@@ -10,6 +10,9 @@
 	<inherits name="com.google.gwt.inject.Inject"/>
 	<inherits name="com.google.gwt.text.Text"/>
 
+	<inherits name="com.github.gwtbootstrap.Bootstrap" />
+	<!-- <set-property name="bootstrap.responsiveDesign" value="true"/> -->
+
 	<source path='client'/>
 	<source path='shared'/>
 

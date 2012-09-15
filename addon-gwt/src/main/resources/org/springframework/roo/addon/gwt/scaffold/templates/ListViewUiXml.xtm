@@ -1,7 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
   xmlns:g='urn:import:com.google.gwt.user.client.ui'
-  xmlns:b='urn:import:com.google.gwt.user.cellview.client'>
+  xmlns:b='urn:import:com.google.gwt.user.cellview.client'
+  xmlns:gb="urn:import:com.github.gwtbootstrap.client.ui">
 <ui:image field="createButton" src="../../style/images/createButton.png"/>
 
 <ui:style>
@@ -48,8 +49,8 @@
 
   <g:HTMLPanel styleName="{style.listView}">
     <div style='height:3em;'></div>
-    <b:CellTable width='100%' ui:field='table' pageSize='8'/>
-    <div class='{style.controls}'>      
+    <gb:CellTable width='100%' ui:field='table' pageSize='10'/>
+    <div class='{style.controls}'>
       <g:Button styleName='{style.createButton}' ui:field='newButton'>Create {{=name}}</g:Button>
       <b:SimplePager display='{table}' location='RIGHT'/>
     </div>

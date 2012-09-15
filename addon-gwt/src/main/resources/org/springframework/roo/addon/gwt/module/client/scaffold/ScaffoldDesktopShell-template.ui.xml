@@ -1,12 +1,12 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'
+			 xmlns:b='urn:import:com.github.gwtbootstrap.client.ui'
 			 xmlns:s='urn:import:__TOP_LEVEL_PACKAGE__.client.scaffold.ui'>
 
 	<ui:image field='gwtLogo' src="../style/images/gwtLogo.png"/>
 	<ui:image field='rooLogo' src="../style/images/rooLogo.png"/>
 	<ui:style>
-		@def contentWidth 850px;
 
 		.disabled {
 			color: gray;
@@ -26,42 +26,13 @@
 			height: 4em;
 		}
 
-		.title {
-			color: white;
-			padding: 1em;
-			position: absolute;
-			color: #def;
-		}
-
-		.title h2 {
-			margin: 0;
-		}
-
-		.error {
-			position: absolute;
-			left: 12%;
-			right: 12%;
-			text-align: center;
-			background-color: red;
-		}
-
-		.login {
-			position: absolute;
-			left: 75%;
-			right: 0%;
-			text-align: center;
-			color: #def;
-		}
-
 		.users {
 			position: absolute;
 			right: 0;
 		}
 
-		.centered {
-			width: contentWidth;
-			margin-right: auto;
-			margin-left: auto;
+		.widescreen {
+			width: 100%;
 		}
 
 		.content {
@@ -111,7 +82,7 @@
 
 		.logos {
 			color: #aaa;
-			font-size: 0.8em;
+			font-size: 10px;
 			width: 160px;
 			margin-left: auto;
 			margin-right: auto;
@@ -119,19 +90,19 @@
 		}
 	</ui:style>
 
-	<g:DockLayoutPanel unit='EM'>
-		<g:north size='6'>
-			<g:HTMLPanel styleName='{style.centered}'>
-				<div class='{style.banner}'>
-					<div class='{style.error}' ui:field='error'></div>
-					<span class='{style.title}'>
-						<h2>Data Browser</h2>
-					</span>
-					<s:LoginWidget styleName='{style.login}' ui:field="loginWidget"/>
-				</div>
-			</g:HTMLPanel>
+	<g:DockLayoutPanel unit='PX'>
+		<g:north size='44'>
+			<b:Navbar height="44px">
+				<b:Brand>Data Browser</b:Brand>
+				<b:Nav alignment="RIGHT">
+					<b:NavText ui:field="username">Not Signed In</b:NavText>
+					<b:Tooltip text="Sign Out" placement="BOTTOM" showDelay="1000">
+						<b:NavLink icon="SIGNOUT" ui:field="signOut"/>
+					</b:Tooltip>
+				</b:Nav>
+			</b:Navbar>
 		</g:north>
-		<g:south size='2'>
+		<g:south size='20'>
 			<g:HTML>
 				<div class='{style.logos}'>
 					<span>Powered by:</span>
@@ -145,7 +116,7 @@
 			</g:HTML>
 		</g:south>
 		<g:center>
-			<g:FlowPanel styleName='{style.content} {style.centered}'>
+			<g:FlowPanel styleName='{style.content} {style.widescreen}'>
 				<g:SimplePanel styleName='{style.entities}'>
 					<g:ValuePicker styleName="{style.entitiesList}" width='100%' pageSize='100' ui:field='placesBox'/>
 				</g:SimplePanel>
