@@ -28,7 +28,7 @@ public class GaeLoginWidgetDriver {
 					public void onClick(ClickEvent event) {
 						Window.Location.replace(response);
 					}
-				}
+				});
 			}
 		});
 
