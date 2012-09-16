@@ -4,21 +4,33 @@ import __TOP_LEVEL_PACKAGE__.client.proxy.AccountProxy;
 import __TOP_LEVEL_PACKAGE__.shared.account.Account;
 import __TOP_LEVEL_PACKAGE__.shared.account.OpenIdAccountServiceRequest;
 import __TOP_LEVEL_PACKAGE__.shared.account.MakesAccountRequests;
-import com.github.gwtbootstrap.client.ui.NavText;
 import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
- * Makes account requests to drive a NavText.
+ * Makes account requests to drive a HasText and a HasClickHandlers.
  */
-public class AccountNavTextDriver {
+public class AccountWidgetDriver {
 	private final MakesAccountRequests requests;
 
-	public AccountNavTextDriver(MakesAccountRequests requests) {
+	public AccountWidgetDriver(MakesAccountRequests requests) {
 		this.requests = requests;
 	}
 
-	public void setWidget(final NavText widget) {
+	public void setWidget(final HasText hasText, final HasClickHandlers hasClickHandlers) {
 		OpenIdAccountServiceRequest request = requests.accountServiceRequest();
+
+		request.getLogoutURL(Location.getHref()).to(new Receiver<String>() {
+			public void onSuccess(String response) {
+				hasClickHandlers.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.Location.replace(response);
+					}
+				}
+			}
+		});
 
 		request.getAccount().to(new Receiver<AccountProxy>() {
 			@Override
@@ -34,7 +46,7 @@ public class AccountNavTextDriver {
 					} else {
 						identifier = "";
 					}
-					widget.setText(identifier);
+					hasText.setText(identifier);
 				}
 			}
 		});

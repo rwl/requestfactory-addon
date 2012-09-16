@@ -6,6 +6,8 @@ import __TOP_LEVEL_PACKAGE__.shared.gae.GaeUserServiceRequest;
 import __TOP_LEVEL_PACKAGE__.shared.gae.MakesGaeRequests;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.gwt.user.client.Window.Location;
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
  * Makes GAE requests to drive a LoginWidget.
@@ -17,11 +19,16 @@ public class GaeLoginWidgetDriver {
 		this.requests = requests;
 	}
 
-	public void setWidget(final LoginWidget widget) {
+	public void setWidget(final HasText hasText, final HasClickHandlers hasClickHandlers) {
 		GaeUserServiceRequest request = requests.userServiceRequest();
 		request.createLogoutURL(Location.getHref()).to(new Receiver<String>() {
 			public void onSuccess(String response) {
-				widget.setLogoutUrl(response);
+				hasClickHandlers.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.Location.replace(response);
+					}
+				}
 			}
 		});
 
@@ -29,7 +36,7 @@ public class GaeLoginWidgetDriver {
 			@Override
 			public void onSuccess(GaeUser response) {
 				if (response != null) {
-					widget.setUserName(response.getNickname());
+					hasText.setText(response.getNickname());
 				}
 			}
 		});

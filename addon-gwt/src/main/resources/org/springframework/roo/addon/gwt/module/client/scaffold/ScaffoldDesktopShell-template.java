@@ -9,6 +9,9 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import com.github.gwtbootstrap.client.ui.NavText;
+import com.github.gwtbootstrap.client.ui.NavLink;
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
  * The outermost UI of the application.
@@ -22,7 +25,8 @@ public class ScaffoldDesktopShell extends Composite {
 
 	@UiField SimplePanel details;
 	@UiField DivElement error;
-	@UiField NavText username;
+	@UiField HasText nickname;
+	@UiField HasClickHandlers signout;
 	@UiField SimplePanel master;
 	@UiField NotificationMole mole;
 	@UiField(provided = true)
@@ -75,9 +79,16 @@ public class ScaffoldDesktopShell extends Composite {
 	}
 
 	/**
-	 * @return the username
+	 * @return the nickname widget
 	 */
-	public NavText getUsername() {
+	public HasText getNicknameWidget() {
 		return username;
+	}
+
+	/**
+	 * @return the sign out widget
+	 */
+	public HasClickHandlers getSignOutWidget() {
+		return signout;
 	}
 }

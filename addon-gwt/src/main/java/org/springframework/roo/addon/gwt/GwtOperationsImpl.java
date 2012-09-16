@@ -75,7 +75,7 @@ import org.w3c.dom.Element;
 
 /**
  * Implementation of {@link GwtOperations}.
- * 
+ *
  * @author Ben Alex
  * @author Alan Stewart
  * @author Stefan Schmidt
@@ -215,7 +215,7 @@ public class GwtOperationsImpl implements GwtOperations {
      * annotation. This is analogous to how ITD-based addons work, e.g. adding a
      * trigger annotation and letting the metadata provider do the rest. This
      * allows for the metadata provider to correctly respond to project changes.
-     * 
+     *
      * @param entity the entity for which to create the GWT request interface
      *            (required)
      * @param destinationPackage the package in which to create the request
@@ -249,7 +249,7 @@ public class GwtOperationsImpl implements GwtOperations {
      * Builds the given entity's unmanaged RequestContext interface used for
      * adding custom methods. This interface extends the RequestContext
      * interface managed by Roo.
-     * 
+     *
      * @param entity the entity for which to create the GWT request interface
      *            (required)
      * @param destinationPackage the package in which to create the request
@@ -367,9 +367,9 @@ public class GwtOperationsImpl implements GwtOperations {
 
     private CharSequence getGaeHookup() {
         final StringBuilder builder = new StringBuilder(
-                "// AppEngine user authentication\n\n");
-        builder.append("new GaeLoginWidgetDriver(requestFactory).setWidget(shell.getLoginWidget());\n\n");
-        builder.append("new ReloadOnAuthenticationFailure().register(eventBus);\n\n");
+                "// AppEngine user authentication\n");
+        builder.append("\t\tnew GaeLoginWidgetDriver(requestFactory).setWidget(shell.getNicknameWidget(), shell.getSignOutWidget());\n");
+        builder.append("\t\tnew ReloadOnAuthenticationFailure().register(eventBus);\n");
         return builder.toString();
     }
 

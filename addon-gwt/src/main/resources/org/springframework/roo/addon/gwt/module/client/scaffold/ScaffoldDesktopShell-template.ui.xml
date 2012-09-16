@@ -96,9 +96,9 @@
 			<b:Navbar height="44px">
 				<b:Brand>Data Browser</b:Brand>
 				<b:Nav alignment="RIGHT">
-					<b:NavText ui:field="username">Not Signed In</b:NavText>
+					<b:NavText ui:field="nickname">Not Signed In</b:NavText>
 					<b:Tooltip text="Sign Out" placement="BOTTOM" showDelay="1000">
-						<b:NavLink icon="SIGNOUT" ui:field="signOut"/>
+						<b:NavLink icon="SIGNOUT" ui:field="signout"/>
 					</b:Tooltip>
 				</b:Nav>
 			</b:Navbar>
