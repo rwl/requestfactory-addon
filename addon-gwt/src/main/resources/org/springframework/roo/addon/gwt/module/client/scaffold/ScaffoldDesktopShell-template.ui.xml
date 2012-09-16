@@ -61,6 +61,7 @@
 		}
 
 		.entitiesList > div > div {
+			background-image: none;
 			padding-left: 1em;
 			padding-top: 5px;
 			padding-bottom: 5px;

@@ -1,9 +1,9 @@
 package __TOP_LEVEL_PACKAGE__.client.scaffold.place;
 
+import com.github.gwtbootstrap.client.ui.Button;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasData;

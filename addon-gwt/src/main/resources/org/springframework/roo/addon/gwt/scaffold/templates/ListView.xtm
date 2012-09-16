@@ -11,8 +11,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.github.gwtbootstrap.client.ui.CellTable;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.github.gwtbootstrap.client.ui.Button;
 
 import {{=placePackage}}.AbstractProxyListView;
 {{#imports}}import {{=import}};
@@ -30,41 +30,41 @@ public class {{=className}} extends AbstractProxyListView<{{=proxy}}> {
 
 	private static final Binder BINDER = GWT.create(Binder.class);
 
-  private static {{=className}} instance;
+	private static {{=className}} instance;
 
 	@UiField(provided = true)
-    CellTable<{{=proxy}}> table = new CellTable<{{=proxy}}>(10, GWT.<CellTable.SelectableResources>create(CellTable.SelectableResources.class));
+	CellTable<{{=proxy}}> table = new CellTable<{{=proxy}}>(10, GWT.<CellTable.SelectableResources>create(CellTable.SelectableResources.class));
 	@UiField Button newButton;
 
-  private Set<String> paths = new HashSet<String>();
+	private Set<String> paths = new HashSet<String>();
 
-  public static {{=className}} instance() {
-    if (instance == null) {
-      instance = new {{=className}}();
-    }
+	public static {{=className}} instance() {
+		if (instance == null) {
+			instance = new {{=className}}();
+		}
 
-    return instance;
-  }
+		return instance;
+	}
 
 	public {{=className}}() {
 		init(BINDER.createAndBindUi(this), table, newButton);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
-    	init();
- 	}
+			init();
+	}
 
 	public void init() {
 		{{#properties}}
-    paths.add("{{=prop}}");
-    table.addColumn(new TextColumn<{{=proxy}}>() {
-      Renderer<{{=propType}}> renderer = {{=propRenderer}};
+		paths.add("{{=prop}}");
+		table.addColumn(new TextColumn<{{=proxy}}>() {
+			Renderer<{{=propType}}> renderer = {{=propRenderer}};
 
-      @Override
-      public String getValue({{=proxy}} object) {
-        return renderer.render(object.{{=propGetter}}());
-      }
-    }, "{{=propReadable}}");{{/properties}}
+			@Override
+			public String getValue({{=proxy}} object) {
+				return renderer.render(object.{{=propGetter}}());
+			}
+		}, "{{=propReadable}}");{{/properties}}
 	}
-  public String[] getPaths() {
-    return paths.toArray(new String[paths.size()]);
-  }
+	public String[] getPaths() {
+		return paths.toArray(new String[paths.size()]);
+	}
 }

@@ -2,6 +2,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
   xmlns:g='urn:import:com.google.gwt.user.client.ui'
   xmlns:d='urn:import:com.google.gwt.user.datepicker.client'
+  xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
   xmlns:r='urn:import:{{=scaffoldUiPackage}}'
   xmlns:a='urn:import:{{=uiPackage}}'>
 
@@ -34,9 +35,9 @@
       border-bottom: 2px solid #6F7277;
     }
   </ui:style>
- 
+
   <g:HTMLPanel>
-    <div class='{style.underline}'>    
+    <div class='{style.underline}'>
       <h3 class='{style.header}' ui:field="editTitle">
         <ui:msg>Edit {{name}}</ui:msg>
       </h3>
@@ -49,8 +50,8 @@
     </table>
 
     <div class='{style.bar}'>
-      <g:Button addStyleNames='{style.button}' ui:field='save'>Save</g:Button>
-      <g:Button addStyleNames='{style.button}' ui:field='cancel'>Cancel</g:Button>
+      <b:Button addStyleNames='{style.button}' icon='SAVE' ui:field='save'>Save</b:Button>
+      <b:Button addStyleNames='{style.button}' icon='REMOVE_SIGN' ui:field='cancel'>Cancel</b:Button>
     </div>
   </g:HTMLPanel>
 </ui:UiBinder>
