@@ -39,11 +39,11 @@ public class AccountWidgetDriver {
 			public void onSuccess(AccountProxy account) {
 				if (account != null) {
 					String identifier;
-					if (account.getName() != null && account.getName().length() > 0) {
+					if (account.getName() != null && !account.getName().isEmpty()) {
 						identifier = account.getName();
-					} else if (account.getEmail() != null && account.getEmail().length() > 0) {
+					} else if (account.getEmail() != null && !account.getEmail().isEmpty()) {
 						identifier = account.getEmail();
-					} else if (account.getIdentityUrl() != null && account.getIdentityUrl().length() > 0) {
+					} else if (account.getIdentityUrl() != null && !account.getIdentityUrl().isEmpty()) {
 						identifier = account.getIdentityUrl();
 					} else {
 						identifier = "";
