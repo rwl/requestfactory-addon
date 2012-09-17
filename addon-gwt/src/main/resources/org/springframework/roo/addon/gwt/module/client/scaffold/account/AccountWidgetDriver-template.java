@@ -7,6 +7,8 @@ import __TOP_LEVEL_PACKAGE__.shared.account.MakesAccountRequests;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 
 /**
  * Makes account requests to drive a HasText and a HasClickHandlers.
@@ -22,7 +24,7 @@ public class AccountWidgetDriver {
 		OpenIdAccountServiceRequest request = requests.accountServiceRequest();
 
 		request.getLogoutURL(Location.getHref()).to(new Receiver<String>() {
-			public void onSuccess(String response) {
+			public void onSuccess(final String response) {
 				hasClickHandlers.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {

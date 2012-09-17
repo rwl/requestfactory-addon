@@ -1,7 +1,10 @@
 package org.springframework.roo.addon.gwt.locator;
 
 import static org.springframework.roo.addon.gwt.GwtJavaType.LOCATOR;
+import static org.springframework.roo.addon.gwt.GaeJavaType.KEY;
+import static org.springframework.roo.addon.gwt.GaeJavaType.KEY_FACTORY;
 import static org.springframework.roo.model.JavaType.CLASS;
+import static org.springframework.roo.model.JavaType.STRING;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -126,7 +129,7 @@ public class GwtLocatorMetadataProviderImpl implements
         cidBuilder.setPhysicalTypeCategory(PhysicalTypeCategory.CLASS);
         cidBuilder.addExtendsTypes(new JavaType(LOCATOR
                 .getFullyQualifiedTypeName(), 0, DataType.TYPE, null, Arrays
-                .asList(entity, identifierType)));
+                .asList(entity, identifierType.equals(KEY) ? STRING : identifierType)));
         cidBuilder.addMethod(getCreateMethod(locatorPhysicalTypeId, entity));
 
         final MemberTypeAdditions findMethodAdditions = layerService
@@ -146,7 +149,7 @@ public class GwtLocatorMetadataProviderImpl implements
         cidBuilder.addMethod(getIdMethod(locatorPhysicalTypeId, entity,
                 identifierAccessor));
         cidBuilder.addMethod(getIdTypeMethod(locatorPhysicalTypeId, entity,
-                identifierType));
+                identifierType.equals(KEY) ? STRING : identifierType));
         cidBuilder.addMethod(getVersionMethod(locatorPhysicalTypeId, entity,
                 versionAccessor));
 
@@ -194,8 +197,26 @@ public class GwtLocatorMetadataProviderImpl implements
             final JavaType idType) {
         final InvocableMemberBodyBuilder invocableMemberBodyBuilder = InvocableMemberBodyBuilder
                 .getInstance();
-        invocableMemberBodyBuilder.append("return ")
-                .append(findMethodAdditions.getMethodCall()).append(";");
+
+        if (idType.equals(KEY)) {
+            invocableMemberBodyBuilder.append("return ")
+                .append(targetType.getSimpleTypeName())
+                .append(".")
+                .append(findMethodAdditions.getMethodName())
+                .append("(")
+                .append(KEY_FACTORY.getFullyQualifiedTypeName())
+                .append(".")
+                .append("stringToKey")
+                .append("(")
+                .append(findMethodAdditions.getMethodParameters().get(0).getRight().getSymbolName())
+                .append(")")
+                .append(")")
+                .append(";");
+        } else {
+            invocableMemberBodyBuilder.append("return ")
+                    .append(findMethodAdditions.getMethodCall()).append(";");
+        }
+
         findMethodAdditions.copyAdditionsTo(locatorBuilder,
                 locatorBuilder.build());
         final MethodMetadataBuilder findMethodBuilder = new MethodMetadataBuilder(
@@ -208,7 +229,7 @@ public class GwtLocatorMetadataProviderImpl implements
                 JavaType.CLASS.getFullyQualifiedTypeName(), 0, DataType.TYPE,
                 null, Arrays.asList(wildEntityType));
         findMethodBuilder.addParameter("clazz", classParameterType);
-        findMethodBuilder.addParameter("id", idType);
+        findMethodBuilder.addParameter("id", idType.equals(KEY) ? STRING : idType);
         return findMethodBuilder;
     }
 
@@ -227,14 +248,28 @@ public class GwtLocatorMetadataProviderImpl implements
             final JavaType targetType, final MethodMetadata idAccessor) {
         final InvocableMemberBodyBuilder invocableMemberBodyBuilder = InvocableMemberBodyBuilder
                 .getInstance();
-        invocableMemberBodyBuilder.append("return "
-                + StringUtils.uncapitalize(targetType.getSimpleTypeName())
-                + "." + idAccessor.getMethodName() + "();");
+        String methodCall = StringUtils.uncapitalize(targetType.getSimpleTypeName()).toString()
+                + "." + idAccessor.getMethodName() + "()";
+        if (idAccessor.getReturnType().equals(KEY)) {
+            invocableMemberBodyBuilder
+                    .append("if (" + methodCall + " != null) {\n")
+                    .append("return ")
+                    .append(KEY_FACTORY.getFullyQualifiedTypeName())
+                    .append(".keyToString(" + methodCall + ");\n")
+                    .append("\t\t} else {\n")
+                    .append("return null;\n")
+                    .append("\t}");
+                    /*.append("return ")
+                    .append(KEY_FACTORY.getFullyQualifiedTypeName())
+                    .append(".keyToString(" + methodCall + ");");*/
+        } else {
+            invocableMemberBodyBuilder.append("return " + methodCall + ";");
+        }
         final MethodMetadataBuilder getIdMethod = new MethodMetadataBuilder(
                 declaredById,
                 Modifier.PUBLIC,
                 new JavaSymbolName("getId"),
-                GwtUtils.convertPrimitiveType(idAccessor.getReturnType(), true),
+                GwtUtils.convertPrimitiveType(idAccessor.getReturnType().equals(KEY) ? STRING : idAccessor.getReturnType(), true),
                 invocableMemberBodyBuilder);
         getIdMethod.addParameter(
                 StringUtils.uncapitalize(targetType.getSimpleTypeName()),

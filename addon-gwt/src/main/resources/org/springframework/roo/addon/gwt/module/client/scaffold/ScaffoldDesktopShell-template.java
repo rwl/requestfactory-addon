@@ -24,7 +24,6 @@ public class ScaffoldDesktopShell extends Composite {
 	private static final Binder BINDER = GWT.create(Binder.class);
 
 	@UiField SimplePanel details;
-	@UiField DivElement error;
 	@UiField HasText nickname;
 	@UiField HasClickHandlers signout;
 	@UiField SimplePanel master;
@@ -41,13 +40,6 @@ public class ScaffoldDesktopShell extends Composite {
 	 */
 	public SimplePanel getDetailsPanel() {
 		return details;
-	}
-
-	/**
-	 * @return the login widget
-	 */
-	public LoginWidget getLoginWidget() {
-		return loginWidget;
 	}
 
 	/**
@@ -72,17 +64,10 @@ public class ScaffoldDesktopShell extends Composite {
 	}
 
 	/**
-	 * @param string
-	 */
-	public void setError(String string) {
-		error.setInnerText(string);
-	}
-
-	/**
 	 * @return the nickname widget
 	 */
 	public HasText getNicknameWidget() {
-		return username;
+		return nickname;
 	}
 
 	/**

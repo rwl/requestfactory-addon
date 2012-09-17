@@ -2,7 +2,8 @@
 <ui:UiBinder
 		xmlns:ui='urn:ui:com.google.gwt.uibinder'
 		xmlns:g='urn:import:com.google.gwt.user.client.ui'
-		xmlns:b='urn:import:com.google.gwt.user.cellview.client'>
+		xmlns:b='urn:import:com.google.gwt.user.cellview.client'
+		xmlns:gb='urn:import:com.github.gwtbootstrap.client.ui'>
 	<ui:image field="createButton" src="../../style/images/createButton.png"/>
 
 	<ui:style>
@@ -24,8 +25,8 @@
 	</ui:style>
 
 	<g:FlowPanel>
-		<g:Button
-				styleName='{style.createButton}'
+		<gb:Button
+				type="LINK" icon="PLUS_SIGN"
 				ui:field='newButton'/>
 		<b:SimplePager display='{list}' location='RIGHT'/>
         <b:CellList

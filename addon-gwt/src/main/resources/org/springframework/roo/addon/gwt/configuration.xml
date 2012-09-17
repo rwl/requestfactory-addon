@@ -7,6 +7,14 @@
                 <name>SpringSource Maven Repository - External Releases</name>
                 <url>http://maven.springframework.org/external</url>
             </repository>
+
+            <!-- TODO: Remove on Gwt Bootstrap 2.1 release -->
+            <repository>
+                <id>sonatype</id>
+                <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+                <snapshots><enabled>true</enabled></snapshots>
+                <releases><enabled>false</enabled></releases>
+            </repository>
         </repositories>
         <dependencies>
             <dependency>
@@ -49,7 +57,7 @@
             <dependency>
                 <groupId>com.github.gwtbootstrap</groupId>
                 <artifactId>gwt-bootstrap</artifactId>
-                <version>2.0.4.0</version>
+                <version>2.1.0.0-SNAPSHOT</version>
             </dependency>
         </dependencies>
         <plugins>

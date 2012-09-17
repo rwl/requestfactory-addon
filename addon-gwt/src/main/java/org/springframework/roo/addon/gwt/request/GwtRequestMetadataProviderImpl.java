@@ -146,7 +146,7 @@ public class GwtRequestMetadataProviderImpl extends
 
     /**
      * Returns the type on which the given request methods will be invoked
-     * 
+     *
      * @param invokedFields the autowired fields invoked by layer method calls
      *            (can include <code>null</code> elements for 'active record'
      *            calls)
@@ -221,7 +221,7 @@ public class GwtRequestMetadataProviderImpl extends
         /*
          * TODO make sure the active record instance methods have the correct
          * parameters
-         * 
+         *
          * expected: abstract
          * InstanceRequest<com.example.gwtbug.client.proxy.ThingProxy,
          * java.lang.Void> persist(); actual: abstract Request<java.lang.Void>
@@ -290,8 +290,9 @@ public class GwtRequestMetadataProviderImpl extends
         signatures.put(FIND_ENTRIES_METHOD, Arrays.asList(new MethodParameter(
                 INT_PRIMITIVE, "firstResult"), new MethodParameter(
                 INT_PRIMITIVE, "maxResults")));
+        /* Not required and incompatible with Key IDs
         signatures.put(FIND_METHOD,
-                Arrays.asList(new MethodParameter(idType, "id")));
+                Arrays.asList(new MethodParameter(idType, "id")));*/
         final List<MethodParameter> proxyParameterAsList = Arrays
                 .asList(new MethodParameter(domainType, "proxy"));
         signatures.put(PERSIST_METHOD, proxyParameterAsList);
@@ -353,7 +354,7 @@ public class GwtRequestMetadataProviderImpl extends
 
     /**
      * Creates or updates the entity-specific request interface with
-     * 
+     *
      * @param request
      * @param requestMethods the methods to declare in the interface, mapped to
      *            the injected field type on which they are invoked (required)
