@@ -1,8 +1,8 @@
 package org.springframework.roo.addon.gwt.locator;
 
 import static org.springframework.roo.addon.gwt.GwtJavaType.LOCATOR;
-import static org.springframework.roo.addon.gwt.GaeJavaType.KEY;
-import static org.springframework.roo.addon.gwt.GaeJavaType.KEY_FACTORY;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.KEY;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.KEY_FACTORY;
 import static org.springframework.roo.model.JavaType.CLASS;
 import static org.springframework.roo.model.JavaType.STRING;
 

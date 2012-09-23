@@ -30,6 +30,6 @@ public class ProxyPlaceToListPlace implements FilteredActivityMapper.Filter {
 		}
 
 		ProxyPlace proxyPlace = (ProxyPlace) place;
-		return new ProxyListPlace(proxyPlace.getProxyClass());
+		return new ProxyListPlace(proxyPlace.getProxyClass(), proxyPlace.getParentId());
 	}
 }

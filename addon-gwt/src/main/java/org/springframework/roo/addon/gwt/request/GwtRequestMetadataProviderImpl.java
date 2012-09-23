@@ -16,6 +16,7 @@ import static org.springframework.roo.classpath.customdata.CustomDataKeys.REMOVE
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.VOID_PRIMITIVE;
+import static org.springframework.roo.model.JavaType.STRING;
 import static org.springframework.roo.model.RooJavaType.ROO_GWT_REQUEST;
 
 import java.util.ArrayList;
@@ -70,6 +71,11 @@ import org.springframework.roo.project.ProjectOperations;
 public class GwtRequestMetadataProviderImpl extends
         AbstractHashCodeTrackingMetadataNotifier implements
         GwtRequestMetadataProvider {
+
+    public static final MethodMetadataCustomDataKey COUNT_BY_PARENT_METHOD = new MethodMetadataCustomDataKey(
+            "COUNT_BY_PARENT_METHOD");
+    public static final MethodMetadataCustomDataKey FIND_ENTRIES_BY_PARENT_METHOD = new MethodMetadataCustomDataKey(
+            "FIND_ENTRIES_BY_PARENT_METHOD");
 
     private static final int LAYER_POSITION = LayerType.HIGHEST.getPosition();
 
@@ -297,6 +303,14 @@ public class GwtRequestMetadataProviderImpl extends
                 .asList(new MethodParameter(domainType, "proxy"));
         signatures.put(PERSIST_METHOD, proxyParameterAsList);
         signatures.put(REMOVE_METHOD, proxyParameterAsList);
+
+        signatures.put(COUNT_BY_PARENT_METHOD, Arrays
+                .asList(new MethodParameter(STRING, "parentId")));
+        signatures.put(FIND_ENTRIES_BY_PARENT_METHOD, Arrays.asList(new MethodParameter(
+                STRING, "parentId"), new MethodParameter(
+                INT_PRIMITIVE, "firstResult"), new MethodParameter(
+                INT_PRIMITIVE, "maxResults")));
+
         return signatures;
     }
 

@@ -22,17 +22,17 @@ public class {{=className}} {
     this.placeController = placeController;
   }
 
-  public Activity getActivity(ProxyPlace place) {
+  public Activity getActivity(ProxyPlace place, String parentId) {
     switch (place.getOperation()) {
       case DETAILS:
-        return new {{=detailsActivity}}((EntityProxyId<{{=proxy}}>)place.getProxyId(), requests, 
-          placeController, ScaffoldApp.isMobile() ? {{=mobileDetailsView}}.instance() : {{=detailsView}}.instance());
+        return new {{=detailsActivity}}((EntityProxyId<{{=proxy}}>)place.getProxyId(), requests,
+          placeController, ScaffoldApp.isMobile() ? {{=mobileDetailsView}}.instance() : {{=detailsView}}.instance(), parentId);
 
       case EDIT:
-        return makeEditActivity(place);
+        return makeEditActivity(place, parentId);
 
       case CREATE:
-        return makeCreateActivity();
+        return makeCreateActivity(parentId);
     }
 
     throw new IllegalArgumentException("Unknown operation " + place.getOperation());
@@ -43,14 +43,21 @@ public class {{=className}} {
     return (EntityProxyId<{{=proxy}}>) place.getProxyId();
   }
 
-  private Activity makeCreateActivity() {
+  private Activity makeCreateActivity(final String parentId) {
     {{=editView}}.instance().setCreating(true);
     final {{=request}} request = requests.{{=nameUncapitalized}}Request();
     Activity activity = new CreateAndEditProxy<{{=proxy}}>(
         {{=proxy}}.class, request,
         ScaffoldApp.isMobile() ? {{=mobileEditView}}.instance() : {{=editView}}.instance(),
-        placeController) {
-      
+        placeController,
+        parentId) {
+
+      protected {{=proxy}} getProxy() {
+        final {{=proxy}} proxy = super.getProxy();
+        // TODO: set parent post creation
+        return proxy;
+      }
+
       @Override
       protected RequestContext createSaveRequest({{=proxy}} proxy) {
         request.{{=persistMethodSignature}}(proxy);
@@ -63,13 +70,14 @@ public class {{=className}} {
         activity, null);
   }
 
-  private Activity makeEditActivity(ProxyPlace place) {
+  private Activity makeEditActivity(ProxyPlace place, String parentId) {
     {{=editView}}.instance().setCreating(false);
     EntityProxyId<{{=proxy}}> proxyId = coerceId(place);
     Activity activity = new FindAndEditProxy<{{=proxy}}>(proxyId,
         requests,
         ScaffoldApp.isMobile() ? {{=mobileEditView}}.instance() : {{=editView}}.instance(),
-        placeController) {
+        placeController,
+        parentId) {
 
       @Override
       protected RequestContext createSaveRequest({{=proxy}} proxy) {

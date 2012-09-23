@@ -28,6 +28,7 @@ public class ApplicationDetailsActivities implements ActivityMapper {
     }
 
     final ProxyPlace proxyPlace = (ProxyPlace) place;
+    final String parentId = proxyPlace.getParentId();
 
     return new ApplicationEntityTypesProcessor<Activity>() {{{#entities}}
       @Override

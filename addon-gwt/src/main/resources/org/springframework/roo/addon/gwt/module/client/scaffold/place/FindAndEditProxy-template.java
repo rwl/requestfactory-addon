@@ -18,8 +18,8 @@ public abstract class FindAndEditProxy<P extends EntityProxy> extends AbstractPr
 	private final EntityProxyId<P> proxyId;
 	private P proxy;
 
-	public FindAndEditProxy(EntityProxyId<P> proxyId, RequestFactory factory, ProxyEditView<P, ?> view, PlaceController placeController) {
-		super(view, placeController);
+	public FindAndEditProxy(EntityProxyId<P> proxyId, RequestFactory factory, ProxyEditView<P, ?> view, PlaceController placeController, String parentId) {
+		super(view, placeController, parentId);
 		this.proxyId = proxyId;
 		this.factory = factory;
 	}

@@ -24,7 +24,7 @@ public class ScaffoldApp {
 		HashSet<ProxyListPlace> rtn = new HashSet<ProxyListPlace>(types.size());
 
 		for (Class<? extends EntityProxy> type : types) {
-			rtn.add(new ProxyListPlace(type));
+			rtn.add(new ProxyListPlace(type, null));
 		}
 
 		return rtn;

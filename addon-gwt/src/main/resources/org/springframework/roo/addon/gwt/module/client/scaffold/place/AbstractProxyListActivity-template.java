@@ -45,16 +45,18 @@ public abstract class AbstractProxyListActivity<P extends EntityProxy> implement
 	private final PlaceController placeController;
 	private final SingleSelectionModel<P> selectionModel;
 	private final Class<P> proxyClass;
+	private final String parentId;
 
 	private HandlerRegistration rangeChangeHandler;
 	private ProxyListView<P> view;
 	private AcceptsOneWidget display;
 	private EntityProxyId<P> pendingSelection;
 
-	public AbstractProxyListActivity(PlaceController placeController, ProxyListView<P> view, Class<P> proxyType) {
+	public AbstractProxyListActivity(PlaceController placeController, ProxyListView<P> view, Class<P> proxyType, String parentId) {
 		this.view = view;
 		this.placeController = placeController;
 		this.proxyClass = proxyType;
+		this.parentId = parentId;
 		view.setDelegate(this);
 
 		final HasData<P> hasData = view.asHasData();
@@ -73,14 +75,14 @@ public abstract class AbstractProxyListActivity<P extends EntityProxy> implement
 			public void onSelectionChange(SelectionChangeEvent event) {
 				P selectedObject = selectionModel.getSelectedObject();
 				if (selectedObject != null) {
-					showDetails(selectedObject);
+					showDetails(selectedObject, AbstractProxyListActivity.this.parentId);
 				}
 			}
 		});
 	}
 
 	public void createClicked() {
-		placeController.goTo(new ProxyPlace(proxyClass));
+		placeController.goTo(new ProxyPlace(proxyClass, parentId));
 	}
 
 	public ProxyListView<P> getView() {
@@ -216,7 +218,7 @@ public abstract class AbstractProxyListActivity<P extends EntityProxy> implement
 	 * @param record the chosen record
 	 */
 	protected void showDetails(P record) {
-		placeController.goTo(new ProxyPlace(record.stableId(), ProxyPlace.Operation.DETAILS));
+		placeController.goTo(new ProxyPlace(record.stableId(), ProxyPlace.Operation.DETAILS, parentId));
 	}
 
 	@SuppressWarnings("unchecked")

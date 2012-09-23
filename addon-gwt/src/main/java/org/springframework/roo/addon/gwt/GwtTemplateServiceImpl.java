@@ -75,7 +75,7 @@ import org.xml.sax.SAXException;
  * to create {@link ClassOrInterfaceTypeDetails} objects from source files
  * created from templates. This class keeps all templating concerns in one
  * place.
- * 
+ *
  * @author James Tyrrell
  * @since 1.1.2
  */
@@ -297,7 +297,7 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                             .append(" proxy) {\n")
                             .append("\t\t\t\tsetResult(new ")
                             .append(entitySimpleName)
-                            .append("ActivitiesMapper(requests, placeController).getActivity(proxyPlace));\n\t\t\t}")
+                            .append("ActivitiesMapper(requests, placeController).getActivity(proxyPlace, parentId));\n\t\t\t}")
                             .toString();
                     dataDictionary.addSection("entities").setVariable("entity",
                             entityExpression);

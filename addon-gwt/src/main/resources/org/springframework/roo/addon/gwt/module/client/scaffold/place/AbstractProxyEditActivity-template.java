@@ -26,10 +26,12 @@ public abstract class AbstractProxyEditActivity<P extends EntityProxy> implement
 	private final PlaceController placeController;
 	private RequestFactoryEditorDriver<P, ?> editorDriver;
 	private boolean waiting;
+    private final String parentId;
 
-	public AbstractProxyEditActivity(ProxyEditView<P, ?> view, PlaceController placeController) {
+	public AbstractProxyEditActivity(ProxyEditView<P, ?> view, PlaceController placeController, String parentId) {
 		this.view = view;
 		this.placeController = placeController;
+		this.parentId = parentId;
 	}
 
 	public void cancelClicked() {
@@ -130,7 +132,7 @@ public abstract class AbstractProxyEditActivity<P extends EntityProxy> implement
 	 * @param saved true if changes were comitted, false if user canceled
 	 */
 	protected void exit(@SuppressWarnings("unused") boolean saved) {
-		placeController.goTo(new ProxyPlace(getProxyId(), ProxyPlace.Operation.DETAILS));
+		placeController.goTo(new ProxyPlace(getProxyId(), ProxyPlace.Operation.DETAILS, this.parentId));
 	}
 
 	/**
