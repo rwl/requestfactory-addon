@@ -9,8 +9,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface RooGwtBootstrap {
 
+    String PARENT_FIELD_DEFAULT = "";
+
     /**
      * @return the field name of the parent reference
      */
-    String parent() default "";
+    String parentField() default PARENT_FIELD_DEFAULT;
 }

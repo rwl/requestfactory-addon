@@ -2,10 +2,21 @@ package org.springframework.roo.addon.gwt.bootstrap;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
+import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
+import static org.springframework.roo.model.JavaType.STRING;
+import static org.springframework.roo.model.JpaJavaType.TYPED_QUERY;
+import static org.springframework.roo.model.SpringJavaType.PROPAGATION;
+import static org.springframework.roo.model.SpringJavaType.TRANSACTIONAL;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.KEY;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.roo.addon.jpa.activerecord.JpaCrudAnnotationValues;
 import org.springframework.roo.addon.plural.PluralMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
@@ -19,6 +30,8 @@ import org.springframework.roo.classpath.details.annotations.AnnotationMetadataB
 import org.springframework.roo.classpath.itd.AbstractItdTypeDetailsProvidingMetadataItem;
 import org.springframework.roo.classpath.itd.InvocableMemberBodyBuilder;
 import org.springframework.roo.metadata.MetadataIdentificationUtils;
+import org.springframework.roo.model.DataType;
+import org.springframework.roo.model.EnumDetails;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
@@ -34,6 +47,8 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
     // Constants
     private static final String PROVIDES_TYPE_STRING = GwtBootstrapMetadata.class.getName();
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils.create(PROVIDES_TYPE_STRING);
+
+    private static final String ENTITY_MANAGER_METHOD_NAME = "entityManager";
 
     public static final String getMetadataIdentiferType() {
         return PROVIDES_TYPE;
@@ -55,45 +70,45 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         return PhysicalTypeIdentifierNamingUtils.isValid(PROVIDES_TYPE_STRING, metadataIdentificationString);
     }
 
-    public GwtBootstrapMetadata(String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata,
-            String plural) {
+    private final JpaCrudAnnotationValues crudAnnotationValues;
+    private final GwtBootstrapAnnotationValues gwtBootstrapAnnotationValues;
+    private final boolean isGaeEnabled;
+    private final String entityName;
+    private final String plural;
+    private final FieldMetadata identifierField;
+    private final FieldMetadata parentField;
+
+    public GwtBootstrapMetadata(String identifier, JavaType aspectName, JpaCrudAnnotationValues crudAnnotationValues,
+            PhysicalTypeMetadata governorPhysicalTypeMetadata,
+            GwtBootstrapAnnotationValues gwtBootstrapAnnotationValues, String plural, FieldMetadata idField, FieldMetadata parentField,
+            final String entityName, final boolean isGaeEnabled) {
         super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
 
-        // Adding a new sample field definition
-//        builder.addField(getSampleField());
+        this.crudAnnotationValues = crudAnnotationValues;
+        this.gwtBootstrapAnnotationValues = gwtBootstrapAnnotationValues;
+        this.isGaeEnabled = isGaeEnabled;
+        this.entityName = entityName;
+        this.plural = plural;
+        this.identifierField = idField;
+        this.parentField = parentField;
 
-        // Adding a new sample method definition
-        builder.addMethod(getCountMethod(plural));
+        builder.addMethod(getFindEntriesMethod());
+        builder.addMethod(getCountMethod());
 
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
     }
 
-    /**
-     * Create metadata for a field definition.
-     *
-     * @return a FieldMetadata object
-     */
-    /*private FieldMetadata getSampleField() {
-        // Note private fields are private to the ITD, not the target type, this is undesirable if a dependent method is pushed in to the target type
-        int modifier = 0;
+    private MethodMetadata getFindEntriesMethod() {
 
-        // Using the FieldMetadataBuilder to create the field definition.
-        final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(getId(), // Metadata ID provided by supertype
-            modifier, // Using package protection rather than private
-            new ArrayList<AnnotationMetadataBuilder>(), // No annotations for this field
-            new JavaSymbolName("sampleField"), // Field name
-            JavaType.STRING); // Field type
-
-        return fieldBuilder.build(); // Build and return a FieldMetadata instance
-    }*/
-
-    private MethodMetadata getCountMethod(String plural) {
-
+        if (parentField == null) {
+            return null;
+        }
 
         // Specify the desired method name
-        JavaSymbolName methodName = new JavaSymbolName("count" + plural + "ByParentId");
+        JavaSymbolName methodName = new JavaSymbolName("find" + destination.getSimpleTypeName()
+                + "EntriesBy" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id");
 
         // Check if a method with the same signature already exists in the target type
         final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
@@ -102,28 +117,135 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
             return method;
         }
 
-        // Define method annotations (none in this case)
+        // Define method annotations
         List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        if (isGaeEnabled) {
+            addTransactionalAnnotation(annotations);
+        }
 
         // Define method throws types (none in this case)
         List<JavaType> throwsTypes = new ArrayList<JavaType>();
 
         // Define method parameter types (none in this case)
-        List<AnnotatedJavaType> parameterTypes = new ArrayList<AnnotatedJavaType>();
+        final JavaType idType = identifierField.getFieldType().equals(KEY) ? STRING : identifierField.getFieldType();
+        final JavaType[] parameterTypes = { idType, INT_PRIMITIVE, INT_PRIMITIVE };
 
         // Define method parameter names (none in this case)
-        List<JavaSymbolName> parameterNames = new ArrayList<JavaSymbolName>();
+//        List<JavaSymbolName> parameterNames = new ArrayList<JavaSymbolName>();
+        final List<JavaSymbolName> parameterNames = Arrays.asList(
+                new JavaSymbolName("parentId"),
+                new JavaSymbolName("firstResult"),
+                new JavaSymbolName("maxResults"));
 
         // Create the method body
         InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
         bodyBuilder.appendFormalLine("System.out.println(\"Hello World\");");
 
         // Use the MethodMetadataBuilder for easy creation of MethodMetadata
-        MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(getId(), Modifier.PUBLIC, methodName, JavaType.VOID_PRIMITIVE, parameterTypes, parameterNames, bodyBuilder);
+        MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(getId(),
+                Modifier.PUBLIC,
+                methodName,
+                JavaType.VOID_PRIMITIVE,
+                AnnotatedJavaType.convertFromJavaTypes(parameterTypes),
+                parameterNames,
+                bodyBuilder);
         methodBuilder.setAnnotations(annotations);
         methodBuilder.setThrowsTypes(throwsTypes);
 
         return methodBuilder.build(); // Build and return a MethodMetadata instance
+    }
+
+    private MethodMetadata getCountMethod() {
+        if (parentField == null) {
+            return null;
+        }
+
+        // Specify the desired method name
+        JavaSymbolName methodName = new JavaSymbolName("count" + plural
+                + "By" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id");
+
+        // Check if a method with the same signature already exists in the target type
+        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
+        if (method != null) {
+            // If it already exists, just return the method and omit its generation via the ITD
+            return method;
+        }
+
+        // Define method annotations
+        List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        if (isGaeEnabled) {
+            addTransactionalAnnotation(annotations);
+        }
+
+        // Define method throws types (none in this case)
+        List<JavaType> throwsTypes = new ArrayList<JavaType>();
+
+        // Define method parameter types (none in this case)
+        final JavaType idType = identifierField.getFieldType().equals(KEY) ? STRING : identifierField.getFieldType();
+        final JavaType[] parameterTypes = { idType };
+
+        // Define method parameter names (none in this case)
+        final String idParamName = parentField.getFieldName().getSymbolName() + "Id";
+        final List<JavaSymbolName> parameterNames = Arrays.asList(new JavaSymbolName(idParamName));
+
+        // Create the method body
+        final String findMethodName = crudAnnotationValues.getFindMethod() + destination.getSimpleTypeName();
+        InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+        bodyBuilder.appendFormalLine("final " + parentField.getFieldType().getNameIncludingTypeParameters()
+                + " "
+                + parentField.getFieldName().getSymbolName() + " = "
+                + parentField.getFieldType().getNameIncludingTypeParameters(true, builder.getImportRegistrationResolver())
+                + "." + findMethodName + "(" + idParamName + ");");
+
+
+        final List<JavaType> parameters = new ArrayList<JavaType>();
+        parameters.add(destination);
+        final JavaType typedQueryType = new JavaType(
+                TYPED_QUERY.getFullyQualifiedTypeName(), 0, DataType.TYPE,
+                null, parameters);
+
+        bodyBuilder.appendFormalLine(typedQueryType.getNameIncludingTypeParameters(false, builder.getImportRegistrationResolver())
+                + " q = "
+                + ENTITY_MANAGER_METHOD_NAME
+                + "().createQuery(\"SELECT o FROM "
+                + entityName
+                + " AS o WHERE o."
+                + parentField.getFieldName().getSymbolName()
+                + " = :"
+                + parentField.getFieldName().getSymbolName()
+                + "\", "
+                + destination.getSimpleTypeName()
+                + ".class);");
+        bodyBuilder.appendFormalLine("q.setParameter(\""
+                + parentField.getFieldName().getSymbolName()
+                + "\", "
+                + parentField.getFieldName().getSymbolName()
+                + ");");
+        bodyBuilder.appendFormalLine("return q.getResultList().size();");
+
+        // Use the MethodMetadataBuilder for easy creation of MethodMetadata
+        MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(getId(),
+                Modifier.PUBLIC,
+                methodName,
+                LONG_PRIMITIVE,
+                AnnotatedJavaType.convertFromJavaTypes(parameterTypes),
+                parameterNames,
+                bodyBuilder);
+        methodBuilder.setAnnotations(annotations);
+        methodBuilder.setThrowsTypes(throwsTypes);
+
+        return methodBuilder.build(); // Build and return a MethodMetadata instance
+    }
+
+    private void addTransactionalAnnotation(final List<AnnotationMetadataBuilder> annotations) {
+        final AnnotationMetadataBuilder transactionalBuilder = new AnnotationMetadataBuilder(
+                TRANSACTIONAL);
+        if (StringUtils
+                .isNotBlank(crudAnnotationValues.getTransactionManager())) {
+            transactionalBuilder.addStringAttribute("value",
+                    crudAnnotationValues.getTransactionManager());
+        }
+        annotations.add(transactionalBuilder);
     }
 
     private MethodMetadata methodExists(JavaSymbolName methodName, List<AnnotatedJavaType> paramTypes) {
