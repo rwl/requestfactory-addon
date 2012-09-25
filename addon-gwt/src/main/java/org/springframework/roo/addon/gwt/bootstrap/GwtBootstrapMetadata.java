@@ -202,8 +202,9 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         }
 
         // Specify the desired method name
-        JavaSymbolName methodName = new JavaSymbolName("find" + destination.getSimpleTypeName()
-                + "EntriesBy" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id");
+        /*JavaSymbolName methodName = new JavaSymbolName("find" + destination.getSimpleTypeName()
+                + "EntriesBy" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id");*/
+        JavaSymbolName methodName = new JavaSymbolName("find" + destination.getSimpleTypeName() + "EntriesByParentId");
 
         // Check if a method with the same signature already exists in the target type
         final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
@@ -291,8 +292,9 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         }
 
         // Specify the desired method name
-        JavaSymbolName methodName = new JavaSymbolName("count" + plural
-                + "By" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id");
+        /*JavaSymbolName methodName = new JavaSymbolName("count" + plural
+                + "By" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id");*/
+        JavaSymbolName methodName = new JavaSymbolName("count" + plural + "ByParentId");
 
         // Check if a method with the same signature already exists in the target type
         final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());

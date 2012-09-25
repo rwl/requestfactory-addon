@@ -2,6 +2,7 @@ package org.springframework.roo.addon.gwt.request;
 
 import static java.lang.reflect.Modifier.ABSTRACT;
 import static java.lang.reflect.Modifier.STATIC;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
 import static org.springframework.roo.addon.gwt.GwtJavaType.INSTANCE_REQUEST;
 import static org.springframework.roo.addon.gwt.GwtJavaType.OLD_REQUEST_CONTEXT;
 import static org.springframework.roo.addon.gwt.GwtJavaType.REQUEST;
@@ -37,6 +38,7 @@ import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.gwt.GwtFileManager;
 import org.springframework.roo.addon.gwt.GwtTypeService;
 import org.springframework.roo.addon.gwt.GwtUtils;
+import org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapDataKeys;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.TypeLocationService;
@@ -71,11 +73,6 @@ import org.springframework.roo.project.ProjectOperations;
 public class GwtRequestMetadataProviderImpl extends
         AbstractHashCodeTrackingMetadataNotifier implements
         GwtRequestMetadataProvider {
-
-    public static final MethodMetadataCustomDataKey COUNT_BY_PARENT_METHOD = new MethodMetadataCustomDataKey(
-            "COUNT_BY_PARENT_METHOD");
-    public static final MethodMetadataCustomDataKey FIND_ENTRIES_BY_PARENT_METHOD = new MethodMetadataCustomDataKey(
-            "FIND_ENTRIES_BY_PARENT_METHOD");
 
     private static final int LAYER_POSITION = LayerType.HIGHEST.getPosition();
 
@@ -289,6 +286,15 @@ public class GwtRequestMetadataProviderImpl extends
 
     private Map<MethodMetadataCustomDataKey, Collection<MethodParameter>> getRequestMethodSignatures(
             final JavaType domainType, final JavaType idType) {
+
+        ClassOrInterfaceTypeDetails domainTypeDetails = typeLocationService.getTypeDetails(domainType);
+        AnnotationMetadata annotation = domainTypeDetails.getAnnotation(ROO_GWT_BOOTSTRAP);
+        AnnotationAttributeValue<String> annotationAttributeValue = annotation.getAttribute("parentField");
+        String parentField = "";
+        if (annotationAttributeValue != null) {
+            parentField = annotationAttributeValue.getValue();
+        }
+
         final Map<MethodMetadataCustomDataKey, Collection<MethodParameter>> signatures = new LinkedHashMap<MethodMetadataCustomDataKey, Collection<MethodParameter>>();
         final List<MethodParameter> noArgs = Arrays.asList();
         signatures.put(COUNT_ALL_METHOD, noArgs);
@@ -304,12 +310,14 @@ public class GwtRequestMetadataProviderImpl extends
         signatures.put(PERSIST_METHOD, proxyParameterAsList);
         signatures.put(REMOVE_METHOD, proxyParameterAsList);
 
-        signatures.put(COUNT_BY_PARENT_METHOD, Arrays
-                .asList(new MethodParameter(STRING, "parentId")));
-        signatures.put(FIND_ENTRIES_BY_PARENT_METHOD, Arrays.asList(new MethodParameter(
-                STRING, "parentId"), new MethodParameter(
-                INT_PRIMITIVE, "firstResult"), new MethodParameter(
-                INT_PRIMITIVE, "maxResults")));
+        if (!parentField.isEmpty()) {
+            signatures.put(GwtBootstrapDataKeys.COUNT_BY_PARENT_METHOD, Arrays
+                    .asList(new MethodParameter(STRING, parentField + "Id")));
+            signatures.put(GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD, Arrays.asList(new MethodParameter(
+                    STRING, parentField + "Id"), new MethodParameter(
+                    INT_PRIMITIVE, "firstResult"), new MethodParameter(
+                    INT_PRIMITIVE, "maxResults")));
+        }
 
         return signatures;
     }
@@ -329,6 +337,14 @@ public class GwtRequestMetadataProviderImpl extends
         if (PERSIST_METHOD.equals(methodKey) || REMOVE_METHOD.equals(methodKey)) {
             return VOID_PRIMITIVE;
         }
+
+        if (GwtBootstrapDataKeys.COUNT_BY_PARENT_METHOD.equals(methodKey)) {
+            return LONG_PRIMITIVE;
+        }
+        if (GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.equals(methodKey)) {
+            return JavaType.listOf(entity);
+        }
+
         throw new IllegalStateException("Unexpected method key " + methodKey);
     }
 

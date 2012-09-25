@@ -1,25 +1,33 @@
 package org.springframework.roo.addon.gwt.bootstrap;
 
+
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapDataKeys.COUNT_BY_PARENT_METHOD;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD;
 import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.service.component.ComponentContext;
-import org.springframework.roo.addon.jpa.activerecord.JpaActiveRecordMetadata;
 import org.springframework.roo.addon.jpa.activerecord.JpaCrudAnnotationValues;
 import org.springframework.roo.addon.jpa.entity.JpaEntityAnnotationValues;
 import org.springframework.roo.addon.plural.PluralMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
+import org.springframework.roo.classpath.customdata.taggers.CustomDataKeyDecorator;
+import org.springframework.roo.classpath.customdata.taggers.MethodMatcher;
 import org.springframework.roo.classpath.details.FieldMetadata;
+import org.springframework.roo.classpath.details.MemberFindingUtils;
 import org.springframework.roo.classpath.itd.AbstractItdMetadataProvider;
 import org.springframework.roo.classpath.itd.ItdTypeDetailsProvidingMetadataItem;
+import org.springframework.roo.classpath.itd.MemberHoldingTypeDetailsMetadataItem;
 import org.springframework.roo.classpath.scanner.MemberDetails;
+import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.FeatureNames;
 import org.springframework.roo.project.LogicalPath;
@@ -37,6 +45,7 @@ import org.springframework.roo.project.ProjectOperations;
 @Service
 public final class GwtBootstrapMetadataProvider extends AbstractItdMetadataProvider {
 
+    @Reference private CustomDataKeyDecorator customDataKeyDecorator;
     @Reference private ProjectOperations projectOperations;
 
     /**
@@ -48,6 +57,7 @@ public final class GwtBootstrapMetadataProvider extends AbstractItdMetadataProvi
     protected void activate(ComponentContext context) {
         metadataDependencyRegistry.registerDependency(PhysicalTypeIdentifier.getMetadataIdentiferType(), getProvidesType());
         addMetadataTrigger(ROO_GWT_BOOTSTRAP);
+        registerMatchers();
     }
 
     /**
@@ -59,6 +69,7 @@ public final class GwtBootstrapMetadataProvider extends AbstractItdMetadataProvi
     protected void deactivate(ComponentContext context) {
         metadataDependencyRegistry.deregisterDependency(PhysicalTypeIdentifier.getMetadataIdentiferType(), getProvidesType());
         removeMetadataTrigger(ROO_GWT_BOOTSTRAP);
+        customDataKeyDecorator.unregisterMatchers(getClass());
     }
 
     /**
@@ -147,5 +158,29 @@ public final class GwtBootstrapMetadataProvider extends AbstractItdMetadataProvi
 
     public String getProvidesType() {
         return GwtBootstrapMetadata.getMetadataIdentiferType();
+    }
+
+    public GwtBootstrapAnnotationValues getAnnotationValues(final JavaType javaType) {
+        Validate.notNull(javaType, "JavaType required");
+        final String physicalTypeId = typeLocationService
+                .getPhysicalTypeIdentifier(javaType);
+        if (StringUtils.isBlank(physicalTypeId)) {
+            return null;
+        }
+        final MemberHoldingTypeDetailsMetadataItem<?> governor = (MemberHoldingTypeDetailsMetadataItem<?>) metadataService
+                .get(physicalTypeId);
+        if (MemberFindingUtils.getAnnotationOfType(governor,
+                ROO_GWT_BOOTSTRAP) == null) {
+            // The type is not annotated with @RooGwtBootstrap
+            return null;
+        }
+        return new GwtBootstrapAnnotationValues(governor);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void registerMatchers() {
+        customDataKeyDecorator.registerMatchers(getClass(),
+                new MethodMatcher(COUNT_BY_PARENT_METHOD, ROO_GWT_BOOTSTRAP, new JavaSymbolName("countByParentMethod"), "count", true, false, "ByParentId"),
+                new MethodMatcher(FIND_ENTRIES_BY_PARENT_METHOD, ROO_GWT_BOOTSTRAP, new JavaSymbolName("findEntriesByParentMethod"), "find", false, true, "EntriesByParentId"));
     }
 }
