@@ -1,14 +1,17 @@
 package org.springframework.roo.addon.gwt.bootstrap;
 
+import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
+import static org.springframework.roo.model.JavaType.STRING;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.classpath.customdata.tagkeys.MethodMetadataCustomDataKey;
 import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.classpath.layers.MethodParameter;
@@ -30,8 +33,9 @@ enum GwtBootstrapLayerMethod {
         public String getName(final GwtBootstrapAnnotationValues annotationValues,
                 final JavaType targetEntity, final String plural, final FieldMetadata parentField) {
             if (StringUtils.isNotBlank(annotationValues.getParentField())) {
-                return "count" + plural
-                        + "By" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id";
+                /*return "count" + plural
+                        + "By" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id";*/
+                return "count" + plural + "ByParentId";
             }
             return null;
         }
@@ -39,7 +43,7 @@ enum GwtBootstrapLayerMethod {
         @Override
         protected List<JavaType> getParameterTypes(final JavaType targetEntity,
                 final JavaType idType) {
-            return Collections.emptyList();
+            return Arrays.asList(idType);
         }
     },
 
@@ -66,8 +70,9 @@ enum GwtBootstrapLayerMethod {
         public String getName(final GwtBootstrapAnnotationValues annotationValues,
                 final JavaType targetEntity, final String plural, final FieldMetadata parentField) {
             if (StringUtils.isNotBlank(annotationValues.getParentField())) {
-                return "find" + targetEntity.getSimpleTypeName()
-                        + "EntriesBy" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id";
+                /*return "find" + targetEntity.getSimpleTypeName()
+                        + "EntriesBy" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id";*/
+                return "find" + targetEntity.getSimpleTypeName() + "EntriesByParentId";
             }
             return null;
         }
@@ -75,8 +80,7 @@ enum GwtBootstrapLayerMethod {
         @Override
         protected List<JavaType> getParameterTypes(final JavaType targetEntity,
                 final JavaType idType) {
-            return Arrays
-                    .asList(JavaType.INT_PRIMITIVE, JavaType.INT_PRIMITIVE);
+            return Arrays.asList(idType, INT_PRIMITIVE, INT_PRIMITIVE);
         }
     };
 

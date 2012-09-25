@@ -3,6 +3,7 @@ package org.springframework.roo.addon.gwt.request;
 import static java.lang.reflect.Modifier.ABSTRACT;
 import static java.lang.reflect.Modifier.STATIC;
 import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.KEY;
 import static org.springframework.roo.addon.gwt.GwtJavaType.INSTANCE_REQUEST;
 import static org.springframework.roo.addon.gwt.GwtJavaType.OLD_REQUEST_CONTEXT;
 import static org.springframework.roo.addon.gwt.GwtJavaType.REQUEST;
@@ -271,7 +272,7 @@ public class GwtRequestMetadataProviderImpl extends
             final String methodId = methodSignature.getKey().name();
             final MemberTypeAdditions memberTypeAdditions = layerService
                     .getMemberTypeAdditions(requestMetadataId, methodId,
-                            entity, idType, LAYER_POSITION,
+                            entity, idType.equals(KEY) ? STRING : idType, LAYER_POSITION,
                             methodSignature.getValue());
             Validate.notNull(memberTypeAdditions, "No support for " + methodId
                     + " method for domain type " + entity);

@@ -42,17 +42,19 @@ public class GwtBootstrapLayerProvider extends CoreLayerProvider {
     @Reference private MetadataService metadataService;
     @Reference TypeLocationService typeLocationService;
 
-    @Reference protected MemberDetailsScanner memberDetailsScanner;
+//    @Reference protected MemberDetailsScanner memberDetailsScanner;
 
     public int getLayerPosition() {
-        return LayerType.ACTIVE_RECORD.getPosition();
+        //return LayerType.ACTIVE_RECORD.getPosition();
+        return LayerType.DAO.getPosition();
     }
 
-    @Override
+    /*@Override
     public int getPriority() {
         return 1;
-    }
+    }*/
 
+    @Override
     public MemberTypeAdditions getMemberTypeAdditions(final String callerMID,
             final String methodIdentifier, final JavaType targetEntity,
             final JavaType idType, final MethodParameter... callerParameters) {
@@ -83,10 +85,10 @@ public class GwtBootstrapLayerProvider extends CoreLayerProvider {
             return null;
         }
 
-        final FieldMetadata parentField = getParentField(targetEntity, annotationValues.getParentField());
-        if (parentField == null) {
+        final FieldMetadata parentField = null;//getParentField(targetEntity, annotationValues.getParentField());
+        /*if (parentField == null) {
             return null;
-        }
+        }*/
 
         // It's an entity layer method; see if it's specified by the annotation
         final String methodName = method.getName(annotationValues,
@@ -111,7 +113,7 @@ public class GwtBootstrapLayerProvider extends CoreLayerProvider {
                 method.getParameters(callerParameterList));
     }
 
-    private FieldMetadata getParentField(JavaType targetEntity, String parentFieldName) {
+    /*private FieldMetadata getParentField(JavaType targetEntity, String parentFieldName) {
 
         final String physicalTypeIdentifier = typeLocationService.getPhysicalTypeIdentifier(targetEntity);
         if (physicalTypeIdentifier == null) {
@@ -151,7 +153,7 @@ public class GwtBootstrapLayerProvider extends CoreLayerProvider {
             }
         }
         return parentField;
-    }
+    }*/
 
     /**
      * Returns the plural form of the given entity
@@ -178,7 +180,7 @@ public class GwtBootstrapLayerProvider extends CoreLayerProvider {
      * @param gwtBootstrapMetadataProvider
      */
     void setJpaActiveRecordMetadataProvider(
-            final GwtBootstrapMetadataProvider gwtBootstrapMetadataProvider) {
+            final GwtBootstrapMetadataProviderImpl gwtBootstrapMetadataProvider) {
         this.gwtBootstrapMetadataProvider = gwtBootstrapMetadataProvider;
     }
 
