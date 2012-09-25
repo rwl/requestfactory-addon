@@ -50,8 +50,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
         if (!projectOperations.isFocusedProjectAvailable()) {
             return false;
         }
-        if (typeLocationService.findTypesWithAnnotation(ROO_JPA_ACTIVE_RECORD).size() == 0 ||
-                typeLocationService.findTypesWithAnnotation(ROO_JPA_ENTITY).size() == 0) {
+        if (typeLocationService.findTypesWithAnnotation(ROO_JPA_ACTIVE_RECORD, ROO_JPA_ENTITY).size() == 0) {
             return false;
         }
         return true;
@@ -75,7 +74,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
             // Create Annotation metadata
             AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(ROO_GWT_BOOTSTRAP);
             if (parentName != null) {
-                annotationBuilder.addStringAttribute("parent", parentName.getSymbolName());
+                annotationBuilder.addStringAttribute("parentField", parentName.getSymbolName());
             }
 
             // Add annotation to target type

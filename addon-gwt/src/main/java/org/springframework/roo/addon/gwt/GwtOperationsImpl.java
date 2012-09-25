@@ -1,6 +1,7 @@
 package org.springframework.roo.addon.gwt;
 
 import static java.lang.reflect.Modifier.PUBLIC;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
 import static org.springframework.roo.addon.gwt.GwtJavaType.ENTITY_PROXY;
 import static org.springframework.roo.addon.gwt.GwtJavaType.OLD_ENTITY_PROXY;
 import static org.springframework.roo.addon.gwt.GwtJavaType.OLD_REQUEST_CONTEXT;
@@ -458,8 +459,7 @@ public class GwtOperationsImpl implements GwtOperations {
 
     public void proxyAll(final JavaPackage proxyPackage) {
         for (final ClassOrInterfaceTypeDetails entity : typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
-                        ROO_JPA_ACTIVE_RECORD)) {
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_BOOTSTRAP)) {
             createProxy(entity, proxyPackage);
         }
         copyDirectoryContents(GwtPath.LOCATOR);
@@ -496,8 +496,7 @@ public class GwtOperationsImpl implements GwtOperations {
 
     public void requestAll(final JavaPackage proxyPackage) {
         for (final ClassOrInterfaceTypeDetails entity : typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
-                        ROO_JPA_ACTIVE_RECORD)) {
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_BOOTSTRAP)) {
             createRequestInterfaceIfNecessary(entity, proxyPackage);
         }
     }
