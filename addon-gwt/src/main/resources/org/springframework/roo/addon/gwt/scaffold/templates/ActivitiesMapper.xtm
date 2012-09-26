@@ -67,7 +67,7 @@ public class {{=className}} {
 
     return new {{=editActivityWrapper}}(requests,
         ScaffoldApp.isMobile() ? {{=mobileEditView}}.instance() : {{=editView}}.instance(),
-        activity, null);
+        activity, null, parentId);
   }
 
   private Activity makeEditActivity(ProxyPlace place, String parentId) {
@@ -89,6 +89,6 @@ public class {{=className}} {
 
     return new {{=editActivityWrapper}}(requests,
         ScaffoldApp.isMobile() ? {{=mobileEditView}}.instance() : {{=editView}}.instance(),
-        activity, proxyId);
+        activity, proxyId, parentId);
   }
 }

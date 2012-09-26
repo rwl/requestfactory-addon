@@ -45,7 +45,7 @@ public abstract class AbstractProxyListActivity<P extends EntityProxy> implement
 	private final PlaceController placeController;
 	private final SingleSelectionModel<P> selectionModel;
 	private final Class<P> proxyClass;
-	private final String parentId;
+	protected final String parentId;
 
 	private HandlerRegistration rangeChangeHandler;
 	private ProxyListView<P> view;
@@ -75,7 +75,7 @@ public abstract class AbstractProxyListActivity<P extends EntityProxy> implement
 			public void onSelectionChange(SelectionChangeEvent event) {
 				P selectedObject = selectionModel.getSelectedObject();
 				if (selectedObject != null) {
-					showDetails(selectedObject, AbstractProxyListActivity.this.parentId);
+					showDetails(selectedObject);
 				}
 			}
 		});

@@ -178,7 +178,8 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
 
         bodyBuilder.appendFormalLine("return " + ENTITY_MANAGER_METHOD_NAME
                 + "().find(" + returnType.getSimpleTypeName() + ".class, "
-                + idFieldName + ");");
+                + KEY_FACTORY.getNameIncludingTypeParameters(true, builder.getImportRegistrationResolver())
+                + ".stringToKey(" + idFieldName + "));");
 
         final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
                 getId(), Modifier.PUBLIC | Modifier.STATIC, methodName,
@@ -220,7 +221,7 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         final JavaType[] parameterTypes = { idType, INT_PRIMITIVE, INT_PRIMITIVE };
 
         // Define method parameter names
-        final String idParamName = parentField.getFieldName().getSymbolName() + "Id";
+        final String idParamName = StringUtils.uncapitalize(parentField.getFieldType().getSimpleTypeName()) + "Id";
         final List<JavaSymbolName> parameterNames = Arrays.asList(
                 new JavaSymbolName(idParamName),
                 new JavaSymbolName("firstResult"),
@@ -230,9 +231,12 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
                 Arrays.asList(destination));
 
         // Create the method body
-        final String findMethodName = crudAnnotationValues.getFindMethod() + destination.getSimpleTypeName();
+        String findMethodName = crudAnnotationValues.getFindMethod() + parentField.getFieldType().getSimpleTypeName();
+        if (identifierField.getFieldType().equals(KEY)) {
+            findMethodName = findMethodName + "ByStringId";
+        }
         InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-        bodyBuilder.appendFormalLine("final " + parentField.getFieldType().getNameIncludingTypeParameters()
+        bodyBuilder.appendFormalLine("final " + parentField.getFieldType().getNameIncludingTypeParameters(false, builder.getImportRegistrationResolver())
                 + " "
                 + parentField.getFieldName().getSymbolName() + " = "
                 + parentField.getFieldType().getNameIncludingTypeParameters(true, builder.getImportRegistrationResolver())
@@ -262,7 +266,7 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
                 + "\", "
                 + parentField.getFieldName().getSymbolName()
                 + ");");
-        bodyBuilder.appendFormalLine("q.setFirstResult(firstResult).setMaxResults(maxResults)");
+        bodyBuilder.appendFormalLine("q.setFirstResult(firstResult).setMaxResults(maxResults);");
         bodyBuilder.appendFormalLine("return q.getResultList();");
 
         // Use the MethodMetadataBuilder for easy creation of MethodMetadata
@@ -310,13 +314,16 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         final JavaType[] parameterTypes = { idType };
 
         // Define method parameter names
-        final String idParamName = parentField.getFieldName().getSymbolName() + "Id";
+        final String idParamName = StringUtils.uncapitalize(parentField.getFieldType().getSimpleTypeName()) + "Id";
         final List<JavaSymbolName> parameterNames = Arrays.asList(new JavaSymbolName(idParamName));
 
         // Create the method body
-        final String findMethodName = crudAnnotationValues.getFindMethod() + destination.getSimpleTypeName();
+        String findMethodName = crudAnnotationValues.getFindMethod() + parentField.getFieldType().getSimpleTypeName();
+        if (identifierField.getFieldType().equals(KEY)) {
+            findMethodName = findMethodName + "ByStringId";
+        }
         InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-        bodyBuilder.appendFormalLine("final " + parentField.getFieldType().getNameIncludingTypeParameters()
+        bodyBuilder.appendFormalLine("final " + parentField.getFieldType().getNameIncludingTypeParameters(false, builder.getImportRegistrationResolver())
                 + " "
                 + parentField.getFieldName().getSymbolName() + " = "
                 + parentField.getFieldType().getNameIncludingTypeParameters(true, builder.getImportRegistrationResolver())

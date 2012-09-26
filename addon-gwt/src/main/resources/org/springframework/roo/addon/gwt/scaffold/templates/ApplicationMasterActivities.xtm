@@ -29,12 +29,14 @@ public final class ApplicationMasterActivities implements ActivityMapper {
 
 		ProxyListPlace listPlace = (ProxyListPlace) place;
 
+		final String parentId = listPlace.getParentId();
+
 		return new ApplicationEntityTypesProcessor<Activity>() {{{#entities}}
 			@Override
       public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
         setResult(new {{=entitySimpleName}}ListActivity(requests,
           ScaffoldApp.isMobile() ? {{=entitySimpleName}}MobileListView.instance() : {{=entitySimpleName}}ListView.instance(),
-          placeController));
+          placeController, parentId));
       }
       {{/entities}}
 		}.process(listPlace.getProxyClass());

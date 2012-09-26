@@ -27,7 +27,7 @@ public class {{=className}} implements Activity, {{=isScaffoldMobileActivity}} {
 
   /**
    * The view used by this activity.
-   * 
+   *
    * @param <V> the type of the ProxyEditView
    */
   public interface View<V extends ProxyEditView<{{=proxy}}, V>>
@@ -44,18 +44,20 @@ public class {{=className}} implements Activity, {{=isScaffoldMobileActivity}} {
   private final ApplicationRequestFactory requests;
   private final View<?> view;
   private final Activity wrapped;
+  private final String parentId;
 
   public {{=className}}(ApplicationRequestFactory requests,
-        View<?> view, Activity activity, EntityProxyId<{{=proxy}}> proxyId) {
+        View<?> view, Activity activity, EntityProxyId<{{=proxy}}> proxyId, String parentId) {
     this.requests = requests;
     this.view = view;
     this.wrapped = activity;
     this.proxyId = proxyId;
+    this.parentId = parentId;
   }
 
   public Place getBackButtonPlace() {
-    return (proxyId == null) ? new ProxyListPlace({{=proxy}}.class) :
-      new ProxyPlace(proxyId, ProxyPlace.Operation.DETAILS);
+    return (proxyId == null) ? new ProxyListPlace({{=proxy}}.class, parentId) :
+      new ProxyPlace(proxyId, ProxyPlace.Operation.DETAILS, parentId);
   }
 
   public String getBackButtonText() {

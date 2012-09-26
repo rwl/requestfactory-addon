@@ -15,14 +15,12 @@ public abstract class CreateAndEditProxy<P extends EntityProxy> extends Abstract
 	private final P proxy;
 	private final PlaceController placeController;
 	private Class<P> proxyClass;
-	private final String parentIdentity;
 
 	public CreateAndEditProxy(Class<P> proxyClass, RequestContext request, ProxyEditView<P, ?> view, PlaceController placeController, String parentId) {
-		super(view, placeController);
+		super(view, placeController, parentId);
 		this.proxy = request.create(proxyClass);
 		this.placeController = placeController;
 		this.proxyClass = proxyClass;
-        this.parentIdentity = parentId;
 	}
 
 	@Override
@@ -39,7 +37,7 @@ public abstract class CreateAndEditProxy<P extends EntityProxy> extends Abstract
 	@Override
 	protected void exit(boolean saved) {
 		if (!saved) {
-			placeController.goTo(new ProxyListPlace(proxyClass, parentIdentity));
+			placeController.goTo(new ProxyListPlace(proxyClass, parentId));
 		} else {
 			super.exit(saved);
 		}

@@ -23,7 +23,7 @@ public class {{=className}} extends AbstractProxyListActivity<{{=proxy}}> implem
 
 	public {{=className}}({{=requestFactory}} requests,
       ProxyListView<{{=proxy}}> view, PlaceController placeController, String parentId) {
-		super(placeController, view, {{=proxy}}.class);
+		super(placeController, view, {{=proxy}}.class, parentId);
 		this.requests = requests;
 		this.parentId = parentId;
 	}
@@ -49,10 +49,10 @@ public class {{=className}} extends AbstractProxyListActivity<{{=proxy}}> implem
 	}
 
 	protected Request<List<{{=proxy}}>> createRangeRequest(Range range) {
-		return requests.{{=nameUncapitalized}}Request().find{{=name}}EntriesByParent(parentId, range.getStart(), range.getLength());
+		return requests.{{=nameUncapitalized}}Request().{{=findEntitiesMethod}};
 	}
 
 	protected void fireCountRequest(Receiver<Long> callback) {
-		requests.{{=nameUncapitalized}}Request().{{=countEntitiesMethod}}ByParent(parentId).fire(callback);
+		requests.{{=nameUncapitalized}}Request().{{=countEntitiesMethod}}.fire(callback);
 	}
 }

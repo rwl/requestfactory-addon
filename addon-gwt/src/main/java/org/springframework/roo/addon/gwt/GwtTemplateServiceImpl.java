@@ -1,10 +1,14 @@
 package org.springframework.roo.addon.gwt;
 
-import static org.springframework.roo.addon.gwt.GwtJavaType.INSTANCE_REQUEST;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.KEY;
+import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
+import static org.springframework.roo.model.JavaType.STRING;
 import static org.springframework.roo.model.JdkJavaType.ARRAY_LIST;
 import static org.springframework.roo.model.JdkJavaType.HASH_SET;
 import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JdkJavaType.SET;
+import static org.springframework.roo.addon.gwt.GwtJavaType.INSTANCE_REQUEST;
 import hapax.Template;
 import hapax.TemplateDataDictionary;
 import hapax.TemplateDictionary;
@@ -18,6 +22,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -36,6 +41,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapDataKeys;
 import org.springframework.roo.addon.gwt.scaffold.GwtScaffoldMetadata;
 import org.springframework.roo.addon.plural.PluralMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
@@ -47,6 +53,8 @@ import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.classpath.details.MemberFindingUtils;
 import org.springframework.roo.classpath.details.MethodMetadata;
+import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
+import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.classpath.layers.LayerService;
 import org.springframework.roo.classpath.layers.LayerType;
 import org.springframework.roo.classpath.layers.MemberTypeAdditions;
@@ -374,14 +382,58 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
         dataDictionary.setVariable("removeMethodSignature",
                 removeMethodSignature);
 
+
+        AnnotationMetadata annotation = mirroredType.getAnnotation(ROO_GWT_BOOTSTRAP);
+        AnnotationAttributeValue<String> annotationAttributeValue = annotation.getAttribute("parentField");
+        String parentField = "";
+        if (annotationAttributeValue != null) {
+            parentField = annotationAttributeValue.getValue();
+        }
+
+        JavaType altIdType = idType.equals(KEY) ? STRING : idType;
+
+        String countMethodId, findMethodId, countCall, findCall;
+        List<MethodParameter> findParameters, countParamemters;
+        if (parentField.isEmpty()) {
+            countMethodId = CustomDataKeys.COUNT_ALL_METHOD.name();
+            findMethodId = CustomDataKeys.FIND_ENTRIES_METHOD.name();
+            countCall = "()";
+            findCall = "(range.getStart(), range.getLength())";
+            countParamemters = Arrays.asList();
+            findParameters = Arrays.asList(new MethodParameter(
+                    INT_PRIMITIVE, "firstResult"), new MethodParameter(
+                    INT_PRIMITIVE, "maxResults"));
+        } else {
+            countMethodId = GwtBootstrapDataKeys.COUNT_BY_PARENT_METHOD.name();
+            findMethodId = GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.name();
+            countCall = "(parentId)";
+            findCall = "(parentId, range.getStart(), range.getLength())";
+            countParamemters = Arrays.asList(new MethodParameter(
+                    altIdType, parentField + "Id"));
+            findParameters = Arrays.asList(new MethodParameter(
+                    altIdType, parentField + "Id"), new MethodParameter(
+                    INT_PRIMITIVE, "firstResult"), new MethodParameter(
+                    INT_PRIMITIVE, "maxResults"));
+        }
+
+        final MemberTypeAdditions findMethodAdditions = layerService
+                .getMemberTypeAdditions(metadataIdentificationString,
+                        findMethodId, entity, altIdType, LAYER_POSITION,
+                        findParameters);
+        Validate.notNull(findMethodAdditions,
+                "Find entries method is not available for entity '" + entityName + "'");
+        dataDictionary.setVariable("findEntitiesMethod",
+                findMethodAdditions.getMethodName() + findCall);
+
         final MemberTypeAdditions countMethodAdditions = layerService
                 .getMemberTypeAdditions(metadataIdentificationString,
-                        CustomDataKeys.COUNT_ALL_METHOD.name(), entity, idType,
-                        LAYER_POSITION);
+                        countMethodId, entity, altIdType, LAYER_POSITION,
+                        countParamemters);
         Validate.notNull(countMethodAdditions,
                 "Count method is not available for entity '" + entityName + "'");
         dataDictionary.setVariable("countEntitiesMethod",
-                countMethodAdditions.getMethodName());
+                countMethodAdditions.getMethodName() + countCall);
+
 
         for (final GwtType reference : type.getReferences()) {
             addReference(dataDictionary, reference, mirrorTypeMap);
