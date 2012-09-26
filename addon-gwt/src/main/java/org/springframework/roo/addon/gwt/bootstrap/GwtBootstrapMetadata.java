@@ -100,9 +100,9 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         }
 
         builder.addMethod(getStringIdMethod());
-//        builder.addMethod(getFindMethod());
         builder.addMethod(getFindEntriesMethod());
         builder.addMethod(getCountMethod());
+        builder.addMethod(getFindByStringIdMethod());
 
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
@@ -144,21 +144,15 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         return methodBuilder.build(); // Build and return a MethodMetadata instance
     }
 
-    private MethodMetadata getFindMethod() {
+    private MethodMetadata getFindByStringIdMethod() {
         if (!identifierField.getFieldType().equals(KEY)) {
-            return null;
-        }
-
-        if ("".equals(crudAnnotationValues.getFindMethod())) {
             return null;
         }
 
         // Method definition to find or build
         final String idFieldName = identifierField.getFieldName().getSymbolName();
-        final JavaSymbolName methodName = new JavaSymbolName(
-                crudAnnotationValues.getFindMethod()
-                        + destination.getSimpleTypeName()
-                        + "ByStringId");
+        final JavaSymbolName methodName = new JavaSymbolName("find"
+                + destination.getSimpleTypeName() + "ByStringId");
         final JavaType parameterType = STRING;
         final List<JavaSymbolName> parameterNames = Arrays
                 .asList(new JavaSymbolName(idFieldName));
@@ -168,7 +162,7 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
         if (method != null) {
             // If it already exists, just return the method and omit its generation via the ITD
-            return null;
+            return method;
         }
 
         // Create method
@@ -192,7 +186,6 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
                 AnnotatedJavaType.convertFromJavaTypes(parameterType),
                 parameterNames, bodyBuilder);
         methodBuilder.setAnnotations(annotations);
-        builder.addMethod(methodBuilder);
         return methodBuilder.build();
     }
 
@@ -391,6 +384,11 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
                 return method;
             }
         }
+        /*for (MethodMetadata method : builder.build().getDeclaredMethods()) {
+            if (method.getMethodName().equals(methodName)) {
+                return method;
+            }
+        }*/
         return null;
     }
 

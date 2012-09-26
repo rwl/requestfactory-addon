@@ -22,7 +22,7 @@ import org.springframework.roo.model.JavaType;
  *
  * @author Andrew Swan
  * @author Stefan Schmidt
- * @since 1.2.0
+ * @author Richard Lincoln
  */
 enum GwtBootstrapLayerMethod {
 
@@ -47,23 +47,19 @@ enum GwtBootstrapLayerMethod {
         }
     },
 
-/*    FIND(CustomDataKeys.FIND_METHOD, true) {
+    FIND_BY_STRING_ID(GwtBootstrapDataKeys.FIND_BY_STRING_ID_METHOD, true) {
         @Override
         public String getName(final GwtBootstrapAnnotationValues annotationValues,
-                final JavaType targetEntity, final String plural) {
-            if (StringUtils.isNotBlank(annotationValues.getFindMethod())) {
-                return annotationValues.getFindMethod()
-                        + targetEntity.getSimpleTypeName();
-            }
-            return null;
+                final JavaType targetEntity, final String plural, final FieldMetadata parentField) {
+            return "find" + targetEntity.getSimpleTypeName() + "ByStringId";
         }
 
         @Override
         protected List<JavaType> getParameterTypes(final JavaType targetEntity,
                 final JavaType idType) {
-            return Arrays.asList(idType);
+            return Arrays.asList(STRING);
         }
-    },*/
+    },
 
     FIND_ENTRIES_BY_PARENT(GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD, true) {
         @Override

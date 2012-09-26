@@ -320,6 +320,11 @@ public class GwtRequestMetadataProviderImpl extends
                     INT_PRIMITIVE, "maxResults")));
         }
 
+        if (idType.equals(KEY)) {
+            signatures.put(GwtBootstrapDataKeys.FIND_BY_STRING_ID_METHOD, Arrays
+                    .asList(new MethodParameter(STRING, "id")));
+        }
+
         return signatures;
     }
 
@@ -344,6 +349,9 @@ public class GwtRequestMetadataProviderImpl extends
         }
         if (GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.equals(methodKey)) {
             return JavaType.listOf(entity);
+        }
+        if (GwtBootstrapDataKeys.FIND_BY_STRING_ID_METHOD.equals(methodKey)) {
+            return entity;
         }
 
         throw new IllegalStateException("Unexpected method key " + methodKey);
