@@ -74,7 +74,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
             // Create Annotation metadata
             AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(ROO_GWT_BOOTSTRAP);
             if (parentName != null) {
-                annotationBuilder.addStringAttribute("parentField", parentName.getSymbolName());
+                annotationBuilder.addStringAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE, parentName.getSymbolName());
             }
 
             // Add annotation to target type

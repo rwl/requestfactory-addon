@@ -42,6 +42,8 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapDataKeys;
+import org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType;
+import org.springframework.roo.addon.gwt.bootstrap.RooGwtBootstrap;
 import org.springframework.roo.addon.gwt.scaffold.GwtScaffoldMetadata;
 import org.springframework.roo.addon.plural.PluralMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
@@ -353,6 +355,36 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                 "Identifier type is not available for entity '" + entityName
                         + "'");
 
+        for (final ClassOrInterfaceTypeDetails gwtBootstrapEntity : typeLocationService
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_BOOTSTRAP)) {
+            AnnotationMetadata annotation = gwtBootstrapEntity
+                    .getAnnotation(ROO_GWT_BOOTSTRAP);
+            if (annotation == null) {
+                continue;
+            }
+            AnnotationAttributeValue<String> annotationAttributeValue = annotation
+                    .getAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE);
+            if (annotationAttributeValue == null) {
+                continue;
+            }
+            String parentFieldName = annotationAttributeValue.getValue();
+            if (parentFieldName.isEmpty()) {
+                continue;
+            }
+            FieldMetadata parentField = gwtBootstrapEntity
+                    .getField(new JavaSymbolName(parentFieldName));
+            Validate.notNull(parentField, "Parent field not found");
+
+            if (parentField.getFieldType().equals(entity)) {
+                ClassOrInterfaceTypeDetails proxyForEntity = gwtTypeService
+                        .lookupProxyFromEntity(gwtBootstrapEntity);
+                dataDictionary.addSection("children").setVariable("child",
+                        proxyForEntity.getName().getSimpleTypeName());
+                addImport(dataDictionary,
+                        proxyForEntity.getName().getFullyQualifiedTypeName());
+            }
+        }
+
         final MethodParameter entityParameter = new MethodParameter(entity,
                 "proxy");
         final ClassOrInterfaceTypeDetails request = gwtTypeService
@@ -384,7 +416,7 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
 
 
         AnnotationMetadata annotation = mirroredType.getAnnotation(ROO_GWT_BOOTSTRAP);
-        AnnotationAttributeValue<String> annotationAttributeValue = annotation.getAttribute("parentField");
+        AnnotationAttributeValue<String> annotationAttributeValue = annotation.getAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE);
         String parentField = "";
         if (annotationAttributeValue != null) {
             parentField = annotationAttributeValue.getValue();

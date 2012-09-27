@@ -50,7 +50,7 @@ public class GwtBootstrapCommands implements CommandMarker { // All command type
      */
     @CliCommand(value = "web gwtbootstrap entity", help = "Configure entity for GWT Bootstrap")
     public void add(@CliOption(key = "type", mandatory = true, help = "The entity to configure") JavaType target,
-            @CliOption(key = "parentField", mandatory = false, help = "The name of the field of the parent") final JavaSymbolName parentField) {
+            @CliOption(key = RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE, mandatory = false, help = "The name of the field of the parent") final JavaSymbolName parentField) {
         operations.annotateType(target, parentField);
     }
 }

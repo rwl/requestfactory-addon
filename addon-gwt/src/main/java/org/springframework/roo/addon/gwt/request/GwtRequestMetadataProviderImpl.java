@@ -40,6 +40,7 @@ import org.springframework.roo.addon.gwt.GwtFileManager;
 import org.springframework.roo.addon.gwt.GwtTypeService;
 import org.springframework.roo.addon.gwt.GwtUtils;
 import org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapDataKeys;
+import org.springframework.roo.addon.gwt.bootstrap.RooGwtBootstrap;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.TypeLocationService;
@@ -290,7 +291,7 @@ public class GwtRequestMetadataProviderImpl extends
 
         ClassOrInterfaceTypeDetails domainTypeDetails = typeLocationService.getTypeDetails(domainType);
         AnnotationMetadata annotation = domainTypeDetails.getAnnotation(ROO_GWT_BOOTSTRAP);
-        AnnotationAttributeValue<String> annotationAttributeValue = annotation.getAttribute("parentField");
+        AnnotationAttributeValue<String> annotationAttributeValue = annotation.getAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE);
         String parentField = "";
         if (annotationAttributeValue != null) {
             parentField = annotationAttributeValue.getValue();

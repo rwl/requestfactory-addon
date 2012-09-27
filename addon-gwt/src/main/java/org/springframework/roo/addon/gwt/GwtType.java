@@ -62,6 +62,10 @@ public enum GwtType {
             GwtPath.MANAGED_ACTIVITY, false, "", "masterActivities",
             "ApplicationMasterActivities", false, true, false),
 
+            NAVIGATION_ACTIVITY(
+                    GwtPath.MANAGED_ACTIVITY, true, "NavigationActivity", "navigationActivity",
+                    "NavigationActivity", false, true, false),
+
     MOBILE_ACTIVITIES(GwtPath.MANAGED_ACTIVITY, false, "", "mobileActivities",
             "ScaffoldMobileActivities", false, false, false), MOBILE_DETAILS_VIEW(
             GwtPath.MANAGED_UI, true, "MobileDetailsView", "mobileDetailsView",
