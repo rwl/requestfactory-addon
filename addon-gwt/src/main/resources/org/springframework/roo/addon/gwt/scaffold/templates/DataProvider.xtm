@@ -1,0 +1,40 @@
+package {{=packageName}};
+
+import java.util.List;
+
+import com.google.web.bindery.requestfactory.shared.Request;
+
+import {{=uiPackage}}.{{=proxyRendererType}};
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+public class {{=className}} extends AbstractListDataProvider<{{=proxy}}> {
+
+	private final {{=requestFactory}} requestFactory;
+
+	public {{=className}}({{=requestFactory}} requestFactory, String parentId) {
+		super(parentId);
+		this.requestFactory = requestFactory;
+	}
+
+	@Override
+	public Request<Long> getCountRequest() {
+		return requestFactory.{{=nameUncapitalized}}Request().{{=countEntitiesMethod}};
+	}
+
+	@Override
+	public Request<List<{{=proxy}}>> getEntitiesRequest(Range range) {
+		return requestFactory.{{=nameUncapitalized}}Request().{{=findEntitiesMethod}};
+	}
+
+	@Override
+	protected String getNodeName({{=proxy}} proxy) {
+		return {{=proxyRendererType}}.instance().render(proxy);
+	}
+
+	@Override
+	protected String getServerId({{=proxy}} proxy) {
+		return proxy.getStringId();
+	}
+}

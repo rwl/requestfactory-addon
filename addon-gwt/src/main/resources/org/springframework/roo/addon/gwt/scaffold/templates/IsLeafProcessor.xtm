@@ -1,0 +1,18 @@
+package {{=packageName}};
+
+import com.cimhub.jacobi.client.managed.request.ApplicationEntityTypesProcessor;
+{{#imports}}import {{=import}};
+{{/imports}}
+
+public class IsLeafProcessor extends ApplicationEntityTypesProcessor<Boolean> {
+
+	public IsLeafProcessor() {
+		super(false);
+	}
+
+{{#entities}}
+	@Override
+	public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
+		setResult({{=isLeaf}});
+	}{{/entities}}
+}

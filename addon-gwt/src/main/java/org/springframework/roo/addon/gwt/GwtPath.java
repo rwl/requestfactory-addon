@@ -19,7 +19,9 @@ public enum GwtPath {
     MANAGED_REQUEST("/client/managed/request", "module/client/request/"
             + GwtPath.templateSelector), // GWT_SCAFFOLD_GENERATED
     MANAGED_UI("/client/managed/ui", "module/client/managed/ui/"
-            + GwtPath.templateSelector), // GWT_SCAFFOLD_UI
+            + GwtPath.templateSelector), MANAGED_TREE(
+                    "/client/managed/tree", "module/client/managed/tree/"
+                            + GwtPath.templateSelector), // GWT_SCAFFOLD_UI
     SCAFFOLD("/client/scaffold", "module/client/scaffold/"
             + GwtPath.templateSelector), SCAFFOLD_ACTIVITY(
             "/client/scaffold/activity", "module/client/scaffold/activity/"
@@ -51,7 +53,7 @@ public enum GwtPath {
 
     /**
      * Constructor
-     * 
+     *
      * @param segmentName
      * @param sourceAntPath the Ant-style path to the source files for this
      *            {@link GwtPath}, relative to the package in which this enum is
@@ -71,7 +73,7 @@ public enum GwtPath {
 
     /**
      * Package access for benefit of unit test
-     * 
+     *
      * @return
      */
     String getSegmentName() {

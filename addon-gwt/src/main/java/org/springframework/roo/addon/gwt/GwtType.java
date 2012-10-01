@@ -62,9 +62,14 @@ public enum GwtType {
             GwtPath.MANAGED_ACTIVITY, false, "", "masterActivities",
             "ApplicationMasterActivities", false, true, false),
 
-            NAVIGATION_ACTIVITY(
-                    GwtPath.MANAGED_ACTIVITY, true, "NavigationActivity", "navigationActivity",
-                    "NavigationActivity", false, true, false),
+            DATA_PROVIDER(GwtPath.MANAGED_TREE, true, "DataProvider", "dataProvider",
+                    "DataProvider", false, true, false),
+            IS_LEAF_PROCESSOR(GwtPath.MANAGED_TREE, false, "", "isLeafProcessor",
+                    "IsLeafProcessor", false, true, false),
+            PROXY_LIST_NODE_PROCESSOR(GwtPath.MANAGED_TREE, false, "", "proxyListNodeProcessor",
+                    "ProxyListNodeProcessor", false, true, false),
+            PROXY_NODE_PROCESSOR(GwtPath.MANAGED_TREE, false, "", "proxyNodeProcessor",
+                    "ProxyNodeProcessor", false, true, false),
 
     MOBILE_ACTIVITIES(GwtPath.MANAGED_ACTIVITY, false, "", "mobileActivities",
             "ScaffoldMobileActivities", false, false, false), MOBILE_DETAILS_VIEW(

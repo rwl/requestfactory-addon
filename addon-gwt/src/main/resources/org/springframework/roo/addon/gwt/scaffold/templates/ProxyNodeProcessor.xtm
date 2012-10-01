@@ -1,0 +1,30 @@
+package {{=packageName}};
+
+import {{=scaffoldUiPackage}}.NavigationTree.ProxyNode;
+import {{=requestPackage}}.ApplicationEntityTypesProcessor;
+import {{=requestPackage}}.ApplicationRequestFactory;
+
+import com.google.gwt.view.client.AbstractDataProvider;
+import com.google.web.bindery.requestfactory.shared.EntityProxy;
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+public class ProxyNodeProcessor {
+
+	private final ApplicationRequestFactory requestFactory;
+
+	public ProxyNodeProcessor(ApplicationRequestFactory requestFactory) {
+		this.requestFactory = requestFactory;
+	}
+
+	public AbstractDataProvider<ProxyNode> process(final String parentId, Class<? extends EntityProxy> proxyType) {
+		return new ApplicationEntityTypesProcessor<AbstractDataProvider<ProxyNode>>() {
+{{#entities}}
+			@Override
+			public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
+				setResult(new {{=providerSimpleName}}(requestFactory, parentId));
+			}{{/entities}}
+		}.process(proxyType);
+	}
+}

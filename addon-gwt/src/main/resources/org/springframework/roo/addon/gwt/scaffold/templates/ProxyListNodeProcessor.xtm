@@ -1,0 +1,31 @@
+package {{=packageName}};
+
+import java.util.List;
+
+import {{=scaffoldUiPackage}}.NavigationTree.ProxyListNode;
+import {{=requestPackage}}.ApplicationEntityTypesProcessor;
+import {{=uiPackage}}.ApplicationListPlaceRenderer;
+
+import com.google.web.bindery.requestfactory.shared.EntityProxy;
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+public class ProxyListNodeProcessor {
+
+	private static final ApplicationListPlaceRenderer renderer = new ApplicationListPlaceRenderer();
+
+	public void process(final List<ProxyListNode> listNodes, final String serverId, Class<? extends EntityProxy> proxyType) {
+		new ApplicationEntityTypesProcessor<String>() {
+{{#entities}}
+			@Override
+			public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
+				String nodeName;
+				{{#children}}
+				nodeName = renderer.render(new ProxyListPlace({{=child}}.class, null));
+				listNodes.add(new ProxyListNode(nodeName, {{=child}}.class, serverId));
+				{{/children}}
+      		}{{/entities}}
+		}.process(proxyType);
+	}
+}
