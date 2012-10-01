@@ -1,10 +1,9 @@
 package {{=packageName}};
 
-import com.cimhub.jacobi.client.managed.request.ApplicationEntityTypesProcessor;
 {{#imports}}import {{=import}};
 {{/imports}}
 
-public class IsLeafProcessor extends ApplicationEntityTypesProcessor<Boolean> {
+public class IsLeafProcessor extends {{=entityTypes}}<Boolean> {
 
 	public IsLeafProcessor() {
 		super(false);

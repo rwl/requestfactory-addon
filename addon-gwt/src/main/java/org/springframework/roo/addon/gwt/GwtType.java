@@ -63,13 +63,13 @@ public enum GwtType {
             "ApplicationMasterActivities", false, true, false),
 
             DATA_PROVIDER(GwtPath.MANAGED_TREE, true, "DataProvider", "dataProvider",
-                    "DataProvider", false, true, false),
+                    "DataProvider", false, false, false),
             IS_LEAF_PROCESSOR(GwtPath.MANAGED_TREE, false, "", "isLeafProcessor",
-                    "IsLeafProcessor", false, true, false),
+                    "IsLeafProcessor", false, false, false),
             PROXY_LIST_NODE_PROCESSOR(GwtPath.MANAGED_TREE, false, "", "proxyListNodeProcessor",
-                    "ProxyListNodeProcessor", false, true, false),
+                    "ProxyListNodeProcessor", false, false, false),
             PROXY_NODE_PROCESSOR(GwtPath.MANAGED_TREE, false, "", "proxyNodeProcessor",
-                    "ProxyNodeProcessor", false, true, false),
+                    "ProxyNodeProcessor", false, false, false),
 
     MOBILE_ACTIVITIES(GwtPath.MANAGED_ACTIVITY, false, "", "mobileActivities",
             "ScaffoldMobileActivities", false, false, false), MOBILE_DETAILS_VIEW(
@@ -377,6 +377,16 @@ public enum GwtType {
         case DETAILS_ACTIVITIES:
             return Arrays.asList(GwtType.APP_REQUEST_FACTORY,
                     GwtType.APP_ENTITY_TYPES_PROCESSOR);
+        case DATA_PROVIDER:
+            return Arrays.asList(GwtType.APP_REQUEST_FACTORY);
+        case PROXY_NODE_PROCESSOR:
+            return Arrays.asList(GwtType.APP_REQUEST_FACTORY,
+                    GwtType.APP_ENTITY_TYPES_PROCESSOR);
+        case PROXY_LIST_NODE_PROCESSOR:
+            return Arrays.asList(GwtType.APP_ENTITY_TYPES_PROCESSOR,
+                    GwtType.LIST_PLACE_RENDERER);
+        case IS_LEAF_PROCESSOR:
+            return Arrays.asList(GwtType.APP_ENTITY_TYPES_PROCESSOR);
         default:
             return new ArrayList<GwtType>();
         }

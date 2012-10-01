@@ -3,6 +3,7 @@ package {{=packageName}};
 import java.util.List;
 
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.gwt.view.client.Range;
 
 import {{=uiPackage}}.{{=proxyRendererType}};
 

@@ -328,30 +328,6 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
             // Do nothing
             break;
         case PROXY_NODE_PROCESSOR:
-            for (final ClassOrInterfaceTypeDetails proxy : proxies) {
-                if (!GwtUtils.scaffoldProxy(proxy)) {
-                    continue;
-                }
-                final ClassOrInterfaceTypeDetails entity = gwtTypeService
-                        .lookupEntityFromProxy(proxy);
-                if (entity != null) {
-
-                    final String entitySimpleName = entity.getName()
-                            .getSimpleTypeName();
-                    final JavaPackage topLevelPackage = projectOperations
-                            .getTopLevelPackage(moduleName);
-                    final String providerSimpleName = entitySimpleName
-                            + GwtType.DATA_PROVIDER.getSuffix();
-                    final String providerFullName = GwtType.DATA_PROVIDER.
-                            getPath().packageName(topLevelPackage)
-                            + "." + providerSimpleName;
-
-                    final TemplateDataDictionary section = dataDictionary
-                            .addSection("entities");
-                    section.setVariable("providerSimpleName", providerSimpleName);
-                    addImport(dataDictionary, providerFullName);
-                }
-            }
         case PROXY_LIST_NODE_PROCESSOR:
         case IS_LEAF_PROCESSOR:
             for (final ClassOrInterfaceTypeDetails proxy : proxies) {
@@ -365,41 +341,63 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                             .getSimpleTypeName();
                     final String proxySimpleName = proxy.getName()
                             .getSimpleTypeName();
+                    final JavaPackage topLevelPackage = projectOperations
+                            .getTopLevelPackage(moduleName);
+                    final String providerSimpleName = entitySimpleName
+                            + GwtType.DATA_PROVIDER.getSuffix();
+                    final String providerFullName = GwtType.DATA_PROVIDER.
+                            getPath().packageName(topLevelPackage)
+                            + "." + providerSimpleName;
                     final TemplateDataDictionary section = dataDictionary
                             .addSection("entities");
                     section.setVariable("entitySimpleName", entitySimpleName);
                     section.setVariable("entityFullPath", proxySimpleName);
                     addImport(dataDictionary, proxy.getName()
                             .getFullyQualifiedTypeName());
+                    section.setVariable("providerSimpleName", providerSimpleName);
+                    addImport(dataDictionary, providerFullName);
 
                     Boolean isLeaf = true;
-                    for (final ClassOrInterfaceTypeDetails gwtBootstrapEntity : typeLocationService
-                            .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_BOOTSTRAP)) {
-                        AnnotationMetadata annotation = gwtBootstrapEntity.getAnnotation(ROO_GWT_BOOTSTRAP);
+
+                    for (final ClassOrInterfaceTypeDetails p : proxies) {
+                        if (!GwtUtils.scaffoldProxy(p)) {
+                            continue;
+                        }
+                        final ClassOrInterfaceTypeDetails ety = gwtTypeService
+                                .lookupEntityFromProxy(p);
+                        if (ety != null) {
+
+//                    for (final ClassOrInterfaceTypeDetails ety : typeLocationService
+//                            .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_BOOTSTRAP)) {
+                        AnnotationMetadata annotation = ety.getAnnotation(ROO_GWT_BOOTSTRAP);
                         if (annotation == null) continue;
                         AnnotationAttributeValue<String> annotationAttributeValue = annotation
                                 .getAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE);
                         if (annotationAttributeValue == null) continue;
                         String parentFieldName = annotationAttributeValue.getValue();
                         if (parentFieldName.isEmpty()) continue;
-                        FieldMetadata parentField = gwtBootstrapEntity
+                        FieldMetadata parentField = ety
                                 .getField(new JavaSymbolName(parentFieldName));
                         Validate.notNull(parentField, "Parent field not found");
 
-                        if (parentField.getFieldType().equals(entity)) {
+                        if (parentField.getFieldType().equals(entity.getType())) {
                             isLeaf = false;
 
                             ClassOrInterfaceTypeDetails proxyForEntity = gwtTypeService
-                                    .lookupProxyFromEntity(gwtBootstrapEntity);
-                            dataDictionary.addSection("children").setVariable("child",
+                                    .lookupProxyFromEntity(ety);
+                            section.addSection("children").setVariable("child",
                                     proxyForEntity.getName().getSimpleTypeName());
                             addImport(dataDictionary, proxyForEntity.getName()
                                     .getFullyQualifiedTypeName());
+                        }
                         }
                     }
                     section.setVariable("isLeaf", isLeaf.toString());
                 }
             }
+            dataDictionary.setVariable("scaffoldUiPackage",
+                    GwtPath.SCAFFOLD_UI.packageName(projectOperations
+                            .getTopLevelPackage(moduleName)));
             break;
         }
 

@@ -60,7 +60,7 @@ import org.springframework.roo.project.ProjectOperations;
  * <p/>
  * A separate type monitors the creation/deletion of the aforementioned files to
  * maintain "global indexes".
- * 
+ *
  * @author Ben Alex
  * @author Alan Stewart
  * @author Ray Cromwell
@@ -136,6 +136,9 @@ public class GwtScaffoldMetadataProviderImpl implements
         buildType(GwtType.LIST_PLACE_RENDERER, moduleName);
         buildType(GwtType.DETAILS_ACTIVITIES, moduleName);
         buildType(GwtType.MOBILE_ACTIVITIES, moduleName);
+        buildType(GwtType.IS_LEAF_PROCESSOR, moduleName);
+        buildType(GwtType.PROXY_LIST_NODE_PROCESSOR, moduleName);
+        buildType(GwtType.PROXY_NODE_PROCESSOR, moduleName);
 
         final GwtScaffoldMetadata gwtScaffoldMetadata = new GwtScaffoldMetadata(
                 metadataIdentificationString);
