@@ -167,6 +167,18 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                     dataDictionary.addSection("proxys").setVariable("proxy",
                             proxySimpleName);
 
+
+                    AnnotationMetadata annotation = entity.getAnnotation(ROO_GWT_BOOTSTRAP);
+                    if (annotation != null) {
+                        AnnotationAttributeValue<String> attribute = annotation
+                                .getAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE);
+                        if (attribute == null || attribute.getValue().isEmpty()) {
+                            dataDictionary.addSection("roots").setVariable("root",
+                                    proxySimpleName);
+                        }
+                    }
+
+
                     final String entity1 = new StringBuilder("\t\tif (")
                             .append(proxySimpleName)
                             .append(".class.equals(clazz)) {\n\t\t\tprocessor.handle")

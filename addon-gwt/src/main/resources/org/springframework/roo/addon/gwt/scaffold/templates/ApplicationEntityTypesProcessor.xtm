@@ -16,27 +16,27 @@ import java.util.Set;
  * classes, then call {@link #process(Class)} or {@link #process(Object)}.
  * Optionally use {#setResult} to set the return value of the {@link #process}
  * call.
- 
+
  * <p>
  * Use {@link #getAll} for a set of all proxy types.
- * 
+ *
  * @param <T> the type to filter to
  */
 public abstract class {{=className}}<T> {
 
 	/**
-	 * Return a set of all proxy types available to this application.
+	 * Return a set of all root proxy types available to this application.
 	 */
 	public static Set<Class<? extends EntityProxy>> getAll() {
 		Set<Class<? extends EntityProxy>> rtn = new HashSet<Class<? extends EntityProxy>>();
-{{#proxys}}
-		rtn.add({{=proxy}}.class);{{/proxys}}
-  
+{{#roots}}
+		rtn.add({{=root}}.class);{{/roots}}
+
 		return Collections.unmodifiableSet(rtn);
 	}
 
 	private static void process({{=className}}<?> processor, Class<?> clazz) {{{#entities1}}
-{{=entity}}{{/entities1}} 	
+{{=entity}}{{/entities1}}
 		processor.handleNonProxy(null);
 	}
 
@@ -57,7 +57,7 @@ public abstract class {{=className}}<T> {
 
 	/**
 	 * Create an instance with the given default value.
-	 * 
+	 *
 	 * @param the value that will be returned by {@link #process} if {@link #setResult} is not called.
 	 */
 	public {{=className}}(T defaultValue) {
@@ -71,7 +71,7 @@ public abstract class {{=className}}<T> {
 	public void handleNonProxy(Object object) {
 	}
 
-{{#entities3}}{{=entity}}		
+{{#entities3}}{{=entity}}
 {{/entities3}}
    	/**
 	 * Call the handle method of the appropriate type, with a null argument. Note
@@ -82,7 +82,7 @@ public abstract class {{=className}}<T> {
 	 * {@link com.google.web.bindery.requestfactory.shared.RequestFactory#getClass(Proxy)}
 	 * or
 	 * {@link com.google.web.bindery.requestfactory.shared.RequestFactory#getClass(String)}.
- 	 * 
+ 	 *
 	 * @param clazz the proxy type to resolve
 	 * @return the value provided via {@link #setResult}, or the default value
 	 */
@@ -94,7 +94,7 @@ public abstract class {{=className}}<T> {
 
 	/**
 	 * Process a proxy object
-	 * 
+	 *
 	 * @param proxy the proxy to process
 	 * @return the value provided via {@link #setResult}, or the default value
 	 */
@@ -107,7 +107,7 @@ public abstract class {{=className}}<T> {
 	/**
 	 * Set the value to return from a call to {@link #process(Class)} or
 	 * {@link #process(Object)}.
-	 * 
+	 *
 	 * @param result the value to return
 	 */
 	protected void setResult(T result) {

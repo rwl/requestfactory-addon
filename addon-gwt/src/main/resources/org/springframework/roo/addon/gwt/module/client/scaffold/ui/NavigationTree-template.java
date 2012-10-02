@@ -109,7 +109,7 @@ public class NavigationTree extends Composite {
 		public <T> NodeInfo<?> getNodeInfo(T value) {
 			if (value == null) {
 				// Top level.
-				return new DefaultNodeInfo<ProxyNode>(topLevelDataProvider, proxyNodeCell, selectionModel, null);
+				return new DefaultNodeInfo<ProxyListNode>(topLevelDataProvider, proxyListNodeCell, selectionModel, null);
 
 			} else if (value instanceof ProxyNode) {
 				ProxyNode proxyNode = (ProxyNode) value;
@@ -143,7 +143,7 @@ public class NavigationTree extends Composite {
 	/**
 	 * The data provider that provides the root nodes.
 	 */
-	private final ListDataProvider<ProxyNode> topLevelDataProvider = new ListDataProvider<ProxyNode>();
+	private final ListDataProvider<ProxyListNode> topLevelDataProvider = new ListDataProvider<ProxyListNode>();
 
 	/**
 	 * The factory used to send requests.
@@ -188,8 +188,8 @@ public class NavigationTree extends Composite {
 		getElement().getStyle().setOverflow(Overflow.AUTO);
 	}
 
-	public void addRootNodes(ProxyNode... nodes) {
-		final List<ProxyNode> rootNodes = topLevelDataProvider.getList();
+	public void addRootNodes(ProxyListNode... nodes) {
+		final List<ProxyListNode> rootNodes = topLevelDataProvider.getList();
 		rootNodes.addAll(Arrays.asList(nodes));
 	}
 

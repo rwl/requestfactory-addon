@@ -1,8 +1,11 @@
 package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
+import __TOP_LEVEL_PACKAGE__.client.managed.request.ApplicationRequestFactory;
 import __TOP_LEVEL_PACKAGE__.client.managed.ui.ApplicationListPlaceRenderer;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.ui.LoginWidget;
+import __TOP_LEVEL_PACKAGE__.client.scaffold.ui.NavigationTree;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -12,6 +15,7 @@ import com.github.gwtbootstrap.client.ui.NavText;
 import com.github.gwtbootstrap.client.ui.NavLink;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.inject.Inject;
 
 /**
  * The outermost UI of the application.
@@ -29,9 +33,11 @@ public class ScaffoldDesktopShell extends Composite {
 	@UiField SimplePanel master;
 	@UiField NotificationMole mole;
 	@UiField(provided = true)
-	ValuePicker<ProxyListPlace> placesBox = new ValuePicker<ProxyListPlace>(new ApplicationListPlaceRenderer());
+	NavigationTree navigationTree;
 
-	public ScaffoldDesktopShell() {
+    @Inject
+	public ScaffoldDesktopShell(ApplicationRequestFactory requestFactory, PlaceController placeController) {
+        this.navigationTree = new NavigationTree(requestFactory, placeController);
 		initWidget(BINDER.createAndBindUi(this));
 	}
 
@@ -59,8 +65,8 @@ public class ScaffoldDesktopShell extends Composite {
 	/**
 	 * @return the navigator
 	 */
-	public HasConstrainedValue<ProxyListPlace> getPlacesBox() {
-		return placesBox;
+	public NavigationTree getNavigationTree() {
+		return navigationTree;
 	}
 
 	/**
