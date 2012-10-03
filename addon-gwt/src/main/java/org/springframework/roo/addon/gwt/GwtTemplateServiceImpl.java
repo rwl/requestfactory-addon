@@ -501,16 +501,16 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
 
         AnnotationMetadata annotation = mirroredType.getAnnotation(ROO_GWT_BOOTSTRAP);
         AnnotationAttributeValue<String> annotationAttributeValue = annotation.getAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE);
-        String parentField = "";
+        String parentFieldName = "";
         if (annotationAttributeValue != null) {
-            parentField = annotationAttributeValue.getValue();
+            parentFieldName = annotationAttributeValue.getValue();
         }
 
         JavaType altIdType = idType.equals(KEY) ? STRING : idType;
 
         String countMethodId, findMethodId, countCall, findCall;
         List<MethodParameter> findParameters, countParamemters;
-        if (parentField.isEmpty()) {
+        if (parentFieldName.isEmpty()) {
             countMethodId = CustomDataKeys.COUNT_ALL_METHOD.name();
             findMethodId = CustomDataKeys.FIND_ENTRIES_METHOD.name();
             countCall = "()";
@@ -525,11 +525,40 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
             countCall = "(parentId)";
             findCall = "(parentId, range.getStart(), range.getLength())";
             countParamemters = Arrays.asList(new MethodParameter(
-                    altIdType, parentField + "Id"));
+                    altIdType, parentFieldName + "Id"));
             findParameters = Arrays.asList(new MethodParameter(
-                    altIdType, parentField + "Id"), new MethodParameter(
+                    altIdType, parentFieldName + "Id"), new MethodParameter(
                     INT_PRIMITIVE, "firstResult"), new MethodParameter(
                     INT_PRIMITIVE, "maxResults"));
+
+            FieldMetadata parentField = mirroredType
+                    .getField(new JavaSymbolName(parentFieldName));
+            Validate.notNull(parentField, "Parent field not found");
+            String parentTypeName = parentField.getFieldType().getSimpleTypeName();
+            String parentProxyName = parentTypeName + "Proxy";
+
+            /*
+                if (proxy.getSystem() == null) {
+                    requests.powerSystemRequest().findPowerSystem(systemId).fire(new Receiver<PowerSystemProxy>() {
+                        @Override
+                        public void onSuccess(PowerSystemProxy response) {
+                            proxy.setSystem(response);
+                        }
+                    });
+                }
+                */
+            String setProxyParentStmt = "if (proxy.get"
+                    + StringUtils.capitalize(parentFieldName) + "() == null) {\n"
+                    + "requests." + StringUtils.uncapitalize(parentTypeName)
+                    + "Request().find" + parentTypeName + "ByStringId"
+                    + "(finalParentId).fire(new Receiver<" + parentProxyName + ">() {\n"
+                    + "@Override\n"
+                    + "public void onSuccess(" + parentProxyName + " response) {\n"
+                    + "proxy.set" + StringUtils.capitalize(parentFieldName) + "(response);\n"
+                    + "}\n"
+                    + "});\n"
+                    + "}\n";
+            dataDictionary.setVariable("setProxyParentStmt", setProxyParentStmt);
         }
 
         final MemberTypeAdditions findMethodAdditions = layerService
