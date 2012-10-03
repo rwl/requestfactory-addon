@@ -8,6 +8,7 @@ import java.util.List;
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
+import static org.springframework.roo.model.JavaType.VOID_PRIMITIVE;
 import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JpaJavaType.TYPED_QUERY;
 import static org.springframework.roo.model.SpringJavaType.PROPAGATION;
@@ -99,7 +100,8 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
             return;
         }
 
-        builder.addMethod(getStringIdMethod());
+        builder.addMethod(getStringIdGetter());
+        builder.addMethod(getStringIdSetter());
         builder.addMethod(getFindEntriesMethod());
         builder.addMethod(getCountMethod());
         builder.addMethod(getFindByStringIdMethod());
@@ -108,7 +110,7 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         itdTypeDetails = builder.build();
     }
 
-    private MethodMetadata getStringIdMethod() {
+    private MethodMetadata getStringIdGetter() {
         if (!identifierField.getFieldType().equals(KEY)) {
             return null;
         }
@@ -138,6 +140,46 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         // Use the MethodMetadataBuilder for easy creation of MethodMetadata
         MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(getId(),
                 Modifier.PUBLIC, methodName, STRING, parameterTypes, parameterNames, bodyBuilder);
+        methodBuilder.setAnnotations(annotations);
+        methodBuilder.setThrowsTypes(throwsTypes);
+
+        return methodBuilder.build(); // Build and return a MethodMetadata instance
+    }
+
+    private MethodMetadata getStringIdSetter() {
+        if (!identifierField.getFieldType().equals(KEY)) {
+            return null;
+        }
+
+        JavaSymbolName methodName = new JavaSymbolName("setStringId");
+
+        // Check if a method with the same signature already exists in the target type
+        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
+        if (method != null) {
+            // If it already exists, just return the method and omit its generation via the ITD
+            return method;
+        }
+
+        List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        List<JavaType> throwsTypes = new ArrayList<JavaType>();
+        final JavaType parameterType = STRING;
+        final String idFieldName = identifierField.getFieldName().getSymbolName();
+        final List<JavaSymbolName> parameterNames = Arrays
+                .asList(new JavaSymbolName(idFieldName));
+
+        // Create the method body
+        InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+        bodyBuilder.appendFormalLine("set" + identifierField.getFieldName().getSymbolNameCapitalisedFirstLetter()
+                + "("
+                + KEY_FACTORY.getNameIncludingTypeParameters(true, builder.getImportRegistrationResolver())
+                + ".stringToKey(" + idFieldName
+                + "));");
+
+        // Use the MethodMetadataBuilder for easy creation of MethodMetadata
+        MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(getId(),
+                Modifier.PUBLIC, methodName, VOID_PRIMITIVE,
+                AnnotatedJavaType.convertFromJavaTypes(parameterType),
+                parameterNames, bodyBuilder);
         methodBuilder.setAnnotations(annotations);
         methodBuilder.setThrowsTypes(throwsTypes);
 
@@ -237,8 +279,7 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         }
         InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
         bodyBuilder.appendFormalLine("final " + parentField.getFieldType().getNameIncludingTypeParameters(false, builder.getImportRegistrationResolver())
-                + " "
-                + parentField.getFieldName().getSymbolName() + " = "
+                + " parent = "
                 + parentField.getFieldType().getNameIncludingTypeParameters(true, builder.getImportRegistrationResolver())
                 + "." + findMethodName + "(" + idParamName + ");");
 
@@ -256,16 +297,11 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
                 + entityName
                 + " AS o WHERE o."
                 + parentField.getFieldName().getSymbolName()
-                + " = :"
-                + parentField.getFieldName().getSymbolName()
+                + " = :parent"
                 + "\", "
                 + destination.getSimpleTypeName()
                 + ".class);");
-        bodyBuilder.appendFormalLine("q.setParameter(\""
-                + parentField.getFieldName().getSymbolName()
-                + "\", "
-                + parentField.getFieldName().getSymbolName()
-                + ");");
+        bodyBuilder.appendFormalLine("q.setParameter(\"parent\", parent);");
         bodyBuilder.appendFormalLine("q.setFirstResult(firstResult).setMaxResults(maxResults);");
         bodyBuilder.appendFormalLine("return q.getResultList();");
 
