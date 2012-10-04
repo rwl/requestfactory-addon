@@ -1,5 +1,6 @@
 package org.springframework.roo.addon.gwt.bootstrap;
 
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
 import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JpaJavaType.ENTITY;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
@@ -10,8 +11,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;

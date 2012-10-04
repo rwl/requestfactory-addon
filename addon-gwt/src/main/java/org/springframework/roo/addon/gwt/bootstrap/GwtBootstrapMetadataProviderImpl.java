@@ -2,8 +2,8 @@ package org.springframework.roo.addon.gwt.bootstrap;
 
 
 import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapDataKeys.COUNT_BY_PARENT_METHOD;
-import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD;
 import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapDataKeys.FIND_BY_STRING_ID_METHOD;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD;
 import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 

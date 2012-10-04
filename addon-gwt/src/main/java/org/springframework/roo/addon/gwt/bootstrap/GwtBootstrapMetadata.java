@@ -1,31 +1,28 @@
 package org.springframework.roo.addon.gwt.bootstrap;
 
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.KEY;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.KEY_FACTORY;
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
 import static org.springframework.roo.model.JavaType.VOID_PRIMITIVE;
 import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JpaJavaType.TYPED_QUERY;
-import static org.springframework.roo.model.SpringJavaType.PROPAGATION;
 import static org.springframework.roo.model.SpringJavaType.TRANSACTIONAL;
-import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.KEY;
-import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.KEY_FACTORY;
+
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.roo.addon.jpa.activerecord.JpaCrudAnnotationValues;
-import org.springframework.roo.addon.plural.PluralMetadata;
-import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.details.FieldMetadata;
-import org.springframework.roo.classpath.details.FieldMetadataBuilder;
+import org.springframework.roo.classpath.details.ItdTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.classpath.details.MethodMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotatedJavaType;
@@ -34,7 +31,6 @@ import org.springframework.roo.classpath.itd.AbstractItdTypeDetailsProvidingMeta
 import org.springframework.roo.classpath.itd.InvocableMemberBodyBuilder;
 import org.springframework.roo.metadata.MetadataIdentificationUtils;
 import org.springframework.roo.model.DataType;
-import org.springframework.roo.model.EnumDetails;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
