@@ -9,11 +9,18 @@ import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.roo.classpath.PhysicalTypeCategory;
+import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
+import org.springframework.roo.classpath.TypeLocationService;
+import org.springframework.roo.classpath.TypeManagementService;
+import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
+import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.classpath.details.FieldMetadataBuilder;
 import org.springframework.roo.classpath.details.ItdTypeDetailsBuilder;
+import org.springframework.roo.classpath.details.MemberFindingUtils;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.classpath.details.MethodMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotatedJavaType;
@@ -57,22 +64,60 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         return PhysicalTypeIdentifierNamingUtils.isValid(PROVIDES_TYPE_STRING, metadataIdentificationString);
     }
 
+    private final TypeManagementService typeManagementService;
+    private final TypeLocationService typeLocationService;
+    private final String sharedPackageName;
+
     private FieldMetadata identityUrlField;
 
-    public AccountMetadata(String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata) {
+    public AccountMetadata(String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata,
+            TypeManagementService typeManagementService, TypeLocationService typeLocationService, String sharedPackageName) {
         super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
+        this.typeManagementService = typeManagementService;
+        this.typeLocationService = typeLocationService;
+        this.sharedPackageName = sharedPackageName;
 
-        // Adding a new sample field definition
+        createRoleEnum();
+
         identityUrlField = getIdentityUrlField();
         builder.addField(identityUrlField);
         builder.addMethod(getUsernameAccessor());
 
+        builder.addField(getEmailField());
+
         // Adding a new sample method definition
-        builder.addMethod(getSampleMethod());
+//        builder.addMethod(getSampleMethod());
 
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
+    }
+
+    private void createRoleEnum() {
+        JavaSymbolName roleAdmin = new JavaSymbolName("ROLE_ADMIN");
+        JavaSymbolName roleUser = new JavaSymbolName("ROLE_USER");
+
+        String packageName;
+        if (sharedPackageName == null || sharedPackageName.isEmpty()) {
+            JavaType entity = AccountMetadata.getJavaType(getId());
+            packageName = entity.getPackage().getFullyQualifiedPackageName();
+        } else {
+            packageName = sharedPackageName;
+        }
+        JavaType name = new JavaType(packageName + ".Role");
+        if (typeLocationService.getTypeDetails(name) != null) {
+            return;
+        }
+
+        final String physicalTypeId = PhysicalTypeIdentifier.createIdentifier(
+                name, AccountMetadata.getPath(getId()));
+        final ClassOrInterfaceTypeDetailsBuilder cidBuilder = new ClassOrInterfaceTypeDetailsBuilder(
+                physicalTypeId, Modifier.PUBLIC, name,
+                PhysicalTypeCategory.ENUMERATION);
+        cidBuilder.addEnumConstant(roleUser);
+        cidBuilder.addEnumConstant(roleAdmin);
+        ClassOrInterfaceTypeDetails cid = cidBuilder.build();
+        typeManagementService.createOrUpdateTypeOnDisk(cid);
     }
 
     /**
@@ -81,6 +126,13 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
      * @return a FieldMetadata object
      */
     private FieldMetadata getIdentityUrlField() {
+        JavaSymbolName fieldName = new JavaSymbolName("identityUrl");
+
+        FieldMetadata existing = governorTypeDetails.getField(fieldName);
+        if (existing != null) {
+            return existing;
+        }
+
         // Note private fields are private to the ITD, not the target type, this is undesirable if a dependent method is pushed in to the target type
         int modifier = 0;
 
@@ -95,14 +147,19 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         // Using the FieldMetadataBuilder to create the field definition.
         final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(getId(), // Metadata ID provided by supertype
             modifier, // Using package protection rather than private
-            annotations, // No annotations for this field
-            new JavaSymbolName("identityUrl"), // Field name
+            annotations,
+            fieldName, // Field name
             JavaType.STRING); // Field type
 
         return fieldBuilder.build(); // Build and return a FieldMetadata instance
     }
 
     private MethodMetadataBuilder getUsernameAccessor() {
+
+        // See if the user provided the field
+        if (!getId().equals(identityUrlField.getDeclaredByMetadataId())) {
+            return null;
+        }
 
         // Locate the identifier field, and compute the name of the accessor
         // that will be produced
@@ -115,6 +172,25 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         return new MethodMetadataBuilder(getId(), Modifier.PUBLIC,
                 requiredAccessorName, identityUrlField.getFieldType(),
                 bodyBuilder);
+    }
+
+    private FieldMetadata getEmailField() {
+        JavaSymbolName fieldName = new JavaSymbolName("email");
+
+        FieldMetadata existing = governorTypeDetails.getField(fieldName);
+        if (existing != null) {
+            return existing;
+        }
+
+        // Using the FieldMetadataBuilder to create the field definition.
+        final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(getId(), // Metadata ID provided by supertype
+            0, // Using package protection rather than private
+            new ArrayList<AnnotationMetadataBuilder>(), // No annotations for this field
+            fieldName, // Field name
+            JavaType.STRING); // Field type
+
+        return fieldBuilder.build(); // Build and return a FieldMetadata instance
+
     }
 
     /*private MethodMetadataBuilder getIdentityUrlMutator() {
