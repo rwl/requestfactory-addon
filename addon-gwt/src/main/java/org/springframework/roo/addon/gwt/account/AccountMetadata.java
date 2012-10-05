@@ -2,13 +2,24 @@ package org.springframework.roo.addon.gwt.account;
 
 import static org.springframework.roo.model.Jsr303JavaType.NOT_NULL;
 import static org.springframework.roo.model.Jsr303JavaType.SIZE;
+import static org.springframework.roo.model.JdkJavaType.ARRAY_LIST;
+import static org.springframework.roo.model.JdkJavaType.COLLECTION;
+import static org.springframework.roo.model.JdkJavaType.SET;
+import static org.springframework.roo.model.JdkJavaType.HASH_SET;
+import static org.springframework.roo.model.JpaJavaType.ENUMERATED;
+import static org.springframework.roo.model.JpaJavaType.ENUM_TYPE;
+
+import static org.springframework.roo.addon.gwt.account.AccountJavaType.SIMPLE_GRANTED_AUTHORITY;
+import static org.springframework.roo.addon.gwt.account.AccountJavaType.USER_DETAILS;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.roo.addon.gwt.bootstrap.ListField;
 import org.springframework.roo.classpath.PhysicalTypeCategory;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
@@ -27,7 +38,10 @@ import org.springframework.roo.classpath.details.annotations.AnnotatedJavaType;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
 import org.springframework.roo.classpath.itd.AbstractItdTypeDetailsProvidingMetadataItem;
 import org.springframework.roo.classpath.itd.InvocableMemberBodyBuilder;
+import org.springframework.roo.classpath.operations.jsr303.SetField;
 import org.springframework.roo.metadata.MetadataIdentificationUtils;
+import org.springframework.roo.model.DataType;
+import org.springframework.roo.model.ImportRegistrationResolver;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
@@ -68,7 +82,8 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
     private final TypeLocationService typeLocationService;
     private final String sharedPackageName;
 
-    private FieldMetadata identityUrlField;
+    private FieldMetadata identityUrlField, userRolesField;
+    private JavaType roleType;
 
     public AccountMetadata(String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata,
             TypeManagementService typeManagementService, TypeLocationService typeLocationService, String sharedPackageName) {
@@ -78,7 +93,12 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         this.typeLocationService = typeLocationService;
         this.sharedPackageName = sharedPackageName;
 
+        ensureGovernorImplements(USER_DETAILS);
+
         createRoleEnum();
+        userRolesField = getAuthoritiesField();
+        builder.addField(userRolesField);
+        builder.addMethod(getAuthoritiesAccessor());
 
         identityUrlField = getIdentityUrlField();
         builder.addField(identityUrlField);
@@ -104,20 +124,91 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         } else {
             packageName = sharedPackageName;
         }
-        JavaType name = new JavaType(packageName + ".Role");
-        if (typeLocationService.getTypeDetails(name) != null) {
+        roleType = new JavaType(packageName + ".Role");
+        if (typeLocationService.getTypeDetails(roleType) != null) {
             return;
         }
 
         final String physicalTypeId = PhysicalTypeIdentifier.createIdentifier(
-                name, AccountMetadata.getPath(getId()));
+                roleType, AccountMetadata.getPath(getId()));
         final ClassOrInterfaceTypeDetailsBuilder cidBuilder = new ClassOrInterfaceTypeDetailsBuilder(
-                physicalTypeId, Modifier.PUBLIC, name,
+                physicalTypeId, Modifier.PUBLIC, roleType,
                 PhysicalTypeCategory.ENUMERATION);
         cidBuilder.addEnumConstant(roleUser);
         cidBuilder.addEnumConstant(roleAdmin);
         ClassOrInterfaceTypeDetails cid = cidBuilder.build();
         typeManagementService.createOrUpdateTypeOnDisk(cid);
+    }
+
+    private FieldMetadata getAuthoritiesField() {
+        JavaSymbolName fieldName = new JavaSymbolName("userRoles");
+
+        FieldMetadata existing = governorTypeDetails.getField(fieldName);
+        if (existing != null) {
+            return existing;
+        }
+
+        // Note private fields are private to the ITD, not the target type, this is undesirable
+        // if a dependent method is pushed in to the target type
+        int modifier = 0;
+
+        List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        AnnotationMetadataBuilder enumeratedAnnotation = new AnnotationMetadataBuilder(ENUMERATED);
+        enumeratedAnnotation.addEnumAttribute("value", ENUM_TYPE, "STRING");
+
+
+        final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
+                .getTypeDetails(roleType);
+        Validate.notNull(javaTypeDetails, "The type specified, '" + roleType
+                + "'doesn't exist");
+
+        final String physicalTypeIdentifier = javaTypeDetails
+                .getDeclaredByMetadataId();
+        final SetField fieldDetails = new SetField(physicalTypeIdentifier,
+                new JavaType(SET.getFullyQualifiedTypeName(), 0, DataType.TYPE,
+                        null, Arrays.asList(roleType)), fieldName, roleType,
+                null);
+        fieldDetails.decorateAnnotationsList(annotations);
+
+        String initializer = "new " + fieldDetails.getInitializer() + "()";
+        final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(
+                fieldDetails.getPhysicalTypeIdentifier(), modifier,
+                annotations, fieldDetails.getFieldName(),
+                fieldDetails.getFieldType());
+        fieldBuilder.setFieldInitializer(initializer);
+
+        return fieldBuilder.build();
+    }
+
+    private MethodMetadataBuilder getAuthoritiesAccessor() {
+
+        // See if the user provided the field
+        if (!getId().equals(userRolesField.getDeclaredByMetadataId())) {
+            return null;
+        }
+
+        final ImportRegistrationResolver resolver = builder.getImportRegistrationResolver();
+
+        JavaSymbolName requiredAccessorName = new JavaSymbolName("getAuthorities");
+
+        JavaType collection = new JavaType(COLLECTION.getFullyQualifiedTypeName(), 0,
+                DataType.TYPE, null, Arrays.asList(SIMPLE_GRANTED_AUTHORITY));
+        JavaType hashSet = new JavaType(HASH_SET.getFullyQualifiedTypeName(), 0,
+                DataType.TYPE, null, Arrays.asList(SIMPLE_GRANTED_AUTHORITY));
+
+        final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+        bodyBuilder.appendFormalLine(collection.getNameIncludingTypeParameters(false, resolver)
+                + " authorities = " + hashSet.getNameIncludingTypeParameters(false, resolver)
+                + "();");
+        bodyBuilder.appendFormalLine("for (" + roleType.getSimpleTypeName() + " role : "
+                + userRolesField.getFieldName().getSymbolName() + ") {");
+        bodyBuilder.appendFormalLine("authorities.add(new "
+                + SIMPLE_GRANTED_AUTHORITY.getSimpleTypeName() + "(role.name()));");
+        bodyBuilder.appendFormalLine("}");
+        bodyBuilder.appendFormalLine("return authorities;");
+
+        return new MethodMetadataBuilder(getId(), Modifier.PUBLIC,
+                requiredAccessorName, collection, bodyBuilder);
     }
 
     /**

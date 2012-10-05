@@ -30,7 +30,6 @@ import org.springframework.roo.classpath.operations.Fetch;
 import org.springframework.roo.classpath.operations.jsr303.CollectionField;
 import org.springframework.roo.classpath.operations.jsr303.DateField;
 import org.springframework.roo.classpath.operations.jsr303.FieldDetails;
-import org.springframework.roo.classpath.operations.jsr303.SetField;
 import org.springframework.roo.classpath.scanner.MemberDetails;
 import org.springframework.roo.classpath.scanner.MemberDetailsScanner;
 import org.springframework.roo.model.DataType;
@@ -149,7 +148,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
 
         final String physicalTypeIdentifier = javaTypeDetails
                 .getDeclaredByMetadataId();
-        final SetField fieldDetails = new ListField(physicalTypeIdentifier,
+        final ListField fieldDetails = new ListField(physicalTypeIdentifier,
                 new JavaType(LIST.getFullyQualifiedTypeName(), 0, DataType.TYPE,
                         null, Arrays.asList(fieldType)), fieldName, fieldType,
                 cardinality);
