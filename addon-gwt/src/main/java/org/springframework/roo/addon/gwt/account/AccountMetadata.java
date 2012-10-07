@@ -8,6 +8,7 @@ import static org.springframework.roo.model.JdkJavaType.SET;
 import static org.springframework.roo.model.JdkJavaType.HASH_SET;
 import static org.springframework.roo.model.JpaJavaType.ENUMERATED;
 import static org.springframework.roo.model.JpaJavaType.ENUM_TYPE;
+import static org.springframework.roo.model.JavaType.BOOLEAN_PRIMITIVE;
 
 import static org.springframework.roo.addon.gwt.account.AccountJavaType.SIMPLE_GRANTED_AUTHORITY;
 import static org.springframework.roo.addon.gwt.account.AccountJavaType.USER_DETAILS;
@@ -26,6 +27,7 @@ import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeManagementService;
+import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.FieldMetadata;
@@ -82,8 +84,8 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
     private final TypeLocationService typeLocationService;
     private final String sharedPackageName;
 
-    private FieldMetadata identityUrlField, userRolesField;
-    private JavaType roleType;
+    private FieldMetadata usernameField, userRolesField, emailField, nameField, statusField;
+    private JavaType roleType, statusType;
 
     public AccountMetadata(String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata,
             TypeManagementService typeManagementService, TypeLocationService typeLocationService, String sharedPackageName) {
@@ -96,18 +98,36 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         ensureGovernorImplements(USER_DETAILS);
 
         createRoleEnum();
-        userRolesField = getAuthoritiesField();
+        userRolesField = getUserRolesField();
         builder.addField(userRolesField);
+        builder.addMethod(getDeclaredGetter(userRolesField));
+        builder.addMethod(getDeclaredSetter(userRolesField));
         builder.addMethod(getAuthoritiesAccessor());
 
-        identityUrlField = getIdentityUrlField();
-        builder.addField(identityUrlField);
-        builder.addMethod(getUsernameAccessor());
+        createStatusEnum();
+        statusField = getStatusField();
+        builder.addField(statusField);
+        builder.addMethod(getDeclaredGetter(statusField));
+        builder.addMethod(getDeclaredSetter(statusField));
+        builder.addMethod(getAccountExpiredMethod());
+        builder.addMethod(getLockedMethod());
+        builder.addMethod(getCredentialsExpiredMethod());
+        builder.addMethod(getEnabledMethod());
 
-        builder.addField(getEmailField());
+        usernameField = getUsernameField();
+        builder.addField(usernameField);
+        builder.addMethod(getDeclaredGetter(usernameField));
+        builder.addMethod(getDeclaredSetter(usernameField));
 
-        // Adding a new sample method definition
-//        builder.addMethod(getSampleMethod());
+        emailField = getEmailField();
+        builder.addField(emailField);
+        builder.addMethod(getDeclaredGetter(emailField));
+        builder.addMethod(getDeclaredSetter(emailField));
+
+        nameField = getNameField();
+        builder.addField(nameField);
+        builder.addMethod(getDeclaredGetter(nameField));
+        builder.addMethod(getDeclaredSetter(nameField));
 
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
@@ -140,7 +160,38 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         typeManagementService.createOrUpdateTypeOnDisk(cid);
     }
 
-    private FieldMetadata getAuthoritiesField() {
+    private void createStatusEnum() {
+        JavaSymbolName active = new JavaSymbolName("ACTIVE");
+        JavaSymbolName expired = new JavaSymbolName("EXPIRED");
+        JavaSymbolName locked = new JavaSymbolName("LOCKED");
+        JavaSymbolName expiredCredentials = new JavaSymbolName("EXPIRED_CREDENTIALS");
+
+        String packageName;
+        if (sharedPackageName == null || sharedPackageName.isEmpty()) {
+            JavaType entity = AccountMetadata.getJavaType(getId());
+            packageName = entity.getPackage().getFullyQualifiedPackageName();
+        } else {
+            packageName = sharedPackageName;
+        }
+        statusType = new JavaType(packageName + ".Status");
+        if (typeLocationService.getTypeDetails(statusType) != null) {
+            return;
+        }
+
+        final String physicalTypeId = PhysicalTypeIdentifier.createIdentifier(
+                statusType, AccountMetadata.getPath(getId()));
+        final ClassOrInterfaceTypeDetailsBuilder cidBuilder = new ClassOrInterfaceTypeDetailsBuilder(
+                physicalTypeId, Modifier.PUBLIC, statusType,
+                PhysicalTypeCategory.ENUMERATION);
+        cidBuilder.addEnumConstant(active);
+        cidBuilder.addEnumConstant(expired);
+        cidBuilder.addEnumConstant(locked);
+        cidBuilder.addEnumConstant(expiredCredentials);
+        ClassOrInterfaceTypeDetails cid = cidBuilder.build();
+        typeManagementService.createOrUpdateTypeOnDisk(cid);
+    }
+
+    private FieldMetadata getUserRolesField() {
         JavaSymbolName fieldName = new JavaSymbolName("userRoles");
 
         FieldMetadata existing = governorTypeDetails.getField(fieldName);
@@ -156,26 +207,41 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         AnnotationMetadataBuilder enumeratedAnnotation = new AnnotationMetadataBuilder(ENUMERATED);
         enumeratedAnnotation.addEnumAttribute("value", ENUM_TYPE, "STRING");
 
+        JavaType fieldType = new JavaType(SET.getFullyQualifiedTypeName(), 0, DataType.TYPE,
+                null, Arrays.asList(roleType));
 
-        final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
-                .getTypeDetails(roleType);
-        Validate.notNull(javaTypeDetails, "The type specified, '" + roleType
-                + "'doesn't exist");
+        final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(getId(), // Metadata ID provided by supertype
+            modifier, // Using package protection rather than private
+            annotations,
+            fieldName, // Field name
+            fieldType); // Field type
 
-        final String physicalTypeIdentifier = javaTypeDetails
-                .getDeclaredByMetadataId();
-        final SetField fieldDetails = new SetField(physicalTypeIdentifier,
-                new JavaType(SET.getFullyQualifiedTypeName(), 0, DataType.TYPE,
-                        null, Arrays.asList(roleType)), fieldName, roleType,
-                null);
-        fieldDetails.decorateAnnotationsList(annotations);
+        JavaType initializer = new JavaType(HASH_SET.getFullyQualifiedTypeName(), 0,
+                DataType.TYPE, null, Arrays.asList(roleType));
+        fieldBuilder.setFieldInitializer("new " + initializer + "()");
 
-        String initializer = "new " + fieldDetails.getInitializer() + "()";
+        return fieldBuilder.build();
+    }
+
+    private FieldMetadata getStatusField() {
+        JavaSymbolName fieldName = new JavaSymbolName("status");
+
+        FieldMetadata existing = governorTypeDetails.getField(fieldName);
+        if (existing != null) {
+            return existing;
+        }
+
+        // Note private fields are private to the ITD, not the target type, this is undesirable
+        // if a dependent method is pushed in to the target type
+        int modifier = 0;
+
+        List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        AnnotationMetadataBuilder enumeratedAnnotation = new AnnotationMetadataBuilder(ENUMERATED);
+        enumeratedAnnotation.addEnumAttribute("value", ENUM_TYPE, "STRING");
+
         final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(
-                fieldDetails.getPhysicalTypeIdentifier(), modifier,
-                annotations, fieldDetails.getFieldName(),
-                fieldDetails.getFieldType());
-        fieldBuilder.setFieldInitializer(initializer);
+                getId(), modifier, annotations, fieldName, statusType);
+        fieldBuilder.setFieldInitializer("Status.ACTIVE");
 
         return fieldBuilder.build();
     }
@@ -216,8 +282,8 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
      *
      * @return a FieldMetadata object
      */
-    private FieldMetadata getIdentityUrlField() {
-        JavaSymbolName fieldName = new JavaSymbolName("identityUrl");
+    private FieldMetadata getUsernameField() {
+        JavaSymbolName fieldName = new JavaSymbolName("username");
 
         FieldMetadata existing = governorTypeDetails.getField(fieldName);
         if (existing != null) {
@@ -230,7 +296,7 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
         AnnotationMetadataBuilder notNullAnnotation = new AnnotationMetadataBuilder(NOT_NULL);
         AnnotationMetadataBuilder sizeAnnotation = new AnnotationMetadataBuilder(SIZE);
-        sizeAnnotation.addIntegerAttribute("min", 8);
+        sizeAnnotation.addIntegerAttribute("min", 3);
         sizeAnnotation.addIntegerAttribute("max", 64);
         annotations.add(notNullAnnotation);
         annotations.add(sizeAnnotation);
@@ -245,24 +311,64 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         return fieldBuilder.build(); // Build and return a FieldMetadata instance
     }
 
-    private MethodMetadataBuilder getUsernameAccessor() {
+    private MethodMetadataBuilder getAccountExpiredMethod() {
 
-        // See if the user provided the field
-        if (!getId().equals(identityUrlField.getDeclaredByMetadataId())) {
+        JavaSymbolName methodName = new JavaSymbolName("isAccountNonExpired");
+
+        if (governorHasMethod(methodName)) {
             return null;
         }
 
-        // Locate the identifier field, and compute the name of the accessor
-        // that will be produced
-        JavaSymbolName requiredAccessorName = new JavaSymbolName("getUsername");
-
         final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-        bodyBuilder.appendFormalLine("return this."
-                + identityUrlField.getFieldName().getSymbolName() + ";");
+        bodyBuilder.appendFormalLine("return this.status != Status.EXPIRED;");
 
         return new MethodMetadataBuilder(getId(), Modifier.PUBLIC,
-                requiredAccessorName, identityUrlField.getFieldType(),
-                bodyBuilder);
+                methodName, BOOLEAN_PRIMITIVE, bodyBuilder);
+    }
+
+    private MethodMetadataBuilder getLockedMethod() {
+
+        JavaSymbolName methodName = new JavaSymbolName("isAccountNonLocked");
+
+        if (governorHasMethod(methodName)) {
+            return null;
+        }
+
+        final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+        bodyBuilder.appendFormalLine("return this.status != Status.LOCKED;");
+
+        return new MethodMetadataBuilder(getId(), Modifier.PUBLIC,
+                methodName, BOOLEAN_PRIMITIVE, bodyBuilder);
+    }
+
+    private MethodMetadataBuilder getCredentialsExpiredMethod() {
+
+        JavaSymbolName methodName = new JavaSymbolName("isCredentialsNonExpired");
+
+        if (governorHasMethod(methodName)) {
+            return null;
+        }
+
+        final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+        bodyBuilder.appendFormalLine("return this.status != Status.EXPIRED_CREDENTIALS;");
+
+        return new MethodMetadataBuilder(getId(), Modifier.PUBLIC,
+                methodName, BOOLEAN_PRIMITIVE, bodyBuilder);
+    }
+
+    private MethodMetadataBuilder getEnabledMethod() {
+
+        JavaSymbolName methodName = new JavaSymbolName("isEnabled");
+
+        if (governorHasMethod(methodName)) {
+            return null;
+        }
+
+        final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+        bodyBuilder.appendFormalLine("return status == Status.ACTIVE;");
+
+        return new MethodMetadataBuilder(getId(), Modifier.PUBLIC,
+                methodName, BOOLEAN_PRIMITIVE, bodyBuilder);
     }
 
     private FieldMetadata getEmailField() {
@@ -281,7 +387,74 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
             JavaType.STRING); // Field type
 
         return fieldBuilder.build(); // Build and return a FieldMetadata instance
+    }
 
+    private FieldMetadata getNameField() {
+        JavaSymbolName fieldName = new JavaSymbolName("name");
+
+        FieldMetadata existing = governorTypeDetails.getField(fieldName);
+        if (existing != null) {
+            return existing;
+        }
+
+        // Using the FieldMetadataBuilder to create the field definition.
+        final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(getId(), // Metadata ID provided by supertype
+            0, // Using package protection rather than private
+            new ArrayList<AnnotationMetadataBuilder>(), // No annotations for this field
+            fieldName, // Field name
+            JavaType.STRING); // Field type
+
+        return fieldBuilder.build(); // Build and return a FieldMetadata instance
+    }
+
+    private MethodMetadataBuilder getDeclaredGetter(final FieldMetadata field) {
+        Validate.notNull(field, "Field required");
+
+        // Compute the mutator method name
+        final JavaSymbolName methodName = BeanInfoUtils
+                .getAccessorMethodName(field);
+
+        // See if the type itself declared the accessor
+        if (governorHasMethod(methodName)) {
+            return null;
+        }
+
+        final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+        bodyBuilder.appendFormalLine("return this."
+                + field.getFieldName().getSymbolName() + ";");
+
+        return new MethodMetadataBuilder(getId(), Modifier.PUBLIC,
+                methodName, field.getFieldType(), bodyBuilder);
+    }
+
+    private MethodMetadataBuilder getDeclaredSetter(final FieldMetadata field) {
+        Validate.notNull(field, "Field required");
+
+        // Compute the mutator method name
+        final JavaSymbolName methodName = BeanInfoUtils
+                .getMutatorMethodName(field);
+
+        // Compute the mutator method parameters
+        final JavaType parameterType = field.getFieldType();
+
+        // See if the type itself declared the mutator
+        if (governorHasMethod(methodName, parameterType)) {
+            return null;
+        }
+
+        // Compute the mutator method parameter names
+        final List<JavaSymbolName> parameterNames = Arrays.asList(field
+                .getFieldName());
+
+        final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+        bodyBuilder.appendFormalLine("this."
+                + field.getFieldName().getSymbolName() + " = "
+                + field.getFieldName().getSymbolName() + ";");
+
+        return new MethodMetadataBuilder(getId(), Modifier.PUBLIC,
+                methodName, JavaType.VOID_PRIMITIVE,
+                AnnotatedJavaType.convertFromJavaTypes(parameterType),
+                parameterNames, bodyBuilder);
     }
 
     /*private MethodMetadataBuilder getIdentityUrlMutator() {
@@ -306,41 +479,6 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
                 AnnotatedJavaType.convertFromJavaTypes(parameterTypes),
                 parameterNames, bodyBuilder);
     }*/
-
-    private MethodMetadata getSampleMethod() {
-        // Specify the desired method name
-        JavaSymbolName methodName = new JavaSymbolName("sampleMethod");
-
-        // Check if a method with the same signature already exists in the target type
-        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
-        if (method != null) {
-            // If it already exists, just return the method and omit its generation via the ITD
-            return method;
-        }
-
-        // Define method annotations (none in this case)
-        List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
-
-        // Define method throws types (none in this case)
-        List<JavaType> throwsTypes = new ArrayList<JavaType>();
-
-        // Define method parameter types (none in this case)
-        List<AnnotatedJavaType> parameterTypes = new ArrayList<AnnotatedJavaType>();
-
-        // Define method parameter names (none in this case)
-        List<JavaSymbolName> parameterNames = new ArrayList<JavaSymbolName>();
-
-        // Create the method body
-        InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-        bodyBuilder.appendFormalLine("System.out.println(\"Hello World\");");
-
-        // Use the MethodMetadataBuilder for easy creation of MethodMetadata
-        MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(getId(), Modifier.PUBLIC, methodName, JavaType.VOID_PRIMITIVE, parameterTypes, parameterNames, bodyBuilder);
-        methodBuilder.setAnnotations(annotations);
-        methodBuilder.setThrowsTypes(throwsTypes);
-
-        return methodBuilder.build(); // Build and return a MethodMetadata instance
-    }
 
     private MethodMetadata methodExists(JavaSymbolName methodName, List<AnnotatedJavaType> paramTypes) {
         // We have no access to method parameter information, so we scan by name alone and treat any match as authoritative
