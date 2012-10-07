@@ -6,7 +6,7 @@ import __TOP_LEVEL_PACKAGE__.client.scaffold.gae.GaeHelper;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.*;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.request.RequestEvent;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.ui.NavigationTree.ProxyListNode;
-import __TOP_LEVEL_PACKAGE__.client.managed.ui.ApplicationListPlaceRenderer;
+import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRenderer;
 import com.google.gwt.activity.shared.*;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;

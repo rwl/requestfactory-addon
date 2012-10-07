@@ -26,44 +26,46 @@ import java.util.List;
  * Wraps {{=proxy}} edit and create activities to manage extra portions of their
  * views, like value pickers.
  */
-public class {{=className}} extends AbstractProxyEditActivity<{{=proxy}}> implements {{=editView}}.Delegate 
+public class {{=className}} extends AbstractProxyEditActivity<{{=proxy}}> implements {{=editView}}.Delegate
 {
 
 	private Class<{{=proxy}}> proxyClass;
 	private {{=editView}}<?> view;
 	private {{=request}} request;
 
-	public {{=className}}(Class<{{=proxy}}> proxyClass, EntityProxyId<{{=proxy}}> proxyId, ApplicationRequestFactory factory, {{=editView}}<?> view, PlaceController placeController) 
+	public {{=className}}(Class<{{=proxy}}> proxyClass, EntityProxyId<{{=proxy}}> proxyId, ApplicationRequestFactory factory, {{=editView}}<?> view, PlaceController placeController, String parentId)
 	{
-		super(proxyId, factory, placeController);
+		super(proxyId, factory, placeController, parentId);
 		this.proxyClass = proxyClass;
 		this.view = view;
 		this.request = factory.{{=nameUncapitalized}}Request();
 	}
-	
+
 	@Override
 	protected {{=editView}}<?> getView()
 	{
 		return view;
 	}
-	
+
 	@Override
 	public void start(AcceptsOneWidget display, EventBus eventBus)
 	{
 		this.view.setDelegate(this);
 		super.start(display, eventBus);
 	}
-	
+
 	@Override
 	protected {{=proxy}} createProxy()
 	{
-		return request.create({{=proxy}}.class);
+        final {{=proxy}} proxy = request.create({{=proxy}}.class);
+        {{=setProxyParentStmt}}
+        return proxy;
 	}
-                      
+
 	@Override
-	protected RequestContext createSaveRequest({{=proxy}} proxy) 
+	protected RequestContext createSaveRequest({{=proxy}} proxy)
 	{
 	  	request.{{=persistMethodSignature}}(proxy);
 	  	return request;
-	} 
+	}
 }

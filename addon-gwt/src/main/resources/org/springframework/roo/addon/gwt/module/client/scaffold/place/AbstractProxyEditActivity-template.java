@@ -204,6 +204,7 @@ public abstract class AbstractProxyEditActivity<P extends EntityProxy> implement
 
 	protected void executeBeforeBind()
 	{
+	}
 
 	/**
 	 * Called when the user cancels or has successfully saved. This default
@@ -231,19 +232,6 @@ public abstract class AbstractProxyEditActivity<P extends EntityProxy> implement
 	protected boolean changed()
 	{
 		return this.editorDriver != null && this.editorDriver.flush().isChanged();
-	}
-
-	/**
-	 * Called when the user cancels or has successfully saved. This default
-	 * implementation tells the {@link PlaceController} to show the details of
-	 * the edited record.
-	 *
-	 * @param saved
-	 *            true if changes were comitted, false if user canceled
-	 */
-	protected void exit(boolean saved)
-	{
-		this.placeController.goTo(new ProxyListPlace(getProxyId().getProxyClass()));
 	}
 
 	/**

@@ -3,7 +3,7 @@ package __TOP_LEVEL_PACKAGE__.client.scaffold.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import __TOP_LEVEL_PACKAGE__.client.managed.ui.ApplicationListPlaceRenderer;
+import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRenderer;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;

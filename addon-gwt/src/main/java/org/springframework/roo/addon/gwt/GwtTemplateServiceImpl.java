@@ -549,9 +549,9 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                 */
             String setProxyParentStmt = "if (proxy.get"
                     + StringUtils.capitalize(parentFieldName) + "() == null) {\n"
-                    + "requests." + StringUtils.uncapitalize(parentTypeName)
+                    + "factory." + StringUtils.uncapitalize(parentTypeName)
                     + "Request().find" + parentTypeName + "ByStringId"
-                    + "(finalParentId).fire(new Receiver<" + parentProxyName + ">() {\n"
+                    + "(parentId).fire(new Receiver<" + parentProxyName + ">() {\n"
                     + "@Override\n"
                     + "public void onSuccess(" + parentProxyName + " response) {\n"
                     + "proxy.set" + StringUtils.capitalize(parentFieldName) + "(response);\n"

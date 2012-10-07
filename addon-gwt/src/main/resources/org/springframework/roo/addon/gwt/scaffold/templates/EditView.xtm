@@ -3,6 +3,8 @@ package {{=packageName}};
 {{#imports}}import {{=import}};
 {{/imports}}
 
+import {{=placePackage}}.ProxyEditView;
+
 import java.util.Collection;
 import java.util.List;
 

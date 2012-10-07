@@ -1,7 +1,6 @@
 package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import __TOP_LEVEL_PACKAGE__.client.managed.request.ApplicationRequestFactory;
-import __TOP_LEVEL_PACKAGE__.client.managed.ui.ApplicationListPlaceRenderer;
 import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRenderer;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.ui.LoginWidget;
