@@ -3,6 +3,7 @@
   xmlns:g='urn:import:com.google.gwt.user.client.ui'
   xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
   xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+<ui:image field="createButton" src="../../../style/images/createButton.png"/>
 
 <ui:style>
   .controls {
@@ -34,7 +35,6 @@
     cursor: pointer;
   }
  </ui:style>
-
 
   <g:HTMLPanel styleName="{style.listView}">
     <div style='height:3em;'></div>
