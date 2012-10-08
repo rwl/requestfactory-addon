@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
@@ -32,11 +34,19 @@ import org.springframework.roo.classpath.details.annotations.AnnotationMetadataB
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.process.manager.FileManager;
+import org.springframework.roo.project.Dependency;
+import org.springframework.roo.project.DependencyScope;
+import org.springframework.roo.project.DependencyType;
 import org.springframework.roo.project.FeatureNames;
+import org.springframework.roo.project.Path;
+import org.springframework.roo.project.PathResolver;
 import org.springframework.roo.project.ProjectOperations;
+import org.springframework.roo.project.Property;
 import org.springframework.roo.support.logging.HandlerUtils;
 import org.springframework.roo.support.osgi.OSGiUtils;
 import org.springframework.roo.support.util.FileUtils;
+import org.springframework.roo.support.util.XmlUtils;
+import org.w3c.dom.Element;
 
 /**
  * Implementation of operations this add-on offers.
@@ -66,6 +76,7 @@ public class AccountOperationsImpl implements AccountOperations {
     @Reference private TypeManagementService typeManagementService;
 
     @Reference protected FileManager fileManager;
+    @Reference private PathResolver pathResolver;
 
     private ComponentContext context;
 
@@ -112,11 +123,13 @@ public class AccountOperationsImpl implements AccountOperations {
         }
     }
 
+    private JavaPackage accountPackage;
     private JavaType accountType;
     private JavaType roleType;
 
     @Override
     public void setupSecurity(JavaType accountType, JavaPackage accountPackage) {
+        this.accountPackage = accountPackage;
         this.accountType = accountType;
 
         ClassOrInterfaceTypeDetails accountDetails = typeLocationService.getTypeDetails(accountType);
@@ -133,11 +146,32 @@ public class AccountOperationsImpl implements AccountOperations {
             roleType = new JavaType(sharedPackage.getValue() + ".Role");
         }
 
-        final String targetDirectory = projectOperations.getPathResolver().getFocusedIdentifier(
+        final String accountDirectory = projectOperations.getPathResolver().getFocusedIdentifier(
                 SRC_MAIN_JAVA, accountPackage.getFullyQualifiedPackageName().replace('.',
                         File.separatorChar));
 
-        updateFile("account/*-template.*", targetDirectory, null, false);
+        updateFile("*-template.*", accountDirectory, null, false);
+
+        String moduleName = projectOperations.getFocusedModuleName();
+        for (Element propertyElement : XmlUtils.findElements("/configuration/batch/properties/*", XmlUtils.getConfiguration(getClass()))) {
+            projectOperations.addProperty(moduleName, new Property(propertyElement));
+        }
+        List<Dependency> dependencies = new ArrayList<Dependency>();
+        for (Element dependencyElement : XmlUtils.findElements("/configuration/batch/dependencies/dependency", XmlUtils.getConfiguration(getClass()))) {
+            dependencies.add(new Dependency(dependencyElement));
+        }
+        projectOperations.addDependencies(moduleName, dependencies);
+
+
+        final String springDirectory = pathResolver.getFocusedIdentifier(
+                Path.SPRING_CONFIG_ROOT, "");
+
+        if (projectOperations.isFeatureInstalledInFocusedModule(FeatureNames.GAE)) {
+            updateFile("context/*security-gae-template.xml", springDirectory, null, false);
+            updateFile("context/*-template.java", accountDirectory, null, false);
+        } else {
+            updateFile("context/*security-template.xml", springDirectory, null, false);
+        }
     }
 
     private void updateFile(final String sourceAntPath, String targetDirectory,
@@ -199,13 +233,10 @@ public class AccountOperationsImpl implements AccountOperations {
         if (segmentPackage == null) {
             segmentPackage = "";
         }
-        final String topLevelPackage = projectOperations.getTopLevelPackage(
-                projectOperations.getFocusedModuleName())
-                .getFullyQualifiedPackageName();
-        input = input.replace("__TOP_LEVEL_PACKAGE__", topLevelPackage);
-        input = input.replace("__SEGMENT_PACKAGE__", segmentPackage);
-        input = input.replace("__PROJECT_NAME__", projectOperations
-                .getProjectName(projectOperations.getFocusedModuleName()));
+
+        if (accountPackage != null) {
+            input = input.replace("__ACCOUNT_PACKAGE__", accountPackage.getFullyQualifiedPackageName());
+        }
 
         if (accountType != null) {
             input = input.replace("__FULL_ACCOUNT_NAME__", accountType.getFullyQualifiedTypeName());

@@ -352,7 +352,7 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
 
         final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
         bodyBuilder.appendFormalLine(collection.getNameIncludingTypeParameters(false, resolver)
-                + " authorities = " + hashSet.getNameIncludingTypeParameters(false, resolver)
+                + " authorities = new " + hashSet.getNameIncludingTypeParameters(false, resolver)
                 + "();");
         bodyBuilder.appendFormalLine("for (" + roleType.getSimpleTypeName() + " role : "
                 + userRolesField.getFieldName().getSymbolName() + ") {");

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<b:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:b="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <http use-expressions="true">
+        <intercept-url pattern="/login" access="permitAll" />
+        <intercept-url pattern="/gwtRequest/**" access="permitAll" />
+        <intercept-url pattern="/_ah/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
+        <logout logout-url="/logout"/>
+        <openid-login login-page="/login.jsp" user-service-ref="registeringUserService"
+                authentication-failure-url="/login.jsp?login_error=true">
+            <attribute-exchange identifier-match="https://www.google.com/.*">
+                <openid-attribute name="email" type="http://axschema.org/contact/email" required="true" count="1"/>
+                <openid-attribute name="firstname" type="http://axschema.org/namePerson/first" required="true" />
+                <openid-attribute name="lastname" type="http://axschema.org/namePerson/last" required="true" />
+            </attribute-exchange>
+            <attribute-exchange identifier-match=".*yahoo.com.*">
+                <openid-attribute name="email" type="http://axschema.org/contact/email" required="true"/>
+                <openid-attribute name="fullname" type="http://axschema.org/namePerson" required="true" />
+            </attribute-exchange>
+            <attribute-exchange identifier-match=".*myopenid.com.*">
+                <openid-attribute name="email" type="http://schema.openid.net/contact/email" required="true"/>
+                <openid-attribute name="fullname" type="http://schema.openid.net/namePerson" required="true" />
+            </attribute-exchange>
+        </openid-login>
+        <remember-me token-repository-ref="tokenRepo"/>
+    </http>
+
+    <authentication-manager alias="authenticationManager"/>
+
+    <b:bean id="tokenRepo" class="org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl" />
+
+<!--
+    A custom UserDetailsService which will allow any user to authenticate and "register" their IDs
+    for use if they return to the site. This is the most common usage pattern for sites which use OpenID.
+-->
+    <b:bean id="registeringUserService" class="__ACCOUNT_PACKAGE__.AccountService" />
+
+</b:beans>

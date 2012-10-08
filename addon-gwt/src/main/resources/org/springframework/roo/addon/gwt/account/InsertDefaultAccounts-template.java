@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
+package __ACCOUNT_PACKAGE__;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -12,10 +12,10 @@ import __FULL_ROLE_NAME__;
 @Configurable
 public class InsertDefaultAccounts implements ApplicationListener<ContextRefreshedEvent> {
 
-	@Override
-	public void onApplicationEvent(ContextRefreshedEvent event) {
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
 
-	    String identityUrl = "http://example.myopenid.com/";
+        String identityUrl = "http://example.myopenid.com/";
 
         try {
             __ACCOUNT_NAME__.find__ACCOUNT_NAME__ByUsername(identityUrl);
@@ -31,5 +31,5 @@ public class InsertDefaultAccounts implements ApplicationListener<ContextRefresh
         accountAdminActive.setEmail("name@example.com");
         accountAdminActive.setName("John Smith");
         accountAdminActive.persist();
-	}
+    }
 }

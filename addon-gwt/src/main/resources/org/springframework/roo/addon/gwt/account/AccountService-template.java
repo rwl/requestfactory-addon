@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
+package __ACCOUNT_PACKAGE__;
 
 import java.util.List;
 
