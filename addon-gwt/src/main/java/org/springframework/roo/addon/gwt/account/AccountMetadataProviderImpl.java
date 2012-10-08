@@ -1,6 +1,7 @@
 package org.springframework.roo.addon.gwt.account;
 
 import static org.springframework.roo.addon.gwt.account.AccountJavaType.ROO_ACCOUNT;
+import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -9,6 +10,9 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapAnnotationValues;
+import org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapMetadata;
+import org.springframework.roo.addon.jpa.activerecord.JpaCrudAnnotationValues;
+import org.springframework.roo.addon.jpa.entity.JpaEntityAnnotationValues;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.TypeLocationService;
@@ -18,7 +22,10 @@ import org.springframework.roo.classpath.itd.AbstractItdMetadataProvider;
 import org.springframework.roo.classpath.itd.ItdTypeDetailsProvidingMetadataItem;
 import org.springframework.roo.classpath.itd.MemberHoldingTypeDetailsMetadataItem;
 import org.springframework.roo.model.JavaType;
+import org.springframework.roo.project.FeatureNames;
 import org.springframework.roo.project.LogicalPath;
+import org.springframework.roo.project.ProjectMetadata;
+import org.springframework.roo.project.ProjectOperations;
 
 /**
  * Provides {@link ExampleMetadata}. This type is called by Roo to retrieve the metadata for this add-on.
@@ -32,6 +39,7 @@ import org.springframework.roo.project.LogicalPath;
 public final class AccountMetadataProviderImpl extends AbstractItdMetadataProvider implements AccountMetadataProvider {
 
     @Reference TypeManagementService typeManagementService;
+    @Reference private ProjectOperations projectOperations;
 
     /**
      * The activate method for this OSGi component, this will be called by the OSGi container upon bundle activation
@@ -59,9 +67,33 @@ public final class AccountMetadataProviderImpl extends AbstractItdMetadataProvid
      * Return an instance of the Metadata offered by this add-on
      */
     protected ItdTypeDetailsProvidingMetadataItem getMetadata(String metadataIdentificationString, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata, String itdFilename) {
+
+        final JpaCrudAnnotationValues crudAnnotationValues = new JpaCrudAnnotationValues(governorPhysicalTypeMetadata);
+        final JpaEntityAnnotationValues jpaEntityAnnotationValues = new JpaEntityAnnotationValues(governorPhysicalTypeMetadata, ROO_JPA_ENTITY);
         final AccountAnnotationValues accountAnnotationValues = new AccountAnnotationValues(governorPhysicalTypeMetadata);
+
         final String sharedPackageName = accountAnnotationValues.getSharedPackage();
-        return new AccountMetadata(metadataIdentificationString, aspectName, governorPhysicalTypeMetadata, typeManagementService, typeLocationService, sharedPackageName);
+
+        JavaType entity = AccountMetadata.getJavaType(metadataIdentificationString);
+        LogicalPath path = AccountMetadata.getPath(metadataIdentificationString);
+
+        final String entityName = StringUtils.defaultIfEmpty(
+                jpaEntityAnnotationValues.getEntityName(),
+                entity.getSimpleTypeName());
+
+        boolean isGaeEnabled = false;
+        final String moduleName = path.getModule();
+        if (projectOperations.isProjectAvailable(moduleName)) {
+            // If the project itself changes, we want a chance to refresh this
+            // item
+            metadataDependencyRegistry.registerDependency(
+                    ProjectMetadata.getProjectIdentifier(moduleName),
+                    metadataIdentificationString);
+            isGaeEnabled = projectOperations
+                    .isFeatureInstalledInFocusedModule(FeatureNames.GAE);
+        }
+
+        return new AccountMetadata(metadataIdentificationString, aspectName, governorPhysicalTypeMetadata, crudAnnotationValues, typeManagementService, typeLocationService, entityName, sharedPackageName, isGaeEnabled);
     }
 
     /**

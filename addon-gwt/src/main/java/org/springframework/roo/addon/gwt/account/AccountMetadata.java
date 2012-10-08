@@ -4,23 +4,31 @@ import static org.springframework.roo.model.Jsr303JavaType.NOT_NULL;
 import static org.springframework.roo.model.Jsr303JavaType.SIZE;
 import static org.springframework.roo.model.JdkJavaType.ARRAY_LIST;
 import static org.springframework.roo.model.JdkJavaType.COLLECTION;
+import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JdkJavaType.SET;
 import static org.springframework.roo.model.JdkJavaType.HASH_SET;
 import static org.springframework.roo.model.JpaJavaType.ENUMERATED;
 import static org.springframework.roo.model.JpaJavaType.ENUM_TYPE;
+import static org.springframework.roo.model.JpaJavaType.TYPED_QUERY;
 import static org.springframework.roo.model.JavaType.BOOLEAN_PRIMITIVE;
+import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
+import static org.springframework.roo.model.JavaType.STRING;
+import static org.springframework.roo.model.SpringJavaType.TRANSACTIONAL;
 
 import static org.springframework.roo.addon.gwt.account.AccountJavaType.SIMPLE_GRANTED_AUTHORITY;
 import static org.springframework.roo.addon.gwt.account.AccountJavaType.USER_DETAILS;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.KEY;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.roo.addon.gwt.bootstrap.ListField;
+import org.springframework.roo.addon.jpa.activerecord.JpaCrudAnnotationValues;
 import org.springframework.roo.classpath.PhysicalTypeCategory;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
@@ -60,6 +68,8 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
     private static final String PROVIDES_TYPE_STRING = AccountMetadata.class.getName();
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils.create(PROVIDES_TYPE_STRING);
 
+    private static final String ENTITY_MANAGER_METHOD_NAME = "entityManager";
+
     public static final String getMetadataIdentiferType() {
         return PROVIDES_TYPE;
     }
@@ -80,57 +90,135 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         return PhysicalTypeIdentifierNamingUtils.isValid(PROVIDES_TYPE_STRING, metadataIdentificationString);
     }
 
+    private final JpaCrudAnnotationValues crudAnnotationValues;
     private final TypeManagementService typeManagementService;
     private final TypeLocationService typeLocationService;
+    private final String entityName;
     private final String sharedPackageName;
+    private final boolean isGaeEnabled;
 
     private FieldMetadata usernameField, userRolesField, emailField, nameField, statusField;
     private JavaType roleType, statusType;
 
     public AccountMetadata(String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata,
-            TypeManagementService typeManagementService, TypeLocationService typeLocationService, String sharedPackageName) {
+            JpaCrudAnnotationValues crudAnnotationValues,
+            TypeManagementService typeManagementService, TypeLocationService typeLocationService, String entityName, String sharedPackageName, boolean isGaeEnabled) {
         super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
+        this.crudAnnotationValues = crudAnnotationValues;
         this.typeManagementService = typeManagementService;
         this.typeLocationService = typeLocationService;
+        this.entityName = entityName;
         this.sharedPackageName = sharedPackageName;
+        this.isGaeEnabled = isGaeEnabled;
 
         ensureGovernorImplements(USER_DETAILS);
 
         createRoleEnum();
         userRolesField = getUserRolesField();
         builder.addField(userRolesField);
-        builder.addMethod(getDeclaredGetter(userRolesField));
-        builder.addMethod(getDeclaredSetter(userRolesField));
-        builder.addMethod(getAuthoritiesAccessor());
 
         createStatusEnum();
         statusField = getStatusField();
         builder.addField(statusField);
-        builder.addMethod(getDeclaredGetter(statusField));
-        builder.addMethod(getDeclaredSetter(statusField));
+
+        usernameField = getUsernameField();
+        builder.addField(usernameField);
+
+        emailField = getEmailField();
+        builder.addField(emailField);
+
+        nameField = getNameField();
+        builder.addField(nameField);
+
+        builder.addMethod(getAuthoritiesAccessor());
         builder.addMethod(getAccountExpiredMethod());
         builder.addMethod(getLockedMethod());
         builder.addMethod(getCredentialsExpiredMethod());
         builder.addMethod(getEnabledMethod());
+        builder.addMethod(getFindByUsernameMethod());
 
-        usernameField = getUsernameField();
-        builder.addField(usernameField);
+        builder.addMethod(getDeclaredGetter(userRolesField));
+        builder.addMethod(getDeclaredSetter(userRolesField));
+        builder.addMethod(getDeclaredGetter(statusField));
+        builder.addMethod(getDeclaredSetter(statusField));
         builder.addMethod(getDeclaredGetter(usernameField));
         builder.addMethod(getDeclaredSetter(usernameField));
-
-        emailField = getEmailField();
-        builder.addField(emailField);
         builder.addMethod(getDeclaredGetter(emailField));
         builder.addMethod(getDeclaredSetter(emailField));
-
-        nameField = getNameField();
-        builder.addField(nameField);
         builder.addMethod(getDeclaredGetter(nameField));
         builder.addMethod(getDeclaredSetter(nameField));
 
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
+    }
+
+    private MethodMetadata getFindByUsernameMethod() {
+
+        // Specify the desired method name
+        JavaSymbolName methodName = new JavaSymbolName("find" + destination.getSimpleTypeName() + "ByUsername");
+
+        // Check if a method with the same signature already exists in the target type
+        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
+        if (method != null) {
+            // If it already exists, just return the method and omit its generation via the ITD
+            return method;
+        }
+
+        // Define method annotations
+        List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        if (isGaeEnabled) {
+            final AnnotationMetadataBuilder transactionalBuilder = new AnnotationMetadataBuilder(
+                    TRANSACTIONAL);
+            if (StringUtils
+                    .isNotBlank(crudAnnotationValues.getTransactionManager())) {
+                transactionalBuilder.addStringAttribute("value",
+                        crudAnnotationValues.getTransactionManager());
+            }
+            annotations.add(transactionalBuilder);
+        }
+
+        // Define method throws types (none in this case)
+        List<JavaType> throwsTypes = new ArrayList<JavaType>();
+
+        // Define method parameter types
+        final JavaType[] parameterTypes = { STRING };
+
+        // Define method parameter names
+        final List<JavaSymbolName> parameterNames = Arrays.asList(
+                new JavaSymbolName("username"));
+        final JavaType returnType = destination;
+
+        // Create the method body
+        InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+
+        final JavaType typedQueryType = new JavaType(
+                TYPED_QUERY.getFullyQualifiedTypeName(), 0, DataType.TYPE,
+                null, Arrays.asList(destination));
+
+        bodyBuilder.appendFormalLine(typedQueryType.getNameIncludingTypeParameters(false, builder.getImportRegistrationResolver())
+                + " q = "
+                + ENTITY_MANAGER_METHOD_NAME
+                + "().createQuery(\"SELECT o FROM "
+                + entityName
+                + " AS o WHERE o.username = :username\", "
+                + destination.getSimpleTypeName()
+                + ".class);");
+        bodyBuilder.appendFormalLine("q.setParameter(\"username\", username);");
+        bodyBuilder.appendFormalLine("return q.getSingleResult();");
+
+        // Use the MethodMetadataBuilder for easy creation of MethodMetadata
+        MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(getId(),
+                Modifier.PUBLIC | Modifier.STATIC,
+                methodName,
+                returnType,
+                AnnotatedJavaType.convertFromJavaTypes(parameterTypes),
+                parameterNames,
+                bodyBuilder);
+        methodBuilder.setAnnotations(annotations);
+        methodBuilder.setThrowsTypes(throwsTypes);
+
+        return methodBuilder.build(); // Build and return a MethodMetadata instance
     }
 
     private void createRoleEnum() {

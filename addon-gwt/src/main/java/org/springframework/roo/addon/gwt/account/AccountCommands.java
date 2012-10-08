@@ -48,4 +48,10 @@ public class AccountCommands implements CommandMarker { // All command types mus
             @CliOption(key = RooAccount.SHARED_PACKAGE_ATTRIBUTE, mandatory = false, help = "Package for enums shared with GWT") final JavaPackage sharedPackage) {
         operations.annotateAccountType(target, sharedPackage);
     }
+
+    @CliCommand(value = "web gwtbootstrap security setup", help = "Setup Spring Security account service")
+    public void setupSecurity(@CliOption(key = "account", mandatory = true, help = "The account entity") JavaType target,
+            @CliOption(key = "package", mandatory = true, help = "Package for user details service") final JavaPackage accountPackage) {
+        operations.setupSecurity(target, accountPackage);
+    }
 }

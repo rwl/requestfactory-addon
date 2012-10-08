@@ -537,16 +537,6 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
             String parentTypeName = parentField.getFieldType().getSimpleTypeName();
             String parentProxyName = parentTypeName + "Proxy";
 
-            /*
-                if (proxy.getSystem() == null) {
-                    requests.powerSystemRequest().findPowerSystem(systemId).fire(new Receiver<PowerSystemProxy>() {
-                        @Override
-                        public void onSuccess(PowerSystemProxy response) {
-                            proxy.setSystem(response);
-                        }
-                    });
-                }
-                */
             String setProxyParentStmt = "if (proxy.get"
                     + StringUtils.capitalize(parentFieldName) + "() == null) {\n"
                     + "factory." + StringUtils.uncapitalize(parentTypeName)

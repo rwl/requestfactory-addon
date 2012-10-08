@@ -21,4 +21,6 @@ public interface AccountOperations {
      * Annotate the provided Java type with the trigger of this add-on
      */
     void annotateAccountType(JavaType type, final JavaPackage sharedPackage);
+
+    void setupSecurity(JavaType type, final JavaPackage accountPackage);
 }
