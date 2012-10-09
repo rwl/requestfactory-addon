@@ -80,7 +80,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Provides a basic implementation of {@link GwtTypeService}.
- * 
+ *
  * @author James Tyrrell
  * @since 1.1.2
  */
@@ -394,7 +394,7 @@ public class GwtTypeServiceImpl implements GwtTypeService {
     private void displayWarning(final String warning) {
         if (!warnings.contains(warning)) {
             warnings.add(warning);
-            LOGGER.severe(warning);
+            LOGGER.warning(warning);
             warningTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -456,7 +456,7 @@ public class GwtTypeServiceImpl implements GwtTypeService {
      * return type. If domain method return type is List<Integer> or
      * Set<Integer>, returns the same. If domain method return type is
      * List<Employee>, return List<EmployeeProxy>
-     * 
+     *
      * @param returnType
      * @param projectMetadata
      * @param governorType

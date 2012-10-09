@@ -1,0 +1,70 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
+	<ui:style>
+		@def contentWidth 500px;
+		.content {
+			width: 100%;
+		}
+		.decorator {
+			width: contentWidth;
+			margin-right: auto;
+			margin-left: auto;
+			margin-top: 20px;
+		}
+		.panel {
+			width: 100%;
+			margin: 12px;
+		}
+		.panel td {
+			padding-top: 2px;
+			padding-bottom: 2px;
+		}
+		.group {
+			width: 100%;
+		}
+		.group td {
+			padding-left: 4px;
+			padding-right: 4px;
+		}
+		.disclosure {
+			border-left: none;
+			margin-left: 0;
+		}
+		.flow a {
+			margin: 4px;
+		}
+		.form {
+			margin-bottom: 0;
+		}
+		.submit {
+			margin-left:6px;
+		}
+	</ui:style>
+	<g:VerticalPanel styleName="{style.content}">
+		<g:DecoratorPanel addStyleNames="{style.decorator}">
+			<g:VerticalPanel styleName="{style.panel}">
+				<g:HTML>
+					<h4>Sign-In or Register using:</h4>
+				</g:HTML>
+				<g:HorizontalPanel styleName="{style.group}" ui:field="primaryGroup"/>
+				<g:DisclosurePanel addStyleNames="{style.disclosure}" animationEnabled="true" ui:field="more">
+					<g:VerticalPanel>
+						<g:FlowPanel addStyleNames="{style.flow}" ui:field="secondaryGroup"/>
+						<!-- <g:DisclosurePanel animationEnabled="true" ui:field="evenMore">
+							<g:HorizontalPanel ui:field="tertiaryGroup"/>
+						</g:DisclosurePanel> -->
+					</g:VerticalPanel>
+				</g:DisclosurePanel>
+				<g:VerticalPanel>
+					<b:WellForm type="INLINE" action="j_spring_openid_security_check" method="post"
+							addStyleNames="{style.form}" ui:field="wellForm">
+						<b:TextBox placeholder="Username" ui:field="username"/>
+						<b:SubmitButton type="PRIMARY" addStyleNames="{style.submit}">Login</b:SubmitButton>
+					</b:WellForm>
+				</g:VerticalPanel>
+			</g:VerticalPanel>
+		</g:DecoratorPanel>
+	</g:VerticalPanel>
+</ui:UiBinder>

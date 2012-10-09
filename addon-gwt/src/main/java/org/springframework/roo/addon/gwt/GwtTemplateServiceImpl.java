@@ -500,7 +500,8 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
 
 
         AnnotationMetadata annotation = mirroredType.getAnnotation(ROO_GWT_BOOTSTRAP);
-        AnnotationAttributeValue<String> annotationAttributeValue = annotation.getAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE);
+        AnnotationAttributeValue<String> annotationAttributeValue = annotation
+                .getAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE);
         String parentFieldName = "";
         if (annotationAttributeValue != null) {
             parentFieldName = annotationAttributeValue.getValue();
@@ -905,7 +906,7 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                             gwtProxyProperty.getPropertyType());
                     maybeAddImport(dataDictionary, importSet,
                             gwtProxyProperty.getValueType());
-                    if (gwtProxyProperty.isCollectionOfProxy()) {
+                    if (gwtProxyProperty.isCollection/*OfProxy*/()) {
                         maybeAddImport(dataDictionary, importSet,
                                 gwtProxyProperty.getPropertyType()
                                         .getParameters().get(0));
@@ -1208,7 +1209,7 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
 
             TemplateDataDictionary dataDictionary = TemplateDictionary.create();
             dataDictionary.setVariable("packageName",
-                    GwtPath.MANAGED_UI.packageName(topLevelPackage));
+                    GwtPath.MANAGED_UI_EDITOR.packageName(topLevelPackage));
             dataDictionary.setVariable("scaffoldUiPackage",
                     GwtPath.SCAFFOLD_UI.packageName(topLevelPackage));
             final JavaType collectionTypeImpl = getCollectionImplementation(proxyProperty
@@ -1228,14 +1229,14 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                     boundCollectionType);
 
             final JavaType collectionEditorType = new JavaType(
-                    GwtPath.MANAGED_UI.packageName(topLevelPackage) + "."
+                    GwtPath.MANAGED_UI_EDITOR.packageName(topLevelPackage) + "."
                             + boundCollectionType + collectionType + "Editor");
             typeDetails.add(getTemplateDetails(dataDictionary,
                     "CollectionEditor", collectionEditorType, moduleName));
 
             dataDictionary = TemplateDictionary.create();
             dataDictionary.setVariable("packageName",
-                    GwtPath.MANAGED_UI.packageName(topLevelPackage));
+                    GwtPath.MANAGED_UI_EDITOR.packageName(topLevelPackage));
             dataDictionary.setVariable("scaffoldUiPackage",
                     GwtPath.SCAFFOLD_UI.packageName(topLevelPackage));
             dataDictionary.setVariable("collectionType", collectionType);
@@ -1249,7 +1250,7 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                     + "UiXml", dataDictionary);
             final String packagePath = projectOperations.getPathResolver()
                     .getFocusedIdentifier(Path.SRC_MAIN_JAVA,
-                            GwtPath.MANAGED_UI.getPackagePath(topLevelPackage));
+                            GwtPath.MANAGED_UI_EDITOR.getPackagePath(topLevelPackage));
             xmlMap.put(packagePath + "/" + boundCollectionType + collectionType
                     + "Editor.ui.xml", contents);
         }

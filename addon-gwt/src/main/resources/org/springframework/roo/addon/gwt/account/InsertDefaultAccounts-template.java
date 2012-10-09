@@ -1,9 +1,12 @@
 package __ACCOUNT_PACKAGE__;
 
+import javax.persistence.NoResultException;
+
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import __FULL_ACCOUNT_NAME__;
 import __FULL_ROLE_NAME__;

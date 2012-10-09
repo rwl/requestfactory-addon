@@ -26,70 +26,42 @@ public enum GwtType {
 
     // Represents shared types. There is one such type per application using
     // Roo's GWT support
-    APP_ENTITY_TYPES_PROCESSOR(GwtPath.MANAGED_REQUEST, false, "",
-            "entityTypes", "ApplicationEntityTypesProcessor", false, false,
-            true), APP_REQUEST_FACTORY(GwtPath.MANAGED_REQUEST, false, "",
-            "requestFactory", "ApplicationRequestFactory", false, false, true), DETAIL_ACTIVITY(
-            GwtPath.MANAGED_ACTIVITY, true, "DetailsActivity",
-            "detailsActivity", "DetailsActivity", false, true, false), DETAILS_ACTIVITIES(
-            GwtPath.MANAGED_ACTIVITY, false, "", "detailsActivities",
-            "ApplicationDetailsActivities", false, true, false), DETAILS_VIEW(
-            GwtPath.MANAGED_UI, true, "DetailsView", "detailsView",
-            "DetailsView", false, false, false), DESKTOP_DETAILS_VIEW(
-            GwtPath.MANAGED_UI_DESKTOP, true, "DesktopDetailsView",
-            "desktopDetailsView", "DesktopDetailsView", true, true, false), EDIT_ACTIVITY(
-            GwtPath.MANAGED_ACTIVITY, true, "EditActivity", "editActivity",
-            "EditActivity", false, false, false), EDIT_ACTIVITY_WRAPPER(
-            GwtPath.MANAGED_ACTIVITY, true, "EditActivityWrapper",
-            "editActivityWrapper", "EditActivityWrapper", false, true, false), EDIT_RENDERER(
-            GwtPath.MANAGED_UI_RENDERER, true, "ProxyRenderer", "renderer",
-            "EditRenderer", false, false, false), EDIT_VIEW(GwtPath.MANAGED_UI,
-            true, "EditView", "editView", "EditView", false, false, false), DESKTOP_EDIT_VIEW(
-            GwtPath.MANAGED_UI_DESKTOP, true, "DesktopEditView",
-            "desktopEditView", "DesktopEditView", true, true, false), IS_SCAFFOLD_MOBILE_ACTIVITY(
-            GwtPath.SCAFFOLD_ACTIVITY, false, "", "isScaffoldMobileActivity",
-            "IsScaffoldMobileActivity", false, false, false), LIST_ACTIVITY(
-            GwtPath.MANAGED_ACTIVITY, true, "ListActivity", "listActivity",
-            "ListActivity", false, true, false), LIST_EDITOR(
-            GwtPath.MANAGED_UI_EDITOR, true, "ListEditor", "listEditor",
-            "ListEditor", true, true, false), LIST_PLACE_RENDERER(
-            GwtPath.MANAGED_UI_RENDERER, false, "", "listPlaceRenderer",
-            "ApplicationListPlaceRenderer", false, true, false), DESKTOP_LIST_VIEW(
-            GwtPath.MANAGED_UI_DESKTOP, true, "DesktopListView",
-            "desktopListView", "DesktopListView", true, true, false), MASTER_ACTIVITIES(
-            GwtPath.MANAGED_ACTIVITY, false, "", "masterActivities",
-            "ApplicationMasterActivities", false, true, false),
+    APP_ENTITY_TYPES_PROCESSOR(GwtPath.MANAGED_REQUEST, false, "", "entityTypes", "ApplicationEntityTypesProcessor", false, false, true),
+    APP_REQUEST_FACTORY(GwtPath.MANAGED_REQUEST, false, "", "requestFactory", "ApplicationRequestFactory", false, false, true),
+    DETAIL_ACTIVITY(GwtPath.MANAGED_ACTIVITY, true, "DetailsActivity", "detailsActivity", "DetailsActivity", false, true, false),
+    DETAILS_ACTIVITIES(GwtPath.MANAGED_ACTIVITY, false, "", "detailsActivities", "ApplicationDetailsActivities", false, true, false),
+    DETAILS_VIEW(GwtPath.MANAGED_UI, true, "DetailsView", "detailsView", "DetailsView", false, false, false),
+    DESKTOP_DETAILS_VIEW(GwtPath.MANAGED_UI_DESKTOP, true, "DesktopDetailsView", "desktopDetailsView", "DesktopDetailsView", true, true, false),
+    EDIT_ACTIVITY(GwtPath.MANAGED_ACTIVITY, true, "EditActivity", "editActivity", "EditActivity", false, false, false),
+    EDIT_ACTIVITY_WRAPPER(GwtPath.MANAGED_ACTIVITY, true, "EditActivityWrapper", "editActivityWrapper", "EditActivityWrapper", false, true, false),
+    EDIT_RENDERER(GwtPath.MANAGED_UI_RENDERER, true, "ProxyRenderer", "renderer", "EditRenderer", false, false, false),
+    EDIT_VIEW(GwtPath.MANAGED_UI, true, "EditView", "editView", "EditView", false, false, false),
+    DESKTOP_EDIT_VIEW(GwtPath.MANAGED_UI_DESKTOP, true, "DesktopEditView", "desktopEditView", "DesktopEditView", true, true, false),
+    IS_SCAFFOLD_MOBILE_ACTIVITY(GwtPath.SCAFFOLD_ACTIVITY, false, "", "isScaffoldMobileActivity", "IsScaffoldMobileActivity", false, false, false),
+    LIST_ACTIVITY(GwtPath.MANAGED_ACTIVITY, true, "ListActivity", "listActivity", "ListActivity", false, true, false),
+    LIST_EDITOR(GwtPath.MANAGED_UI_EDITOR, true, "ListEditor", "listEditor", "ListEditor", true, true, false),
+    LIST_PLACE_RENDERER(GwtPath.MANAGED_UI_RENDERER, false, "", "listPlaceRenderer", "ApplicationListPlaceRenderer", false, true, false),
+    DESKTOP_LIST_VIEW(GwtPath.MANAGED_UI_DESKTOP, true, "DesktopListView", "desktopListView", "DesktopListView", true, true, false),
+    MASTER_ACTIVITIES(GwtPath.MANAGED_ACTIVITY, false, "", "masterActivities", "ApplicationMasterActivities", false, true, false),
 
-            DATA_PROVIDER(GwtPath.MANAGED_TREE, true, "DataProvider", "dataProvider",
-                    "DataProvider", false, false, false),
-            IS_LEAF_PROCESSOR(GwtPath.MANAGED_TREE, false, "", "isLeafProcessor",
-                    "IsLeafProcessor", false, false, false),
-            PROXY_LIST_NODE_PROCESSOR(GwtPath.MANAGED_TREE, false, "", "proxyListNodeProcessor",
-                    "ProxyListNodeProcessor", false, false, false),
-            PROXY_NODE_PROCESSOR(GwtPath.MANAGED_TREE, false, "", "proxyNodeProcessor",
-                    "ProxyNodeProcessor", false, false, false),
+    DATA_PROVIDER(GwtPath.MANAGED_TREE, true, "DataProvider", "dataProvider", "DataProvider", false, false, false),
+    IS_LEAF_PROCESSOR(GwtPath.MANAGED_TREE, false, "", "isLeafProcessor", "IsLeafProcessor", false, false, false),
+    PROXY_LIST_NODE_PROCESSOR(GwtPath.MANAGED_TREE, false, "", "proxyListNodeProcessor", "ProxyListNodeProcessor", false, false, false),
+    PROXY_NODE_PROCESSOR(GwtPath.MANAGED_TREE, false, "", "proxyNodeProcessor", "ProxyNodeProcessor", false, false, false),
 
-    MOBILE_ACTIVITIES(GwtPath.MANAGED_ACTIVITY, false, "", "mobileActivities",
-            "ScaffoldMobileActivities", false, false, false), MOBILE_DETAILS_VIEW(
-            GwtPath.MANAGED_UI_MOBILE, true, "MobileDetailsView",
-            "mobileDetailsView", "MobileDetailsView", true, true, false), MOBILE_EDIT_VIEW(
-            GwtPath.MANAGED_UI_MOBILE, true, "MobileEditView",
-            "mobileEditView", "MobileEditView", true, true, false), MOBILE_LIST_VIEW(
-            GwtPath.MANAGED_UI_MOBILE, true, "MobileListView",
-            "mobileListView", "MobileListView", false, true, false), MOBILE_PROXY_LIST_VIEW(
-            GwtPath.SCAFFOLD_UI, false, "", "mobileProxyListView",
-            "MobileProxyListView", false, false, false),
+    MOBILE_ACTIVITIES(GwtPath.MANAGED_ACTIVITY, false, "", "mobileActivities", "ScaffoldMobileActivities", false, false, false),
+    MOBILE_DETAILS_VIEW(GwtPath.MANAGED_UI_MOBILE, true, "MobileDetailsView", "mobileDetailsView", "MobileDetailsView", true, true, false),
+    MOBILE_EDIT_VIEW(GwtPath.MANAGED_UI_MOBILE, true, "MobileEditView", "mobileEditView", "MobileEditView", true, true, false),
+    MOBILE_LIST_VIEW(GwtPath.MANAGED_UI_MOBILE, true, "MobileListView", "mobileListView", "MobileListView", false, true, false),
+    MOBILE_PROXY_LIST_VIEW(GwtPath.SCAFFOLD_UI, false, "", "mobileProxyListView", "MobileProxyListView", false, false, false),
 
     // Represents mirror types classes. There are one of these for each entity
     // mirrored by Roo.
-    PROXY(GwtPath.MANAGED_REQUEST, true, "Proxy", "proxy", null, false, false,
-            true), REQUEST(GwtPath.MANAGED_REQUEST, true, "Request", "request",
-            null, false, false, true), SCAFFOLD_APP(GwtPath.SCAFFOLD, false,
-            "", "scaffoldApp", "ScaffoldApp", false, false, false), SCAFFOLD_MOBILE_APP(
-            GwtPath.SCAFFOLD, false, "", "scaffoldMobileApp",
-            "ScaffoldMobileApp", false, false, false), SET_EDITOR(
-            GwtPath.MANAGED_UI_EDITOR, true, "SetEditor", "setEditor",
-            "SetEditor", true, true, false);
+    PROXY(GwtPath.MANAGED_REQUEST, true, "Proxy", "proxy", null, false, false, true),
+    REQUEST(GwtPath.MANAGED_REQUEST, true, "Request", "request", null, false, false, true),
+    SCAFFOLD_APP(GwtPath.SCAFFOLD, false, "", "scaffoldApp", "ScaffoldApp", false, false, false),
+    SCAFFOLD_MOBILE_APP(GwtPath.SCAFFOLD, false, "", "scaffoldMobileApp", "ScaffoldMobileApp", false, false, false),
+    SET_EDITOR(GwtPath.MANAGED_UI_EDITOR, true, "SetEditor", "setEditor", "SetEditor", true, true, false);
 
     public static List<GwtType> getMirrorTypes() {
         final List<GwtType> mirrorTypes = new ArrayList<GwtType>();

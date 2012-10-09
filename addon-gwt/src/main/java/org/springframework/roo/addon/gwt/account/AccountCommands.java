@@ -38,18 +38,23 @@ public class AccountCommands implements CommandMarker { // All command types mus
      *
      * @return true (default) if the command should be visible at this stage, false otherwise
      */
-    @CliAvailabilityIndicator({ "web gwtbootstrap account" })
-    public boolean isCommandAvailable() {
-        return operations.isCommandAvailable();
+    @CliAvailabilityIndicator({ "account add" })
+    public boolean isAddCommandAvailable() {
+        return operations.isAddCommandAvailable();
     }
 
-    @CliCommand(value = "web gwtbootstrap account", help = "Configure entity as a Spring Security account")
+    @CliAvailabilityIndicator({ "account setup" })
+    public boolean isSetupCommandAvailable() {
+        return operations.isSetupCommandAvailable();
+    }
+
+    @CliCommand(value = "account add", help = "Configure entity as a Spring Security account")
     public void addAccount(@CliOption(key = "type", mandatory = true, help = "The account entity") JavaType target,
             @CliOption(key = RooAccount.SHARED_PACKAGE_ATTRIBUTE, mandatory = false, help = "Package for enums shared with GWT") final JavaPackage sharedPackage) {
         operations.annotateAccountType(target, sharedPackage);
     }
 
-    @CliCommand(value = "web gwtbootstrap security setup", help = "Setup Spring Security account service")
+    @CliCommand(value = "account setup", help = "Setup Spring Security account service")
     public void setupSecurity(@CliOption(key = "account", mandatory = true, help = "The account entity") JavaType target,
             @CliOption(key = "package", mandatory = true, help = "Package for user details service") final JavaPackage accountPackage) {
         operations.setupSecurity(target, accountPackage);

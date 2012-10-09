@@ -1,6 +1,7 @@
 package org.springframework.roo.addon.gwt;
 
 import static java.lang.reflect.Modifier.PUBLIC;
+import static org.springframework.roo.addon.gwt.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
 import static org.springframework.roo.addon.gwt.GwtJavaType.ENTITY_PROXY;
 import static org.springframework.roo.addon.gwt.GwtJavaType.OLD_ENTITY_PROXY;
@@ -62,6 +63,7 @@ import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.Plugin;
 import org.springframework.roo.project.ProjectMetadata;
 import org.springframework.roo.project.ProjectOperations;
+import org.springframework.roo.project.Property;
 import org.springframework.roo.project.Repository;
 import org.springframework.roo.project.maven.Pom;
 import org.springframework.roo.support.osgi.OSGiUtils;
@@ -141,7 +143,12 @@ public class GwtOperationsImpl implements GwtOperations {
                         .isFeatureInstalledInFocusedModule(FeatureNames.GAE)) {
             return;
         }
-        final String targetDirectory = gwtPath == GwtPath.WEB ? projectOperations
+        if (sourceAntPath.contains("account")
+                && typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() == 0) {
+            return;
+        }
+        final String targetDirectory = (gwtPath == GwtPath.WEB
+                || gwtPath == GwtPath.ACCOUNT_WEB) ? projectOperations
                 .getPathResolver().getFocusedRoot(SRC_MAIN_WEBAPP)
                 : projectOperations.getPathResolver().getFocusedIdentifier(
                         SRC_MAIN_JAVA,
@@ -618,6 +625,9 @@ public class GwtOperationsImpl implements GwtOperations {
 
         final Element configuration = XmlUtils.getConfiguration(getClass());
 
+        // Add POM properties
+        updateProperties(configuration);
+
         // Add POM repositories
         updateRepositories(configuration);
 
@@ -677,6 +687,16 @@ public class GwtOperationsImpl implements GwtOperations {
             }
             projectOperations.addBuildPlugin(
                     projectOperations.getFocusedModuleName(), defaultPlugin);
+        }
+    }
+
+    private void updateProperties(final Element configuration) {
+        final List<Element> properties = XmlUtils.findElements(
+                "/configuration/batch/properties/*", configuration);
+        for (Element propertyElement : properties) {
+            projectOperations.addProperty(
+                    projectOperations.getFocusedModuleName(),
+                    new Property(propertyElement));
         }
     }
 

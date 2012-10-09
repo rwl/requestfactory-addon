@@ -4,7 +4,6 @@ import static org.springframework.roo.addon.gwt.account.AccountJavaType.ROO_ACCO
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
-import static org.springframework.roo.project.Path.SRC_MAIN_WEBAPP;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,8 +20,7 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.service.component.ComponentContext;
-import org.springframework.roo.addon.finder.FinderOperationsImpl;
-import org.springframework.roo.addon.gwt.GwtPath;
+import org.springframework.roo.addon.web.mvc.controller.WebMvcOperations;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
@@ -35,8 +33,6 @@ import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.process.manager.FileManager;
 import org.springframework.roo.project.Dependency;
-import org.springframework.roo.project.DependencyScope;
-import org.springframework.roo.project.DependencyType;
 import org.springframework.roo.project.FeatureNames;
 import org.springframework.roo.project.Path;
 import org.springframework.roo.project.PathResolver;
@@ -45,7 +41,9 @@ import org.springframework.roo.project.Property;
 import org.springframework.roo.support.logging.HandlerUtils;
 import org.springframework.roo.support.osgi.OSGiUtils;
 import org.springframework.roo.support.util.FileUtils;
+import org.springframework.roo.support.util.WebXmlUtils;
 import org.springframework.roo.support.util.XmlUtils;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -85,13 +83,26 @@ public class AccountOperationsImpl implements AccountOperations {
     }
 
     /** {@inheritDoc} */
-    public boolean isCommandAvailable() {
+    public boolean isAddCommandAvailable() {
 
         // Check if a project has been created
         if (!projectOperations.isFocusedProjectAvailable()) {
             return false;
         }
         if (typeLocationService.findTypesWithAnnotation(ROO_JPA_ACTIVE_RECORD, ROO_JPA_ENTITY).size() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    public boolean isSetupCommandAvailable() {
+
+        // Check if a project has been created
+        if (!projectOperations.isFocusedProjectAvailable()) {
+            return false;
+        }
+        if (typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() != 1) {
             return false;
         }
         return true;
@@ -172,6 +183,20 @@ public class AccountOperationsImpl implements AccountOperations {
         } else {
             updateFile("context/*security-template.xml", springDirectory, null, false);
         }
+
+
+        final String webXmlPath = pathResolver.getFocusedIdentifier(
+                Path.SRC_MAIN_WEBAPP, "WEB-INF/web.xml");
+        final Document webXmlDocument = XmlUtils.readXml(fileManager
+                .getInputStream(webXmlPath));
+        WebXmlUtils.addFilterAtPosition(WebXmlUtils.FilterPosition.FIRST,
+                WebMvcOperations.HTTP_METHOD_FILTER_NAME,
+                WebMvcOperations.OPEN_ENTITYMANAGER_IN_VIEW_FILTER_NAME,
+                AccountOperations.SECURITY_FILTER_NAME,
+                "org.springframework.web.filter.DelegatingFilterProxy", "/*",
+                webXmlDocument, null);
+        fileManager.createOrUpdateTextFileIfRequired(webXmlPath,
+                XmlUtils.nodeToString(webXmlDocument), false);
     }
 
     private void updateFile(final String sourceAntPath, String targetDirectory,

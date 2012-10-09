@@ -10,12 +10,16 @@ import org.springframework.roo.model.JavaType;
  */
 public interface AccountOperations {
 
+    String SECURITY_FILTER_NAME = "springSecurityFilterChain";
+
     /**
      * Indicate commands should be available
      *
      * @return true if it should be available, otherwise false
      */
-    boolean isCommandAvailable();
+    boolean isAddCommandAvailable();
+
+    boolean isSetupCommandAvailable();
 
     /**
      * Annotate the provided Java type with the trigger of this add-on

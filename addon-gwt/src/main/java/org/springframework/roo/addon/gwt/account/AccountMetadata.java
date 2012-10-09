@@ -97,7 +97,7 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
     private final String sharedPackageName;
     private final boolean isGaeEnabled;
 
-    private FieldMetadata usernameField, userRolesField, emailField, nameField, statusField;
+    private FieldMetadata usernameField, passwordField, userRolesField, emailField, nameField, statusField;
     private JavaType roleType, statusType;
 
     public AccountMetadata(String identifier, JavaType aspectName, PhysicalTypeMetadata governorPhysicalTypeMetadata,
@@ -125,6 +125,9 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         usernameField = getUsernameField();
         builder.addField(usernameField);
 
+        passwordField = getPasswordField();
+        builder.addField(passwordField);
+
         emailField = getEmailField();
         builder.addField(emailField);
 
@@ -144,6 +147,8 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         builder.addMethod(getDeclaredSetter(statusField));
         builder.addMethod(getDeclaredGetter(usernameField));
         builder.addMethod(getDeclaredSetter(usernameField));
+        builder.addMethod(getDeclaredGetter(passwordField));
+        builder.addMethod(getDeclaredSetter(passwordField));
         builder.addMethod(getDeclaredGetter(emailField));
         builder.addMethod(getDeclaredSetter(emailField));
         builder.addMethod(getDeclaredGetter(nameField));
@@ -385,6 +390,35 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         AnnotationMetadataBuilder notNullAnnotation = new AnnotationMetadataBuilder(NOT_NULL);
         AnnotationMetadataBuilder sizeAnnotation = new AnnotationMetadataBuilder(SIZE);
         sizeAnnotation.addIntegerAttribute("min", 3);
+        sizeAnnotation.addIntegerAttribute("max", 64);
+        annotations.add(notNullAnnotation);
+        annotations.add(sizeAnnotation);
+
+        // Using the FieldMetadataBuilder to create the field definition.
+        final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(getId(), // Metadata ID provided by supertype
+            modifier, // Using package protection rather than private
+            annotations,
+            fieldName, // Field name
+            JavaType.STRING); // Field type
+
+        return fieldBuilder.build(); // Build and return a FieldMetadata instance
+    }
+
+    private FieldMetadata getPasswordField() {
+        JavaSymbolName fieldName = new JavaSymbolName("password");
+
+        FieldMetadata existing = governorTypeDetails.getField(fieldName);
+        if (existing != null) {
+            return existing;
+        }
+
+        // Note private fields are private to the ITD, not the target type, this is undesirable if a dependent method is pushed in to the target type
+        int modifier = 0;
+
+        List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        AnnotationMetadataBuilder notNullAnnotation = new AnnotationMetadataBuilder(NOT_NULL);
+        AnnotationMetadataBuilder sizeAnnotation = new AnnotationMetadataBuilder(SIZE);
+        sizeAnnotation.addIntegerAttribute("min", 8);
         sizeAnnotation.addIntegerAttribute("max", 64);
         annotations.add(notNullAnnotation);
         annotations.add(sizeAnnotation);

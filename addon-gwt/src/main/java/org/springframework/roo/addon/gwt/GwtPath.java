@@ -7,51 +7,37 @@ import org.springframework.roo.model.JavaPackage;
 
 public enum GwtPath {
 
-    CLIENT("/client", "module/client/" + GwtPath.templateSelector), GWT_ROOT(
-            "/", "module/" + GwtPath.templateSelector), IMAGES(
-            "/client/style/images", "module/client/style/images/"
-                    + GwtPath.wildCardSelector), LOCATOR("/server/locator",
-            "module/server/locator/" + GwtPath.templateSelector), // GWT_REQUEST
-    MANAGED("/client/managed", "module/client/managed/"
-            + GwtPath.templateSelector), MANAGED_ACTIVITY(
-            "/client/managed/activity", "module/client/managed/activity/"
-                    + GwtPath.templateSelector), // GWT_SCAFFOLD
-    MANAGED_REQUEST("/client/managed/request", "module/client/request/"
-            + GwtPath.templateSelector), // GWT_SCAFFOLD_GENERATED
-    MANAGED_UI("/client/managed/ui", "module/client/managed/ui/"
-            + GwtPath.templateSelector),
-    MANAGED_TREE("/client/managed/tree",
-            "module/client/managed/tree/" + GwtPath.templateSelector), // GWT_SCAFFOLD_UI
-    MANAGED_UI_DESKTOP("/client/managed/ui/desktop",
-            "module/client/managed/ui/desktop/" + GwtPath.templateSelector), // GWT_SCAFFOLD_UI
-    MANAGED_UI_MOBILE("/client/managed/ui/mobile",
-            "module/client/managed/ui/mobile/" + GwtPath.templateSelector), // GWT_SCAFFOLD_UI
-    MANAGED_UI_RENDERER("/client/managed/ui/renderer",
-            "module/client/managed/ui/renderer/" + GwtPath.templateSelector), // GWT_SCAFFOLD_UI
-    MANAGED_UI_EDITOR("/client/managed/ui/editor",
-            "module/client/managed/ui/editor/" + GwtPath.templateSelector), // GWT_SCAFFOLD_UI
-    SCAFFOLD("/client/scaffold", "module/client/scaffold/"
-            + GwtPath.templateSelector), SCAFFOLD_ACTIVITY(
-            "/client/scaffold/activity", "module/client/scaffold/activity/"
-                    + GwtPath.templateSelector), SCAFFOLD_GAE(
-            "/client/scaffold/gae", "module/client/scaffold/gae/"
-                    + GwtPath.templateSelector), SCAFFOLD_IOC(
-            "/client/scaffold/ioc", "module/client/scaffold/ioc/"
-                    + GwtPath.templateSelector), SCAFFOLD_PLACE(
-            "/client/scaffold/place", "module/client/scaffold/place/"
-                    + GwtPath.templateSelector), SCAFFOLD_REQUEST(
-            "/client/scaffold/request", "module/client/scaffold/request/"
-                    + GwtPath.templateSelector), SCAFFOLD_UI(
-            "/client/scaffold/ui", "module/client/scaffold/ui/"
-                    + GwtPath.templateSelector), SERVER("/server",
-            "module/server/" + GwtPath.templateSelector), // IOC
+    CLIENT("/client", "module/client/" + GwtPath.templateSelector),
+    GWT_ROOT("/", "module/" + GwtPath.templateSelector),
+    IMAGES("/client/style/images", "module/client/style/images/" + GwtPath.wildCardSelector),
+    LOCATOR("/server/locator", "module/server/locator/" + GwtPath.templateSelector), // GWT_REQUEST
+    MANAGED("/client/managed", "module/client/managed/" + GwtPath.templateSelector),
+    MANAGED_ACTIVITY("/client/managed/activity", "module/client/managed/activity/" + GwtPath.templateSelector), // GWT_SCAFFOLD
+    MANAGED_REQUEST("/client/managed/request", "module/client/request/" + GwtPath.templateSelector), // GWT_SCAFFOLD_GENERATED
+    MANAGED_UI("/client/managed/ui", "module/client/managed/ui/" + GwtPath.templateSelector),
+    MANAGED_TREE("/client/managed/tree", "module/client/managed/tree/" + GwtPath.templateSelector), // GWT_SCAFFOLD_UI
+    MANAGED_UI_DESKTOP("/client/managed/ui/desktop", "module/client/managed/ui/desktop/" + GwtPath.templateSelector), // GWT_SCAFFOLD_UI
+    MANAGED_UI_MOBILE("/client/managed/ui/mobile", "module/client/managed/ui/mobile/" + GwtPath.templateSelector), // GWT_SCAFFOLD_UI
+    MANAGED_UI_RENDERER("/client/managed/ui/renderer", "module/client/managed/ui/renderer/" + GwtPath.templateSelector), // GWT_SCAFFOLD_UI
+    MANAGED_UI_EDITOR("/client/managed/ui/editor", "module/client/managed/ui/editor/" + GwtPath.templateSelector), // GWT_SCAFFOLD_UI
+    SCAFFOLD("/client/scaffold", "module/client/scaffold/" + GwtPath.templateSelector),
+    SCAFFOLD_ACTIVITY("/client/scaffold/activity", "module/client/scaffold/activity/" + GwtPath.templateSelector),
+    SCAFFOLD_GAE("/client/scaffold/gae", "module/client/scaffold/gae/" + GwtPath.templateSelector),
+    SCAFFOLD_IOC("/client/scaffold/ioc", "module/client/scaffold/ioc/" + GwtPath.templateSelector),
+    SCAFFOLD_PLACE("/client/scaffold/place", "module/client/scaffold/place/" + GwtPath.templateSelector),
+    SCAFFOLD_REQUEST("/client/scaffold/request", "module/client/scaffold/request/" + GwtPath.templateSelector),
+    SCAFFOLD_UI("/client/scaffold/ui", "module/client/scaffold/ui/" + GwtPath.templateSelector),
+    SERVER("/server", "module/server/" + GwtPath.templateSelector), // IOC
     SERVER_GAE("/server/gae", "module/server/gae/" + GwtPath.templateSelector), // PLACE
-    SHARED("/shared", "module/shared/" + GwtPath.templateSelector), SHARED_GAE(
-            "/shared/gae", "module/shared/gae/" + GwtPath.templateSelector), SHARED_SCAFFOLD(
-            "/shared/scaffold", "module/shared/scaffold/"
-                    + GwtPath.templateSelector), STYLE("/client/style",
-            "module/client/style/" + GwtPath.templateSelector), WEB("",
-            "webapp/" + GwtPath.wildCardSelector);
+    SHARED("/shared", "module/shared/" + GwtPath.templateSelector),
+    SHARED_GAE("/shared/gae", "module/shared/gae/" + GwtPath.templateSelector),
+    SHARED_SCAFFOLD("/shared/scaffold", "module/shared/scaffold/" + GwtPath.templateSelector),
+    STYLE("/client/style", "module/client/style/" + GwtPath.templateSelector),
+    WEB("", "webapp/" + GwtPath.wildCardSelector),
+
+    ACCOUNT_ROOT("/account", "account/module/" + GwtPath.templateSelector),
+    ACCOUNT_UI("/account/client/ui", "account/module/client/scaffold/ui/" + GwtPath.templateSelector),
+    ACCOUNT_WEB(".", "account/webapp/" + GwtPath.wildCardSelector);
 
     private static final String templateSelector = "*-template.*";
     private static final String wildCardSelector = "*";
