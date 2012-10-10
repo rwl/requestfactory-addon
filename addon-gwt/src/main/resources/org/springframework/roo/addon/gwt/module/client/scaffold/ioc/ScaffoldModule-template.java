@@ -10,7 +10,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-__GAE_IMPORT__
+__ACCOUNT_IMPORT__
 
 public class ScaffoldModule extends AbstractGinModule {
 
@@ -40,7 +40,7 @@ public class ScaffoldModule extends AbstractGinModule {
 		@Inject
 		public RequestFactoryProvider(EventBus eventBus) {
 			requestFactory = GWT.create(ApplicationRequestFactory.class);
-			requestFactory.initialize(eventBus, new EventSourceRequestTransport(eventBus__GAE_REQUEST_TRANSPORT__));
+			requestFactory.initialize(eventBus, new EventSourceRequestTransport(eventBus__ACCOUNT_REQUEST_TRANSPORT__));
 		}
 
 		public ApplicationRequestFactory get() {

@@ -9,30 +9,30 @@ import com.google.gwt.http.client.Response;
 /**
  * An event posted when an authentication failure is detected.
  */
-public class GaeAuthenticationFailureEvent extends GwtEvent<GaeAuthenticationFailureEvent.Handler> {
+public class AccountAuthenticationFailureEvent extends GwtEvent<AccountAuthenticationFailureEvent.Handler> {
 
 	/**
 	 * Implemented by handlers of this type of event.
 	 */
 	public interface Handler extends EventHandler {
 		/**
-		 * Called when a {@link GaeAuthenticationFailureEvent} is fired.
+		 * Called when a {@link AccountAuthenticationFailureEvent} is fired.
 		 *
-		 * @param requestEvent a {@link GaeAuthenticationFailureEvent} instance
+		 * @param requestEvent a {@link AccountAuthenticationFailureEvent} instance
 		 */
-		void onAuthFailure(GaeAuthenticationFailureEvent requestEvent);
+		void onAuthFailure(AccountAuthenticationFailureEvent requestEvent);
 	}
 
 	private static final Type<Handler> TYPE = new Type<Handler>();
 
 	/**
-	 * Register a {@link GaeAuthenticationFailureEvent.Handler} on an {@link EventBus}.
+	 * Register a {@link AccountAuthenticationFailureEvent.Handler} on an {@link EventBus}.
 	 *
 	 * @param eventBus the {@link EventBus}
-	 * @param handler  a {@link GaeAuthenticationFailureEvent.Handler}
+	 * @param handler  a {@link AccountAuthenticationFailureEvent.Handler}
 	 * @return a {@link HandlerRegistration} instance
 	 */
-	public static HandlerRegistration register(EventBus eventBus, GaeAuthenticationFailureEvent.Handler handler) {
+	public static HandlerRegistration register(EventBus eventBus, AccountAuthenticationFailureEvent.Handler handler) {
 		return eventBus.addHandler(TYPE, handler);
 	}
 
@@ -48,7 +48,7 @@ public class GaeAuthenticationFailureEvent extends GwtEvent<GaeAuthenticationFai
 	 * @param state    a {@link State} instance
 	 * @param response a {@link Response} instance
 	 */
-	public GaeAuthenticationFailureEvent(String loginUrl) {
+	public AccountAuthenticationFailureEvent(String loginUrl) {
 		this.loginUrl = loginUrl;
 	}
 

@@ -22,21 +22,24 @@ public enum GwtPath {
     MANAGED_UI_EDITOR("/client/managed/ui/editor", "module/client/managed/ui/editor/" + GwtPath.templateSelector), // GWT_SCAFFOLD_UI
     SCAFFOLD("/client/scaffold", "module/client/scaffold/" + GwtPath.templateSelector),
     SCAFFOLD_ACTIVITY("/client/scaffold/activity", "module/client/scaffold/activity/" + GwtPath.templateSelector),
-    SCAFFOLD_GAE("/client/scaffold/gae", "module/client/scaffold/gae/" + GwtPath.templateSelector),
+//    SCAFFOLD_GAE("/client/scaffold/gae", "module/client/scaffold/gae/" + GwtPath.templateSelector),
     SCAFFOLD_IOC("/client/scaffold/ioc", "module/client/scaffold/ioc/" + GwtPath.templateSelector),
     SCAFFOLD_PLACE("/client/scaffold/place", "module/client/scaffold/place/" + GwtPath.templateSelector),
     SCAFFOLD_REQUEST("/client/scaffold/request", "module/client/scaffold/request/" + GwtPath.templateSelector),
     SCAFFOLD_UI("/client/scaffold/ui", "module/client/scaffold/ui/" + GwtPath.templateSelector),
     SERVER("/server", "module/server/" + GwtPath.templateSelector), // IOC
-    SERVER_GAE("/server/gae", "module/server/gae/" + GwtPath.templateSelector), // PLACE
+//    SERVER_GAE("/server/gae", "module/server/gae/" + GwtPath.templateSelector), // PLACE
     SHARED("/shared", "module/shared/" + GwtPath.templateSelector),
-    SHARED_GAE("/shared/gae", "module/shared/gae/" + GwtPath.templateSelector),
+//    SHARED_GAE("/shared/gae", "module/shared/gae/" + GwtPath.templateSelector),
     SHARED_SCAFFOLD("/shared/scaffold", "module/shared/scaffold/" + GwtPath.templateSelector),
     STYLE("/client/style", "module/client/style/" + GwtPath.templateSelector),
     WEB("", "webapp/" + GwtPath.wildCardSelector),
 
+    SCAFFOLD_ACCOUNT("/client/scaffold/account", "module/client/scaffold/account/" + GwtPath.templateSelector),
+    SERVER_ACCOUNT("/server/account", "module/server/account/" + GwtPath.templateSelector),
+    SHARED_ACCOUNT("/shared/account", "module/shared/account/" + GwtPath.templateSelector),
     ACCOUNT_ROOT("/account", "account/module/" + GwtPath.templateSelector),
-    ACCOUNT_UI("/account/client/ui", "account/module/client/scaffold/ui/" + GwtPath.templateSelector),
+    ACCOUNT_UI("/account/client", "module/client/account/ui/" + GwtPath.templateSelector),
     ACCOUNT_WEB(".", "account/webapp/" + GwtPath.wildCardSelector);
 
     private static final String templateSelector = "*-template.*";

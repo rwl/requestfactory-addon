@@ -36,6 +36,7 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.service.component.ComponentContext;
+import org.springframework.roo.addon.gwt.account.RooAccount;
 import org.springframework.roo.addon.gwt.request.GwtRequestMetadata;
 import org.springframework.roo.addon.web.mvc.controller.WebMvcOperations;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
@@ -373,11 +374,34 @@ public class GwtOperationsImpl implements GwtOperations {
         }
     }
 
-    private CharSequence getGaeHookup() {
-        final StringBuilder builder = new StringBuilder(
-                "// AppEngine user authentication\n");
-        builder.append("\t\tnew GaeLoginWidgetDriver(requestFactory).setWidget(shell.getNicknameWidget(), shell.getSignOutWidget());\n");
-        builder.append("\t\tnew ReloadOnAuthenticationFailure().register(eventBus);\n");
+    private CharSequence getImportAccountHookup() {
+        JavaType account = typeLocationService
+                .findTypesWithAnnotation(ROO_ACCOUNT)
+                .iterator().next();
+        return "import " + account.getFullyQualifiedTypeName() + ";";
+    }
+
+    private CharSequence getImportRoleHookup() {
+        ClassOrInterfaceTypeDetails account = typeLocationService
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_ACCOUNT)
+                .iterator().next();
+        AnnotationAttributeValue<String> sharedPackage = account
+                .getAnnotation(ROO_ACCOUNT)
+                .getAttribute(RooAccount.SHARED_PACKAGE_ATTRIBUTE);
+        String rolePackageName;
+        if (sharedPackage == null || sharedPackage.getValue().isEmpty()) {
+            rolePackageName = account.getType().getPackage()
+                    .getFullyQualifiedPackageName();
+        } else {
+            rolePackageName = sharedPackage.getValue();
+        }
+        return "import " + rolePackageName + ".Role;";
+    }
+
+    private CharSequence getAccountHookup() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("new AccountNavTextDriver(requestFactory).setWidget(shell.getNicknameWidget());\n");
+        builder.append("\t\tnew LoginOnAuthenticationFailure().register(eventBus);");
         return builder.toString();
     }
 
@@ -448,18 +472,21 @@ public class GwtOperationsImpl implements GwtOperations {
         input = input.replace("__PROJECT_NAME__", projectOperations
                 .getProjectName(projectOperations.getFocusedModuleName()));
 
-        if (projectOperations
-                .isFeatureInstalledInFocusedModule(FeatureNames.GAE)) {
-            input = input.replace("__GAE_IMPORT__", "import " + topLevelPackage
-                    + ".client.scaffold.gae.*;\n");
-            input = input.replace("__GAE_HOOKUP__", getGaeHookup());
-            input = input.replace("__GAE_REQUEST_TRANSPORT__",
-                    ", new GaeAuthRequestTransport(eventBus)");
+        if (typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() != 0) {
+            input = input.replace("__ACCOUNT_IMPORT__", "import " + topLevelPackage
+                    + ".client.scaffold.account.*;\n");
+            input = input.replace("__ACCOUNT_HOOKUP__", getAccountHookup());
+            input = input.replace("__ACCOUNT_REQUEST_TRANSPORT__",
+                    ", new AccountAuthRequestTransport(eventBus)");
+            input = input.replace("__IMPORT_ACCOUNT__", getImportAccountHookup());
+            input = input.replace("__IMPORT_ROLE__", getImportRoleHookup());
         }
         else {
-            input = input.replace("__GAE_IMPORT__", "");
-            input = input.replace("__GAE_HOOKUP__", "");
-            input = input.replace("__GAE_REQUEST_TRANSPORT__", "");
+            input = input.replace("__ACCOUNT_IMPORT__", "");
+            input = input.replace("__ACCOUNT_HOOKUP__", "");
+            input = input.replace("__ACCOUNT_REQUEST_TRANSPORT__", "");
+            input = input.replace("__IMPORT_ACCOUNT__", "");
+            input = input.replace("__IMPORT_ROLE__", "");
         }
         return input;
     }
@@ -938,19 +965,18 @@ public class GwtOperationsImpl implements GwtOperations {
                         .getFocusedModuleName())
                         + ".server.CustomRequestFactoryServlet", "/gwtRequest",
                 null, webXml, null);
-        if (projectOperations
-                .isFeatureInstalledInFocusedModule(FeatureNames.GAE)) {
+        if (typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() != 0) {
             WebXmlUtils
                     .addFilter(
-                            "GaeAuthFilter",
-                            GwtPath.SERVER_GAE.packageName(projectOperations
+                            "AccountAuthFilter",
+                            GwtPath.SERVER_ACCOUNT.packageName(projectOperations
                                     .getTopLevelPackage(projectOperations
                                             .getFocusedModuleName()))
-                                    + ".GaeAuthFilter",
+                                    + ".AccountAuthFilter",
                             "/gwtRequest/*",
                             webXml,
-                            "This filter makes GAE authentication services visible to a RequestFactory client.");
-            final String displayName = "Redirect to the login page if needed before showing any html pages";
+                            "This filter makes account authentication services visible to a RequestFactory client.");
+            /*final String displayName = "Redirect to the login page if needed before showing any html pages";
             final WebXmlUtils.WebResourceCollection webResourceCollection = new WebXmlUtils.WebResourceCollection(
                     "Login required", null,
                     Collections.singletonList("*.html"),
@@ -960,26 +986,26 @@ public class GwtOperationsImpl implements GwtOperations {
             final String userDataConstraint = null;
             WebXmlUtils.addSecurityConstraint(displayName,
                     Collections.singletonList(webResourceCollection),
-                    roleNames, userDataConstraint, webXml, null);
+                    roleNames, userDataConstraint, webXml, null);*/
         }
         else {
             final Element filter = XmlUtils.findFirstElement(
-                    "/web-app/filter[filter-name = 'GaeAuthFilter']", root);
+                    "/web-app/filter[filter-name = 'AccountAuthFilter']", root);
             if (filter != null) {
                 filter.getParentNode().removeChild(filter);
             }
             final Element filterMapping = XmlUtils.findFirstElement(
-                    "/web-app/filter-mapping[filter-name = 'GaeAuthFilter']",
+                    "/web-app/filter-mapping[filter-name = 'AccountAuthFilter']",
                     root);
             if (filterMapping != null) {
                 filterMapping.getParentNode().removeChild(filterMapping);
             }
-            final Element securityConstraint = XmlUtils.findFirstElement(
+            /*final Element securityConstraint = XmlUtils.findFirstElement(
                     "security-constraint", root);
             if (securityConstraint != null) {
                 securityConstraint.getParentNode().removeChild(
                         securityConstraint);
-            }
+            }*/
         }
 
         removeIfFound("/web-app/error-page", root);

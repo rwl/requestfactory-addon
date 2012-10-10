@@ -1,5 +1,6 @@
 package org.springframework.roo.addon.gwt;
 
+import static org.springframework.roo.addon.gwt.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
 import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.KEY;
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
@@ -273,9 +274,8 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                                 .getTopLevelPackage(moduleName)));
             }
 
-            if (projectOperations
-                    .isFeatureInstalledInFocusedModule(FeatureNames.GAE)) {
-                dataDictionary.showSection("gae");
+            if (typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() != 0) {
+                dataDictionary.showSection("account");
             }
             break;
         case LIST_PLACE_RENDERER:
@@ -986,7 +986,7 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
         dataDictionary.setVariable("sharedScaffoldPackage",
                 GwtPath.SHARED_SCAFFOLD.packageName(projectOperations
                         .getTopLevelPackage(moduleName)));
-        dataDictionary.setVariable("sharedGaePackage", GwtPath.SHARED_GAE
+        dataDictionary.setVariable("sharedAccountPackage", GwtPath.SHARED_ACCOUNT
                 .packageName(projectOperations.getTopLevelPackage(moduleName)));
         return dataDictionary;
     }

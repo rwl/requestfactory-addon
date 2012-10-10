@@ -1,13 +1,13 @@
 package {{=packageName}};
 
 import {{=sharedScaffoldPackage}}.ScaffoldRequestFactory;
-{{#gae}}import {{=sharedGaePackage}}.MakesGaeRequests;
-{{/gae}}
+{{#account}}import {{=sharedAccountPackage}}.MakesAccountRequests;
+{{/account}}
 
 {{#imports}}import {{=import}};
 {{/imports}}
 
-public interface ApplicationRequestFactory extends ScaffoldRequestFactory{{#gae}}, MakesGaeRequests{{/gae}} {
+public interface ApplicationRequestFactory extends ScaffoldRequestFactory{{#account}}, MakesAccountRequests{{/account}} {
 {{#entities}}
-{{=entity}}{{/entities}} 	
+{{=entity}}{{/entities}}
 }

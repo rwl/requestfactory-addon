@@ -2,7 +2,7 @@ package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import __TOP_LEVEL_PACKAGE__.client.managed.activity.*;
 import __TOP_LEVEL_PACKAGE__.client.managed.request.ApplicationRequestFactory;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.gae.GaeHelper;
+import __TOP_LEVEL_PACKAGE__.client.scaffold.account.AccountHelper;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.*;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.request.RequestEvent;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.ui.NavigationTree.ProxyListNode;
@@ -24,7 +24,7 @@ import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryLogHandler
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-__GAE_IMPORT__
+__ACCOUNT_IMPORT__
 
 /**
  * Application for browsing entities.
@@ -40,7 +40,7 @@ public class ScaffoldDesktopApp extends ScaffoldApp {
     private final ApplicationDetailsActivities applicationDetailsActivities;
 
     @Inject
-    public ScaffoldDesktopApp(ScaffoldDesktopShell shell, ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController, PlaceHistoryFactory placeHistoryFactory, ApplicationMasterActivities applicationMasterActivities, ApplicationDetailsActivities applicationDetailsActivities, GaeHelper gaeHelper) {
+    public ScaffoldDesktopApp(ScaffoldDesktopShell shell, ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController, PlaceHistoryFactory placeHistoryFactory, ApplicationMasterActivities applicationMasterActivities, ApplicationDetailsActivities applicationDetailsActivities, AccountHelper accountHelper) {
         this.shell = shell;
         this.requestFactory = requestFactory;
         this.eventBus = eventBus;

@@ -5,7 +5,7 @@ import __TOP_LEVEL_PACKAGE__.client.managed.request.ApplicationRequestFactory;
 import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRenderer;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.activity.IsScaffoldMobileActivity;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.*;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.gae.GaeHelper;
+import __TOP_LEVEL_PACKAGE__.client.scaffold.account.AccountHelper;
 import __TOP_LEVEL_PACKAGE__.client.style.MobileListResources;
 import com.google.gwt.activity.shared.*;
 import com.google.gwt.cell.client.AbstractCell;
@@ -30,14 +30,14 @@ import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryLogHandler
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-__GAE_IMPORT__
+__ACCOUNT_IMPORT__
 
 /**
  * Mobile application for browsing entities.
  */
 public class ScaffoldMobileApp extends ScaffoldApp {
-	
-	
+
+
 	private static final Logger log = Logger.getLogger(Scaffold.class.getName());
 	public static final Place ROOT_PLACE = new Place() {};
 
@@ -100,7 +100,7 @@ public class ScaffoldMobileApp extends ScaffoldApp {
 	private final PlaceHistoryFactory placeHistoryFactory;
 
 	@Inject
-	public ScaffoldMobileApp(ScaffoldMobileShell shell, ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController, ScaffoldMobileActivities scaffoldMobileActivities, PlaceHistoryFactory placeHistoryFactory, GaeHelper gaeHelper) {
+	public ScaffoldMobileApp(ScaffoldMobileShell shell, ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController, ScaffoldMobileActivities scaffoldMobileActivities, PlaceHistoryFactory placeHistoryFactory, AccountHelper accountHelper) {
 		this.shell = shell;
 		this.requestFactory = requestFactory;
 		this.eventBus = eventBus;

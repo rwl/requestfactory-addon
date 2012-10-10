@@ -27,12 +27,10 @@
   <set-configuration-property name="devModeRedirectEnabled" value="true"/>
 
   <!-- Specify the app entry point class.                         -->
-  <entry-point class='__TOP_LEVEL_PACKAGE__.account.client.ui.Account'/>
+  <entry-point class='__TOP_LEVEL_PACKAGE__.account.client.Account'/>
 
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
-  <source path='com/cimhub/account/client'/>
-  <source path='com/cimhub/account/shared'/>
 
   <!-- Logging Configuration -->
   <set-property name="gwt.logging.enabled" value="TRUE"/>

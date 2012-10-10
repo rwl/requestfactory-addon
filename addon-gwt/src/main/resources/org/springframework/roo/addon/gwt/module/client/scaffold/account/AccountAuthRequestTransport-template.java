@@ -1,6 +1,5 @@
 package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
-import __TOP_LEVEL_PACKAGE__.client.scaffold.gae.GaeAuthenticationFailureEvent;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -12,24 +11,27 @@ import com.google.gwt.user.client.Window;
 
 /**
  * Extends DefaultRequestTransport to handle the authentication failures
- * reported by {@link com.google.gwt.sample.gaerequest.server.GaeAuthFilter}
+ * reported by {@link AccountAuthFilter}
  */
-public class GaeAuthRequestTransport extends DefaultRequestTransport {
+public class AccountAuthRequestTransport extends DefaultRequestTransport {
+
+	public static final String REQUEST_URL = "requestUrl";
+
 	private final EventBus eventBus;
 
-	public GaeAuthRequestTransport(EventBus eventBus) {
+	public AccountAuthRequestTransport(EventBus eventBus) {
 		this.eventBus = eventBus;
 	}
 
 	@Override
-	protected RequestCallback createRequestCallback(
-			final TransportReceiver receiver) {
+	protected RequestCallback createRequestCallback(final TransportReceiver receiver) {
+
 		final RequestCallback superCallback = super.createRequestCallback(receiver);
 
 		return new RequestCallback() {
 			public void onResponseReceived(Request request, Response response) {
 				/*
-				 * The GaeAuthFailure filter responds with Response.SC_UNAUTHORIZED and
+				 * The AccountAuthFailure filter responds with Response.SC_UNAUTHORIZED and
 				 * adds a "login" url header if the user is not logged in. When we
 				 * receive that combo, post an event so that the app can handle things
 				 * as it sees fit.
@@ -45,7 +47,7 @@ public class GaeAuthRequestTransport extends DefaultRequestTransport {
 						 * runtime exception.
 						 */
 						receiver.onTransportFailure(new ServerFailure("Unauthenticated user", null, null, false /* not fatal */));
-						eventBus.fireEvent(new GaeAuthenticationFailureEvent(loginUrl));
+						eventBus.fireEvent(new AccountAuthenticationFailureEvent(loginUrl));
 						return;
 					}
 				}
@@ -59,6 +61,18 @@ public class GaeAuthRequestTransport extends DefaultRequestTransport {
 					receiver.onTransportFailure(new ServerFailure("Status zero response, probably after auth failure", null, null, false /* not fatal */));
 					return;
 				}
+				/*
+				 * Handle the SC_FORBIDDEN error code returned by GaeAdminFilter
+				 * in the case of request denial.
+				 */
+				if (Response.SC_FORBIDDEN == statusCode) {
+					String loginUrl = response.getHeader("login");
+					if (loginUrl != null) {
+						receiver.onTransportFailure(new ServerFailure("Forbidden content", null, null, false /* not fatal */));
+						eventBus.fireEvent(new AccountAuthenticationFailureEvent(loginUrl));
+						return;
+					}
+				}
 				superCallback.onResponseReceived(request, response);
 			}
 
@@ -71,8 +85,8 @@ public class GaeAuthRequestTransport extends DefaultRequestTransport {
 	@Override
 	protected RequestBuilder createRequestBuilder() {
 		RequestBuilder builder = super.createRequestBuilder();
-		// GaeAuthFilter uses this to construct login url
-		builder.setHeader("requestUrl", Window.Location.getHref());
+		// AccountAuthFilter uses this to construct login url
+		builder.setHeader(REQUEST_URL, Window.Location.getHref());
 		return builder;
 	}
 }

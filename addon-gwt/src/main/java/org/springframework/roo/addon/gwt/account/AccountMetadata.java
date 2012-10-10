@@ -418,7 +418,7 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
         AnnotationMetadataBuilder notNullAnnotation = new AnnotationMetadataBuilder(NOT_NULL);
         AnnotationMetadataBuilder sizeAnnotation = new AnnotationMetadataBuilder(SIZE);
-        sizeAnnotation.addIntegerAttribute("min", 8);
+        sizeAnnotation.addIntegerAttribute("min", 6);
         sizeAnnotation.addIntegerAttribute("max", 64);
         annotations.add(notNullAnnotation);
         annotations.add(sizeAnnotation);
@@ -429,6 +429,7 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
             annotations,
             fieldName, // Field name
             JavaType.STRING); // Field type
+        fieldBuilder.setFieldInitializer("\"unused\"");
 
         return fieldBuilder.build(); // Build and return a FieldMetadata instance
     }
