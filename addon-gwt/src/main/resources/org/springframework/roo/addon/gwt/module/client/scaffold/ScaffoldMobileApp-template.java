@@ -5,7 +5,7 @@ import __TOP_LEVEL_PACKAGE__.client.managed.request.ApplicationRequestFactory;
 import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRenderer;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.activity.IsScaffoldMobileActivity;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.*;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.account.AccountHelper;
+import __TOP_LEVEL_PACKAGE__.client.scaffold.account.helper.AccountHelper;
 import __TOP_LEVEL_PACKAGE__.client.style.MobileListResources;
 import com.google.gwt.activity.shared.*;
 import com.google.gwt.cell.client.AbstractCell;

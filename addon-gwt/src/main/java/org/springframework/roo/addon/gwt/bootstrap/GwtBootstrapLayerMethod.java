@@ -31,10 +31,10 @@ enum GwtBootstrapLayerMethod {
     COUNT_BY_PARENT(GwtBootstrapDataKeys.COUNT_BY_PARENT_METHOD, true) {
         @Override
         public String getName(final GwtBootstrapAnnotationValues annotationValues,
-                final JavaType targetEntity, final String plural, final FieldMetadata parentField) {
-            if (StringUtils.isNotBlank(annotationValues.getParentField())) {
+                final JavaType targetEntity, final String plural, final FieldMetadata parentProperty) {
+            if (StringUtils.isNotBlank(annotationValues.getParentProperty())) {
                 /*return "count" + plural
-                        + "By" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id";*/
+                        + "By" + parentProperty.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id";*/
                 return "count" + plural + "ByParentId";
             }
             return null;
@@ -50,7 +50,7 @@ enum GwtBootstrapLayerMethod {
     FIND_BY_STRING_ID(GwtBootstrapDataKeys.FIND_BY_STRING_ID_METHOD, true) {
         @Override
         public String getName(final GwtBootstrapAnnotationValues annotationValues,
-                final JavaType targetEntity, final String plural, final FieldMetadata parentField) {
+                final JavaType targetEntity, final String plural, final FieldMetadata parentProperty) {
             return "find" + targetEntity.getSimpleTypeName() + "ByStringId";
         }
 
@@ -64,10 +64,10 @@ enum GwtBootstrapLayerMethod {
     FIND_ENTRIES_BY_PARENT(GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD, true) {
         @Override
         public String getName(final GwtBootstrapAnnotationValues annotationValues,
-                final JavaType targetEntity, final String plural, final FieldMetadata parentField) {
-            if (StringUtils.isNotBlank(annotationValues.getParentField())) {
+                final JavaType targetEntity, final String plural, final FieldMetadata parentProperty) {
+            if (StringUtils.isNotBlank(annotationValues.getParentProperty())) {
                 /*return "find" + targetEntity.getSimpleTypeName()
-                        + "EntriesBy" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id";*/
+                        + "EntriesBy" + parentProperty.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id";*/
                 return "find" + targetEntity.getSimpleTypeName() + "EntriesByParentId";
             }
             return null;
@@ -133,7 +133,7 @@ enum GwtBootstrapLayerMethod {
      * @return a non-blank Java snippet
      */
     public String getCall(final GwtBootstrapAnnotationValues annotationValues,
-            final JavaType targetEntity, final String plural, final FieldMetadata parentField,
+            final JavaType targetEntity, final String plural, final FieldMetadata parentProperty,
             final List<MethodParameter> callerParameters) {
         final String target;
         if (isStatic) {
@@ -143,7 +143,7 @@ enum GwtBootstrapLayerMethod {
             target = callerParameters.get(0).getValue().getSymbolName();
         }
         final List<MethodParameter> parameters = getParameters(callerParameters);
-        return getCall(target, getName(annotationValues, targetEntity, plural, parentField),
+        return getCall(target, getName(annotationValues, targetEntity, plural, parentProperty),
                 parameters.iterator());
     }
 
@@ -184,7 +184,7 @@ enum GwtBootstrapLayerMethod {
      * @return <code>null</code> if the method isn't desired for that entity
      */
     public abstract String getName(GwtBootstrapAnnotationValues annotationValues,
-            JavaType targetEntity, String plural, final FieldMetadata parentField);
+            JavaType targetEntity, String plural, final FieldMetadata parentProperty);
 
     /**
      * Returns the parameters to be passed when this method is invoked

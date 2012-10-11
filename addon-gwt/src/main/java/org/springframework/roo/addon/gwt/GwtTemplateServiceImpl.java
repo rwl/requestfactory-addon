@@ -172,7 +172,7 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                     AnnotationMetadata annotation = entity.getAnnotation(ROO_GWT_BOOTSTRAP);
                     if (annotation != null) {
                         AnnotationAttributeValue<String> attribute = annotation
-                                .getAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE);
+                                .getAttribute(RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE);
                         if (attribute == null || attribute.getValue().isEmpty()) {
                             dataDictionary.addSection("roots").setVariable("root",
                                     proxySimpleName);
@@ -384,15 +384,15 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                         AnnotationMetadata annotation = ety.getAnnotation(ROO_GWT_BOOTSTRAP);
                         if (annotation == null) continue;
                         AnnotationAttributeValue<String> annotationAttributeValue = annotation
-                                .getAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE);
+                                .getAttribute(RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE);
                         if (annotationAttributeValue == null) continue;
-                        String parentFieldName = annotationAttributeValue.getValue();
-                        if (parentFieldName.isEmpty()) continue;
-                        FieldMetadata parentField = ety
-                                .getField(new JavaSymbolName(parentFieldName));
-                        Validate.notNull(parentField, "Parent field not found");
+                        String parentPropertyName = annotationAttributeValue.getValue();
+                        if (parentPropertyName.isEmpty()) continue;
+                        FieldMetadata parentProperty = ety
+                                .getField(new JavaSymbolName(parentPropertyName));
+                        Validate.notNull(parentProperty, "Parent property not found");
 
-                        if (parentField.getFieldType().equals(entity.getType())) {
+                        if (parentProperty.getFieldType().equals(entity.getType())) {
                             isLeaf = false;
 
                             ClassOrInterfaceTypeDetails proxyForEntity = gwtTypeService
@@ -447,19 +447,19 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                 continue;
             }
             AnnotationAttributeValue<String> annotationAttributeValue = annotation
-                    .getAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE);
+                    .getAttribute(RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE);
             if (annotationAttributeValue == null) {
                 continue;
             }
-            String parentFieldName = annotationAttributeValue.getValue();
-            if (parentFieldName.isEmpty()) {
+            String parentPropertyName = annotationAttributeValue.getValue();
+            if (parentPropertyName.isEmpty()) {
                 continue;
             }
-            FieldMetadata parentField = gwtBootstrapEntity
-                    .getField(new JavaSymbolName(parentFieldName));
-            Validate.notNull(parentField, "Parent field not found");
+            FieldMetadata parentProperty = gwtBootstrapEntity
+                    .getField(new JavaSymbolName(parentPropertyName));
+            Validate.notNull(parentProperty, "Parent field not found");
 
-            if (parentField.getFieldType().equals(entity)) {
+            if (parentProperty.getFieldType().equals(entity)) {
                 ClassOrInterfaceTypeDetails proxyForEntity = gwtTypeService
                         .lookupProxyFromEntity(gwtBootstrapEntity);
                 dataDictionary.addSection("children").setVariable("child",
@@ -501,17 +501,17 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
 
         AnnotationMetadata annotation = mirroredType.getAnnotation(ROO_GWT_BOOTSTRAP);
         AnnotationAttributeValue<String> annotationAttributeValue = annotation
-                .getAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE);
-        String parentFieldName = "";
+                .getAttribute(RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE);
+        String parentPropertyName = "";
         if (annotationAttributeValue != null) {
-            parentFieldName = annotationAttributeValue.getValue();
+            parentPropertyName = annotationAttributeValue.getValue();
         }
 
         JavaType altIdType = idType.equals(KEY) ? STRING : idType;
 
         String countMethodId, findMethodId, countCall, findCall;
         List<MethodParameter> findParameters, countParamemters;
-        if (parentFieldName.isEmpty()) {
+        if (parentPropertyName.isEmpty()) {
             countMethodId = CustomDataKeys.COUNT_ALL_METHOD.name();
             findMethodId = CustomDataKeys.FIND_ENTRIES_METHOD.name();
             countCall = "()";
@@ -526,26 +526,26 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
             countCall = "(parentId)";
             findCall = "(parentId, range.getStart(), range.getLength())";
             countParamemters = Arrays.asList(new MethodParameter(
-                    altIdType, parentFieldName + "Id"));
+                    altIdType, parentPropertyName + "Id"));
             findParameters = Arrays.asList(new MethodParameter(
-                    altIdType, parentFieldName + "Id"), new MethodParameter(
+                    altIdType, parentPropertyName + "Id"), new MethodParameter(
                     INT_PRIMITIVE, "firstResult"), new MethodParameter(
                     INT_PRIMITIVE, "maxResults"));
 
-            FieldMetadata parentField = mirroredType
-                    .getField(new JavaSymbolName(parentFieldName));
-            Validate.notNull(parentField, "Parent field not found");
-            String parentTypeName = parentField.getFieldType().getSimpleTypeName();
+            FieldMetadata parentProperty = mirroredType
+                    .getField(new JavaSymbolName(parentPropertyName));
+            Validate.notNull(parentProperty, "Parent property not found");
+            String parentTypeName = parentProperty.getFieldType().getSimpleTypeName();
             String parentProxyName = parentTypeName + "Proxy";
 
             String setProxyParentStmt = "if (proxy.get"
-                    + StringUtils.capitalize(parentFieldName) + "() == null) {\n"
+                    + StringUtils.capitalize(parentPropertyName) + "() == null) {\n"
                     + "factory." + StringUtils.uncapitalize(parentTypeName)
                     + "Request().find" + parentTypeName + "ByStringId"
                     + "(parentId).fire(new Receiver<" + parentProxyName + ">() {\n"
                     + "@Override\n"
                     + "public void onSuccess(" + parentProxyName + " response) {\n"
-                    + "proxy.set" + StringUtils.capitalize(parentFieldName) + "(response);\n"
+                    + "proxy.set" + StringUtils.capitalize(parentPropertyName) + "(response);\n"
                     + "}\n"
                     + "});\n"
                     + "}\n";
@@ -753,18 +753,26 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                 // Choose the first available field.
                 primaryProperty = gwtProxyProperty;
             }
-            else if (gwtProxyProperty.isString() && !primaryProperty.isString()) {
+            else if (gwtProxyProperty.isString()
+                    && !primaryProperty.isString()
+                    && !isPrimaryProp(primaryProperty, mirroredType)) {
                 // Favor String properties over other types.
-                secondaryProperty = primaryProperty;
+                //secondaryProperty = primaryProperty;
                 primaryProperty = gwtProxyProperty;
             }
-            else if (secondaryProperty == null) {
+            /*else if (secondaryProperty == null) {
                 // Choose the next available property.
                 secondaryProperty = gwtProxyProperty;
             }
             else if (gwtProxyProperty.isString()
                     && !secondaryProperty.isString()) {
                 // Favor String properties over other types.
+                secondaryProperty = gwtProxyProperty;
+            }*/
+            if (isPrimaryProp(gwtProxyProperty, mirroredType)) {
+                primaryProperty = gwtProxyProperty;
+            }
+            if (isSecondaryProp(gwtProxyProperty, mirroredType)) {
                 secondaryProperty = gwtProxyProperty;
             }
 
@@ -939,6 +947,9 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
             dataDictionary.setVariable("primaryPropBuilder", "");
         }
         if (secondaryProperty != null) {
+            dataDictionary.showSection("hasSecondaryProp");
+            dataDictionary.setVariable("secondaryPropGetter",
+                    secondaryProperty.getGetter());
             dataDictionary.setVariable("secondaryPropBuilder",
                     secondaryProperty.forMobileListView("secondaryRenderer"));
             final TemplateDataDictionary section = dataDictionary
@@ -967,6 +978,34 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
             dataDictionary.setVariable("datePropBuilder", "");
         }
         return dataDictionary;
+    }
+
+    private boolean isPrimaryProp(final GwtProxyProperty prop,
+            final ClassOrInterfaceTypeDetails entity) {
+        return isRenderProp(prop, entity, RooGwtBootstrap.
+                PRIMARY_PROPERTY_ATTRIBUTE);
+    }
+
+    private boolean isSecondaryProp(final GwtProxyProperty prop,
+            final ClassOrInterfaceTypeDetails entity) {
+        return isRenderProp(prop, entity, RooGwtBootstrap.
+                SECONDARY_PROPERTY_ATTRIBUTE);
+    }
+
+    private boolean isRenderProp(final GwtProxyProperty prop,
+            final ClassOrInterfaceTypeDetails entity,
+            final String propertyAttribute) {
+        AnnotationMetadata annotation = entity.getAnnotation(ROO_GWT_BOOTSTRAP);
+        if (annotation == null) {
+            return false;
+        }
+        AnnotationAttributeValue<String> primaryProperty = annotation
+                .getAttribute(propertyAttribute);
+        if (primaryProperty == null || !primaryProperty.getValue()
+                .equals(prop.getName())) {
+            return false;
+        }
+        return true;
     }
 
     private TemplateDataDictionary buildStandardDataDictionary(

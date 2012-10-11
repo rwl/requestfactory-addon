@@ -52,8 +52,10 @@ public class GwtBootstrapCommands implements CommandMarker { // All command type
      */
     @CliCommand(value = "web gwtbootstrap entity", help = "Configure entity for GWT Bootstrap")
     public void add(@CliOption(key = "type", mandatory = true, help = "The entity to configure") JavaType target,
-            @CliOption(key = RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE, mandatory = false, help = "The name of the field of the parent") final JavaSymbolName parentField) {
-        operations.annotateType(target, parentField);
+            @CliOption(key = RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE, mandatory = false, help = "The name of the field of the parent") final JavaSymbolName parentProperty,
+            @CliOption(key = RooGwtBootstrap.PRIMARY_PROPERTY_ATTRIBUTE, mandatory = false, help = "Primary property to be used when rendering") final JavaSymbolName primaryProperty,
+            @CliOption(key = RooGwtBootstrap.SECONDARY_PROPERTY_ATTRIBUTE, mandatory = false, help = "Secondary property to be used when rendering") final JavaSymbolName secondaryProperty) {
+        operations.annotateType(target, parentProperty, primaryProperty, secondaryProperty);
     }
 
     @CliCommand(value = "field list", help = "Adds a private List field to an existing Java source file (eg the 'one' side of a many-to-one)")

@@ -35,6 +35,7 @@ public enum GwtPath {
     STYLE("/client/style", "module/client/style/" + GwtPath.templateSelector),
     WEB("", "webapp/" + GwtPath.wildCardSelector),
 
+    ACCOUNT_HELPER("/client/scaffold/account/helper", "module/client/scaffold/helper/" + GwtPath.templateSelector),
     SCAFFOLD_ACCOUNT("/client/scaffold/account", "module/client/scaffold/account/" + GwtPath.templateSelector),
     SERVER_ACCOUNT("/server/account", "module/server/account/" + GwtPath.templateSelector),
     SHARED_ACCOUNT("/shared/account", "module/shared/account/" + GwtPath.templateSelector),

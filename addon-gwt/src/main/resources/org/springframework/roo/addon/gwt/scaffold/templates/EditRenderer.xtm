@@ -27,6 +27,6 @@ public class {{=className}} extends ProxyRenderer<{{=proxy}}> {
     if (object == null) {
       return "";
     }
-    return object.{{=primaryPropGetter}}() + " (" + object.{{=primaryPropGetter}}() + ")";
+    return object.{{=primaryPropGetter}}().toString(){{#hasSecondaryProp}} + " (" + object.{{=secondaryPropGetter}}().toString() + ")"{{/hasSecondaryProp}};
   }
 }

@@ -21,8 +21,7 @@ import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 
 public enum GwtType {
-    ACTIVITIES_MAPPER(GwtPath.MANAGED_ACTIVITY, true, "ActivitiesMapper",
-            "activitiesMapper", "ActivitiesMapper", false, true, false),
+    ACTIVITIES_MAPPER(GwtPath.MANAGED_ACTIVITY, true, "ActivitiesMapper", "activitiesMapper", "ActivitiesMapper", false, true, false),
 
     // Represents shared types. There is one such type per application using
     // Roo's GWT support
@@ -59,9 +58,11 @@ public enum GwtType {
     // mirrored by Roo.
     PROXY(GwtPath.MANAGED_REQUEST, true, "Proxy", "proxy", null, false, false, true),
     REQUEST(GwtPath.MANAGED_REQUEST, true, "Request", "request", null, false, false, true),
+    SET_EDITOR(GwtPath.MANAGED_UI_EDITOR, true, "SetEditor", "setEditor", "SetEditor", true, true, false),
+
     SCAFFOLD_APP(GwtPath.SCAFFOLD, false, "", "scaffoldApp", "ScaffoldApp", false, false, false),
-    SCAFFOLD_MOBILE_APP(GwtPath.SCAFFOLD, false, "", "scaffoldMobileApp", "ScaffoldMobileApp", false, false, false),
-    SET_EDITOR(GwtPath.MANAGED_UI_EDITOR, true, "SetEditor", "setEditor", "SetEditor", true, true, false);
+    SCAFFOLD_DESKTOP_APP(GwtPath.SCAFFOLD, false, "", "scaffoldDesktopApp", "ScaffoldDesktopApp", false, false, false),
+    SCAFFOLD_MOBILE_APP(GwtPath.SCAFFOLD, false, "", "scaffoldMobileApp", "ScaffoldMobileApp", false, false, false);
 
     public static List<GwtType> getMirrorTypes() {
         final List<GwtType> mirrorTypes = new ArrayList<GwtType>();

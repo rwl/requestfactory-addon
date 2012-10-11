@@ -81,14 +81,14 @@ public class GwtBootstrapLayerProvider extends CoreLayerProvider {
             return null;
         }
 
-        final FieldMetadata parentField = null;//getParentField(targetEntity, annotationValues.getParentField());
+        final FieldMetadata parentProperty = null;//getParentField(targetEntity, annotationValues.getParentField());
         /*if (parentField == null) {
             return null;
         }*/
 
         // It's an entity layer method; see if it's specified by the annotation
         final String methodName = method.getName(annotationValues,
-                targetEntity, plural, parentField);
+                targetEntity, plural, parentProperty);
         if (StringUtils.isBlank(methodName)) {
             return null;
         }
@@ -97,7 +97,7 @@ public class GwtBootstrapLayerProvider extends CoreLayerProvider {
         final List<MethodParameter> callerParameterList = Arrays
                 .asList(callerParameters);
         final String methodCall = method.getCall(annotationValues,
-                targetEntity, plural, parentField, callerParameterList);
+                targetEntity, plural, parentProperty, callerParameterList);
         final ClassOrInterfaceTypeDetailsBuilder additionsBuilder = new ClassOrInterfaceTypeDetailsBuilder(
                 callerMID);
         if (method.isStatic()) {

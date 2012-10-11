@@ -858,7 +858,7 @@ public class GwtOperationsImpl implements GwtOperations {
         wasGaeEnabled = isGaeEnabled;
 
         // Update the GaeHelper type
-        updateGaeHelper();
+//        updateGaeHelper();
 
         gwtTypeService.buildType(GwtType.APP_REQUEST_FACTORY,
                 gwtTemplateService.getStaticTemplateTypeDetails(
@@ -949,7 +949,7 @@ public class GwtOperationsImpl implements GwtOperations {
         deleteUntouchedSetupFiles("setup/*", targetDirectory);
         deleteUntouchedSetupFiles("setup/client/*", targetDirectory + "/client");
         copyDirectoryContents();
-        updateGaeHelper();
+//        updateGaeHelper();
     }
 
     private void updateWebXml() {

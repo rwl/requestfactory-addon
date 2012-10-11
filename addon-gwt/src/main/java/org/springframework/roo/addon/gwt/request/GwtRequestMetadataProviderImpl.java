@@ -291,10 +291,10 @@ public class GwtRequestMetadataProviderImpl extends
 
         ClassOrInterfaceTypeDetails domainTypeDetails = typeLocationService.getTypeDetails(domainType);
         AnnotationMetadata annotation = domainTypeDetails.getAnnotation(ROO_GWT_BOOTSTRAP);
-        AnnotationAttributeValue<String> annotationAttributeValue = annotation.getAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE);
-        String parentField = "";
+        AnnotationAttributeValue<String> annotationAttributeValue = annotation.getAttribute(RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE);
+        String parentProperty = "";
         if (annotationAttributeValue != null) {
-            parentField = annotationAttributeValue.getValue();
+            parentProperty = annotationAttributeValue.getValue();
         }
 
         final Map<MethodMetadataCustomDataKey, Collection<MethodParameter>> signatures = new LinkedHashMap<MethodMetadataCustomDataKey, Collection<MethodParameter>>();
@@ -312,11 +312,11 @@ public class GwtRequestMetadataProviderImpl extends
         signatures.put(PERSIST_METHOD, proxyParameterAsList);
         signatures.put(REMOVE_METHOD, proxyParameterAsList);
 
-        if (!parentField.isEmpty()) {
+        if (!parentProperty.isEmpty()) {
             signatures.put(GwtBootstrapDataKeys.COUNT_BY_PARENT_METHOD, Arrays
-                    .asList(new MethodParameter(STRING, parentField + "Id")));
+                    .asList(new MethodParameter(STRING, parentProperty + "Id")));
             signatures.put(GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD, Arrays.asList(new MethodParameter(
-                    STRING, parentField + "Id"), new MethodParameter(
+                    STRING, parentProperty + "Id"), new MethodParameter(
                     INT_PRIMITIVE, "firstResult"), new MethodParameter(
                     INT_PRIMITIVE, "maxResults")));
         }

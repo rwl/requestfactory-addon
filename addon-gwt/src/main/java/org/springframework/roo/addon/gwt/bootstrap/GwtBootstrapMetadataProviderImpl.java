@@ -103,16 +103,16 @@ public final class GwtBootstrapMetadataProviderImpl extends AbstractItdMetadataP
         if (memberDetails == null) {
             return null;
         }
-        FieldMetadata parentField = null;
-        final String parentFieldName = gwtBootstrapAnnotationValues.getParentField();
-        if (!parentFieldName.isEmpty()) {
+        FieldMetadata parentProperty = null;
+        final String parentPropertyName = gwtBootstrapAnnotationValues.getParentProperty();
+        if (!parentPropertyName.isEmpty()) {
             for (FieldMetadata field : memberDetails.getFields()) {
-                if (field.getFieldName().getSymbolName().equals(parentFieldName)) {
-                    parentField = field;
+                if (field.getFieldName().getSymbolName().equals(parentPropertyName)) {
+                    parentProperty = field;
                     break;
                 }
             }
-            if (parentField == null) {
+            if (parentProperty == null) {
                 return null;
             }
         }
@@ -137,7 +137,7 @@ public final class GwtBootstrapMetadataProviderImpl extends AbstractItdMetadataP
         // Pass dependencies required by the metadata in through its constructor
         return new GwtBootstrapMetadata(metadataIdentificationString, aspectName,
                 crudAnnotationValues, governorPhysicalTypeMetadata, gwtBootstrapAnnotationValues,
-                pluralMetadata.getPlural(), idField, parentField, entityName, isGaeEnabled);
+                pluralMetadata.getPlural(), idField, parentProperty, entityName, isGaeEnabled);
     }
 
     /**

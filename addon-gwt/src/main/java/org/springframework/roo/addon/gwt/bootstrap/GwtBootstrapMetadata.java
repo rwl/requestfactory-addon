@@ -75,11 +75,11 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
     private final String entityName;
     private final String plural;
     private final FieldMetadata identifierField;
-    private final FieldMetadata parentField;
+    private final FieldMetadata parentProperty;
 
     public GwtBootstrapMetadata(String identifier, JavaType aspectName, JpaCrudAnnotationValues crudAnnotationValues,
             PhysicalTypeMetadata governorPhysicalTypeMetadata,
-            GwtBootstrapAnnotationValues gwtBootstrapAnnotationValues, String plural, FieldMetadata idField, FieldMetadata parentField,
+            GwtBootstrapAnnotationValues gwtBootstrapAnnotationValues, String plural, FieldMetadata idField, FieldMetadata parentProperty,
             final String entityName, final boolean isGaeEnabled) {
         super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
@@ -90,7 +90,7 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         this.entityName = entityName;
         this.plural = plural;
         this.identifierField = idField;
-        this.parentField = parentField;
+        this.parentProperty = parentProperty;
 
         if (!isValid()) {
             return;
@@ -229,7 +229,7 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
     }
 
     private MethodMetadata getFindEntriesMethod() {
-        if (parentField == null) {
+        if (parentProperty == null) {
             return null;
         }
 
@@ -259,7 +259,7 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         final JavaType[] parameterTypes = { idType, INT_PRIMITIVE, INT_PRIMITIVE };
 
         // Define method parameter names
-        final String idParamName = StringUtils.uncapitalize(parentField.getFieldType().getSimpleTypeName()) + "Id";
+        final String idParamName = StringUtils.uncapitalize(parentProperty.getFieldType().getSimpleTypeName()) + "Id";
         final List<JavaSymbolName> parameterNames = Arrays.asList(
                 new JavaSymbolName(idParamName),
                 new JavaSymbolName("firstResult"),
@@ -269,14 +269,14 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
                 Arrays.asList(destination));
 
         // Create the method body
-        String findMethodName = crudAnnotationValues.getFindMethod() + parentField.getFieldType().getSimpleTypeName();
+        String findMethodName = crudAnnotationValues.getFindMethod() + parentProperty.getFieldType().getSimpleTypeName();
         if (identifierField.getFieldType().equals(KEY)) {
             findMethodName = findMethodName + "ByStringId";
         }
         InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-        bodyBuilder.appendFormalLine("final " + parentField.getFieldType().getNameIncludingTypeParameters(false, builder.getImportRegistrationResolver())
+        bodyBuilder.appendFormalLine("final " + parentProperty.getFieldType().getNameIncludingTypeParameters(false, builder.getImportRegistrationResolver())
                 + " parent = "
-                + parentField.getFieldType().getNameIncludingTypeParameters(true, builder.getImportRegistrationResolver())
+                + parentProperty.getFieldType().getNameIncludingTypeParameters(true, builder.getImportRegistrationResolver())
                 + "." + findMethodName + "(" + idParamName + ");");
 
 
@@ -292,7 +292,7 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
                 + "().createQuery(\"SELECT o FROM "
                 + entityName
                 + " AS o WHERE o."
-                + parentField.getFieldName().getSymbolName()
+                + parentProperty.getFieldName().getSymbolName()
                 + " = :parent"
                 + "\", "
                 + destination.getSimpleTypeName()
@@ -316,7 +316,7 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
     }
 
     private MethodMetadata getCountMethod() {
-        if (parentField == null) {
+        if (parentProperty == null) {
             return null;
         }
 
@@ -346,19 +346,19 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
         final JavaType[] parameterTypes = { idType };
 
         // Define method parameter names
-        final String idParamName = StringUtils.uncapitalize(parentField.getFieldType().getSimpleTypeName()) + "Id";
+        final String idParamName = StringUtils.uncapitalize(parentProperty.getFieldType().getSimpleTypeName()) + "Id";
         final List<JavaSymbolName> parameterNames = Arrays.asList(new JavaSymbolName(idParamName));
 
         // Create the method body
-        String findMethodName = crudAnnotationValues.getFindMethod() + parentField.getFieldType().getSimpleTypeName();
+        String findMethodName = crudAnnotationValues.getFindMethod() + parentProperty.getFieldType().getSimpleTypeName();
         if (identifierField.getFieldType().equals(KEY)) {
             findMethodName = findMethodName + "ByStringId";
         }
         InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-        bodyBuilder.appendFormalLine("final " + parentField.getFieldType().getNameIncludingTypeParameters(false, builder.getImportRegistrationResolver())
+        bodyBuilder.appendFormalLine("final " + parentProperty.getFieldType().getNameIncludingTypeParameters(false, builder.getImportRegistrationResolver())
                 + " "
-                + parentField.getFieldName().getSymbolName() + " = "
-                + parentField.getFieldType().getNameIncludingTypeParameters(true, builder.getImportRegistrationResolver())
+                + parentProperty.getFieldName().getSymbolName() + " = "
+                + parentProperty.getFieldType().getNameIncludingTypeParameters(true, builder.getImportRegistrationResolver())
                 + "." + findMethodName + "(" + idParamName + ");");
 
 
@@ -374,16 +374,16 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
                 + "().createQuery(\"SELECT o FROM "
                 + entityName
                 + " AS o WHERE o."
-                + parentField.getFieldName().getSymbolName()
+                + parentProperty.getFieldName().getSymbolName()
                 + " = :"
-                + parentField.getFieldName().getSymbolName()
+                + parentProperty.getFieldName().getSymbolName()
                 + "\", "
                 + destination.getSimpleTypeName()
                 + ".class);");
         bodyBuilder.appendFormalLine("q.setParameter(\""
-                + parentField.getFieldName().getSymbolName()
+                + parentProperty.getFieldName().getSymbolName()
                 + "\", "
-                + parentField.getFieldName().getSymbolName()
+                + parentProperty.getFieldName().getSymbolName()
                 + ");");
         bodyBuilder.appendFormalLine("return q.getResultList().size();");
 

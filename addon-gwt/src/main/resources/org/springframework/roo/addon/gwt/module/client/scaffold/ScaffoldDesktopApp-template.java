@@ -2,7 +2,7 @@ package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import __TOP_LEVEL_PACKAGE__.client.managed.activity.*;
 import __TOP_LEVEL_PACKAGE__.client.managed.request.ApplicationRequestFactory;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.account.AccountHelper;
+import __TOP_LEVEL_PACKAGE__.client.scaffold.account.helper.AccountHelper;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.*;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.request.RequestEvent;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.ui.NavigationTree.ProxyListNode;

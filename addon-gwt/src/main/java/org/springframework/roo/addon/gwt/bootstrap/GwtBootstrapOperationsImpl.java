@@ -78,7 +78,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
     }
 
     /** {@inheritDoc} */
-    public void annotateType(JavaType javaType, final JavaSymbolName parentName) {
+    public void annotateType(JavaType javaType, final JavaSymbolName parentProperty, final JavaSymbolName primaryProperty, final JavaSymbolName secondaryProperty) {
         // Use Roo's Assert type for null checks
         Validate.notNull(javaType, "Java type required");
 
@@ -89,13 +89,16 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
         if (existing != null && MemberFindingUtils.getAnnotationOfType(existing.getAnnotations(), ROO_GWT_BOOTSTRAP) == null) {
             ClassOrInterfaceTypeDetailsBuilder classOrInterfaceTypeDetailsBuilder = new ClassOrInterfaceTypeDetailsBuilder(existing);
 
-            // Create JavaType instance for the add-ons trigger annotation
-//            JavaType rooRooExample = new JavaType(RooGwtBootstrap.class.getName());
-
             // Create Annotation metadata
             AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(ROO_GWT_BOOTSTRAP);
-            if (parentName != null) {
-                annotationBuilder.addStringAttribute(RooGwtBootstrap.PARENT_FIELD_ATTRIBUTE, parentName.getSymbolName());
+            if (parentProperty != null) {
+                annotationBuilder.addStringAttribute(RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE, parentProperty.getSymbolName());
+            }
+            if (primaryProperty != null) {
+                annotationBuilder.addStringAttribute(RooGwtBootstrap.PRIMARY_PROPERTY_ATTRIBUTE, primaryProperty.getSymbolName());
+            }
+            if (secondaryProperty != null) {
+                annotationBuilder.addStringAttribute(RooGwtBootstrap.SECONDARY_PROPERTY_ATTRIBUTE, secondaryProperty.getSymbolName());
             }
 
             // Add annotation to target type
