@@ -2,7 +2,9 @@ package org.springframework.roo.addon.gwt;
 
 import static java.lang.reflect.Modifier.PUBLIC;
 import static org.springframework.roo.addon.gwt.account.AccountJavaType.ROO_ACCOUNT;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.KEY;
 import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
+import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP_EXCLUDE;
 import static org.springframework.roo.addon.gwt.GwtJavaType.ENTITY_PROXY;
 import static org.springframework.roo.addon.gwt.GwtJavaType.OLD_ENTITY_PROXY;
 import static org.springframework.roo.addon.gwt.GwtJavaType.OLD_REQUEST_CONTEXT;
@@ -42,10 +44,12 @@ import org.springframework.roo.addon.web.mvc.controller.WebMvcOperations;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeManagementService;
+import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.classpath.details.MemberFindingUtils;
+import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
@@ -194,6 +198,7 @@ public class GwtOperationsImpl implements GwtOperations {
         cidBuilder.updateTypeAnnotation(new AnnotationMetadataBuilder(
                 PROXY_FOR_NAME, attributeValues));
         attributeValues.remove(locatorAttributeValue);
+
         final List<StringAttributeValue> readOnlyValues = new ArrayList<StringAttributeValue>();
         final FieldMetadata versionField = persistenceMemberLocator
                 .getVersionField(entity.getName());
@@ -210,6 +215,25 @@ public class GwtOperationsImpl implements GwtOperations {
         final ArrayAttributeValue<StringAttributeValue> readOnlyAttribute = new ArrayAttributeValue<StringAttributeValue>(
                 new JavaSymbolName("readOnly"), readOnlyValues);
         attributeValues.add(readOnlyAttribute);
+
+        final List<StringAttributeValue> excludeValues = new ArrayList<StringAttributeValue>();
+        for (FieldMetadata fieldMetadata : entity.getFieldsWithAnnotation(ROO_GWT_BOOTSTRAP_EXCLUDE)) {
+            excludeValues.add(new StringAttributeValue(VALUE, fieldMetadata.getFieldName().getSymbolName()));
+        }
+        for (MethodMetadata methodMetadata : entity.getMethods()) {
+            if (methodMetadata.getAnnotation(ROO_GWT_BOOTSTRAP_EXCLUDE) != null) {
+                excludeValues.add(new StringAttributeValue(VALUE, StringUtils.uncapitalize(BeanInfoUtils
+                        .getPropertyNameForJavaBeanMethod(methodMetadata)
+                        .getSymbolName())));
+            }
+        }
+        if (!CollectionUtils.isEmpty(idFields) && idFields.get(0).getFieldType().equals(KEY)) {
+            excludeValues.add(new StringAttributeValue(VALUE, "stringId"));
+        }
+        final ArrayAttributeValue<StringAttributeValue> excludeAttribute = new ArrayAttributeValue<StringAttributeValue>(
+                new JavaSymbolName("exclude"), excludeValues);
+        attributeValues.add(excludeAttribute);
+
         cidBuilder.updateTypeAnnotation(new AnnotationMetadataBuilder(
                 ROO_GWT_PROXY, attributeValues));
         typeManagementService.createOrUpdateTypeOnDisk(cidBuilder.build());

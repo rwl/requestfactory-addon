@@ -3,7 +3,6 @@ package org.springframework.roo.addon.gwt.bootstrap;
 import static org.springframework.roo.addon.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
 import static org.springframework.roo.addon.gwt.bootstrap.RooGwtBootstrap.PARENT_PROPERTY_DEFAULT;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.roo.classpath.details.annotations.populator.AbstractAnnotationValues;
 import org.springframework.roo.classpath.details.annotations.populator.AutoPopulate;
 import org.springframework.roo.classpath.details.annotations.populator.AutoPopulationUtils;
@@ -27,6 +26,6 @@ public class GwtBootstrapAnnotationValues extends AbstractAnnotationValues {
     }
 
     public String getParentProperty() {
-        return StringUtils.defaultIfEmpty(parentProperty, PARENT_PROPERTY_DEFAULT);
+        return parentProperty;
     }
 }

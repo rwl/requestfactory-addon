@@ -1,9 +1,9 @@
 package org.springframework.roo.addon.gwt.account;
 
-import static org.springframework.roo.addon.gwt.account.RooAccount.SHARED_PACKAGE_DEFAULT;
 import static org.springframework.roo.addon.gwt.account.AccountJavaType.ROO_ACCOUNT;
+import static org.springframework.roo.addon.gwt.account.RooAccount.SHARED_PACKAGE_DEFAULT;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.roo.addon.gwt.bootstrap.RooGwtBootstrap;
 import org.springframework.roo.classpath.details.annotations.populator.AbstractAnnotationValues;
 import org.springframework.roo.classpath.details.annotations.populator.AutoPopulate;
 import org.springframework.roo.classpath.details.annotations.populator.AutoPopulationUtils;
@@ -27,6 +27,6 @@ public class AccountAnnotationValues extends AbstractAnnotationValues {
     }
 
     public String getSharedPackage() {
-        return StringUtils.defaultIfEmpty(sharedPackage, SHARED_PACKAGE_DEFAULT);
+        return sharedPackage;
     }
 }

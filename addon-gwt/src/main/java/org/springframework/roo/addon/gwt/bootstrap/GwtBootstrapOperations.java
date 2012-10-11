@@ -1,7 +1,5 @@
 package org.springframework.roo.addon.gwt.bootstrap;
 
-import org.springframework.roo.classpath.operations.Cardinality;
-import org.springframework.roo.classpath.operations.Fetch;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 
@@ -26,10 +24,4 @@ public interface GwtBootstrapOperations {
     void annotateType(JavaType type, final JavaSymbolName parentProperty,
             final JavaSymbolName primaryProperty,
             final JavaSymbolName secondaryProperty);
-
-    void addFieldListJpa(JavaSymbolName fieldName, JavaType fieldType,
-            JavaType typeName, JavaSymbolName mappedBy, boolean notNull,
-            boolean nullRequired, Integer sizeMin, Integer sizeMax,
-            Cardinality cardinality, Fetch fetch, String comment,
-            boolean transientModifier, boolean permitReservedWords);
 }

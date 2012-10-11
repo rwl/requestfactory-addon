@@ -11,6 +11,8 @@ public final class GwtBootstrapJavaType {
 
     public static final JavaType ROO_GWT_BOOTSTRAP = new JavaType(
             RooGwtBootstrap.class.getName());
+    public static final JavaType ROO_GWT_BOOTSTRAP_EXCLUDE = new JavaType(
+            RooGwtBootstrapExclude.class.getName());
 
     /**
      * Constructor is private to prevent instantiation
