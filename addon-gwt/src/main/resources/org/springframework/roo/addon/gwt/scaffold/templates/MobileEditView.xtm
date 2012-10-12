@@ -14,16 +14,18 @@ import com.google.gwt.text.shared.AbstractRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.IntegerBox;
-import com.google.gwt.user.client.ui.LongBox;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.ValueListBox;
-import com.google.gwt.user.datepicker.client.DateBox;
+import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.CheckBox;
+import com.github.gwtbootstrap.client.ui.DoubleBox;
+import com.github.gwtbootstrap.client.ui.IntegerBox;
+import com.github.gwtbootstrap.client.ui.LongBox;
+import com.github.gwtbootstrap.client.ui.TextBox;
+import com.github.gwtbootstrap.client.ui.ValueListBox;
+import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.AlertBlock;
+import com.github.gwtbootstrap.datepicker.client.ui.DateBox;
 import {{=scaffoldUiPackage}}.ui.*;
 
 import {{=placePackage}}.ProxyEditView;
@@ -57,7 +59,7 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
 	}
 
 	{{#editViewProps}}
-	{{=prop}};{{/editViewProps}}	
+	{{=prop}};{{/editViewProps}}
 	@UiField Button save;
 	@UiField DivElement errors;
 
@@ -79,7 +81,7 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
 
 	{{#setProxyValuePickers}}
 	{{=setValuePicker}}{{/setProxyValuePickers}}
-   
+
 	public void setCreating(boolean creating) {
 	}
 

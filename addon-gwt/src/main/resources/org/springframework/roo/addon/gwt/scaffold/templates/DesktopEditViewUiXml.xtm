@@ -1,30 +1,19 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
   xmlns:g='urn:import:com.google.gwt.user.client.ui'
-  xmlns:d='urn:import:com.google.gwt.user.datepicker.client'
+  xmlns:d='urn:import:com.github.gwtbootstrap.datepicker.client.ui'
   xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
   xmlns:r='urn:import:{{=scaffoldUiPackage}}'
   xmlns:a='urn:import:{{=uiPackage}}'
   xmlns:e='urn:import:{{=uiEditorPackage}}'>
 
   <ui:style>
-   .errors {
-      padding-left: 0.5em;
-      background-color: red;
-    }
     .fields {
       margin-top: 0.5em;
-      margin-left: 1em;
-    }
-    .label {
-      min-height: 25px;
-      font-weight: bold;
+      margin-bottom: 0.5em;
     }
     .button {
       margin-right: 1em;
-    }
-    .bar {
-      margin-left: 1em;
     }
     .header {
       margin-left: 1em;
@@ -44,15 +33,22 @@
       </h3>
       <h3 class='{style.header}' ui:field='createTitle'><ui:msg>New {{=name}}</ui:msg></h3>
     </div>
-    <div ui:field='errors' class='{style.errors}'></div>
 
-    <table id='boundElementHolder' class="{style.fields}">{{#editableProperties}}
-      <tr id='{{=prop}}'><td><div class='{style.label}'>{{=propReadable}}:</div></td><td><{{=propBinder}} ui:field='{{=prop}}'/></td></tr>{{/editableProperties}}
-    </table>
+    <b:AlertBlock type="ERROR" close="false" animation="true" visible="false" heading="Error" ui:field="errors"/>
 
-    <div class='{style.bar}'>
-      <b:Button addStyleNames='{style.button}' icon='SAVE' ui:field='save'>Save</b:Button>
-      <b:Button addStyleNames='{style.button}' icon='REMOVE_SIGN' ui:field='cancel'>Cancel</b:Button>
-    </div>
+	<b:Form addStyleNames="{style.fields}" type="HORIZONTAL" id="boundElementHolder">
+		<b:Fieldset>{{#editableProperties}}
+			<b:ControlGroup>
+				<b:ControlLabel for="{{=prop}}">{{=propReadable}}:</b:ControlLabel>
+				<b:Controls>
+					<{{=propBinder}} ui:field="{{=prop}}"/>
+				</b:Controls>
+			</b:ControlGroup>{{/editableProperties}}
+			<b:FormActions>
+				<b:Button addStyleNames="{style.button}" icon="SAVE" type="PRIMARY" ui:field="save">Save</b:Button>
+				<b:Button addStyleNames="{style.button}" icon="REMOVE_SIGN" ui:field="cancel">Cancel</b:Button>
+			</b:FormActions>
+		</b:Fieldset>
+	</b:Form>
   </g:HTMLPanel>
 </ui:UiBinder>

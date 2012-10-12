@@ -24,6 +24,8 @@ import org.springframework.roo.model.JavaType;
 
 public class GwtProxyProperty {
 
+    private static final String ALTERNATE_SIZE = "LARGE";
+
     public static String getProxyRendererType(
             final JavaPackage topLevelPackage, final JavaType javaType) {
         return GwtType.EDIT_RENDERER.getPath().packageName(topLevelPackage)
@@ -88,32 +90,34 @@ public class GwtProxyProperty {
 
     public String getBinder() {
         if (type.equals(JavaType.DOUBLE_OBJECT)) {
-            return "g:DoubleBox";
+            return "b:DoubleBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'";
         }
         if (type.equals(LONG_OBJECT)) {
-            return "g:LongBox";
+            return "b:LongBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'";
         }
         if (type.equals(JavaType.INT_OBJECT)) {
-            return "g:IntegerBox";
+            return "b:IntegerBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'";
         }
         if (type.equals(JavaType.FLOAT_OBJECT)) {
-            return "r:FloatBox";
+            return "r:FloatBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'";
         }
         if (type.equals(JavaType.BYTE_OBJECT)) {
-            return "r:ByteBox";
+            return "r:ByteBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'";
         }
         if (type.equals(JavaType.SHORT_OBJECT)) {
-            return "r:ShortBox";
+            return "r:ShortBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'";
         }
         if (type.equals(JavaType.CHAR_OBJECT)) {
-            return "r:CharBox";
+            return "r:CharBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'";
         }
         if (type.equals(BIG_DECIMAL)) {
-            return "r:BigDecimalBox";
+            return "r:BigDecimalBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'";
         }
-        return isCollection() ? "e:" + getSetEditor() : isDate() ? "d:DateBox"
-                : isBoolean() ? "g:CheckBox" : isString() ? "g:TextBox"
-                        : "g:ValueListBox";
+        return isCollection() ? "e:" + getSetEditor()
+                : isDate() ? "d:DateBox"
+                : isBoolean() ? "b:CheckBox"
+                : isString() ? "b:TextBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'"
+                : "b:ValueListBox";
     }
 
     public String getCheckboxSubtype() {

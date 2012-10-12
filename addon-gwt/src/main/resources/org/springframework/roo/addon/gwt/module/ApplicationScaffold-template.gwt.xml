@@ -11,6 +11,7 @@
 	<inherits name="com.google.gwt.text.Text"/>
 
 	<inherits name="com.github.gwtbootstrap.Bootstrap" />
+	<inherits name='com.github.gwtbootstrap.datepicker.Datepicker' />
 	<!-- <set-property name="bootstrap.responsiveDesign" value="true"/> -->
 
 	<source path='client'/>
