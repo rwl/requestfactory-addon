@@ -25,13 +25,8 @@
             <g:Label ui:field="viewLabel"/>
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="editorPanel">
-          <b:InputAddOn>
             <b:ValueListBox ui:field="picker"/>
-            <b:appendWidget>
-	          <b:Button icon="PLUS" ui:field="add"/>
-	        </b:appendWidget>
-          </b:InputAddOn>
-          <br/>
+            <b:Button size="SMALL" icon="PLUS" ui:field="add">Add</b:Button> <br/>
           <g:FlowPanel ui:field="container"/>
         </g:HTMLPanel>
     </g:HTMLPanel>

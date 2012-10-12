@@ -24,7 +24,7 @@
             <g:Label ui:field="viewLabel"/>
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="editorPanel">
-            Entry to Add: <b:ValueListBox ui:field="picker"/>
+            <b:ValueListBox ui:field="picker"/>
             <b:Button size="SMALL" icon="PLUS" ui:field="add">Add</b:Button> <br/>
             <g:FlexTable ui:field="table"/>
         </g:HTMLPanel>

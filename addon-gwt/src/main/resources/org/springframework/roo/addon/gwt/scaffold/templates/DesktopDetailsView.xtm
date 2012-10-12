@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.github.gwtbootstrap.client.ui.Label;
 
 import {{=placePackage}}.ProxyListView;
 {{#imports}}import {{=import}};
@@ -29,8 +30,8 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
 
 	{{=proxy}} proxy;
 	{{#fields}}
-	@UiField SpanElement {{=field}};{{/fields}}	
-	
+	@UiField Label {{=field}};{{/fields}}
+
 	@UiField SpanElement displayRenderer;
 	@UiField HasClickHandlers edit;
 	@UiField HasClickHandlers delete;
@@ -78,7 +79,7 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
 	public void setValue({{=proxy}} proxy) {
 		this.proxy = proxy;
 		{{#managedProperties}}
-		{{=prop}}.setInnerText(proxy.{{=propGetter}}() == null ? "" : {{=propFormatter}}(proxy.{{=propGetter}}()));
+		{{=prop}}.setText(proxy.{{=propGetter}}() == null ? "" : {{=propFormatter}}(proxy.{{=propGetter}}()));
 		{{/managedProperties}}
 
 		displayRenderer.setInnerText({{=proxyRenderer}}.instance().render(proxy));

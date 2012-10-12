@@ -45,7 +45,7 @@
 				</b:Controls>
 			</b:ControlGroup>{{/editableProperties}}
 			<b:FormActions>
-				<b:Button addStyleNames="{style.button}" icon="SAVE" type="PRIMARY" ui:field="save">Save</b:Button>
+				<b:SubmitButton addStyleNames="{style.button}" type="PRIMARY" ui:field="save">Save</b:SubmitButton>
 				<b:Button addStyleNames="{style.button}" icon="REMOVE_SIGN" ui:field="cancel">Cancel</b:Button>
 			</b:FormActions>
 		</b:Fieldset>

@@ -26,6 +26,7 @@ import com.github.gwtbootstrap.client.ui.ValueListBox;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.AlertBlock;
 import com.github.gwtbootstrap.datepicker.client.ui.DateBox;
+import com.github.gwtbootstrap.client.ui.SubmitButton;
 
 {{#imports}}import {{=import}};
 {{/imports}}
@@ -53,7 +54,7 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
 	{{=prop}};{{/editViewProps}}
 
 	@UiField Button cancel;
-	@UiField Button save;
+	@UiField SubmitButton save;
     @UiField AlertBlock errors;
 
 	@UiField Element editTitle;
