@@ -212,6 +212,9 @@ public class GwtOperationsImpl implements GwtOperations {
             readOnlyValues.add(new StringAttributeValue(VALUE, idFields.get(0)
                     .getFieldName().getSymbolName()));
         }
+        if (!CollectionUtils.isEmpty(idFields) && idFields.get(0).getFieldType().equals(KEY)) {
+            readOnlyValues.add(new StringAttributeValue(VALUE, "stringId"));
+        }
         final ArrayAttributeValue<StringAttributeValue> readOnlyAttribute = new ArrayAttributeValue<StringAttributeValue>(
                 new JavaSymbolName("readOnly"), readOnlyValues);
         attributeValues.add(readOnlyAttribute);
@@ -226,9 +229,6 @@ public class GwtOperationsImpl implements GwtOperations {
                         .getPropertyNameForJavaBeanMethod(methodMetadata)
                         .getSymbolName())));
             }
-        }
-        if (!CollectionUtils.isEmpty(idFields) && idFields.get(0).getFieldType().equals(KEY)) {
-            excludeValues.add(new StringAttributeValue(VALUE, "stringId"));
         }
         final ArrayAttributeValue<StringAttributeValue> excludeAttribute = new ArrayAttributeValue<StringAttributeValue>(
                 new JavaSymbolName("exclude"), excludeValues);
