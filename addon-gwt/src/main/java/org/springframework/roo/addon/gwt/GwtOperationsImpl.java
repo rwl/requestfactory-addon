@@ -200,26 +200,28 @@ public class GwtOperationsImpl implements GwtOperations {
         attributeValues.remove(locatorAttributeValue);
 
         final List<StringAttributeValue> readOnlyValues = new ArrayList<StringAttributeValue>();
+        final List<StringAttributeValue> excludeValues = new ArrayList<StringAttributeValue>();
+
         final FieldMetadata versionField = persistenceMemberLocator
                 .getVersionField(entity.getName());
         if (versionField != null) {
             readOnlyValues.add(new StringAttributeValue(VALUE, versionField
                     .getFieldName().getSymbolName()));
         }
+
         final List<FieldMetadata> idFields = persistenceMemberLocator
                 .getIdentifierFields(entity.getName());
         if (!CollectionUtils.isEmpty(idFields)) {
-            readOnlyValues.add(new StringAttributeValue(VALUE, idFields.get(0)
-                    .getFieldName().getSymbolName()));
-        }
-        if (!CollectionUtils.isEmpty(idFields) && idFields.get(0).getFieldType().equals(KEY)) {
-            readOnlyValues.add(new StringAttributeValue(VALUE, "stringId"));
+            readOnlyValues.add(new StringAttributeValue(VALUE,
+                    idFields.get(0).getFieldName().getSymbolName()));
+            if (idFields.get(0).getFieldType().equals(KEY)) {
+                readOnlyValues.add(new StringAttributeValue(VALUE, "stringId"));
+            }
         }
         final ArrayAttributeValue<StringAttributeValue> readOnlyAttribute = new ArrayAttributeValue<StringAttributeValue>(
                 new JavaSymbolName("readOnly"), readOnlyValues);
         attributeValues.add(readOnlyAttribute);
 
-        final List<StringAttributeValue> excludeValues = new ArrayList<StringAttributeValue>();
         for (FieldMetadata fieldMetadata : entity.getFieldsWithAnnotation(ROO_GWT_BOOTSTRAP_EXCLUDE)) {
             excludeValues.add(new StringAttributeValue(VALUE, fieldMetadata.getFieldName().getSymbolName()));
         }

@@ -1,13 +1,14 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:b='urn:import:com.github.gwtbootstrap.client.ui'>
     <ui:style type="{{=packageName}}.{{=className}}.Style">
         .editorPanelVisible {
-          border: thin solid black;
+          /*border: thin solid black;
           margin: 2px;
+    	  -moz-border-radius: 5px;
+    	  -webkit-border-radius: 5px;*/
     	  overflow: hidden;
     	  padding: 5px;
-    	  -moz-border-radius: 5px;
-    	  -webkit-border-radius: 5px;
         }
 
         .viewPanelVisible {
@@ -18,13 +19,13 @@
         }
     </ui:style>
     <g:HTMLPanel>
-        <g:Button ui:field="clickToEdit">Edit</g:Button>
+        <b:Button size="SMALL" icon="EDIT" ui:field="clickToEdit">Edit</b:Button>
         <g:HTMLPanel ui:field="viewPanel">
             <g:Label ui:field="viewLabel"/>
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="editorPanel">
-            Entry to Add: <g:ValueListBox ui:field="picker"/>
-            <g:Button ui:field="add">Add</g:Button> <br/>
+            Entry to Add: <b:ValueListBox ui:field="picker"/>
+            <b:Button size="SMALL" icon="PLUS" ui:field="add">Add</b:Button> <br/>
             <g:FlexTable ui:field="table"/>
         </g:HTMLPanel>
     </g:HTMLPanel>

@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
   xmlns:g='urn:import:com.google.gwt.user.client.ui'
   xmlns:d='urn:import:com.github.gwtbootstrap.datepicker.client.ui'
-  xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
+  xmlns:b='urn:import:com.github.gwtbootstrap.client.ui'
   xmlns:r='urn:import:{{=scaffoldUiPackage}}'
   xmlns:a='urn:import:{{=uiPackage}}'
   xmlns:e='urn:import:{{=uiEditorPackage}}'>
