@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.springframework.roo.addon.requestfactory.request.GwtRequestMetadata;
 
 /**
  * Unit test for {@link GwtRequestMetadata}

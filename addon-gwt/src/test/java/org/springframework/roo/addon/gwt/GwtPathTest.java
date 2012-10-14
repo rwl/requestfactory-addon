@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.junit.Test;
+import org.springframework.roo.addon.requestfactory.GwtPath;
 
 /**
  * Unit test of the {@link GwtPath} enum.
