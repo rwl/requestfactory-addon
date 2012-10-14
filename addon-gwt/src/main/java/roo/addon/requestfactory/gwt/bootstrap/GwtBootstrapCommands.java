@@ -3,6 +3,8 @@ package roo.addon.requestfactory.gwt.bootstrap;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.classpath.converters.JavaTypeConverter;
+import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.shell.CliAvailabilityIndicator;
@@ -10,49 +12,62 @@ import org.springframework.roo.shell.CliCommand;
 import org.springframework.roo.shell.CliOption;
 import org.springframework.roo.shell.CommandMarker;
 
-/**
- * Sample of a command class. The command class is registered by the Roo shell following an
- * automatic classpath scan. You can provide simple user presentation-related logic in this
- * class. You can return any objects from each method, or use the logger directly if you'd
- * like to emit messages of different severity (and therefore different colours on
- * non-Windows systems).
- *
- * @since 1.1
- */
-@Component // Use these Apache Felix annotations to register your commands class in the Roo container
+@Component
 @Service
-public class GwtBootstrapCommands implements CommandMarker { // All command types must implement the CommandMarker interface
+public class GwtBootstrapCommands implements CommandMarker {
 
-    /**
-     * Get a reference to the GwtBootstrapOperations from the underlying OSGi container
-     */
     @Reference private GwtBootstrapOperations operations;
 
-    /**
-     * This method is optional. It allows automatic command hiding in situations when the command should not be visible.
-     * For example the 'entity' command will not be made available before the user has defined his persistence settings
-     * in the Roo shell or directly in the project.
-     *
-     * You can define multiple methods annotated with {@link CliAvailabilityIndicator} if your commands have differing
-     * visibility requirements.
-     *
-     * @return true (default) if the command should be visible at this stage, false otherwise
-     */
+    @CliAvailabilityIndicator({
+            "web gwt bootstrap scaffold all",
+            "web gwt bootstrap scaffold type",
+            "web gwt bootstrap gae update" })
+    public boolean isScaffoldAvailable() {
+        return operations.isScaffoldAvailable();
+    }
+
+    @CliAvailabilityIndicator({ "web gwt bootstrap setup" })
+    public boolean isGwtSetupAvailable() {
+        return operations.isGwtInstallationPossible();
+    }
+
     @CliAvailabilityIndicator({ "bootstrap entity" })
     public boolean isCommandAvailable() {
         return operations.isCommandAvailable();
     }
 
-    /**
-     * This method registers a command with the Roo shell. It also offers a mandatory command attribute.
-     *
-     * @param type
-     */
+    @CliCommand(value = "web gwt bootstrap setup", help = "Install Google Web Toolkit (GWT) Bootstrap into your project")
+    public void webGwtBootstrapSetup() {
+        operations.setupGwtBootstrap();
+    }
+
     @CliCommand(value = "bootstrap entity", help = "Configure entity for GWT Bootstrap")
     public void add(@CliOption(key = "type", mandatory = true, help = "The entity to configure") JavaType target,
             @CliOption(key = RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE, mandatory = false, help = "The name of the field of the parent") final JavaSymbolName parentProperty,
             @CliOption(key = RooGwtBootstrap.PRIMARY_PROPERTY_ATTRIBUTE, mandatory = false, help = "Primary property to be used when rendering") final JavaSymbolName primaryProperty,
             @CliOption(key = RooGwtBootstrap.SECONDARY_PROPERTY_ATTRIBUTE, mandatory = false, help = "Secondary property to be used when rendering") final JavaSymbolName secondaryProperty) {
         operations.annotateType(target, parentProperty, primaryProperty, secondaryProperty);
+    }
+
+    @CliCommand(value = "web gwt bootstrap scaffold all", help = "Locates all entities in the project and creates GWT requests, proxies and creates the scaffold")
+    public void scaffoldAll(
+            @CliOption(key = "proxyPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
+            @CliOption(key = "requestPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created requests will be placed") final JavaPackage requestPackage) {
+
+        operations.scaffoldAll(proxyPackage, requestPackage);
+    }
+
+    @CliCommand(value = "web gwt bootstrap scaffold type", help = "Creates a GWT request, proxy and scaffold for the specified")
+    public void scaffoldType(
+            @CliOption(key = "proxyPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
+            @CliOption(key = "requestPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created requests will be placed") final JavaPackage requestPackage,
+            @CliOption(key = "type", mandatory = true, help = "The type to base the created scaffold on") final JavaType type) {
+
+        operations.scaffoldType(proxyPackage, requestPackage, type);
+    }
+
+    @CliCommand(value = "web gwt gae update", help = "Updates the GWT project to support GAE")
+    public void updateGaeConfiguration() {
+        operations.updateGaeConfiguration();
     }
 }

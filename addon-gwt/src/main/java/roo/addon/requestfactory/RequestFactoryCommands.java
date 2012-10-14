@@ -26,12 +26,7 @@ public class RequestFactoryCommands implements CommandMarker {
 
     @CliAvailabilityIndicator({ "web requestfactory setup" })
     public boolean isRequestFactorySetupAvailable() {
-        return requestFactoryOperations.isRequestFactoryInstallationPossible();
-    }
-
-    @CliAvailabilityIndicator({ "web gwt bootstrap setup" })
-    public boolean isGwtSetupAvailable() {
-        return requestFactoryOperations.isGwtInstallationPossible();
+        return requestFactoryOperations.isRequestFactoryServerInstallationPossible();
     }
 
     @CliAvailabilityIndicator({ "web requestfactory locator all",
@@ -39,12 +34,14 @@ public class RequestFactoryCommands implements CommandMarker {
             "web requestfactory proxy all",
             "web requestfactory proxy type",
             "web requestfactory request all",
-            "web requestfactory request type",
-            "web gwt bootstrap scaffold all",
-            "web gwt bootstrap scaffold type",
-            "web gwt bootstrap gae update" })
+            "web requestfactory request type" })
     public boolean isScaffoldAvailable() {
-        return requestFactoryOperations.isScaffoldAvailable();
+        return requestFactoryOperations.isRequestFactoryCommandAvailable();
+    }
+
+    @CliCommand(value = "web requestfactory setup", help = "Install GWT RequestFactory into your project")
+    public void webRequestFactorySetup() {
+        requestFactoryOperations.setupRequestFactoryServer();
     }
 
     @CliCommand(value = "web requestfactory locator all", help = "Locates all entities in the project and creates RequestFactory locators")
@@ -90,37 +87,5 @@ public class RequestFactoryCommands implements CommandMarker {
             @CliOption(key = "type", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created request on") final JavaType type) {
 
         requestFactoryOperations.requestType(javaPackage, type);
-    }
-
-    @CliCommand(value = "web gwt bootstrap scaffold all", help = "Locates all entities in the project and creates GWT requests, proxies and creates the scaffold")
-    public void scaffoldAll(
-            @CliOption(key = "proxyPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
-            @CliOption(key = "requestPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created requests will be placed") final JavaPackage requestPackage) {
-
-        requestFactoryOperations.scaffoldAll(proxyPackage, requestPackage);
-    }
-
-    @CliCommand(value = "web gwt bootstrap scaffold type", help = "Creates a GWT request, proxy and scaffold for the specified")
-    public void scaffoldType(
-            @CliOption(key = "proxyPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
-            @CliOption(key = "requestPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created requests will be placed") final JavaPackage requestPackage,
-            @CliOption(key = "type", mandatory = true, help = "The type to base the created scaffold on") final JavaType type) {
-
-        requestFactoryOperations.scaffoldType(proxyPackage, requestPackage, type);
-    }
-
-    @CliCommand(value = "web gwt gae update", help = "Updates the GWT project to support GAE")
-    public void updateGaeConfiguration() {
-        requestFactoryOperations.updateGaeConfiguration();
-    }
-
-    @CliCommand(value = "web requestfactory setup", help = "Install GWT RequestFactory into your project")
-    public void webRequestFactorySetup() {
-        requestFactoryOperations.setupRequestFactory();
-    }
-
-    @CliCommand(value = "web gwt bootstrap setup", help = "Install Google Web Toolkit (GWT) Bootstrap into your project")
-    public void webGwtBootstrapSetup() {
-        requestFactoryOperations.setupGwtBootstrap();
     }
 }

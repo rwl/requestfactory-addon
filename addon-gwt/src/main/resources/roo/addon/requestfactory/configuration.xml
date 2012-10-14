@@ -2,209 +2,40 @@
 <configuration>
 	<batch>
 	    <properties>
-        	<gwt.version>2.5.0-rc1</gwt.version>
+        	<gwt.version>2.5.0.rc2</gwt.version>
 	    </properties>
 	</batch>
-    <gwt>
-        <repositories>
-            <repository>
-                <id>maven.springframework.org.external</id>
-                <name>SpringSource Maven Repository - External Releases</name>
-                <url>http://maven.springframework.org/external</url>
-            </repository>
-
-            <!-- TODO: Remove on Gwt Bootstrap 2.1 release -->
-            <repository>
-                <id>sonatype</id>
-                <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-                <snapshots><enabled>true</enabled></snapshots>
-                <releases><enabled>false</enabled></releases>
-            </repository>
-        </repositories>
+	<client>
         <dependencies>
-            <dependency>
-                <groupId>com.google.gwt</groupId>
-                <artifactId>gwt-servlet</artifactId>
-                <version>${gwt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.gwt</groupId>
-                <artifactId>gwt-user</artifactId>
-                <version>${gwt.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>json</artifactId>
-                <version>20090211</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.gwt.inject</groupId>
-                <artifactId>gin</artifactId>
-                <version>1.5.0</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>1.0.0.GA</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>1.0.0.GA</version>
-                <classifier>sources</classifier>
-            </dependency>
-            <dependency>
-                <groupId>xalan</groupId>
-                <artifactId>xalan</artifactId>
-                <version>2.7.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.gwtbootstrap</groupId>
-                <artifactId>gwt-bootstrap</artifactId>
-                <version>2.1.0.0-SNAPSHOT</version>
-            </dependency>
+		    <dependency>
+		      <groupId>com.google.web.bindery</groupId>
+		      <artifactId>requestfactory-client</artifactId>
+		      <version>${gwt.version}</version>
+		    </dependency>
         </dependencies>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <!-- Warning: 2.3.0+ does not work in Windows -->
-                <version>${gwt.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.google.gwt</groupId>
-                        <artifactId>gwt-dev</artifactId>
-                        <version>${gwt.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.google.gwt</groupId>
-                        <artifactId>gwt-user</artifactId>
-                        <version>${gwt.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <logLevel>INFO</logLevel>
-                    <style>PRETTY</style>
-                    <runTarget>/index.html</runTarget>
-                    <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
-                    <!-- <modules>
-                        <module>${project.groupId}.ApplicationScaffold</module>
-                    </modules> -->
-                    <copyWebapp>true</copyWebapp>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>gwtcompile</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Run the RequestFactory ValidationTool -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <configuration>
-                            <id>VerifyRequestFactoryInterfaces</id>
-                            <executable>java</executable>
-                            <arguments>
-                                <argument>-cp</argument>
-                                <classpath />
-                                <argument>com.google.web.bindery.requestfactory.apt.ValidationTool</argument>
-                                <argument>${project.build.outputDirectory}</argument>
-                                <argument>${project.groupId}.client.managed.request.ApplicationRequestFactory</argument>
-                            </arguments>
-                        </configuration>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </gwt>
-    <gae>
+	</client>
+	<server>
         <dependencies>
-            <dependency>
-                <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-api-1.0-sdk</artifactId>
-                <version>1.6.5</version>
-            </dependency>
+		    <dependency>
+		      <groupId>com.google.web.bindery</groupId>
+		      <artifactId>requestfactory-server</artifactId>
+		      <version>${gwt.version}</version>
+		    </dependency>
+		    <dependency>
+		      <groupId>org.hibernate</groupId>
+		      <artifactId>hibernate-validator</artifactId>
+		      <version>4.1.0.Final</version>
+		      <exclusions>
+		        <exclusion>
+		          <groupId>javax.xml.bind</groupId>
+		          <artifactId>jaxb-api</artifactId>
+		        </exclusion>
+		        <exclusion>
+		          <groupId>com.sun.xml.bind</groupId>
+		          <artifactId>jaxb-impl</artifactId>
+		        </exclusion>
+		      </exclusions>
+		    </dependency>
         </dependencies>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <!-- Warning: 2.3.0+ does not work in Windows -->
-                <version>${gwt.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.google.gwt</groupId>
-                        <artifactId>gwt-dev</artifactId>
-                        <version>${gwt.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.google.gwt</groupId>
-                        <artifactId>gwt-user</artifactId>
-                        <version>${gwt.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <logLevel>INFO</logLevel>
-                    <style>PRETTY</style>
-                    <gwtVersion>2.4.0</gwtVersion>
-                    <runTarget>/index.html</runTarget>
-                    <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
-                    <!-- <modules>
-                        <module>${project.groupId}.ApplicationScaffold</module>
-                    </modules> -->
-                    <server>com.google.appengine.tools.development.gwt.AppEngineLauncher</server>
-                    <extraJvmArgs>"-javaagent:${gae.home}/lib/agent/appengine-agent.jar" -Xmx1024m</extraJvmArgs>
-                    <copyWebapp>true</copyWebapp>
-                    <appEngineVersion>1.6.5</appEngineVersion>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>gwtcompile</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-             <!-- Run the RequestFactory ValidationTool -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <configuration>
-                            <id>VerifyRequestFactoryInterfaces</id>
-                            <executable>java</executable>
-                            <arguments>
-                                <argument>-cp</argument>
-                                <classpath />
-                                <argument>com.google.web.bindery.requestfactory.apt.ValidationTool</argument>
-                                <argument>${project.build.outputDirectory}</argument>
-                                <argument>${project.groupId}.client.managed.request.ApplicationRequestFactory</argument>
-                            </arguments>
-                        </configuration>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </gae>
+    </server>
 </configuration>

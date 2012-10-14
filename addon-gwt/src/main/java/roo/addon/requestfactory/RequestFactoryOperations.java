@@ -19,11 +19,9 @@ public interface RequestFactoryOperations extends Feature {
      */
     String PATH_DELIMITER = "/";
 
-    boolean isRequestFactoryInstallationPossible();
+    boolean isRequestFactoryServerInstallationPossible();
 
-    boolean isGwtInstallationPossible();
-
-    boolean isScaffoldAvailable();
+    boolean isRequestFactoryCommandAvailable();
 
     void locatorAll(JavaPackage proxyPackage);
 
@@ -37,14 +35,5 @@ public interface RequestFactoryOperations extends Feature {
 
     void requestType(JavaPackage requestPackage, JavaType type);
 
-    void scaffoldAll(JavaPackage proxyPackage, JavaPackage requestPackage);
-
-    void scaffoldType(JavaPackage proxyPackage, JavaPackage requestPackage,
-            JavaType type);
-
-    void setupRequestFactory();
-
-    void setupGwtBootstrap();
-
-    void updateGaeConfiguration();
+    void setupRequestFactoryServer();
 }
