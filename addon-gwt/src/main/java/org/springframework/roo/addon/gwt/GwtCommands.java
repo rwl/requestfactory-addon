@@ -13,7 +13,7 @@ import org.springframework.roo.shell.CommandMarker;
 
 /**
  * Commands for the GWT add-on to be used by the Roo shell.
- * 
+ *
  * @author Ben Alex
  * @author James Tyrrell
  * @since 1.1
@@ -24,48 +24,52 @@ public class GwtCommands implements CommandMarker {
 
     @Reference protected GwtOperations gwtOperations;
 
-    @Deprecated
-    @CliCommand(value = "gwt setup", help = "Install Google Web Toolkit (GWT) into your project - deprecated, use 'web gwt setup' instead")
-    public void installGwt() {
-        gwtOperations.setup();
+    @CliAvailabilityIndicator({ "web requestfactory setup" })
+    public boolean isRequestFactorySetupAvailable() {
+        return gwtOperations.isRequestFactoryInstallationPossible();
     }
 
-    @CliAvailabilityIndicator({ "web gwt setup", "gwt setup" })
+    @CliAvailabilityIndicator({ "web gwt bootstrap setup" })
     public boolean isGwtSetupAvailable() {
         return gwtOperations.isGwtInstallationPossible();
     }
 
-    @CliAvailabilityIndicator({ "web gwt proxy all", "web gwt proxy type",
-            "web gwt request all", "web gwt request type", "web gwt all",
-            "web gwt scaffold", "web gwt proxy request all",
-            "web gwt proxy request type", "web gwt gae update" })
+    @CliAvailabilityIndicator({ "web requestfactory locator all",
+            "web requestfactory locator type",
+            "web requestfactory proxy all",
+            "web requestfactory proxy type",
+            "web requestfactory request all",
+            "web requestfactory request type",
+            "web gwt bootstrap scaffold all",
+            "web gwt bootstrap scaffold type",
+            "web gwt bootstrap gae update" })
     public boolean isScaffoldAvailable() {
         return gwtOperations.isScaffoldAvailable();
     }
 
-    @CliCommand(value = "web gwt proxy all", help = "Locates all entities in the project and creates GWT proxies")
+    @CliCommand(value = "web requestfactory locator all", help = "Locates all entities in the project and creates RequestFactory locators")
+    public void locatorAll(
+            @CliOption(key = "package", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies will be placed") final JavaPackage javaPackage) {
+
+        gwtOperations.locatorAll(javaPackage);
+    }
+
+    @CliCommand(value = "web requestfactory locator type", help = "Creates a RequestFactory locator based on the specified type")
+    public void locatorType(
+            @CliOption(key = "package", mandatory = true, help = "The package in which created proxies will be placed") final JavaPackage javaPackage,
+            @CliOption(key = "type", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created request on") final JavaType type) {
+
+        gwtOperations.locatorType(javaPackage, type);
+    }
+
+    @CliCommand(value = "web requestfactory proxy all", help = "Locates all entities in the project and creates GWT proxies")
     public void proxyAll(
             @CliOption(key = "package", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies will be placed") final JavaPackage javaPackage) {
 
         gwtOperations.proxyAll(javaPackage);
     }
 
-    @CliCommand(value = "web gwt proxy request all", help = "Locates all entities in the project and creates GWT requests and proxies")
-    public void proxyAndRequestAll(
-            @CliOption(key = "package", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies and requests will be placed") final JavaPackage javaPackage) {
-
-        gwtOperations.proxyAndRequestAll(javaPackage);
-    }
-
-    @CliCommand(value = "web gwt proxy request type", help = "Creates a proxy and request based on the specified type")
-    public void proxyAndRequestType(
-            @CliOption(key = "package", mandatory = true, help = "The package in which created proxies and requests will be placed") final JavaPackage javaPackage,
-            @CliOption(key = "type", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created proxy and request on") final JavaType type) {
-
-        gwtOperations.proxyAndRequestType(javaPackage, type);
-    }
-
-    @CliCommand(value = "web gwt proxy type", help = "Creates a GWT proxy based on the specified type")
+    @CliCommand(value = "web requestfactory proxy type", help = "Creates a GWT proxy based on the specified type")
     public void proxyType(
             @CliOption(key = "package", mandatory = true, help = "The package in which created proxies will be placed") final JavaPackage javaPackage,
             @CliOption(key = "type", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created request on") final JavaType type) {
@@ -73,14 +77,14 @@ public class GwtCommands implements CommandMarker {
         gwtOperations.proxyType(javaPackage, type);
     }
 
-    @CliCommand(value = "web gwt request all", help = "Locates all entities in the project and creates GWT requests")
+    @CliCommand(value = "web requestfactory request all", help = "Locates all entities in the project and creates GWT requests")
     public void requestAll(
             @CliOption(key = "package", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created requests will be placed") final JavaPackage javaPackage) {
 
         gwtOperations.requestAll(javaPackage);
     }
 
-    @CliCommand(value = "web gwt request type", help = "Creates a GWT proxy based on the specified type")
+    @CliCommand(value = "web requestfactory request type", help = "Creates a GWT proxy based on the specified type")
     public void requestType(
             @CliOption(key = "package", mandatory = true, help = "The package in which created requests will be placed") final JavaPackage javaPackage,
             @CliOption(key = "type", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created request on") final JavaType type) {
@@ -88,7 +92,7 @@ public class GwtCommands implements CommandMarker {
         gwtOperations.requestType(javaPackage, type);
     }
 
-    @CliCommand(value = "web gwt all", help = "Locates all entities in the project and creates GWT requests, proxies and creates the scaffold")
+    @CliCommand(value = "web gwt bootstrap scaffold all", help = "Locates all entities in the project and creates GWT requests, proxies and creates the scaffold")
     public void scaffoldAll(
             @CliOption(key = "proxyPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
             @CliOption(key = "requestPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created requests will be placed") final JavaPackage requestPackage) {
@@ -96,7 +100,7 @@ public class GwtCommands implements CommandMarker {
         gwtOperations.scaffoldAll(proxyPackage, requestPackage);
     }
 
-    @CliCommand(value = "web gwt scaffold", help = "Creates a GWT request, proxy and scaffold for the specified")
+    @CliCommand(value = "web gwt bootstrap scaffold type", help = "Creates a GWT request, proxy and scaffold for the specified")
     public void scaffoldType(
             @CliOption(key = "proxyPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
             @CliOption(key = "requestPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created requests will be placed") final JavaPackage requestPackage,
@@ -110,8 +114,13 @@ public class GwtCommands implements CommandMarker {
         gwtOperations.updateGaeConfiguration();
     }
 
-    @CliCommand(value = "web gwt setup", help = "Install Google Web Toolkit (GWT) into your project")
-    public void webGwtSetup() {
-        gwtOperations.setup();
+    @CliCommand(value = "web requestfactory setup", help = "Install GWT RequestFactory into your project")
+    public void webRequestFactorySetup() {
+        gwtOperations.setupRequestFactory();
+    }
+
+    @CliCommand(value = "web gwt bootstrap setup", help = "Install Google Web Toolkit (GWT) Bootstrap into your project")
+    public void webGwtBootstrapSetup() {
+        gwtOperations.setupGwtBootstrap();
     }
 }

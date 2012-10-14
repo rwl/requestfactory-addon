@@ -1039,4 +1039,34 @@ public class GwtOperationsImpl implements GwtOperations {
         fileManager.createOrUpdateTextFileIfRequired(webXmlpath,
                 XmlUtils.nodeToString(webXml), false);
     }
+
+    @Override
+    public boolean isRequestFactoryInstallationPossible() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void locatorAll(JavaPackage proxyPackage) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void locatorType(JavaPackage proxyPackage, JavaType type) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void setupRequestFactory() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void setupGwtBootstrap() {
+        // TODO Auto-generated method stub
+
+    }
 }

@@ -6,7 +6,7 @@ import org.springframework.roo.project.Feature;
 
 /**
  * Provides GWT operations.
- * 
+ *
  * @author Ben Alex
  * @author James Tyrrell
  * @since 1.1
@@ -19,15 +19,17 @@ public interface GwtOperations extends Feature {
      */
     String PATH_DELIMITER = "/";
 
+    boolean isRequestFactoryInstallationPossible();
+
     boolean isGwtInstallationPossible();
 
     boolean isScaffoldAvailable();
 
+    void locatorAll(JavaPackage proxyPackage);
+
+    void locatorType(JavaPackage proxyPackage, JavaType type);
+
     void proxyAll(JavaPackage proxyPackage);
-
-    void proxyAndRequestAll(JavaPackage proxyAndRequestPackage);
-
-    void proxyAndRequestType(JavaPackage proxyAndRequestPackage, JavaType type);
 
     void proxyType(JavaPackage proxyPackage, JavaType type);
 
@@ -40,7 +42,9 @@ public interface GwtOperations extends Feature {
     void scaffoldType(JavaPackage proxyPackage, JavaPackage requestPackage,
             JavaType type);
 
-    void setup();
+    void setupRequestFactory();
+
+    void setupGwtBootstrap();
 
     void updateGaeConfiguration();
 }
