@@ -39,7 +39,7 @@ public interface RequestFactoryTypeService {
 
     String getGwtModuleXml(String moduleName);
 
-    JavaType getGwtSideLeafType(JavaType returnType, JavaType governorType,
+    JavaType getClientSideLeafType(JavaType returnType, JavaType governorType,
             boolean requestType, boolean convertPrimitive);
 
     List<MethodMetadata> getProxyMethods(

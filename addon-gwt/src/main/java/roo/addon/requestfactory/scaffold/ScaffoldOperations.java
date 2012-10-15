@@ -11,7 +11,7 @@ import org.springframework.roo.project.Feature;
  *
  * @since 1.1
  */
-public interface ScaffoldOperations extends Feature {
+public interface ScaffoldOperations {
 
     /**
      * The delimiter for multi-level paths specified by a "<source path="..." />
@@ -21,20 +21,7 @@ public interface ScaffoldOperations extends Feature {
 
     boolean isCommandAvailable();
 
-    boolean isScaffoldAvailable();
-
-    boolean isGwtInstallationPossible();
-
     void annotateType(JavaType type, final JavaSymbolName parentProperty,
             final JavaSymbolName primaryProperty,
             final JavaSymbolName secondaryProperty);
-
-    void setupGwtBootstrap();
-
-    void scaffoldAll(JavaPackage proxyPackage, JavaPackage requestPackage);
-
-    void scaffoldType(JavaPackage proxyPackage, JavaPackage requestPackage,
-            JavaType type);
-
-    void updateGaeConfiguration();
 }

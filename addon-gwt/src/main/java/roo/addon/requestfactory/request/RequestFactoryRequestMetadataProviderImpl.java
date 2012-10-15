@@ -190,7 +190,7 @@ public class RequestFactoryRequestMetadataProviderImpl extends
         final List<AnnotatedJavaType> parameterTypes = new ArrayList<AnnotatedJavaType>();
         for (final AnnotatedJavaType parameterType : method.getParameterTypes()) {
             parameterTypes.add(new AnnotatedJavaType(requestFactoryTypeService
-                    .getGwtSideLeafType(parameterType.getJavaType(),
+                    .getClientSideLeafType(parameterType.getJavaType(),
                             entity.getType(), true, false)));
         }
         return new MethodMetadataBuilder(request.getDeclaredByMetadataId(),
@@ -239,7 +239,7 @@ public class RequestFactoryRequestMetadataProviderImpl extends
                     .getSymbolName(), methodParameter.getKey());
         }
         final JavaType returnType = getReturnType(methodKey, entity);
-        final JavaType gwtType = requestFactoryTypeService.getGwtSideLeafType(returnType,
+        final JavaType gwtType = requestFactoryTypeService.getClientSideLeafType(returnType,
                 entity, true, true);
         methodBuilder.setReturnType(gwtType);
         return methodBuilder.build();

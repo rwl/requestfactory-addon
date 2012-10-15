@@ -461,10 +461,9 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
      * @param returnType
      * @param projectMetadata
      * @param governorType
-     * @return the GWT side leaf type as a JavaType
+     * @return the client-side leaf type as a JavaType
      */
-
-    public JavaType getGwtSideLeafType(final JavaType returnType,
+    public JavaType getClientSideLeafType(final JavaType returnType,
             final JavaType governorType, final boolean requestType,
             final boolean convertPrimitive) {
         if (returnType.isPrimitive() && convertPrimitive) {
@@ -482,7 +481,7 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
             final List<JavaType> args = returnType.getParameters();
             if (args != null && args.size() == 1) {
                 final JavaType elementType = args.get(0);
-                final JavaType convertedJavaType = getGwtSideLeafType(
+                final JavaType convertedJavaType = getClientSideLeafType(
                         elementType, governorType, requestType,
                         convertPrimitive);
                 if (convertedJavaType == null) {

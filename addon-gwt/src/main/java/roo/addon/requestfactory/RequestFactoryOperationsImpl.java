@@ -97,6 +97,7 @@ import roo.addon.requestfactory.request.RequestFactoryRequestMetadata;
 public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
 
     private static final String FEATURE_NAME = "requestfactory";
+    private static final String REQUEST_FACTORY_GROUP_ID = "com.google.web.bindery";
 
     private static final JavaSymbolName VALUE = new JavaSymbolName("value");
     private static final JavaSymbolName LOCATOR_MODULE = new JavaSymbolName(
@@ -117,12 +118,28 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
     }
 
     @Override
+    public boolean isRequestFactoryClientInstallationPossible() {
+        return projectOperations.isFocusedProjectAvailable()
+                && !isInstalledInModule(projectOperations
+                        .getFocusedModuleName());
+    }
+
+    @Override
     public boolean isRequestFactoryCommandAvailable() {
         return isInstalledInModule(projectOperations.getFocusedModuleName());
     }
 
     @Override
     public void setupRequestFactoryServer() {
+        setupRequestFactory(true);
+    }
+
+    @Override
+    public void setupRequestFactoryClient() {
+        setupRequestFactory(false);
+    }
+
+    private void setupRequestFactory(boolean server) {
         final Element configuration = XmlUtils.getConfiguration(getClass());
         final String focusedModuleName = projectOperations
                 .getFocusedModuleName();
@@ -138,7 +155,8 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
         // update dependencies
         final List<Dependency> dependencies = new ArrayList<Dependency>();
         final List<Element> serverDependencies = XmlUtils.findElements(
-                "/configuration/server/dependencies/dependency",
+                "/configuration/" + (server ? "server" : "client")
+                + "/dependencies/dependency",
                 configuration);
         for (final Element dependencyElement : serverDependencies) {
             dependencies.add(new Dependency(dependencyElement));
@@ -198,8 +216,9 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
             return false;
         }
         for (final Dependency dependency : pom.getDependencies()) {
-            if ("com.google.web.bindery".equals(dependency.getGroupId())
-                    && "requestfactory-server".equals(dependency.getArtifactId())) {
+            if (REQUEST_FACTORY_GROUP_ID.equals(dependency.getGroupId())
+                    && dependency.getArtifactId() != null
+                    && dependency.getArtifactId().startsWith("requestfactory-")) {
                 return true;
             }
         }

@@ -127,25 +127,25 @@ public class RequestFactoryProxyMetadataProviderImpl extends
             return null;
         }
 
-        final String moduleName = PhysicalTypeIdentifier.getPath(
-                proxy.getDeclaredByMetadataId()).getModule();
+//        final String moduleName = PhysicalTypeIdentifier.getPath(
+//                proxy.getDeclaredByMetadataId()).getModule();
         final List<MethodMetadata> proxyMethods = requestFactoryTypeService
                 .getProxyMethods(mirroredDetails);
         final List<MethodMetadata> convertedProxyMethods = new ArrayList<MethodMetadata>();
-        final Collection<JavaPackage> sourcePackages = requestFactoryTypeService
-                .getSourcePackages(moduleName);
+//        final Collection<JavaPackage> sourcePackages = requestFactoryTypeService
+//                .getSourcePackages(moduleName);
         for (final MethodMetadata method : proxyMethods) {
-            final JavaType gwtType = requestFactoryTypeService.getGwtSideLeafType(
+            final JavaType gwtType = requestFactoryTypeService.getClientSideLeafType(
                     method.getReturnType(), mirroredDetails.getName(), false,
                     true);
             final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
                     method);
             methodBuilder.setReturnType(gwtType);
-            final MethodMetadata convertedMethod = methodBuilder.build();
-            if (requestFactoryTypeService.isMethodReturnTypeInSourcePath(convertedMethod,
-                    mirroredDetails, sourcePackages)) {
+//            final MethodMetadata convertedMethod = methodBuilder.build();
+//            if (requestFactoryTypeService.isMethodReturnTypeInSourcePath(convertedMethod,
+//                    mirroredDetails, sourcePackages)) {
                 convertedProxyMethods.add(methodBuilder.build());
-            }
+//            }
         }
         final RequestFactoryProxyMetadata metadata = new RequestFactoryProxyMetadata(
                 metadataIdentificationString, updateProxy(proxy,

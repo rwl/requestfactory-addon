@@ -24,6 +24,7 @@ import org.springframework.roo.shell.CommandMarker;
 public class RequestFactoryCommands implements CommandMarker {
 
     private static final String WEB_REQUEST_FACTORY_SETUP_SERVER_COMMAND = "web requestfactory setup server";
+    private static final String WEB_REQUEST_FACTORY_SETUP_CLIENT_COMMAND = "web requestfactory setup client";
     private static final String WEB_REQUEST_FACTORY_PROXY_ALL_COMMAND = "web requestfactory proxy all";
     private static final String WEB_REQUEST_FACTORY_PROXY_TYPE_COMMAND = "web requestfactory proxy type";
     private static final String WEB_REQUEST_FACTORY_REQUEST_ALL_COMMAND = "web requestfactory request all";
@@ -32,8 +33,13 @@ public class RequestFactoryCommands implements CommandMarker {
     @Reference protected RequestFactoryOperations requestFactoryOperations;
 
     @CliAvailabilityIndicator({ WEB_REQUEST_FACTORY_SETUP_SERVER_COMMAND })
-    public boolean isRequestFactorySetupAvailable() {
+    public boolean isRequestFactoryServerSetupAvailable() {
         return requestFactoryOperations.isRequestFactoryServerInstallationPossible();
+    }
+
+    @CliAvailabilityIndicator({ WEB_REQUEST_FACTORY_SETUP_CLIENT_COMMAND })
+    public boolean isRequestFactoryClientSetupAvailable() {
+        return requestFactoryOperations.isRequestFactoryClientInstallationPossible();
     }
 
     @CliAvailabilityIndicator({ WEB_REQUEST_FACTORY_PROXY_ALL_COMMAND,
@@ -44,9 +50,14 @@ public class RequestFactoryCommands implements CommandMarker {
         return requestFactoryOperations.isRequestFactoryCommandAvailable();
     }
 
-    @CliCommand(value = WEB_REQUEST_FACTORY_SETUP_SERVER_COMMAND, help = "Install GWT RequestFactory into your project")
-    public void webRequestFactorySetup() {
+    @CliCommand(value = WEB_REQUEST_FACTORY_SETUP_SERVER_COMMAND, help = "Install RequestFactory server into your project")
+    public void webRequestFactoryServerSetup() {
         requestFactoryOperations.setupRequestFactoryServer();
+    }
+
+    @CliCommand(value = WEB_REQUEST_FACTORY_SETUP_CLIENT_COMMAND, help = "Install RequestFactory client into your project")
+    public void webRequestFactoryClientSetup() {
+        requestFactoryOperations.setupRequestFactoryClient();
     }
 
     @CliCommand(value = WEB_REQUEST_FACTORY_PROXY_ALL_COMMAND, help = "Locates all entities in the project and creates GWT proxies")

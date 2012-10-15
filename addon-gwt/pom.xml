@@ -9,8 +9,8 @@
     </parent>
     <artifactId>org.springframework.roo.addon.gwt</artifactId>
     <packaging>bundle</packaging>
-    <name>Spring Roo - Addon - Google Web Toolkit</name>
-    <description>Support for UI scaffolding using Google Web Toolkit.</description>
+    <name>Spring Roo - Addon - RequestFactory</name>
+    <description>Support for GWT, Android and iOS UI scaffolding using RequestFactory.</description>
     <dependencies>
         <!-- OSGi -->
         <dependency>

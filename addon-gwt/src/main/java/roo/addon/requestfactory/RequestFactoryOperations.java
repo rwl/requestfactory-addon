@@ -21,6 +21,7 @@ public interface RequestFactoryOperations extends Feature {
     String PATH_DELIMITER = "/";
 
     boolean isRequestFactoryServerInstallationPossible();
+    boolean isRequestFactoryClientInstallationPossible();
 
     boolean isRequestFactoryCommandAvailable();
 
@@ -33,4 +34,5 @@ public interface RequestFactoryOperations extends Feature {
     void requestType(JavaPackage requestPackage, JavaType type);
 
     void setupRequestFactoryServer();
+    void setupRequestFactoryClient();
 }

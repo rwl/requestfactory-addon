@@ -73,6 +73,19 @@ import org.springframework.roo.shell.converters.StaticFieldConverter;
 @Service
 public class ScaffoldFieldCommands implements CommandMarker {
 
+    private static final String REQUEST_FACTORY_FIELD_BOOLEAN_COMMAND = "web requestfactory scaffold field boolean";
+    private static final String REQUEST_FACTORY_FIELD_DATE_COMMAND = "web requestfactory scaffold field date";
+    private static final String REQUEST_FACTORY_FIELD_EMBEDDED_COMMAND = "web requestfactory scaffold field embedded";
+    private static final String REQUEST_FACTORY_FIELD_ENUM_COMMAND = "web requestfactory scaffold field enum";
+    private static final String REQUEST_FACTORY_FIELD_NUMBER_COMMAND = "web requestfactory scaffold field number";
+    private static final String REQUEST_FACTORY_FIELD_REFERENCE_COMMAND = "web requestfactory scaffold field reference";
+    private static final String REQUEST_FACTORY_FIELD_SET_COMMAND = "web requestfactory scaffold field set";
+    private static final String REQUEST_FACTORY_FIELD_STRING_COMMAND = "web requestfactory scaffold field string";
+    private static final String REQUEST_FACTORY_FIELD_FILE_COMMAND = "web requestfactory scaffold field file";
+    private static final String REQUEST_FACTORY_FIELD_OTHER_COMMAND = "web requestfactory scaffold field other";
+    private static final String FIELD_LIST_COMMAND = "field list";
+    private static final String REQUEST_FACTORY_FIELD_LIST_COMMAND = "web requestfactory scaffold field list";
+
     @Reference private MemberDetailsScanner memberDetailsScanner;
     @Reference private MetadataService metadataService;
     @Reference private ProjectOperations projectOperations;
@@ -102,7 +115,7 @@ public class ScaffoldFieldCommands implements CommandMarker {
         staticFieldConverter.remove(DateTime.class);*/
     }
 
-    @CliCommand(value = "bootstrap field boolean", help = "Adds a private boolean field to an existing Java source file")
+    @CliCommand(value = REQUEST_FACTORY_FIELD_BOOLEAN_COMMAND, help = "Adds a private boolean field to an existing Java source file")
     public void addFieldBoolean(
             @CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
             @CliOption(key = "class", mandatory = false, unspecifiedDefaultValue = "*", optionContext = "update,project", help = "The name of the class to receive this field") final JavaType typeName,
@@ -145,7 +158,7 @@ public class ScaffoldFieldCommands implements CommandMarker {
         insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
     }
 
-    @CliCommand(value = "bootstrap field date", help = "Adds a private date field to an existing Java source file")
+    @CliCommand(value = REQUEST_FACTORY_FIELD_DATE_COMMAND, help = "Adds a private date field to an existing Java source file")
     public void addFieldDateJpa(
             @CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
             @CliOption(key = "type", mandatory = true, optionContext = "java-date", help = "The Java type of the entity") final JavaType fieldType,
@@ -205,7 +218,7 @@ public class ScaffoldFieldCommands implements CommandMarker {
         insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
     }
 
-    @CliCommand(value = "bootstrap field embedded", help = "Adds a private @Embedded field to an existing Java source file ")
+    @CliCommand(value = REQUEST_FACTORY_FIELD_EMBEDDED_COMMAND, help = "Adds a private @Embedded field to an existing Java source file ")
     public void addFieldEmbeddedJpa(
             @CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
             @CliOption(key = "type", mandatory = true, optionContext = "project", help = "The Java type of the @Embeddable class") final JavaType fieldType,
@@ -253,7 +266,7 @@ public class ScaffoldFieldCommands implements CommandMarker {
         insertField(fieldDetails, permitReservedWords, false, exclude);
     }
 
-    @CliCommand(value = "bootstrap field enum", help = "Adds a private enum field to an existing Java source file")
+    @CliCommand(value = REQUEST_FACTORY_FIELD_ENUM_COMMAND, help = "Adds a private enum field to an existing Java source file")
     public void addFieldEnum(
             @CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
             @CliOption(key = "type", mandatory = true, help = "The enum type of this field") final JavaType fieldType,
@@ -290,7 +303,7 @@ public class ScaffoldFieldCommands implements CommandMarker {
         insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
     }
 
-    @CliCommand(value = "bootstrap field number", help = "Adds a private numeric field to an existing Java source file")
+    @CliCommand(value = REQUEST_FACTORY_FIELD_NUMBER_COMMAND, help = "Adds a private numeric field to an existing Java source file")
     public void addFieldNumber(
             @CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
             @CliOption(key = "type", mandatory = true, optionContext = "java-number", help = "The Java type of the entity") JavaType fieldType,
@@ -367,7 +380,7 @@ public class ScaffoldFieldCommands implements CommandMarker {
         insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
     }
 
-    @CliCommand(value = "bootstrap field reference", help = "Adds a private reference field to an existing Java source file (eg the 'many' side of a many-to-one)")
+    @CliCommand(value = REQUEST_FACTORY_FIELD_REFERENCE_COMMAND, help = "Adds a private reference field to an existing Java source file (eg the 'many' side of a many-to-one)")
     public void addFieldReferenceJpa(
             @CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
             @CliOption(key = "type", mandatory = true, optionContext = "project", help = "The Java type of the entity to reference") final JavaType fieldType,
@@ -433,7 +446,7 @@ public class ScaffoldFieldCommands implements CommandMarker {
         insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
     }
 
-    @CliCommand(value = "bootstrap field set", help = "Adds a private Set field to an existing Java source file (eg the 'one' side of a many-to-one)")
+    @CliCommand(value = REQUEST_FACTORY_FIELD_SET_COMMAND, help = "Adds a private Set field to an existing Java source file (eg the 'one' side of a many-to-one)")
     public void addFieldSetJpa(
             @CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
             @CliOption(key = "type", mandatory = true, help = "The entity which will be contained within the Set") final JavaType fieldType,
@@ -512,7 +525,7 @@ public class ScaffoldFieldCommands implements CommandMarker {
         insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
     }
 
-    @CliCommand(value = "bootstrap field string", help = "Adds a private string field to an existing Java source file")
+    @CliCommand(value = REQUEST_FACTORY_FIELD_STRING_COMMAND, help = "Adds a private string field to an existing Java source file")
     public void addFieldString(
             @CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
             @CliOption(key = "class", mandatory = false, unspecifiedDefaultValue = "*", optionContext = "update,project", help = "The name of the class to receive this field") final JavaType typeName,
@@ -573,7 +586,7 @@ public class ScaffoldFieldCommands implements CommandMarker {
         insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
     }
 
-    @CliCommand(value = "bootstrap field file", help = "Adds a byte array field for storing uploaded file contents (JSF-scaffolded UIs only)")
+    @CliCommand(value = REQUEST_FACTORY_FIELD_FILE_COMMAND, help = "Adds a byte array field for storing uploaded file contents (JSF-scaffolded UIs only)")
     public void addFileUploadField(
             @CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the file upload field to add") final JavaSymbolName fieldName,
             @CliOption(key = "class", mandatory = false, unspecifiedDefaultValue = "*", optionContext = "update,project", help = "The name of the class to receive this field") final JavaType typeName,
@@ -642,7 +655,7 @@ public class ScaffoldFieldCommands implements CommandMarker {
         typeManagementService.addField(fieldBuilder.build());
     }
 
-    @CliCommand(value = "field other bootstrap", help = "Inserts a private field into the specified file")
+    @CliCommand(value = REQUEST_FACTORY_FIELD_OTHER_COMMAND, help = "Inserts a private field into the specified file")
     public void insertField(
             @CliOption(key = "fieldName", mandatory = true, help = "The name of the field") final JavaSymbolName fieldName,
             @CliOption(key = "type", mandatory = true, help = "The Java type of this field") final JavaType fieldType,
@@ -677,21 +690,21 @@ public class ScaffoldFieldCommands implements CommandMarker {
         insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
     }
 
-    @CliAvailabilityIndicator({ "bootstrap field other", "bootstrap field number", "bootstrap field string",
-            "bootstrap field date", "bootstrap field boolean", "bootstrap field enum", "bootstrap field embedded",
-            "bootstrap field file" })
+    @CliAvailabilityIndicator({ REQUEST_FACTORY_FIELD_OTHER_COMMAND, REQUEST_FACTORY_FIELD_NUMBER_COMMAND, REQUEST_FACTORY_FIELD_STRING_COMMAND,
+            REQUEST_FACTORY_FIELD_DATE_COMMAND, REQUEST_FACTORY_FIELD_BOOLEAN_COMMAND, REQUEST_FACTORY_FIELD_ENUM_COMMAND, REQUEST_FACTORY_FIELD_EMBEDDED_COMMAND,
+            REQUEST_FACTORY_FIELD_FILE_COMMAND })
     public boolean isJdkFieldManagementAvailable() {
         return projectOperations.isFocusedProjectAvailable();
     }
 
-    @CliAvailabilityIndicator({ "bootstrap field reference", "bootstrap field set", "field list", "bootstrap field list" })
+    @CliAvailabilityIndicator({ REQUEST_FACTORY_FIELD_REFERENCE_COMMAND, REQUEST_FACTORY_FIELD_SET_COMMAND, FIELD_LIST_COMMAND, REQUEST_FACTORY_FIELD_LIST_COMMAND })
     public boolean isJpaFieldManagementAvailable() {
         // In a separate method in case we decide to check for JPA registration
         // in the future
         return projectOperations.isFocusedProjectAvailable();
     }
 
-    @CliCommand(value = "field list", help = "Adds a private List field to an existing Java source file (eg the 'one' side of a many-to-one)")
+    @CliCommand(value = FIELD_LIST_COMMAND, help = "Adds a private List field to an existing Java source file (eg the 'one' side of a many-to-one)")
     public void addFieldListJpa(
             @CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
             @CliOption(key = "type", mandatory = true, help = "The entity which will be contained within the Set") final JavaType fieldType,
@@ -709,7 +722,7 @@ public class ScaffoldFieldCommands implements CommandMarker {
         addFieldList(fieldName, fieldType, typeName, mappedBy, notNull, nullRequired, sizeMin, sizeMax, cardinality, fetch, comment, transientModifier, permitReservedWords, false);
     }
 
-    @CliCommand(value = "field list bootstrap", help = "Adds a private List field to an existing Java source file (eg the 'one' side of a many-to-one)")
+    @CliCommand(value = REQUEST_FACTORY_FIELD_LIST_COMMAND, help = "Adds a private List field to an existing Java source file (eg the 'one' side of a many-to-one)")
     public void addFieldListJpaGwt(
             @CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
             @CliOption(key = "type", mandatory = true, help = "The entity which will be contained within the Set") final JavaType fieldType,
