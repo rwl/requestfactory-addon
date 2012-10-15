@@ -7,7 +7,7 @@ import com.google.web.bindery.requestfactory.shared.ServiceLocator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-public class GwtServiceLocator implements ServiceLocator {
+public class RequestFactoryServiceLocator implements ServiceLocator {
 
 	HttpServletRequest request = RequestFactoryServlet.getThreadLocalRequest();
 	ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext());
