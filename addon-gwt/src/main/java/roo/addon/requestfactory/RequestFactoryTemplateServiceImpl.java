@@ -178,6 +178,9 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                             dataDictionary.addSection("roots").setVariable("root",
                                     proxySimpleName);
                         }
+                    } else {
+                        dataDictionary.addSection("roots").setVariable("root",
+                                proxySimpleName);
                     }
 
 

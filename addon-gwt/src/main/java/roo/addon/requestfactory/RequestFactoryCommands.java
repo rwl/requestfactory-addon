@@ -6,6 +6,7 @@ import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.classpath.converters.JavaTypeConverter;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
+import org.springframework.roo.project.maven.Pom;
 import org.springframework.roo.shell.CliAvailabilityIndicator;
 import org.springframework.roo.shell.CliCommand;
 import org.springframework.roo.shell.CliOption;
@@ -22,66 +23,57 @@ import org.springframework.roo.shell.CommandMarker;
 @Service
 public class RequestFactoryCommands implements CommandMarker {
 
+    private static final String WEB_REQUEST_FACTORY_SETUP_COMMAND = "web requestfactory setup";
+    private static final String WEB_REQUEST_FACTORY_PROXY_ALL_COMMAND = "web requestfactory proxy all";
+    private static final String WEB_REQUEST_FACTORY_PROXY_TYPE_COMMAND = "web requestfactory proxy type";
+    private static final String WEB_REQUEST_FACTORY_REQUEST_ALL_COMMAND = "web requestfactory request all";
+    private static final String WEB_REQUEST_FACTORY_REQUEST_TYPE_COMMAND = "web requestfactory request type";
+
     @Reference protected RequestFactoryOperations requestFactoryOperations;
 
-    @CliAvailabilityIndicator({ "web requestfactory setup" })
+    @CliAvailabilityIndicator({ WEB_REQUEST_FACTORY_SETUP_COMMAND })
     public boolean isRequestFactorySetupAvailable() {
         return requestFactoryOperations.isRequestFactoryServerInstallationPossible();
     }
 
-    @CliAvailabilityIndicator({ "web requestfactory locator all",
-            "web requestfactory locator type",
-            "web requestfactory proxy all",
-            "web requestfactory proxy type",
-            "web requestfactory request all",
-            "web requestfactory request type" })
+    @CliAvailabilityIndicator({ WEB_REQUEST_FACTORY_PROXY_ALL_COMMAND,
+            WEB_REQUEST_FACTORY_PROXY_TYPE_COMMAND,
+            WEB_REQUEST_FACTORY_REQUEST_ALL_COMMAND,
+            WEB_REQUEST_FACTORY_REQUEST_TYPE_COMMAND })
     public boolean isScaffoldAvailable() {
         return requestFactoryOperations.isRequestFactoryCommandAvailable();
     }
 
-    @CliCommand(value = "web requestfactory setup", help = "Install GWT RequestFactory into your project")
+    @CliCommand(value = WEB_REQUEST_FACTORY_SETUP_COMMAND, help = "Install GWT RequestFactory into your project")
     public void webRequestFactorySetup() {
         requestFactoryOperations.setupRequestFactoryServer();
     }
 
-    @CliCommand(value = "web requestfactory locator all", help = "Locates all entities in the project and creates RequestFactory locators")
-    public void locatorAll(
-            @CliOption(key = "package", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies will be placed") final JavaPackage javaPackage) {
-
-        requestFactoryOperations.locatorAll(javaPackage);
-    }
-
-    @CliCommand(value = "web requestfactory locator type", help = "Creates a RequestFactory locator based on the specified type")
-    public void locatorType(
-            @CliOption(key = "package", mandatory = true, help = "The package in which created proxies will be placed") final JavaPackage javaPackage,
-            @CliOption(key = "type", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created request on") final JavaType type) {
-
-        requestFactoryOperations.locatorType(javaPackage, type);
-    }
-
-    @CliCommand(value = "web requestfactory proxy all", help = "Locates all entities in the project and creates GWT proxies")
+    @CliCommand(value = WEB_REQUEST_FACTORY_PROXY_ALL_COMMAND, help = "Locates all entities in the project and creates GWT proxies")
     public void proxyAll(
-            @CliOption(key = "package", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies will be placed") final JavaPackage javaPackage) {
+            @CliOption(key = "package", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies will be placed") final JavaPackage javaPackage,
+            @CliOption(key = RooRequestFactoryProxy.LOCATOR_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom module) {
 
-        requestFactoryOperations.proxyAll(javaPackage);
+        requestFactoryOperations.proxyAll(javaPackage, module);
     }
 
-    @CliCommand(value = "web requestfactory proxy type", help = "Creates a GWT proxy based on the specified type")
+    @CliCommand(value = WEB_REQUEST_FACTORY_PROXY_TYPE_COMMAND, help = "Creates a GWT proxy based on the specified type")
     public void proxyType(
             @CliOption(key = "package", mandatory = true, help = "The package in which created proxies will be placed") final JavaPackage javaPackage,
-            @CliOption(key = "type", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created request on") final JavaType type) {
+            @CliOption(key = "type", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created request on") final JavaType type,
+            @CliOption(key = RooRequestFactoryProxy.LOCATOR_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom module) {
 
-        requestFactoryOperations.proxyType(javaPackage, type);
+        requestFactoryOperations.proxyType(javaPackage, type, module);
     }
 
-    @CliCommand(value = "web requestfactory request all", help = "Locates all entities in the project and creates GWT requests")
+    @CliCommand(value = WEB_REQUEST_FACTORY_REQUEST_ALL_COMMAND, help = "Locates all entities in the project and creates GWT requests")
     public void requestAll(
             @CliOption(key = "package", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created requests will be placed") final JavaPackage javaPackage) {
 
         requestFactoryOperations.requestAll(javaPackage);
     }
 
-    @CliCommand(value = "web requestfactory request type", help = "Creates a GWT proxy based on the specified type")
+    @CliCommand(value = WEB_REQUEST_FACTORY_REQUEST_TYPE_COMMAND, help = "Creates a GWT request based on the specified type")
     public void requestType(
             @CliOption(key = "package", mandatory = true, help = "The package in which created requests will be placed") final JavaPackage javaPackage,
             @CliOption(key = "type", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created request on") final JavaType type) {

@@ -9,6 +9,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface RooRequestFactoryProxy {
 
+    String LOCATOR_MODULE_ATTRIBUTE = "locatorModule";
+    String LOCATOR_MODULE_DEFAULT = "";
+
     String[] exclude() default {};
 
     String[] readOnly() default {};
@@ -19,4 +22,6 @@ public @interface RooRequestFactoryProxy {
      * @return the fully-qualified type name this key instance was mirrored from
      */
     String value();
+
+    String locatorModule() default LOCATOR_MODULE_DEFAULT;
 }

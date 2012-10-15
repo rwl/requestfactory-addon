@@ -43,10 +43,12 @@ import org.springframework.roo.model.JavaType;
 import org.springframework.roo.model.RooJavaType;
 import org.springframework.roo.model.SpringJavaType;
 import org.springframework.roo.project.LogicalPath;
+import org.springframework.roo.project.Path;
 import org.springframework.roo.project.ProjectOperations;
 
 import roo.addon.requestfactory.RequestFactoryTypeService;
 import roo.addon.requestfactory.RequestFactoryUtils;
+import roo.addon.requestfactory.RooRequestFactoryProxy;
 
 @Component(immediate = true)
 @Service
@@ -111,10 +113,25 @@ public class RequestFactoryLocatorMetadataProviderImpl implements
 
         final JavaType identifierType = RequestFactoryUtils.convertPrimitiveType(
                 identifierAccessor.getReturnType(), true);
+
+        LogicalPath locatorPath = null;
+        AnnotationMetadata rooProxyAnnotation = proxy.getAnnotation(RooJavaType.ROO_GWT_PROXY);
+        if (rooProxyAnnotation != null) {
+            AnnotationAttributeValue<String> locatorModuleAttributeValue = rooProxyAnnotation
+                    .getAttribute(RooRequestFactoryProxy.LOCATOR_MODULE_ATTRIBUTE);
+            if (locatorModuleAttributeValue != null) {
+                String locatorModule = locatorModuleAttributeValue.getValue();
+                if (!locatorModule.isEmpty()) {
+                    locatorPath = LogicalPath.getInstance(Path.SRC_MAIN_JAVA, locatorModule);
+                }
+            }
+        }
+        if (locatorPath == null) {
+            locatorPath = PhysicalTypeIdentifier.getPath(proxy
+                    .getDeclaredByMetadataId());
+        }
         final String locatorPhysicalTypeId = PhysicalTypeIdentifier
-                .createIdentifier(new JavaType(locatorType),
-                        PhysicalTypeIdentifier.getPath(proxy
-                                .getDeclaredByMetadataId()));
+                .createIdentifier(new JavaType(locatorType), locatorPath);
         final ClassOrInterfaceTypeDetailsBuilder cidBuilder = new ClassOrInterfaceTypeDetailsBuilder(
                 locatorPhysicalTypeId);
         final AnnotationMetadataBuilder annotationMetadataBuilder = new AnnotationMetadataBuilder(

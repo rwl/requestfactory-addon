@@ -99,6 +99,8 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
     private static final String FEATURE_NAME = "requestfactory";
 
     private static final JavaSymbolName VALUE = new JavaSymbolName("value");
+    private static final JavaSymbolName LOCATOR_MODULE = new JavaSymbolName(
+            RooRequestFactoryProxy.LOCATOR_MODULE_ATTRIBUTE);
 
     @Reference private RequestFactoryTypeService requestFactoryTypeService;
     @Reference private PersistenceMemberLocator persistenceMemberLocator;
@@ -148,32 +150,22 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
     }
 
     @Override
-    public void locatorAll(JavaPackage proxyPackage) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void locatorType(JavaPackage proxyPackage, JavaType type) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void proxyAll(final JavaPackage proxyPackage) {
+    public void proxyAll(final JavaPackage proxyPackage, final Pom locatorModule) {
         for (final ClassOrInterfaceTypeDetails entity : typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_BOOTSTRAP)) {
-            createProxy(entity, proxyPackage);
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
+                        ROO_JPA_ACTIVE_RECORD)) {
+            createProxy(entity, proxyPackage, locatorModule);
         }
         //copyDirectoryContents(RequestFactoryPath.LOCATOR);
     }
 
     @Override
-    public void proxyType(final JavaPackage proxyPackage, final JavaType type) {
+    public void proxyType(final JavaPackage proxyPackage, final JavaType type,
+            final Pom locatorModule) {
         final ClassOrInterfaceTypeDetails entity = typeLocationService
                 .getTypeDetails(type);
         if (entity != null) {
-            createProxy(entity, proxyPackage);
+            createProxy(entity, proxyPackage, locatorModule);
         }
         //copyDirectoryContents(RequestFactoryPath.LOCATOR);
     }
@@ -181,7 +173,8 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
     @Override
     public void requestAll(final JavaPackage proxyPackage) {
         for (final ClassOrInterfaceTypeDetails entity : typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_BOOTSTRAP)) {
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
+                        ROO_JPA_ACTIVE_RECORD)) {
             createRequestInterfaceIfNecessary(entity, proxyPackage);
         }
     }
@@ -214,7 +207,7 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
     }
 
     private void createProxy(final ClassOrInterfaceTypeDetails entity,
-            final JavaPackage destinationPackage) {
+            final JavaPackage destinationPackage, final Pom locatorModule) {
         final ClassOrInterfaceTypeDetails existingProxy = requestFactoryTypeService
                 .lookupProxyFromEntity(entity);
         if (existingProxy != null || entity.isAbstract()) {
@@ -238,6 +231,7 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
         final StringAttributeValue stringAttributeValue = new StringAttributeValue(
                 VALUE, entity.getName().getFullyQualifiedTypeName());
         attributeValues.add(stringAttributeValue);
+
         final String locator = projectOperations
                 .getTopLevelPackage(focusedModule)
                 + ".server.locator."
@@ -248,6 +242,12 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
         cidBuilder.updateTypeAnnotation(new AnnotationMetadataBuilder(
                 PROXY_FOR_NAME, attributeValues));
         attributeValues.remove(locatorAttributeValue);
+
+        if (locatorModule != null) {
+            final StringAttributeValue locatorModuleAttributeValue = new StringAttributeValue(
+                    LOCATOR_MODULE, locatorModule.getPath());
+            attributeValues.add(locatorModuleAttributeValue);
+        }
 
         final List<StringAttributeValue> readOnlyValues = new ArrayList<StringAttributeValue>();
         final List<StringAttributeValue> excludeValues = new ArrayList<StringAttributeValue>();

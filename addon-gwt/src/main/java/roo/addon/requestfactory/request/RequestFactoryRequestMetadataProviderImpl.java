@@ -290,12 +290,17 @@ public class RequestFactoryRequestMetadataProviderImpl extends
     private Map<MethodMetadataCustomDataKey, Collection<MethodParameter>> getRequestMethodSignatures(
             final JavaType domainType, final JavaType idType) {
 
-        ClassOrInterfaceTypeDetails domainTypeDetails = typeLocationService.getTypeDetails(domainType);
-        AnnotationMetadata annotation = domainTypeDetails.getAnnotation(ROO_GWT_BOOTSTRAP);
-        AnnotationAttributeValue<String> annotationAttributeValue = annotation.getAttribute(RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE);
+        ClassOrInterfaceTypeDetails domainTypeDetails = typeLocationService
+                .getTypeDetails(domainType);
+        AnnotationMetadata annotation = domainTypeDetails
+                .getAnnotation(ROO_GWT_BOOTSTRAP);
         String parentProperty = "";
-        if (annotationAttributeValue != null) {
-            parentProperty = annotationAttributeValue.getValue();
+        if (annotation != null) {
+            AnnotationAttributeValue<String> parentPropertyValue = annotation
+                    .getAttribute(RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE);
+            if (parentPropertyValue != null) {
+                parentProperty = parentPropertyValue.getValue();
+            }
         }
 
         final Map<MethodMetadataCustomDataKey, Collection<MethodParameter>> signatures = new LinkedHashMap<MethodMetadataCustomDataKey, Collection<MethodParameter>>();

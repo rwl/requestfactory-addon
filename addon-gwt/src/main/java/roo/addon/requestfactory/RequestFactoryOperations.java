@@ -3,6 +3,7 @@ package roo.addon.requestfactory;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.Feature;
+import org.springframework.roo.project.maven.Pom;
 
 /**
  * Provides GWT operations.
@@ -23,13 +24,9 @@ public interface RequestFactoryOperations extends Feature {
 
     boolean isRequestFactoryCommandAvailable();
 
-    void locatorAll(JavaPackage proxyPackage);
+    void proxyAll(JavaPackage proxyPackage, Pom locatorModule);
 
-    void locatorType(JavaPackage proxyPackage, JavaType type);
-
-    void proxyAll(JavaPackage proxyPackage);
-
-    void proxyType(JavaPackage proxyPackage, JavaType type);
+    void proxyType(JavaPackage proxyPackage, JavaType type, Pom locatorModule);
 
     void requestAll(JavaPackage requestPackage);
 
