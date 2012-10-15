@@ -1,4 +1,4 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
@@ -14,14 +14,15 @@ import org.springframework.roo.shell.CommandMarker;
 
 @Component
 @Service
-public class GwtBootstrapCommands implements CommandMarker {
+public class ScaffoldCommands implements CommandMarker {
 
+    private static final String SCAFFOLD_COMMAND = "web requestfactory scaffold";
     private static final String SCAFFOLD_ALL_COMMAND = "web requestfactory gwt bootstrap scaffold all";
     private static final String SCAFFOLD_TYPE_COMMAND = "web requestfactory gwt bootstrap scaffold type";
     private static final String SETUP_GAE_COMMAND = "web requestfactory setup gae";
     private static final String SETUP_GWT_BOOTSTRAP_COMMAND = "web requestfactory gwt bootstrap setup";
 
-    @Reference private GwtBootstrapOperations operations;
+    @Reference private ScaffoldOperations operations;
 
     @CliAvailabilityIndicator({
             SCAFFOLD_ALL_COMMAND,
@@ -36,9 +37,22 @@ public class GwtBootstrapCommands implements CommandMarker {
         return operations.isGwtInstallationPossible();
     }
 
+    @CliAvailabilityIndicator({ SCAFFOLD_COMMAND })
+    public boolean isCommandAvailable() {
+        return operations.isCommandAvailable();
+    }
+
     @CliCommand(value = SETUP_GWT_BOOTSTRAP_COMMAND, help = "Install Google Web Toolkit (GWT) Bootstrap into your project")
     public void webGwtBootstrapSetup() {
         operations.setupGwtBootstrap();
+    }
+
+    @CliCommand(value = SCAFFOLD_COMMAND, help = "Configure entity for GWT Bootstrap")
+    public void add(@CliOption(key = "type", mandatory = true, help = "The entity to configure") JavaType target,
+            @CliOption(key = RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE, mandatory = false, help = "The name of the field of the parent") final JavaSymbolName parentProperty,
+            @CliOption(key = RooRequestFactory.PRIMARY_PROPERTY_ATTRIBUTE, mandatory = false, help = "Primary property to be used when rendering") final JavaSymbolName primaryProperty,
+            @CliOption(key = RooRequestFactory.SECONDARY_PROPERTY_ATTRIBUTE, mandatory = false, help = "Secondary property to be used when rendering") final JavaSymbolName secondaryProperty) {
+        operations.annotateType(target, parentProperty, primaryProperty, secondaryProperty);
     }
 
     @CliCommand(value = SCAFFOLD_ALL_COMMAND, help = "Locates all entities in the project and creates GWT requests, proxies and creates the scaffold")

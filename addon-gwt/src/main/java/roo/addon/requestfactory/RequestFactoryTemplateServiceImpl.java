@@ -8,8 +8,8 @@ import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JdkJavaType.SET;
 import static roo.addon.account.AccountJavaType.ROO_ACCOUNT;
 import static roo.addon.requestfactory.RequestFactoryJavaType.INSTANCE_REQUEST;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.KEY;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
 import hapax.Template;
 import hapax.TemplateDataDictionary;
 import hapax.TemplateDictionary;
@@ -77,9 +77,9 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapDataKeys;
-import roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType;
-import roo.addon.requestfactory.gwt.bootstrap.RooGwtBootstrap;
+import roo.addon.requestfactory.scaffold.ScaffoldDataKeys;
+import roo.addon.requestfactory.scaffold.ScaffoldJavaType;
+import roo.addon.requestfactory.scaffold.RooRequestFactory;
 import roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
 
 /**
@@ -173,7 +173,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                     AnnotationMetadata annotation = entity.getAnnotation(ROO_GWT_BOOTSTRAP);
                     if (annotation != null) {
                         AnnotationAttributeValue<String> attribute = annotation
-                                .getAttribute(RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE);
+                                .getAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE);
                         if (attribute == null || attribute.getValue().isEmpty()) {
                             dataDictionary.addSection("roots").setVariable("root",
                                     proxySimpleName);
@@ -388,7 +388,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                         AnnotationMetadata annotation = ety.getAnnotation(ROO_GWT_BOOTSTRAP);
                         if (annotation == null) continue;
                         AnnotationAttributeValue<String> annotationAttributeValue = annotation
-                                .getAttribute(RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE);
+                                .getAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE);
                         if (annotationAttributeValue == null) continue;
                         String parentPropertyName = annotationAttributeValue.getValue();
                         if (parentPropertyName.isEmpty()) continue;
@@ -451,7 +451,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                 continue;
             }
             AnnotationAttributeValue<String> annotationAttributeValue = annotation
-                    .getAttribute(RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE);
+                    .getAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE);
             if (annotationAttributeValue == null) {
                 continue;
             }
@@ -505,7 +505,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
 
         AnnotationMetadata annotation = mirroredType.getAnnotation(ROO_GWT_BOOTSTRAP);
         AnnotationAttributeValue<String> annotationAttributeValue = annotation
-                .getAttribute(RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE);
+                .getAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE);
         String parentPropertyName = "";
         if (annotationAttributeValue != null) {
             parentPropertyName = annotationAttributeValue.getValue();
@@ -525,8 +525,8 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                     INT_PRIMITIVE, "firstResult"), new MethodParameter(
                     INT_PRIMITIVE, "maxResults"));
         } else {
-            countMethodId = GwtBootstrapDataKeys.COUNT_BY_PARENT_METHOD.name();
-            findMethodId = GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.name();
+            countMethodId = ScaffoldDataKeys.COUNT_BY_PARENT_METHOD.name();
+            findMethodId = ScaffoldDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.name();
             countCall = "(parentId)";
             findCall = "(parentId, range.getStart(), range.getLength())";
             countParamemters = Arrays.asList(new MethodParameter(
@@ -986,13 +986,13 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
 
     private boolean isPrimaryProp(final RequestFactoryProxyProperty prop,
             final ClassOrInterfaceTypeDetails entity) {
-        return isRenderProp(prop, entity, RooGwtBootstrap.
+        return isRenderProp(prop, entity, RooRequestFactory.
                 PRIMARY_PROPERTY_ATTRIBUTE);
     }
 
     private boolean isSecondaryProp(final RequestFactoryProxyProperty prop,
             final ClassOrInterfaceTypeDetails entity) {
-        return isRenderProp(prop, entity, RooGwtBootstrap.
+        return isRenderProp(prop, entity, RooRequestFactory.
                 SECONDARY_PROPERTY_ATTRIBUTE);
     }
 

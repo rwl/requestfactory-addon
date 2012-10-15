@@ -1,4 +1,4 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,9 +32,9 @@ import org.springframework.roo.support.util.PairList;
  */
 @Component
 @Service
-public class GwtBootstrapLayerProvider extends CoreLayerProvider {
+public class ScaffoldLayerProvider extends CoreLayerProvider {
 
-    @Reference private GwtBootstrapMetadataProvider gwtBootstrapMetadataProvider;
+    @Reference private ScaffoldMetadataProvider scaffoldMetadataProvider;
     @Reference private MetadataService metadataService;
     @Reference TypeLocationService typeLocationService;
 
@@ -60,7 +60,7 @@ public class GwtBootstrapLayerProvider extends CoreLayerProvider {
         Validate.notNull(targetEntity, "Target enitity type required");
 
         // Get the values of this entity's @RooGwtBootstrap annotation
-        final GwtBootstrapAnnotationValues annotationValues = gwtBootstrapMetadataProvider
+        final ScaffoldAnnotationValues annotationValues = scaffoldMetadataProvider
                 .getAnnotationValues(targetEntity);
         if (annotationValues == null) {
             return null;
@@ -75,7 +75,7 @@ public class GwtBootstrapLayerProvider extends CoreLayerProvider {
         // Look for an entity layer method with this ID and types of parameter
         final List<JavaType> parameterTypes = new PairList<JavaType, JavaSymbolName>(
                 callerParameters).getKeys();
-        final GwtBootstrapLayerMethod method = GwtBootstrapLayerMethod.valueOf(
+        final ScaffoldLayerMethod method = ScaffoldLayerMethod.valueOf(
                 methodIdentifier, parameterTypes, targetEntity, idType);
         if (method == null) {
             return null;
@@ -176,8 +176,8 @@ public class GwtBootstrapLayerProvider extends CoreLayerProvider {
      * @param gwtBootstrapMetadataProvider
      */
     void setJpaActiveRecordMetadataProvider(
-            final GwtBootstrapMetadataProviderImpl gwtBootstrapMetadataProvider) {
-        this.gwtBootstrapMetadataProvider = gwtBootstrapMetadataProvider;
+            final ScaffoldMetadataProviderImpl gwtBootstrapMetadataProvider) {
+        this.scaffoldMetadataProvider = gwtBootstrapMetadataProvider;
     }
 
     /**

@@ -1,7 +1,7 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
-import static roo.addon.requestfactory.gwt.bootstrap.RooGwtBootstrap.PARENT_PROPERTY_DEFAULT;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
+import static roo.addon.requestfactory.scaffold.RooRequestFactory.PARENT_PROPERTY_DEFAULT;
 
 import org.springframework.roo.classpath.details.annotations.populator.AbstractAnnotationValues;
 import org.springframework.roo.classpath.details.annotations.populator.AutoPopulate;
@@ -9,9 +9,9 @@ import org.springframework.roo.classpath.details.annotations.populator.AutoPopul
 import org.springframework.roo.classpath.itd.MemberHoldingTypeDetailsMetadataItem;
 
 /**
- * The values of a parsed {@link RooGwtBootstrap} annotation.
+ * The values of a parsed {@link RooRequestFactory} annotation.
  */
-public class GwtBootstrapAnnotationValues extends AbstractAnnotationValues {
+public class ScaffoldAnnotationValues extends AbstractAnnotationValues {
 
     @AutoPopulate private String parentProperty = PARENT_PROPERTY_DEFAULT;
 
@@ -20,7 +20,7 @@ public class GwtBootstrapAnnotationValues extends AbstractAnnotationValues {
      *
      * @param annotatedType
      */
-    public GwtBootstrapAnnotationValues(final MemberHoldingTypeDetailsMetadataItem<?> annotatedType) {
+    public ScaffoldAnnotationValues(final MemberHoldingTypeDetailsMetadataItem<?> annotatedType) {
         super(annotatedType, ROO_GWT_BOOTSTRAP);
         AutoPopulationUtils.populate(this, annotationMetadata);
     }

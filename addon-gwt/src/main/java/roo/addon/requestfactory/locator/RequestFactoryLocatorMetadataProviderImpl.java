@@ -3,8 +3,8 @@ package roo.addon.requestfactory.locator;
 import static org.springframework.roo.model.JavaType.CLASS;
 import static org.springframework.roo.model.JavaType.STRING;
 import static roo.addon.requestfactory.RequestFactoryJavaType.LOCATOR;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.KEY;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.KEY_FACTORY;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY_FACTORY;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;

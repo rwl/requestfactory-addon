@@ -17,7 +17,7 @@ import static org.springframework.roo.model.SpringJavaType.TRANSACTIONAL;
 
 import static roo.addon.account.AccountJavaType.SIMPLE_GRANTED_AUTHORITY;
 import static roo.addon.account.AccountJavaType.USER_DETAILS;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.KEY;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
 
-import roo.addon.requestfactory.gwt.bootstrap.ListField;
+import roo.addon.requestfactory.scaffold.ListField;
 
 /**
  * This type produces metadata for a new ITD. It uses an {@link ItdTypeDetailsBuilder} provided by

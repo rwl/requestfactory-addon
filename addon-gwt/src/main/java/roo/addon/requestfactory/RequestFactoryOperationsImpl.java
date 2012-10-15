@@ -17,9 +17,9 @@ import static roo.addon.requestfactory.RequestFactoryJavaType.OLD_ENTITY_PROXY;
 import static roo.addon.requestfactory.RequestFactoryJavaType.OLD_REQUEST_CONTEXT;
 import static roo.addon.requestfactory.RequestFactoryJavaType.PROXY_FOR_NAME;
 import static roo.addon.requestfactory.RequestFactoryJavaType.REQUEST_CONTEXT;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.KEY;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP_EXCLUDE;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP_EXCLUDE;
 
 import java.io.File;
 import java.io.IOException;

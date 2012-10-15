@@ -1,8 +1,10 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
 import static org.springframework.roo.model.RooJavaType.ROO_GWT_MIRRORED_FROM;
 import static org.springframework.roo.model.RooJavaType.ROO_GWT_PROXY;
 import static org.springframework.roo.model.RooJavaType.ROO_GWT_REQUEST;
+import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
+import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 import static org.springframework.roo.project.Path.ROOT;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
 import static org.springframework.roo.project.Path.SRC_MAIN_WEBAPP;
@@ -11,6 +13,7 @@ import static roo.addon.requestfactory.RequestFactoryJavaType.ENTITY_PROXY;
 import static roo.addon.requestfactory.RequestFactoryJavaType.OLD_ENTITY_PROXY;
 import static roo.addon.requestfactory.RequestFactoryJavaType.OLD_REQUEST_CONTEXT;
 import static roo.addon.requestfactory.RequestFactoryJavaType.REQUEST_CONTEXT;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +43,7 @@ import org.springframework.roo.classpath.details.annotations.AnnotationMetadataB
 import org.springframework.roo.file.monitor.event.FileDetails;
 import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.JavaPackage;
+import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.process.manager.FileManager;
 import org.springframework.roo.project.Dependency;
@@ -73,7 +77,7 @@ import roo.addon.requestfactory.RequestFactoryUtils;
  */
 @Component // Use these Apache Felix annotations to register your commands class in the Roo container
 @Service
-public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
+public class ScaffoldOperationsImpl implements ScaffoldOperations {
 
     private static final String FEATURE_NAME = "gwtbootstrap";
     private static final String GWT_BUILD_COMMAND = "com.google.gwt.eclipse.core.gwtProjectValidator";
@@ -777,6 +781,49 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
                 toRemove.getParentNode().removeChild(toRemove);
                 toRemove = null;
             }
+        }
+    }
+
+    public boolean isCommandAvailable() {
+
+        // Check if a project has been created
+        if (!projectOperations.isFocusedProjectAvailable()) {
+            return false;
+        }
+        if (typeLocationService.findTypesWithAnnotation(ROO_JPA_ACTIVE_RECORD, ROO_JPA_ENTITY).size() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public void annotateType(JavaType javaType, final JavaSymbolName parentProperty, final JavaSymbolName primaryProperty, final JavaSymbolName secondaryProperty) {
+        // Use Roo's Assert type for null checks
+        Validate.notNull(javaType, "Java type required");
+
+        // Obtain ClassOrInterfaceTypeDetails for this java type
+        ClassOrInterfaceTypeDetails existing = typeLocationService.getTypeDetails(javaType);
+
+        // Test if the annotation already exists on the target type
+        if (existing != null && MemberFindingUtils.getAnnotationOfType(existing.getAnnotations(), ROO_GWT_BOOTSTRAP) == null) {
+            ClassOrInterfaceTypeDetailsBuilder classOrInterfaceTypeDetailsBuilder = new ClassOrInterfaceTypeDetailsBuilder(existing);
+
+            // Create Annotation metadata
+            AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(ROO_GWT_BOOTSTRAP);
+            if (parentProperty != null) {
+                annotationBuilder.addStringAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE, parentProperty.getSymbolName());
+            }
+            if (primaryProperty != null) {
+                annotationBuilder.addStringAttribute(RooRequestFactory.PRIMARY_PROPERTY_ATTRIBUTE, primaryProperty.getSymbolName());
+            }
+            if (secondaryProperty != null) {
+                annotationBuilder.addStringAttribute(RooRequestFactory.SECONDARY_PROPERTY_ATTRIBUTE, secondaryProperty.getSymbolName());
+            }
+
+            // Add annotation to target type
+            classOrInterfaceTypeDetailsBuilder.addAnnotation(annotationBuilder.build());
+
+            // Save changes to disk
+            typeManagementService.createOrUpdateTypeOnDisk(classOrInterfaceTypeDetailsBuilder.build());
         }
     }
 }

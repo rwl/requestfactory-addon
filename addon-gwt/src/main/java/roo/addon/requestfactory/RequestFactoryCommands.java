@@ -23,7 +23,7 @@ import org.springframework.roo.shell.CommandMarker;
 @Service
 public class RequestFactoryCommands implements CommandMarker {
 
-    private static final String WEB_REQUEST_FACTORY_SETUP_COMMAND = "web requestfactory setup";
+    private static final String WEB_REQUEST_FACTORY_SETUP_SERVER_COMMAND = "web requestfactory setup server";
     private static final String WEB_REQUEST_FACTORY_PROXY_ALL_COMMAND = "web requestfactory proxy all";
     private static final String WEB_REQUEST_FACTORY_PROXY_TYPE_COMMAND = "web requestfactory proxy type";
     private static final String WEB_REQUEST_FACTORY_REQUEST_ALL_COMMAND = "web requestfactory request all";
@@ -31,7 +31,7 @@ public class RequestFactoryCommands implements CommandMarker {
 
     @Reference protected RequestFactoryOperations requestFactoryOperations;
 
-    @CliAvailabilityIndicator({ WEB_REQUEST_FACTORY_SETUP_COMMAND })
+    @CliAvailabilityIndicator({ WEB_REQUEST_FACTORY_SETUP_SERVER_COMMAND })
     public boolean isRequestFactorySetupAvailable() {
         return requestFactoryOperations.isRequestFactoryServerInstallationPossible();
     }
@@ -44,7 +44,7 @@ public class RequestFactoryCommands implements CommandMarker {
         return requestFactoryOperations.isRequestFactoryCommandAvailable();
     }
 
-    @CliCommand(value = WEB_REQUEST_FACTORY_SETUP_COMMAND, help = "Install GWT RequestFactory into your project")
+    @CliCommand(value = WEB_REQUEST_FACTORY_SETUP_SERVER_COMMAND, help = "Install GWT RequestFactory into your project")
     public void webRequestFactorySetup() {
         requestFactoryOperations.setupRequestFactoryServer();
     }

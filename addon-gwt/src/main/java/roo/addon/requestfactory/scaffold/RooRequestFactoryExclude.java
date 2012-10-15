@@ -1,4 +1,4 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target( { ElementType.FIELD, ElementType.METHOD } )
-public @interface RooGwtBootstrapExclude {
+public @interface RooRequestFactoryExclude {
 }

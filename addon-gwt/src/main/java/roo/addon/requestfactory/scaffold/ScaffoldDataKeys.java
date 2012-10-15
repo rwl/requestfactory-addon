@@ -1,8 +1,8 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
 import org.springframework.roo.classpath.customdata.tagkeys.MethodMetadataCustomDataKey;
 
-public final class GwtBootstrapDataKeys {
+public final class ScaffoldDataKeys {
 
     public static final MethodMetadataCustomDataKey COUNT_BY_PARENT_METHOD = new MethodMetadataCustomDataKey(
             "COUNT_BY_PARENT_METHOD");

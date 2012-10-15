@@ -1,9 +1,9 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
 import org.springframework.roo.classpath.itd.ItdTriggerBasedMetadataProvider;
 import org.springframework.roo.model.JavaType;
 
-public interface GwtBootstrapMetadataProvider extends ItdTriggerBasedMetadataProvider {
+public interface ScaffoldMetadataProvider extends ItdTriggerBasedMetadataProvider {
 
     /**
      * Returns the values of the Gwt Bootstrap-related annotation on the given Java type
@@ -12,5 +12,5 @@ public interface GwtBootstrapMetadataProvider extends ItdTriggerBasedMetadataPro
      * @param javaType can be <code>null</code>
      * @return <code>null</code> if no values can be found
      */
-    GwtBootstrapAnnotationValues getAnnotationValues(JavaType javaType);
+    ScaffoldAnnotationValues getAnnotationValues(JavaType javaType);
 }

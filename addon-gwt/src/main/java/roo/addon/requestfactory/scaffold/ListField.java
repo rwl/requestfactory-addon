@@ -1,4 +1,4 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
 import static org.springframework.roo.model.JdkJavaType.ARRAY_LIST;
 

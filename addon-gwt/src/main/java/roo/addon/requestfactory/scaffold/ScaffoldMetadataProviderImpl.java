@@ -1,11 +1,11 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
 
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapDataKeys.COUNT_BY_PARENT_METHOD;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapDataKeys.FIND_BY_STRING_ID_METHOD;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
+import static roo.addon.requestfactory.scaffold.ScaffoldDataKeys.COUNT_BY_PARENT_METHOD;
+import static roo.addon.requestfactory.scaffold.ScaffoldDataKeys.FIND_BY_STRING_ID_METHOD;
+import static roo.addon.requestfactory.scaffold.ScaffoldDataKeys.FIND_ENTRIES_BY_PARENT_METHOD;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ import org.springframework.roo.project.ProjectOperations;
  */
 @Component(immediate = true)
 @Service
-public final class GwtBootstrapMetadataProviderImpl extends AbstractItdMetadataProvider implements GwtBootstrapMetadataProvider {
+public final class ScaffoldMetadataProviderImpl extends AbstractItdMetadataProvider implements ScaffoldMetadataProvider {
 
     @Reference private CustomDataKeyDecorator customDataKeyDecorator;
     @Reference private ProjectOperations projectOperations;
@@ -80,11 +80,11 @@ public final class GwtBootstrapMetadataProviderImpl extends AbstractItdMetadataP
 
         final JpaCrudAnnotationValues crudAnnotationValues = new JpaCrudAnnotationValues(governorPhysicalTypeMetadata);
         final JpaEntityAnnotationValues jpaEntityAnnotationValues = new JpaEntityAnnotationValues(governorPhysicalTypeMetadata, ROO_JPA_ENTITY);
-        final GwtBootstrapAnnotationValues gwtBootstrapAnnotationValues = new GwtBootstrapAnnotationValues(governorPhysicalTypeMetadata);
+        final ScaffoldAnnotationValues scaffoldAnnotationValues = new ScaffoldAnnotationValues(governorPhysicalTypeMetadata);
 
         // we need the plural
-        JavaType entity = GwtBootstrapMetadata.getJavaType(metadataIdentificationString);
-        LogicalPath path = GwtBootstrapMetadata.getPath(metadataIdentificationString);
+        JavaType entity = ScaffoldMetadata.getJavaType(metadataIdentificationString);
+        LogicalPath path = ScaffoldMetadata.getPath(metadataIdentificationString);
         String pluralId = PluralMetadata.createIdentifier(entity, path);
         PluralMetadata pluralMetadata = (PluralMetadata) metadataService.get(pluralId);
         if (pluralMetadata == null) {
@@ -104,7 +104,7 @@ public final class GwtBootstrapMetadataProviderImpl extends AbstractItdMetadataP
             return null;
         }
         FieldMetadata parentProperty = null;
-        final String parentPropertyName = gwtBootstrapAnnotationValues.getParentProperty();
+        final String parentPropertyName = scaffoldAnnotationValues.getParentProperty();
         if (!parentPropertyName.isEmpty()) {
             for (FieldMetadata field : memberDetails.getFields()) {
                 if (field.getFieldName().getSymbolName().equals(parentPropertyName)) {
@@ -135,8 +135,8 @@ public final class GwtBootstrapMetadataProviderImpl extends AbstractItdMetadataP
         }
 
         // Pass dependencies required by the metadata in through its constructor
-        return new GwtBootstrapMetadata(metadataIdentificationString, aspectName,
-                crudAnnotationValues, governorPhysicalTypeMetadata, gwtBootstrapAnnotationValues,
+        return new ScaffoldMetadata(metadataIdentificationString, aspectName,
+                crudAnnotationValues, governorPhysicalTypeMetadata, scaffoldAnnotationValues,
                 pluralMetadata.getPlural(), idField, parentProperty, entityName, isGaeEnabled);
     }
 
@@ -148,20 +148,20 @@ public final class GwtBootstrapMetadataProviderImpl extends AbstractItdMetadataP
     }
 
     protected String getGovernorPhysicalTypeIdentifier(String metadataIdentificationString) {
-        JavaType javaType = GwtBootstrapMetadata.getJavaType(metadataIdentificationString);
-        LogicalPath path = GwtBootstrapMetadata.getPath(metadataIdentificationString);
+        JavaType javaType = ScaffoldMetadata.getJavaType(metadataIdentificationString);
+        LogicalPath path = ScaffoldMetadata.getPath(metadataIdentificationString);
         return PhysicalTypeIdentifier.createIdentifier(javaType, path);
     }
 
     protected String createLocalIdentifier(JavaType javaType, LogicalPath path) {
-        return GwtBootstrapMetadata.createIdentifier(javaType, path);
+        return ScaffoldMetadata.createIdentifier(javaType, path);
     }
 
     public String getProvidesType() {
-        return GwtBootstrapMetadata.getMetadataIdentiferType();
+        return ScaffoldMetadata.getMetadataIdentiferType();
     }
 
-    public GwtBootstrapAnnotationValues getAnnotationValues(final JavaType javaType) {
+    public ScaffoldAnnotationValues getAnnotationValues(final JavaType javaType) {
         Validate.notNull(javaType, "JavaType required");
         final String physicalTypeId = typeLocationService
                 .getPhysicalTypeIdentifier(javaType);
@@ -175,7 +175,7 @@ public final class GwtBootstrapMetadataProviderImpl extends AbstractItdMetadataP
             // The type is not annotated with @RooGwtBootstrap
             return null;
         }
-        return new GwtBootstrapAnnotationValues(governor);
+        return new ScaffoldAnnotationValues(governor);
     }
 
     @SuppressWarnings("unchecked")

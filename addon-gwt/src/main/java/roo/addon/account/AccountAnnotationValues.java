@@ -8,10 +8,10 @@ import org.springframework.roo.classpath.details.annotations.populator.AutoPopul
 import org.springframework.roo.classpath.details.annotations.populator.AutoPopulationUtils;
 import org.springframework.roo.classpath.itd.MemberHoldingTypeDetailsMetadataItem;
 
-import roo.addon.requestfactory.gwt.bootstrap.RooGwtBootstrap;
+import roo.addon.requestfactory.scaffold.RooRequestFactory;
 
 /**
- * The values of a parsed {@link RooGwtBootstrap} annotation.
+ * The values of a parsed {@link RooRequestFactory} annotation.
  */
 public class AccountAnnotationValues extends AbstractAnnotationValues {
 

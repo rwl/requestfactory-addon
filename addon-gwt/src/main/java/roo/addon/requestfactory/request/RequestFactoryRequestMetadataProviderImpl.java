@@ -18,8 +18,8 @@ import static roo.addon.requestfactory.RequestFactoryJavaType.OLD_REQUEST_CONTEX
 import static roo.addon.requestfactory.RequestFactoryJavaType.REQUEST;
 import static roo.addon.requestfactory.RequestFactoryJavaType.REQUEST_CONTEXT;
 import static roo.addon.requestfactory.RequestFactoryJavaType.SERVICE_NAME;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.KEY;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,8 +68,8 @@ import org.springframework.roo.project.ProjectOperations;
 import roo.addon.requestfactory.RequestFactoryFileManager;
 import roo.addon.requestfactory.RequestFactoryTypeService;
 import roo.addon.requestfactory.RequestFactoryUtils;
-import roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapDataKeys;
-import roo.addon.requestfactory.gwt.bootstrap.RooGwtBootstrap;
+import roo.addon.requestfactory.scaffold.ScaffoldDataKeys;
+import roo.addon.requestfactory.scaffold.RooRequestFactory;
 
 @Component(immediate = true)
 @Service
@@ -297,7 +297,7 @@ public class RequestFactoryRequestMetadataProviderImpl extends
         String parentProperty = "";
         if (annotation != null) {
             AnnotationAttributeValue<String> parentPropertyValue = annotation
-                    .getAttribute(RooGwtBootstrap.PARENT_PROPERTY_ATTRIBUTE);
+                    .getAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE);
             if (parentPropertyValue != null) {
                 parentProperty = parentPropertyValue.getValue();
             }
@@ -319,16 +319,16 @@ public class RequestFactoryRequestMetadataProviderImpl extends
         signatures.put(REMOVE_METHOD, proxyParameterAsList);
 
         if (!parentProperty.isEmpty()) {
-            signatures.put(GwtBootstrapDataKeys.COUNT_BY_PARENT_METHOD, Arrays
+            signatures.put(ScaffoldDataKeys.COUNT_BY_PARENT_METHOD, Arrays
                     .asList(new MethodParameter(STRING, parentProperty + "Id")));
-            signatures.put(GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD, Arrays.asList(new MethodParameter(
+            signatures.put(ScaffoldDataKeys.FIND_ENTRIES_BY_PARENT_METHOD, Arrays.asList(new MethodParameter(
                     STRING, parentProperty + "Id"), new MethodParameter(
                     INT_PRIMITIVE, "firstResult"), new MethodParameter(
                     INT_PRIMITIVE, "maxResults")));
         }
 
         if (idType.equals(KEY)) {
-            signatures.put(GwtBootstrapDataKeys.FIND_BY_STRING_ID_METHOD, Arrays
+            signatures.put(ScaffoldDataKeys.FIND_BY_STRING_ID_METHOD, Arrays
                     .asList(new MethodParameter(STRING, "id")));
         }
 
@@ -351,13 +351,13 @@ public class RequestFactoryRequestMetadataProviderImpl extends
             return VOID_PRIMITIVE;
         }
 
-        if (GwtBootstrapDataKeys.COUNT_BY_PARENT_METHOD.equals(methodKey)) {
+        if (ScaffoldDataKeys.COUNT_BY_PARENT_METHOD.equals(methodKey)) {
             return LONG_PRIMITIVE;
         }
-        if (GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.equals(methodKey)) {
+        if (ScaffoldDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.equals(methodKey)) {
             return JavaType.listOf(entity);
         }
-        if (GwtBootstrapDataKeys.FIND_BY_STRING_ID_METHOD.equals(methodKey)) {
+        if (ScaffoldDataKeys.FIND_BY_STRING_ID_METHOD.equals(methodKey)) {
             return entity;
         }
 

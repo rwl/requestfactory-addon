@@ -1,4 +1,4 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
 import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JdkJavaType.SET;
@@ -6,7 +6,7 @@ import static org.springframework.roo.model.JpaJavaType.EMBEDDABLE;
 import static org.springframework.roo.model.JpaJavaType.ENTITY;
 import static org.springframework.roo.model.SpringJavaType.PERSISTENT;
 
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP_EXCLUDE;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP_EXCLUDE;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ import org.springframework.roo.shell.converters.StaticFieldConverter;
  */
 @Component
 @Service
-public class GwtBootstrapFieldCommands implements CommandMarker {
+public class ScaffoldFieldCommands implements CommandMarker {
 
     @Reference private MemberDetailsScanner memberDetailsScanner;
     @Reference private MetadataService metadataService;

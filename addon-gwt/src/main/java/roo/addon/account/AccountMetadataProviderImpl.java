@@ -25,8 +25,8 @@ import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.ProjectMetadata;
 import org.springframework.roo.project.ProjectOperations;
 
-import roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapAnnotationValues;
-import roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapMetadata;
+import roo.addon.requestfactory.scaffold.ScaffoldAnnotationValues;
+import roo.addon.requestfactory.scaffold.ScaffoldMetadata;
 
 /**
  * Provides {@link ExampleMetadata}. This type is called by Roo to retrieve the metadata for this add-on.

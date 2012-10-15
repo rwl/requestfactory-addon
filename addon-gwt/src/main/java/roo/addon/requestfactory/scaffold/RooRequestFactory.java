@@ -1,4 +1,4 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
-public @interface RooGwtBootstrap {
+public @interface RooRequestFactory {
 
     String PARENT_PROPERTY_ATTRIBUTE = "parentProperty";
     String PARENT_PROPERTY_DEFAULT = "";

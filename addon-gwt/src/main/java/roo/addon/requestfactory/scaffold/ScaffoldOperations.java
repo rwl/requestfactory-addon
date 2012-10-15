@@ -1,6 +1,7 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
 import org.springframework.roo.model.JavaPackage;
+import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.Feature;
 
@@ -10,7 +11,7 @@ import org.springframework.roo.project.Feature;
  *
  * @since 1.1
  */
-public interface GwtBootstrapOperations extends Feature {
+public interface ScaffoldOperations extends Feature {
 
     /**
      * The delimiter for multi-level paths specified by a "<source path="..." />
@@ -18,9 +19,15 @@ public interface GwtBootstrapOperations extends Feature {
      */
     String PATH_DELIMITER = "/";
 
+    boolean isCommandAvailable();
+
     boolean isScaffoldAvailable();
 
     boolean isGwtInstallationPossible();
+
+    void annotateType(JavaType type, final JavaSymbolName parentProperty,
+            final JavaSymbolName primaryProperty,
+            final JavaSymbolName secondaryProperty);
 
     void setupGwtBootstrap();
 

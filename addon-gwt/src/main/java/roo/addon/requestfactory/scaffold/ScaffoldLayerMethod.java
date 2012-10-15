@@ -1,4 +1,4 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
@@ -24,13 +24,13 @@ import org.springframework.roo.model.JavaType;
  * @author Stefan Schmidt
  * @author Richard Lincoln
  */
-enum GwtBootstrapLayerMethod {
+enum ScaffoldLayerMethod {
 
     // The names of these enum constants are arbitrary
 
-    COUNT_BY_PARENT(GwtBootstrapDataKeys.COUNT_BY_PARENT_METHOD, true) {
+    COUNT_BY_PARENT(ScaffoldDataKeys.COUNT_BY_PARENT_METHOD, true) {
         @Override
-        public String getName(final GwtBootstrapAnnotationValues annotationValues,
+        public String getName(final ScaffoldAnnotationValues annotationValues,
                 final JavaType targetEntity, final String plural, final FieldMetadata parentProperty) {
             if (StringUtils.isNotBlank(annotationValues.getParentProperty())) {
                 /*return "count" + plural
@@ -47,9 +47,9 @@ enum GwtBootstrapLayerMethod {
         }
     },
 
-    FIND_BY_STRING_ID(GwtBootstrapDataKeys.FIND_BY_STRING_ID_METHOD, true) {
+    FIND_BY_STRING_ID(ScaffoldDataKeys.FIND_BY_STRING_ID_METHOD, true) {
         @Override
-        public String getName(final GwtBootstrapAnnotationValues annotationValues,
+        public String getName(final ScaffoldAnnotationValues annotationValues,
                 final JavaType targetEntity, final String plural, final FieldMetadata parentProperty) {
             return "find" + targetEntity.getSimpleTypeName() + "ByStringId";
         }
@@ -61,9 +61,9 @@ enum GwtBootstrapLayerMethod {
         }
     },
 
-    FIND_ENTRIES_BY_PARENT(GwtBootstrapDataKeys.FIND_ENTRIES_BY_PARENT_METHOD, true) {
+    FIND_ENTRIES_BY_PARENT(ScaffoldDataKeys.FIND_ENTRIES_BY_PARENT_METHOD, true) {
         @Override
-        public String getName(final GwtBootstrapAnnotationValues annotationValues,
+        public String getName(final ScaffoldAnnotationValues annotationValues,
                 final JavaType targetEntity, final String plural, final FieldMetadata parentProperty) {
             if (StringUtils.isNotBlank(annotationValues.getParentProperty())) {
                 /*return "find" + targetEntity.getSimpleTypeName()
@@ -90,11 +90,11 @@ enum GwtBootstrapLayerMethod {
      * @param idType specifies the ID type used by the target entity (required)
      * @return
      */
-    public static GwtBootstrapLayerMethod valueOf(final String methodIdentifier,
+    public static ScaffoldLayerMethod valueOf(final String methodIdentifier,
             final List<JavaType> callerParameters, final JavaType targetEntity,
             final JavaType idType) {
         // Look for matching method name and parameter types
-        for (final GwtBootstrapLayerMethod method : values()) {
+        for (final ScaffoldLayerMethod method : values()) {
             if (method.id.equals(methodIdentifier)
                     && method.getParameterTypes(targetEntity, idType).equals(
                             callerParameters)) {
@@ -114,7 +114,7 @@ enum GwtBootstrapLayerMethod {
      * @param id a unique id for this method (required)
      * @param isStatic whether this method is static
      */
-    private GwtBootstrapLayerMethod(final MethodMetadataCustomDataKey key,
+    private ScaffoldLayerMethod(final MethodMetadataCustomDataKey key,
             final boolean isStatic) {
         Validate.notNull(key, "Key is required");
         id = key.name();
@@ -132,7 +132,7 @@ enum GwtBootstrapLayerMethod {
      * @param callerParameters the caller's method's parameters (required)
      * @return a non-blank Java snippet
      */
-    public String getCall(final GwtBootstrapAnnotationValues annotationValues,
+    public String getCall(final ScaffoldAnnotationValues annotationValues,
             final JavaType targetEntity, final String plural, final FieldMetadata parentProperty,
             final List<MethodParameter> callerParameters) {
         final String target;
@@ -183,7 +183,7 @@ enum GwtBootstrapLayerMethod {
      * @param plural the plural form of the entity (required)
      * @return <code>null</code> if the method isn't desired for that entity
      */
-    public abstract String getName(GwtBootstrapAnnotationValues annotationValues,
+    public abstract String getName(ScaffoldAnnotationValues annotationValues,
             JavaType targetEntity, String plural, final FieldMetadata parentProperty);
 
     /**

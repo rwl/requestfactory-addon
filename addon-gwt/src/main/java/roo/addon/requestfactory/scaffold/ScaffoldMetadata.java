@@ -1,4 +1,4 @@
-package roo.addon.requestfactory.gwt.bootstrap;
+package roo.addon.requestfactory.scaffold;
 
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
@@ -7,8 +7,8 @@ import static org.springframework.roo.model.JavaType.VOID_PRIMITIVE;
 import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JpaJavaType.TYPED_QUERY;
 import static org.springframework.roo.model.SpringJavaType.TRANSACTIONAL;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.KEY;
-import static roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.KEY_FACTORY;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
+import static roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY_FACTORY;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -41,10 +41,10 @@ import org.springframework.roo.project.LogicalPath;
  *
  * @since 1.1.0
  */
-public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadataItem {
+public class ScaffoldMetadata extends AbstractItdTypeDetailsProvidingMetadataItem {
 
     // Constants
-    private static final String PROVIDES_TYPE_STRING = GwtBootstrapMetadata.class.getName();
+    private static final String PROVIDES_TYPE_STRING = ScaffoldMetadata.class.getName();
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils.create(PROVIDES_TYPE_STRING);
 
     private static final String ENTITY_MANAGER_METHOD_NAME = "entityManager";
@@ -70,22 +70,22 @@ public class GwtBootstrapMetadata extends AbstractItdTypeDetailsProvidingMetadat
     }
 
     private final JpaCrudAnnotationValues crudAnnotationValues;
-    private final GwtBootstrapAnnotationValues gwtBootstrapAnnotationValues;
+    private final ScaffoldAnnotationValues scaffoldAnnotationValues;
     private final boolean isGaeEnabled;
     private final String entityName;
     private final String plural;
     private final FieldMetadata identifierField;
     private final FieldMetadata parentProperty;
 
-    public GwtBootstrapMetadata(String identifier, JavaType aspectName, JpaCrudAnnotationValues crudAnnotationValues,
+    public ScaffoldMetadata(String identifier, JavaType aspectName, JpaCrudAnnotationValues crudAnnotationValues,
             PhysicalTypeMetadata governorPhysicalTypeMetadata,
-            GwtBootstrapAnnotationValues gwtBootstrapAnnotationValues, String plural, FieldMetadata idField, FieldMetadata parentProperty,
+            ScaffoldAnnotationValues scaffoldAnnotationValues, String plural, FieldMetadata idField, FieldMetadata parentProperty,
             final String entityName, final boolean isGaeEnabled) {
         super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
 
         this.crudAnnotationValues = crudAnnotationValues;
-        this.gwtBootstrapAnnotationValues = gwtBootstrapAnnotationValues;
+        this.scaffoldAnnotationValues = scaffoldAnnotationValues;
         this.isGaeEnabled = isGaeEnabled;
         this.entityName = entityName;
         this.plural = plural;
