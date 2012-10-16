@@ -1,6 +1,7 @@
 package org.springframework.roo.addon.requestfactory;
 
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.INSTANCE_REQUEST;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
@@ -149,7 +150,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
     private TemplateDataDictionary buildDictionary(final RequestFactoryType type,
             final String moduleName) {
         final Set<ClassOrInterfaceTypeDetails> proxies = typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(RooJavaType.ROO_GWT_PROXY);
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY);
         final TemplateDataDictionary dataDictionary = buildStandardDataDictionary(
                 type, moduleName);
         switch (type) {
@@ -1372,7 +1373,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                 .lookupProxyFromEntity(governorTypeDetails);
         if (proxy != null) {
             readOnly.addAll(RequestFactoryUtils.getAnnotationValues(proxy,
-                    RooJavaType.ROO_GWT_PROXY, "readOnly"));
+                    ROO_REQUEST_FACTORY_PROXY, "readOnly"));
         }
 
         return readOnly.contains(name);

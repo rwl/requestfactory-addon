@@ -5,9 +5,9 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.RECEIVER;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.SERVICE;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.SERVICE_NAME;
-import static org.springframework.roo.model.RooJavaType.ROO_GWT_MIRRORED_FROM;
-import static org.springframework.roo.model.RooJavaType.ROO_GWT_PROXY;
-import static org.springframework.roo.model.RooJavaType.ROO_GWT_REQUEST;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_MIRRORED_FROM;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +30,7 @@ import org.springframework.roo.model.RooJavaType;
 
 /**
  * Utility methods used in the GWT Add-On.
- * 
+ *
  * @author James Tyrrell
  * @since 1.1.2
  */
@@ -42,7 +42,7 @@ public final class RequestFactoryUtils {
     public static final JavaType[] REQUEST_ANNOTATIONS = { SERVICE,
             SERVICE_NAME };
     public static final JavaType[] ROO_PROXY_REQUEST_ANNOTATIONS = {
-            ROO_GWT_PROXY, ROO_GWT_REQUEST, ROO_GWT_MIRRORED_FROM };
+            ROO_REQUEST_FACTORY_PROXY, ROO_REQUEST_FACTORY_REQUEST, ROO_REQUEST_FACTORY_MIRRORED_FROM };
 
     public static JavaType convertGovernorTypeNameIntoKeyTypeName(
             final JavaType governorType, final RequestFactoryType type,
@@ -146,7 +146,7 @@ public final class RequestFactoryUtils {
     /**
      * Returns the {@link #RECEIVER} Java type, generically typed to the given
      * type.
-     * 
+     *
      * @param genericType (required)
      * @return a non-<code>null</code> type
      */
@@ -206,7 +206,7 @@ public final class RequestFactoryUtils {
 
     public static boolean scaffoldProxy(final ClassOrInterfaceTypeDetails proxy) {
         return RequestFactoryUtils.getBooleanAnnotationValue(proxy,
-                RooJavaType.ROO_GWT_PROXY, "scaffold", false);
+                ROO_REQUEST_FACTORY_PROXY, "scaffold", false);
     }
 
     /**

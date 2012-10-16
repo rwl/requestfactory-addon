@@ -1,6 +1,9 @@
 package org.springframework.roo.addon.requestfactory.locator;
 
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.LOCATOR;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_LOCATOR;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY_FACTORY;
 import static org.springframework.roo.model.JavaType.CLASS;
@@ -115,7 +118,7 @@ public class RequestFactoryLocatorMetadataProviderImpl implements
                 identifierAccessor.getReturnType(), true);
 
         LogicalPath locatorPath = null;
-        AnnotationMetadata rooProxyAnnotation = proxy.getAnnotation(RooJavaType.ROO_GWT_PROXY);
+        AnnotationMetadata rooProxyAnnotation = proxy.getAnnotation(ROO_REQUEST_FACTORY_PROXY);
         if (rooProxyAnnotation != null) {
             AnnotationAttributeValue<String> locatorModuleAttributeValue = rooProxyAnnotation
                     .getAttribute(RooRequestFactoryProxy.LOCATOR_MODULE_ATTRIBUTE);
@@ -135,7 +138,7 @@ public class RequestFactoryLocatorMetadataProviderImpl implements
         final ClassOrInterfaceTypeDetailsBuilder cidBuilder = new ClassOrInterfaceTypeDetailsBuilder(
                 locatorPhysicalTypeId);
         final AnnotationMetadataBuilder annotationMetadataBuilder = new AnnotationMetadataBuilder(
-                RooJavaType.ROO_GWT_LOCATOR);
+                ROO_REQUEST_FACTORY_LOCATOR);
         annotationMetadataBuilder.addStringAttribute("value",
                 entity.getFullyQualifiedTypeName());
         cidBuilder.addAnnotation(annotationMetadataBuilder);
@@ -349,7 +352,7 @@ public class RequestFactoryLocatorMetadataProviderImpl implements
                 return;
             }
             boolean processed = false;
-            if (cid.getAnnotation(RooJavaType.ROO_GWT_REQUEST) != null) {
+            if (cid.getAnnotation(ROO_REQUEST_FACTORY_REQUEST) != null) {
                 final ClassOrInterfaceTypeDetails proxy = requestFactoryTypeService
                         .lookupProxyFromRequest(cid);
                 if (proxy != null) {
@@ -363,10 +366,10 @@ public class RequestFactoryLocatorMetadataProviderImpl implements
                 }
             }
             if (!processed
-                    && cid.getAnnotation(RooJavaType.ROO_GWT_PROXY) == null) {
+                    && cid.getAnnotation(ROO_REQUEST_FACTORY_PROXY) == null) {
                 boolean found = false;
                 for (final ClassOrInterfaceTypeDetails proxyCid : typeLocationService
-                        .findClassesOrInterfaceDetailsWithAnnotation(RooJavaType.ROO_GWT_PROXY)) {
+                        .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)) {
                     final AnnotationMetadata annotationMetadata = RequestFactoryUtils
                             .getFirstAnnotation(proxyCid,
                                     RequestFactoryUtils.ROO_PROXY_REQUEST_ANNOTATIONS);

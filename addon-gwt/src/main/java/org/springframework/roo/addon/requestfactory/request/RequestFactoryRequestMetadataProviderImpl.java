@@ -7,6 +7,7 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.REQUEST;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.REQUEST_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.SERVICE_NAME;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.COUNT_ALL_METHOD;
@@ -19,7 +20,6 @@ import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.VOID_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
-import static org.springframework.roo.model.RooJavaType.ROO_GWT_REQUEST;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,7 +113,7 @@ public class RequestFactoryRequestMetadataProviderImpl extends
         }
 
         final AnnotationMetadata gwtRequestAnnotation = requestInterface
-                .getAnnotation(ROO_GWT_REQUEST);
+                .getAnnotation(ROO_REQUEST_FACTORY_REQUEST);
         if (gwtRequestAnnotation == null) {
             return null;
         }

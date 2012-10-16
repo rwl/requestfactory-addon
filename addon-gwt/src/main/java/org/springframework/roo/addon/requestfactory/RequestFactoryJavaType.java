@@ -35,6 +35,17 @@ public final class RequestFactoryJavaType {
     public static final JavaType SERVICE_NAME = new JavaType(
             "com.google.web.bindery.requestfactory.shared.ServiceName");
 
+    public static final JavaType ROO_REQUEST_FACTORY_LOCATOR = new JavaType(
+            "org.springframework.roo.addon.requestfactory.RooRequestFactoryLocator");
+    public static final JavaType ROO_REQUEST_FACTORY_MIRRORED_FROM = new JavaType(
+            "org.springframework.roo.addon.requestfactory.RooRequestFactoryMirroredFrom");
+    public static final JavaType ROO_REQUEST_FACTORY_PROXY = new JavaType(
+            "org.springframework.roo.addon.requestfactory.RooRequestFactoryProxy");
+    public static final JavaType ROO_REQUEST_FACTORY_REQUEST = new JavaType(
+            "org.springframework.roo.addon.requestfactory.RooRequestFactoryRequest");
+    public static final JavaType ROO_REQUEST_FACTORY_UNMANAGED_REQUEST = new JavaType(
+            "org.springframework.roo.addon.requestfactory.RooRequestFactoryUnmanagedRequest");
+
     /**
      * Constructor is private to prevent instantiation
      */

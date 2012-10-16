@@ -5,9 +5,9 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.OLD_REQUEST_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.REQUEST_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
-import static org.springframework.roo.model.RooJavaType.ROO_GWT_MIRRORED_FROM;
-import static org.springframework.roo.model.RooJavaType.ROO_GWT_PROXY;
-import static org.springframework.roo.model.RooJavaType.ROO_GWT_REQUEST;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_MIRRORED_FROM;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
 import static org.springframework.roo.project.Path.ROOT;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
 import static org.springframework.roo.project.Path.SRC_MAIN_WEBAPP;
@@ -150,19 +150,19 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
         }
 
         for (final ClassOrInterfaceTypeDetails proxyOrRequest : typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_MIRRORED_FROM)) {
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_MIRRORED_FROM)) {
             final ClassOrInterfaceTypeDetailsBuilder cidBuilder = new ClassOrInterfaceTypeDetailsBuilder(
                     proxyOrRequest);
             if (proxyOrRequest.extendsType(ENTITY_PROXY)
                     || proxyOrRequest.extendsType(OLD_ENTITY_PROXY)) {
                 final AnnotationMetadata annotationMetadata = MemberFindingUtils
                         .getAnnotationOfType(proxyOrRequest.getAnnotations(),
-                                ROO_GWT_MIRRORED_FROM);
+                                ROO_REQUEST_FACTORY_MIRRORED_FROM);
                 if (annotationMetadata != null) {
                     final AnnotationMetadataBuilder annotationMetadataBuilder = new AnnotationMetadataBuilder(
                             annotationMetadata);
-                    annotationMetadataBuilder.setAnnotationType(ROO_GWT_PROXY);
-                    cidBuilder.removeAnnotation(ROO_GWT_MIRRORED_FROM);
+                    annotationMetadataBuilder.setAnnotationType(ROO_REQUEST_FACTORY_PROXY);
+                    cidBuilder.removeAnnotation(ROO_REQUEST_FACTORY_MIRRORED_FROM);
                     cidBuilder.addAnnotation(annotationMetadataBuilder);
                     typeManagementService.createOrUpdateTypeOnDisk(cidBuilder
                             .build());
@@ -172,13 +172,13 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
                     || proxyOrRequest.extendsType(OLD_REQUEST_CONTEXT)) {
                 final AnnotationMetadata annotationMetadata = MemberFindingUtils
                         .getAnnotationOfType(proxyOrRequest.getAnnotations(),
-                                ROO_GWT_MIRRORED_FROM);
+                                ROO_REQUEST_FACTORY_MIRRORED_FROM);
                 if (annotationMetadata != null) {
                     final AnnotationMetadataBuilder annotationMetadataBuilder = new AnnotationMetadataBuilder(
                             annotationMetadata);
                     annotationMetadataBuilder
-                            .setAnnotationType(ROO_GWT_REQUEST);
-                    cidBuilder.removeAnnotation(ROO_GWT_MIRRORED_FROM);
+                            .setAnnotationType(ROO_REQUEST_FACTORY_REQUEST);
+                    cidBuilder.removeAnnotation(ROO_REQUEST_FACTORY_MIRRORED_FROM);
                     cidBuilder.addAnnotation(annotationMetadataBuilder);
                     typeManagementService.createOrUpdateTypeOnDisk(cidBuilder
                             .build());
@@ -217,7 +217,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
 //        proxyAll(proxyPackage);
 //        requestAll(requestPackage);
         for (final ClassOrInterfaceTypeDetails proxy : typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_PROXY)) {
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)) {
             final ClassOrInterfaceTypeDetails request = requestFactoryTypeService
                     .lookupRequestFromProxy(proxy);
             if (request == null) {
@@ -333,7 +333,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
 
     private void createScaffold(final ClassOrInterfaceTypeDetails proxy) {
         final AnnotationMetadata annotationMetadata = RequestFactoryUtils
-                .getFirstAnnotation(proxy, ROO_GWT_PROXY);
+                .getFirstAnnotation(proxy, ROO_REQUEST_FACTORY_PROXY);
         if (annotationMetadata != null) {
             final AnnotationAttributeValue<Boolean> booleanAttributeValue = annotationMetadata
                     .getAttribute("scaffold");

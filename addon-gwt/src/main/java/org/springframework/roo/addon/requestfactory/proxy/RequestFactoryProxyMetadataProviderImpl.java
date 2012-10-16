@@ -2,6 +2,7 @@ package org.springframework.roo.addon.requestfactory.proxy;
 
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ENTITY_PROXY;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.OLD_ENTITY_PROXY;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class RequestFactoryProxyMetadataProviderImpl extends
 
         final AnnotationMetadata mirrorAnnotation = MemberFindingUtils
                 .getAnnotationOfType(proxy.getAnnotations(),
-                        RooJavaType.ROO_GWT_PROXY);
+                        ROO_REQUEST_FACTORY_PROXY);
         if (mirrorAnnotation == null) {
             return null;
         }
@@ -189,10 +190,10 @@ public class RequestFactoryProxyMetadataProviderImpl extends
                 return;
             }
             if (MemberFindingUtils.getAnnotationOfType(cid.getAnnotations(),
-                    RooJavaType.ROO_GWT_PROXY) == null) {
+                    ROO_REQUEST_FACTORY_PROXY) == null) {
                 boolean found = false;
                 for (final ClassOrInterfaceTypeDetails proxyCid : typeLocationService
-                        .findClassesOrInterfaceDetailsWithAnnotation(RooJavaType.ROO_GWT_PROXY)) {
+                        .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)) {
                     final AnnotationMetadata annotationMetadata = RequestFactoryUtils
                             .getFirstAnnotation(proxyCid,
                                     RequestFactoryUtils.ROO_PROXY_REQUEST_ANNOTATIONS);

@@ -6,15 +6,14 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.OLD_REQUEST_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.PROXY_FOR_NAME;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.REQUEST_CONTEXT;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_UNMANAGED_REQUEST;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP_EXCLUDE;
 import static org.springframework.roo.classpath.PhysicalTypeCategory.INTERFACE;
-import static org.springframework.roo.model.RooJavaType.ROO_GWT_MIRRORED_FROM;
-import static org.springframework.roo.model.RooJavaType.ROO_GWT_PROXY;
-import static org.springframework.roo.model.RooJavaType.ROO_GWT_REQUEST;
-import static org.springframework.roo.model.RooJavaType.ROO_GWT_UNMANAGED_REQUEST;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 import static org.springframework.roo.project.Path.ROOT;
@@ -306,7 +305,7 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
         attributeValues.add(excludeAttribute);
 
         cidBuilder.updateTypeAnnotation(new AnnotationMetadataBuilder(
-                ROO_GWT_PROXY, attributeValues));
+                ROO_REQUEST_FACTORY_PROXY, attributeValues));
         typeManagementService.createOrUpdateTypeOnDisk(cidBuilder.build());
 //        addPackageToGwtXml(destinationPackage);
     }
@@ -409,7 +408,7 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
                 VALUE, entity.getType().getFullyQualifiedTypeName());
         final List<AnnotationAttributeValue<?>> gwtRequestAttributeValues = new ArrayList<AnnotationAttributeValue<?>>();
         gwtRequestAttributeValues.add(entityAttributeValue);
-        return new AnnotationMetadataBuilder(ROO_GWT_REQUEST,
+        return new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_REQUEST,
                 gwtRequestAttributeValues).build();
     }
 
@@ -419,7 +418,7 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
                 VALUE, entity.getType().getFullyQualifiedTypeName());
         final List<AnnotationAttributeValue<?>> gwtRequestAttributeValues = new ArrayList<AnnotationAttributeValue<?>>();
         gwtRequestAttributeValues.add(entityAttributeValue);
-        return new AnnotationMetadataBuilder(ROO_GWT_UNMANAGED_REQUEST,
+        return new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_UNMANAGED_REQUEST,
                 gwtRequestAttributeValues).build();
     }
 }

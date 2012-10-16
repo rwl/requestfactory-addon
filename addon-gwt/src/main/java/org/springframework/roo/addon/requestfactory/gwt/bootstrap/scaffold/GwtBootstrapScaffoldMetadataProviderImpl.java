@@ -1,5 +1,9 @@
 package org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold;
 
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_LOCATOR;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
+
 import java.io.File;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -124,7 +128,7 @@ public class GwtBootstrapScaffoldMetadataProviderImpl implements
         }
 
         if (!RequestFactoryUtils.getBooleanAnnotationValue(proxy,
-                RooJavaType.ROO_GWT_PROXY, "scaffold", false)) {
+                ROO_REQUEST_FACTORY_PROXY, "scaffold", false)) {
             return null;
         }
 
@@ -289,21 +293,21 @@ public class GwtBootstrapScaffoldMetadataProviderImpl implements
                 return;
             }
 
-            if (cid.getAnnotation(RooJavaType.ROO_GWT_PROXY) != null) {
+            if (cid.getAnnotation(ROO_REQUEST_FACTORY_PROXY) != null) {
                 final ClassOrInterfaceTypeDetails entityType = requestFactoryTypeService
                         .lookupEntityFromProxy(cid);
                 if (entityType != null) {
                     upstreamDependency = entityType.getDeclaredByMetadataId();
                 }
             }
-            else if (cid.getAnnotation(RooJavaType.ROO_GWT_REQUEST) != null) {
+            else if (cid.getAnnotation(ROO_REQUEST_FACTORY_REQUEST) != null) {
                 final ClassOrInterfaceTypeDetails entityType = requestFactoryTypeService
                         .lookupEntityFromRequest(cid);
                 if (entityType != null) {
                     upstreamDependency = entityType.getDeclaredByMetadataId();
                 }
             }
-            else if (cid.getAnnotation(RooJavaType.ROO_GWT_LOCATOR) != null) {
+            else if (cid.getAnnotation(ROO_REQUEST_FACTORY_LOCATOR) != null) {
                 final ClassOrInterfaceTypeDetails entityType = requestFactoryTypeService
                         .lookupEntityFromLocator(cid);
                 if (entityType != null) {

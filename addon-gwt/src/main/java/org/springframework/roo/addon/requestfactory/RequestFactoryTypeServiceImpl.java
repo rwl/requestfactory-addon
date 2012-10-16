@@ -7,6 +7,11 @@ import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JdkJavaType.SET;
 import static org.springframework.roo.model.JpaJavaType.EMBEDDABLE;
 
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_LOCATOR;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_UNMANAGED_REQUEST;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -762,32 +767,32 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
     public ClassOrInterfaceTypeDetails lookupEntityFromLocator(
             final ClassOrInterfaceTypeDetails locator) {
         Validate.notNull(locator, "Locator is required");
-        return lookupTargetFromX(locator, RooJavaType.ROO_GWT_LOCATOR);
+        return lookupTargetFromX(locator, ROO_REQUEST_FACTORY_LOCATOR);
     }
 
     public ClassOrInterfaceTypeDetails lookupEntityFromProxy(
             final ClassOrInterfaceTypeDetails proxy) {
         Validate.notNull(proxy, "Proxy is required");
-        return lookupTargetFromX(proxy, RooJavaType.ROO_GWT_PROXY);
+        return lookupTargetFromX(proxy, ROO_REQUEST_FACTORY_PROXY);
     }
 
     public ClassOrInterfaceTypeDetails lookupEntityFromRequest(
             final ClassOrInterfaceTypeDetails request) {
         Validate.notNull(request, "Request is required");
-        return lookupTargetFromX(request, RooJavaType.ROO_GWT_REQUEST);
+        return lookupTargetFromX(request, ROO_REQUEST_FACTORY_REQUEST);
     }
 
     public ClassOrInterfaceTypeDetails lookupProxyFromEntity(
             final ClassOrInterfaceTypeDetails entity) {
-        return lookupXFromEntity(entity, RooJavaType.ROO_GWT_PROXY);
+        return lookupXFromEntity(entity, ROO_REQUEST_FACTORY_PROXY);
     }
 
     public ClassOrInterfaceTypeDetails lookupProxyFromRequest(
             final ClassOrInterfaceTypeDetails request) {
         final AnnotationMetadata annotation = RequestFactoryUtils.getFirstAnnotation(
-                request, RooJavaType.ROO_GWT_REQUEST);
+                request, ROO_REQUEST_FACTORY_REQUEST);
         Validate.notNull(annotation, "Request '" + request.getName()
-                + "' isn't annotated with '" + RooJavaType.ROO_GWT_REQUEST
+                + "' isn't annotated with '" + ROO_REQUEST_FACTORY_REQUEST
                 + "'");
         final AnnotationAttributeValue<?> attributeValue = annotation
                 .getAttribute("value");
@@ -799,15 +804,15 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
 
     public ClassOrInterfaceTypeDetails lookupRequestFromEntity(
             final ClassOrInterfaceTypeDetails entity) {
-        return lookupXFromEntity(entity, RooJavaType.ROO_GWT_REQUEST);
+        return lookupXFromEntity(entity, ROO_REQUEST_FACTORY_REQUEST);
     }
 
     public ClassOrInterfaceTypeDetails lookupRequestFromProxy(
             final ClassOrInterfaceTypeDetails proxy) {
         final AnnotationMetadata annotation = RequestFactoryUtils.getFirstAnnotation(
-                proxy, RooJavaType.ROO_GWT_PROXY);
+                proxy, ROO_REQUEST_FACTORY_PROXY);
         Validate.notNull(annotation, "Proxy '" + proxy.getName()
-                + "' isn't annotated with '" + RooJavaType.ROO_GWT_PROXY + "'");
+                + "' isn't annotated with '" + ROO_REQUEST_FACTORY_PROXY + "'");
         final AnnotationAttributeValue<?> attributeValue = annotation
                 .getAttribute("value");
         final JavaType serviceNameType = new JavaType(
@@ -819,9 +824,9 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
     public ClassOrInterfaceTypeDetails lookupUnmanagedRequestFromProxy(
             final ClassOrInterfaceTypeDetails proxy) {
         final AnnotationMetadata annotation = RequestFactoryUtils.getFirstAnnotation(
-                proxy, RooJavaType.ROO_GWT_PROXY);
+                proxy, ROO_REQUEST_FACTORY_PROXY);
         Validate.notNull(annotation, "Proxy '" + proxy.getName()
-                + "' isn't annotated with '" + RooJavaType.ROO_GWT_PROXY + "'");
+                + "' isn't annotated with '" + ROO_REQUEST_FACTORY_PROXY + "'");
         final AnnotationAttributeValue<?> attributeValue = annotation
                 .getAttribute("value");
         final JavaType serviceNameType = new JavaType(
@@ -832,7 +837,7 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
 
     public ClassOrInterfaceTypeDetails lookupUnmanagedRequestFromEntity(
             final ClassOrInterfaceTypeDetails entity) {
-        return lookupXFromEntity(entity, RooJavaType.ROO_GWT_UNMANAGED_REQUEST);
+        return lookupXFromEntity(entity, ROO_REQUEST_FACTORY_UNMANAGED_REQUEST);
     }
 
     public ClassOrInterfaceTypeDetails lookupTargetFromX(

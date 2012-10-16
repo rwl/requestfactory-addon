@@ -1,6 +1,6 @@
 package org.springframework.roo.addon.requestfactory.request;
 
-import static org.springframework.roo.model.RooJavaType.ROO_GWT_REQUEST;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ import org.springframework.roo.project.LogicalPath;
 /**
  * Triggers the generation of {@link RequestFactoryRequestMetadata} upon being notified of
  * changes to {@link PhysicalTypeMetadata} within the user project.
- * 
+ *
  * @author Andrew Swan
  * @since 1.2.0
  */
@@ -64,7 +64,7 @@ public class RequestFactoryRequestMetadataNotificationListener implements
             return downstreamOfGwtEntityLayerComponent;
         }
 
-        if (upstreamType.getAnnotation(ROO_GWT_REQUEST) == null) {
+        if (upstreamType.getAnnotation(ROO_REQUEST_FACTORY_REQUEST) == null) {
             final String downstreamOfGwtEntity = getDownstreamOfGwtEntity(upstreamType
                     .getType());
             if (downstreamOfGwtEntity != null) {
@@ -77,9 +77,9 @@ public class RequestFactoryRequestMetadataNotificationListener implements
 
     private String getDownstreamOfGwtEntity(final JavaType upstreamType) {
         for (final ClassOrInterfaceTypeDetails request : typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_REQUEST)) {
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_REQUEST)) {
             final AnnotationMetadata gwtRequestAnnotation = request
-                    .getAnnotation(ROO_GWT_REQUEST);
+                    .getAnnotation(ROO_REQUEST_FACTORY_REQUEST);
             if (gwtRequestAnnotation != null) {
                 final AnnotationAttributeValue<?> attributeValue = gwtRequestAnnotation
                         .getAttribute("value");
@@ -105,7 +105,7 @@ public class RequestFactoryRequestMetadataNotificationListener implements
         if (!layerEntities.isEmpty()) {
             // Look for a GWT request that manages one of these entities
             for (final ClassOrInterfaceTypeDetails request : typeLocationService
-                    .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_REQUEST)) {
+                    .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_REQUEST)) {
                 final ClassOrInterfaceTypeDetails entity = requestFactoryTypeService
                         .lookupEntityFromRequest(request);
                 if (entity != null && layerEntities.contains(entity.getType())) {
