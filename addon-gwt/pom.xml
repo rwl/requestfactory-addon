@@ -7,9 +7,9 @@
         <version>1.2.3.BUILD-SNAPSHOT</version>
         <relativePath>../osgi-roo-bundle</relativePath>
     </parent>
-    <artifactId>org.springframework.roo.addon.gwt</artifactId>
+    <artifactId>org.springframework.roo.addon.requestfactory</artifactId>
     <packaging>bundle</packaging>
-    <name>Spring Roo - Addon - RequestFactory</name>
+    <name>Spring Roo - Addon - Request Factory</name>
     <description>Support for GWT, Android and iOS UI scaffolding using RequestFactory.</description>
     <dependencies>
         <!-- OSGi -->
