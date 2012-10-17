@@ -462,7 +462,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
     }
 
     private void copyDirectoryContents() {
-        for (final RequestFactoryPath path : RequestFactoryPath.values()) {
+        for (final RequestFactoryPath path : GwtBootstrapPaths.ALL_PATHS) {
             copyDirectoryContents(path);
         }
     }
@@ -478,8 +478,8 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
                 && typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() == 0) {
             return;
         }
-        final String targetDirectory = (requestFactoryPath == RequestFactoryPath.WEB
-                || requestFactoryPath == RequestFactoryPath.ACCOUNT_WEB) ? projectOperations
+        final String targetDirectory = (requestFactoryPath == GwtBootstrapPaths.WEB
+                || requestFactoryPath == GwtBootstrapPaths.ACCOUNT_WEB) ? projectOperations
                 .getPathResolver().getFocusedRoot(SRC_MAIN_WEBAPP)
                 : projectOperations.getPathResolver().getFocusedIdentifier(
                         SRC_MAIN_JAVA,
@@ -726,7 +726,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
             WebXmlUtils
                     .addFilter(
                             "AccountAuthFilter",
-                            RequestFactoryPath.SERVER_ACCOUNT.packageName(projectOperations
+                            GwtBootstrapPaths.SERVER_ACCOUNT.packageName(projectOperations
                                     .getTopLevelPackage(projectOperations
                                             .getFocusedModuleName()))
                                     + ".AccountAuthFilter",

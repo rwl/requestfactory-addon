@@ -15,54 +15,55 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapPaths;
 import org.springframework.roo.model.DataType;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 
 public enum RequestFactoryType {
-    ACTIVITIES_MAPPER(RequestFactoryPath.MANAGED_ACTIVITY, true, "ActivitiesMapper", "activitiesMapper", "ActivitiesMapper", false, true, false),
+    ACTIVITIES_MAPPER(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ActivitiesMapper", "activitiesMapper", "ActivitiesMapper", false, true, false),
 
     // Represents shared types. There is one such type per application using
     // Roo's GWT support
-    APP_ENTITY_TYPES_PROCESSOR(RequestFactoryPath.MANAGED_REQUEST, false, "", "entityTypes", "ApplicationEntityTypesProcessor", false, false, true),
-    APP_REQUEST_FACTORY(RequestFactoryPath.MANAGED_REQUEST, false, "", "requestFactory", "ApplicationRequestFactory", false, false, true),
-    DETAIL_ACTIVITY(RequestFactoryPath.MANAGED_ACTIVITY, true, "DetailsActivity", "detailsActivity", "DetailsActivity", false, true, false),
-    DETAILS_ACTIVITIES(RequestFactoryPath.MANAGED_ACTIVITY, false, "", "detailsActivities", "ApplicationDetailsActivities", false, true, false),
-    DETAILS_VIEW(RequestFactoryPath.MANAGED_UI, true, "DetailsView", "detailsView", "DetailsView", false, false, false),
-    DESKTOP_DETAILS_VIEW(RequestFactoryPath.MANAGED_UI_DESKTOP, true, "DesktopDetailsView", "desktopDetailsView", "DesktopDetailsView", true, true, false),
-    EDIT_ACTIVITY(RequestFactoryPath.MANAGED_ACTIVITY, true, "EditActivity", "editActivity", "EditActivity", false, false, false),
-    EDIT_ACTIVITY_WRAPPER(RequestFactoryPath.MANAGED_ACTIVITY, true, "EditActivityWrapper", "editActivityWrapper", "EditActivityWrapper", false, true, false),
-    EDIT_RENDERER(RequestFactoryPath.MANAGED_UI_RENDERER, true, "ProxyRenderer", "renderer", "EditRenderer", false, false, false),
-    EDIT_VIEW(RequestFactoryPath.MANAGED_UI, true, "EditView", "editView", "EditView", false, false, false),
-    DESKTOP_EDIT_VIEW(RequestFactoryPath.MANAGED_UI_DESKTOP, true, "DesktopEditView", "desktopEditView", "DesktopEditView", true, true, false),
-    IS_SCAFFOLD_MOBILE_ACTIVITY(RequestFactoryPath.SCAFFOLD_ACTIVITY, false, "", "isScaffoldMobileActivity", "IsScaffoldMobileActivity", false, false, false),
-    LIST_ACTIVITY(RequestFactoryPath.MANAGED_ACTIVITY, true, "ListActivity", "listActivity", "ListActivity", false, true, false),
-    LIST_EDITOR(RequestFactoryPath.MANAGED_UI_EDITOR, true, "ListEditor", "listEditor", "ListEditor", true, true, false),
-    LIST_PLACE_RENDERER(RequestFactoryPath.MANAGED_UI_RENDERER, false, "", "listPlaceRenderer", "ApplicationListPlaceRenderer", false, true, false),
-    DESKTOP_LIST_VIEW(RequestFactoryPath.MANAGED_UI_DESKTOP, true, "DesktopListView", "desktopListView", "DesktopListView", true, true, false),
-    MASTER_ACTIVITIES(RequestFactoryPath.MANAGED_ACTIVITY, false, "", "masterActivities", "ApplicationMasterActivities", false, true, false),
+    APP_ENTITY_TYPES_PROCESSOR(GwtBootstrapPaths.MANAGED_REQUEST, false, "", "entityTypes", "ApplicationEntityTypesProcessor", false, false, true),
+    APP_REQUEST_FACTORY(GwtBootstrapPaths.MANAGED_REQUEST, false, "", "requestFactory", "ApplicationRequestFactory", false, false, true),
+    DETAIL_ACTIVITY(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "DetailsActivity", "detailsActivity", "DetailsActivity", false, true, false),
+    DETAILS_ACTIVITIES(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "detailsActivities", "ApplicationDetailsActivities", false, true, false),
+    DETAILS_VIEW(GwtBootstrapPaths.MANAGED_UI, true, "DetailsView", "detailsView", "DetailsView", false, false, false),
+    DESKTOP_DETAILS_VIEW(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopDetailsView", "desktopDetailsView", "DesktopDetailsView", true, true, false),
+    EDIT_ACTIVITY(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "EditActivity", "editActivity", "EditActivity", false, false, false),
+    EDIT_ACTIVITY_WRAPPER(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "EditActivityWrapper", "editActivityWrapper", "EditActivityWrapper", false, true, false),
+    EDIT_RENDERER(GwtBootstrapPaths.MANAGED_UI_RENDERER, true, "ProxyRenderer", "renderer", "EditRenderer", false, false, false),
+    EDIT_VIEW(GwtBootstrapPaths.MANAGED_UI, true, "EditView", "editView", "EditView", false, false, false),
+    DESKTOP_EDIT_VIEW(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopEditView", "desktopEditView", "DesktopEditView", true, true, false),
+    IS_SCAFFOLD_MOBILE_ACTIVITY(GwtBootstrapPaths.SCAFFOLD_ACTIVITY, false, "", "isScaffoldMobileActivity", "IsScaffoldMobileActivity", false, false, false),
+    LIST_ACTIVITY(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ListActivity", "listActivity", "ListActivity", false, true, false),
+    LIST_EDITOR(GwtBootstrapPaths.MANAGED_UI_EDITOR, true, "ListEditor", "listEditor", "ListEditor", true, true, false),
+    LIST_PLACE_RENDERER(GwtBootstrapPaths.MANAGED_UI_RENDERER, false, "", "listPlaceRenderer", "ApplicationListPlaceRenderer", false, true, false),
+    DESKTOP_LIST_VIEW(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopListView", "desktopListView", "DesktopListView", true, true, false),
+    MASTER_ACTIVITIES(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "masterActivities", "ApplicationMasterActivities", false, true, false),
 
-    DATA_PROVIDER(RequestFactoryPath.MANAGED_TREE, true, "DataProvider", "dataProvider", "DataProvider", false, false, false),
-    IS_LEAF_PROCESSOR(RequestFactoryPath.MANAGED_TREE, false, "", "isLeafProcessor", "IsLeafProcessor", false, false, false),
-    PROXY_LIST_NODE_PROCESSOR(RequestFactoryPath.MANAGED_TREE, false, "", "proxyListNodeProcessor", "ProxyListNodeProcessor", false, false, false),
-    PROXY_NODE_PROCESSOR(RequestFactoryPath.MANAGED_TREE, false, "", "proxyNodeProcessor", "ProxyNodeProcessor", false, false, false),
+    DATA_PROVIDER(GwtBootstrapPaths.MANAGED_TREE, true, "DataProvider", "dataProvider", "DataProvider", false, false, false),
+    IS_LEAF_PROCESSOR(GwtBootstrapPaths.MANAGED_TREE, false, "", "isLeafProcessor", "IsLeafProcessor", false, false, false),
+    PROXY_LIST_NODE_PROCESSOR(GwtBootstrapPaths.MANAGED_TREE, false, "", "proxyListNodeProcessor", "ProxyListNodeProcessor", false, false, false),
+    PROXY_NODE_PROCESSOR(GwtBootstrapPaths.MANAGED_TREE, false, "", "proxyNodeProcessor", "ProxyNodeProcessor", false, false, false),
 
-    MOBILE_ACTIVITIES(RequestFactoryPath.MANAGED_ACTIVITY, false, "", "mobileActivities", "ScaffoldMobileActivities", false, false, false),
-    MOBILE_DETAILS_VIEW(RequestFactoryPath.MANAGED_UI_MOBILE, true, "MobileDetailsView", "mobileDetailsView", "MobileDetailsView", true, true, false),
-    MOBILE_EDIT_VIEW(RequestFactoryPath.MANAGED_UI_MOBILE, true, "MobileEditView", "mobileEditView", "MobileEditView", true, true, false),
-    MOBILE_LIST_VIEW(RequestFactoryPath.MANAGED_UI_MOBILE, true, "MobileListView", "mobileListView", "MobileListView", false, true, false),
-    MOBILE_PROXY_LIST_VIEW(RequestFactoryPath.SCAFFOLD_UI, false, "", "mobileProxyListView", "MobileProxyListView", false, false, false),
+    MOBILE_ACTIVITIES(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "mobileActivities", "ScaffoldMobileActivities", false, false, false),
+    MOBILE_DETAILS_VIEW(GwtBootstrapPaths.MANAGED_UI_MOBILE, true, "MobileDetailsView", "mobileDetailsView", "MobileDetailsView", true, true, false),
+    MOBILE_EDIT_VIEW(GwtBootstrapPaths.MANAGED_UI_MOBILE, true, "MobileEditView", "mobileEditView", "MobileEditView", true, true, false),
+    MOBILE_LIST_VIEW(GwtBootstrapPaths.MANAGED_UI_MOBILE, true, "MobileListView", "mobileListView", "MobileListView", false, true, false),
+    MOBILE_PROXY_LIST_VIEW(GwtBootstrapPaths.SCAFFOLD_UI, false, "", "mobileProxyListView", "MobileProxyListView", false, false, false),
 
     // Represents mirror types classes. There are one of these for each entity
     // mirrored by Roo.
-    PROXY(RequestFactoryPath.MANAGED_REQUEST, true, "Proxy", "proxy", null, false, false, true),
-    REQUEST(RequestFactoryPath.MANAGED_REQUEST, true, "Request", "request", null, false, false, true),
-    SET_EDITOR(RequestFactoryPath.MANAGED_UI_EDITOR, true, "SetEditor", "setEditor", "SetEditor", true, true, false),
+    PROXY(GwtBootstrapPaths.MANAGED_REQUEST, true, "Proxy", "proxy", null, false, false, true),
+    REQUEST(GwtBootstrapPaths.MANAGED_REQUEST, true, "Request", "request", null, false, false, true),
+    SET_EDITOR(GwtBootstrapPaths.MANAGED_UI_EDITOR, true, "SetEditor", "setEditor", "SetEditor", true, true, false),
 
-    SCAFFOLD_APP(RequestFactoryPath.SCAFFOLD, false, "", "scaffoldApp", "ScaffoldApp", false, false, false),
-    SCAFFOLD_DESKTOP_APP(RequestFactoryPath.SCAFFOLD, false, "", "scaffoldDesktopApp", "ScaffoldDesktopApp", false, false, false),
-    SCAFFOLD_MOBILE_APP(RequestFactoryPath.SCAFFOLD, false, "", "scaffoldMobileApp", "ScaffoldMobileApp", false, false, false);
+    SCAFFOLD_APP(GwtBootstrapPaths.SCAFFOLD, false, "", "scaffoldApp", "ScaffoldApp", false, false, false),
+    SCAFFOLD_DESKTOP_APP(GwtBootstrapPaths.SCAFFOLD, false, "", "scaffoldDesktopApp", "ScaffoldDesktopApp", false, false, false),
+    SCAFFOLD_MOBILE_APP(GwtBootstrapPaths.SCAFFOLD, false, "", "scaffoldMobileApp", "ScaffoldMobileApp", false, false, false);
 
     public static List<RequestFactoryType> getMirrorTypes() {
         final List<RequestFactoryType> mirrorTypes = new ArrayList<RequestFactoryType>();

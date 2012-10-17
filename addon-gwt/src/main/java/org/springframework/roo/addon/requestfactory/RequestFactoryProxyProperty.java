@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapPaths;
 import org.springframework.roo.classpath.PhysicalTypeCategory;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MemberFindingUtils;
@@ -130,7 +131,7 @@ public class RequestFactoryProxyProperty {
         if (type.getParameters().size() > 0) {
             arg = type.getParameters().get(0);
         }
-        return RequestFactoryPath.SCAFFOLD_PLACE.packageName(topLevelPackage)
+        return GwtBootstrapPaths.SCAFFOLD_PLACE.packageName(topLevelPackage)
                 + ".CollectionRenderer.of("
                 + new RequestFactoryProxyProperty(topLevelPackage, ptmd, arg)
                         .getRenderer() + ")";

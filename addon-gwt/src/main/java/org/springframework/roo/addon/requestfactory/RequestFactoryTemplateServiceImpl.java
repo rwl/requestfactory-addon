@@ -44,6 +44,7 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.plural.PluralMetadata;
+import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapPaths;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
 import org.springframework.roo.addon.requestfactory.scaffold.RooRequestFactory;
 import org.springframework.roo.addon.requestfactory.scaffold.ScaffoldDataKeys;
@@ -275,7 +276,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                     }
                 }
                 dataDictionary.setVariable("sharedScaffoldPackage",
-                        RequestFactoryPath.SHARED_SCAFFOLD.packageName(projectOperations
+                        GwtBootstrapPaths.SHARED_SCAFFOLD.packageName(projectOperations
                                 .getTopLevelPackage(moduleName)));
             }
 
@@ -413,7 +414,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                 }
             }
             dataDictionary.setVariable("scaffoldUiPackage",
-                    RequestFactoryPath.SCAFFOLD_UI.packageName(projectOperations
+                    GwtBootstrapPaths.SCAFFOLD_UI.packageName(projectOperations
                             .getTopLevelPackage(moduleName)));
             break;
         }
@@ -597,17 +598,17 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
         dataDictionary.setVariable("packageName", javaType.getPackage()
                 .getFullyQualifiedPackageName());
         dataDictionary.setVariable("placePackage",
-                RequestFactoryPath.SCAFFOLD_PLACE.packageName(topLevelPackage));
+                GwtBootstrapPaths.SCAFFOLD_PLACE.packageName(topLevelPackage));
         dataDictionary.setVariable("scaffoldUiPackage",
-                RequestFactoryPath.SCAFFOLD_UI.packageName(topLevelPackage));
+                GwtBootstrapPaths.SCAFFOLD_UI.packageName(topLevelPackage));
         dataDictionary.setVariable("sharedScaffoldPackage",
-                RequestFactoryPath.SHARED_SCAFFOLD.packageName(topLevelPackage));
+                GwtBootstrapPaths.SHARED_SCAFFOLD.packageName(topLevelPackage));
         dataDictionary.setVariable("uiPackage",
-                RequestFactoryPath.MANAGED_UI.packageName(topLevelPackage));
+                GwtBootstrapPaths.MANAGED_UI.packageName(topLevelPackage));
         dataDictionary.setVariable("requestPackage",
-                RequestFactoryPath.MANAGED_REQUEST.packageName(topLevelPackage));
+                GwtBootstrapPaths.MANAGED_REQUEST.packageName(topLevelPackage));
         dataDictionary.setVariable("uiEditorPackage",
-                RequestFactoryPath.MANAGED_UI_EDITOR.packageName(topLevelPackage));
+                GwtBootstrapPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage));
         dataDictionary.setVariable("name", simpleTypeName);
         dataDictionary.setVariable("pluralName", plural);
         dataDictionary.setVariable("nameUncapitalized",
@@ -638,7 +639,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
             List<String> existingMobileFields = new ArrayList<String>();
 
             try {
-                String className = RequestFactoryPath.MANAGED_UI_DESKTOP
+                String className = GwtBootstrapPaths.MANAGED_UI_DESKTOP
                         .packageName(topLevelPackage)
                         + "."
                         + simpleTypeName
@@ -655,7 +656,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                     }
                 }
 
-                className = RequestFactoryPath.MANAGED_UI_MOBILE
+                className = GwtBootstrapPaths.MANAGED_UI_MOBILE
                         .packageName(topLevelPackage)
                         + "."
                         + simpleTypeName
@@ -702,7 +703,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
             List<String> existingMobileFields = new ArrayList<String>();
 
             try {
-                String className = RequestFactoryPath.MANAGED_UI_DESKTOP
+                String className = GwtBootstrapPaths.MANAGED_UI_DESKTOP
                         .packageName(topLevelPackage)
                         + "."
                         + simpleTypeName
@@ -719,7 +720,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                     }
                 }
 
-                className = RequestFactoryPath.MANAGED_UI_MOBILE
+                className = GwtBootstrapPaths.MANAGED_UI_MOBILE
                         .packageName(topLevelPackage)
                         + "."
                         + simpleTypeName
@@ -1025,12 +1026,12 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
         dataDictionary.setVariable("className", javaType.getSimpleTypeName());
         dataDictionary.setVariable("packageName", javaType.getPackage()
                 .getFullyQualifiedPackageName());
-        dataDictionary.setVariable("placePackage", RequestFactoryPath.SCAFFOLD_PLACE
+        dataDictionary.setVariable("placePackage", GwtBootstrapPaths.SCAFFOLD_PLACE
                 .packageName(projectOperations.getTopLevelPackage(moduleName)));
         dataDictionary.setVariable("sharedScaffoldPackage",
-                RequestFactoryPath.SHARED_SCAFFOLD.packageName(projectOperations
+                GwtBootstrapPaths.SHARED_SCAFFOLD.packageName(projectOperations
                         .getTopLevelPackage(moduleName)));
-        dataDictionary.setVariable("sharedAccountPackage", RequestFactoryPath.SHARED_ACCOUNT
+        dataDictionary.setVariable("sharedAccountPackage", GwtBootstrapPaths.SHARED_ACCOUNT
                 .packageName(projectOperations.getTopLevelPackage(moduleName)));
         return dataDictionary;
     }
@@ -1253,9 +1254,9 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
 
             TemplateDataDictionary dataDictionary = TemplateDictionary.create();
             dataDictionary.setVariable("packageName",
-                    RequestFactoryPath.MANAGED_UI_EDITOR.packageName(topLevelPackage));
+                    GwtBootstrapPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage));
             dataDictionary.setVariable("scaffoldUiPackage",
-                    RequestFactoryPath.SCAFFOLD_UI.packageName(topLevelPackage));
+                    GwtBootstrapPaths.SCAFFOLD_UI.packageName(topLevelPackage));
             final JavaType collectionTypeImpl = getCollectionImplementation(proxyProperty
                     .getPropertyType());
             addImport(dataDictionary, collectionTypeImpl);
@@ -1273,16 +1274,16 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                     boundCollectionType);
 
             final JavaType collectionEditorType = new JavaType(
-                    RequestFactoryPath.MANAGED_UI_EDITOR.packageName(topLevelPackage) + "."
+                    GwtBootstrapPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage) + "."
                             + boundCollectionType + collectionType + "Editor");
             typeDetails.add(getTemplateDetails(dataDictionary,
                     "CollectionEditor", collectionEditorType, moduleName));
 
             dataDictionary = TemplateDictionary.create();
             dataDictionary.setVariable("packageName",
-                    RequestFactoryPath.MANAGED_UI_EDITOR.packageName(topLevelPackage));
+                    GwtBootstrapPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage));
             dataDictionary.setVariable("scaffoldUiPackage",
-                    RequestFactoryPath.SCAFFOLD_UI.packageName(topLevelPackage));
+                    GwtBootstrapPaths.SCAFFOLD_UI.packageName(topLevelPackage));
             dataDictionary.setVariable("collectionType", collectionType);
             dataDictionary.setVariable("collectionTypeImpl",
                     collectionTypeImpl.getSimpleTypeName());
@@ -1294,7 +1295,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                     + "UiXml", dataDictionary);
             final String packagePath = projectOperations.getPathResolver()
                     .getFocusedIdentifier(Path.SRC_MAIN_JAVA,
-                            RequestFactoryPath.MANAGED_UI_EDITOR.getPackagePath(topLevelPackage));
+                            GwtBootstrapPaths.MANAGED_UI_EDITOR.getPackagePath(topLevelPackage));
             xmlMap.put(packagePath + "/" + boundCollectionType + collectionType
                     + "Editor.ui.xml", contents);
         }

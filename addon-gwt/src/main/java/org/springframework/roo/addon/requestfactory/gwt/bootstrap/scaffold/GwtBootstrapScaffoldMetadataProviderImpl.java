@@ -26,6 +26,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateServic
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
+import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapPaths;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
@@ -223,7 +224,7 @@ public class GwtBootstrapScaffoldMetadataProviderImpl implements
                                 Path.SRC_MAIN_JAVA, moduleName), requestFactoryPath
                                 .getPackagePath(topLevelPackage));
 
-                final String targetDirectory = requestFactoryPath == RequestFactoryPath.WEB ? webappPath
+                final String targetDirectory = requestFactoryPath == GwtBootstrapPaths.WEB ? webappPath
                         : packagePath;
                 final String destFile = targetDirectory + File.separatorChar
                         + javaType.getSimpleTypeName() + ".ui.xml";
