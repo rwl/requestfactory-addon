@@ -1,7 +1,7 @@
 package org.springframework.roo.addon.requestfactory.scaffold;
 
 import static org.springframework.roo.addon.requestfactory.scaffold.RooRequestFactory.PARENT_PROPERTY_DEFAULT;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
+import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_REQUEST_FACTORY;
 
 import org.springframework.roo.classpath.details.annotations.populator.AbstractAnnotationValues;
 import org.springframework.roo.classpath.details.annotations.populator.AutoPopulate;
@@ -13,7 +13,7 @@ import org.springframework.roo.classpath.itd.MemberHoldingTypeDetailsMetadataIte
  */
 public class ScaffoldAnnotationValues extends AbstractAnnotationValues {
 
-    @AutoPopulate private String parentProperty = PARENT_PROPERTY_DEFAULT;
+    @AutoPopulate private String parent = PARENT_PROPERTY_DEFAULT;
 
     /**
      * Constructor
@@ -21,11 +21,11 @@ public class ScaffoldAnnotationValues extends AbstractAnnotationValues {
      * @param annotatedType
      */
     public ScaffoldAnnotationValues(final MemberHoldingTypeDetailsMetadataItem<?> annotatedType) {
-        super(annotatedType, ROO_GWT_BOOTSTRAP);
+        super(annotatedType, ROO_REQUEST_FACTORY);
         AutoPopulationUtils.populate(this, annotationMetadata);
     }
 
     public String getParentProperty() {
-        return parentProperty;
+        return parent;
     }
 }

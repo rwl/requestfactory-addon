@@ -6,10 +6,10 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.OLD_REQUEST_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.REQUEST;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.REQUEST_CONTEXT;
-import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.SERVICE_NAME;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.SERVICE_NAME;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
+import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_REQUEST_FACTORY;
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.COUNT_ALL_METHOD;
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.FIND_ALL_METHOD;
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.FIND_ENTRIES_METHOD;
@@ -18,8 +18,8 @@ import static org.springframework.roo.classpath.customdata.CustomDataKeys.PERSIS
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.REMOVE_METHOD;
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
-import static org.springframework.roo.model.JavaType.VOID_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
+import static org.springframework.roo.model.JavaType.VOID_PRIMITIVE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +30,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
@@ -69,6 +71,7 @@ import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.ProjectMetadata;
 import org.springframework.roo.project.ProjectOperations;
+import org.springframework.roo.support.logging.HandlerUtils;
 
 
 @Component(immediate = true)
@@ -76,6 +79,9 @@ import org.springframework.roo.project.ProjectOperations;
 public class RequestFactoryRequestMetadataProviderImpl extends
         AbstractHashCodeTrackingMetadataNotifier implements
         RequestFactoryRequestMetadataProvider {
+
+    private static final Logger LOGGER = HandlerUtils
+            .getLogger(RequestFactoryRequestMetadataProviderImpl.class);
 
     private static final int LAYER_POSITION = LayerType.HIGHEST.getPosition();
 
@@ -276,13 +282,18 @@ public class RequestFactoryRequestMetadataProviderImpl extends
                     .getMemberTypeAdditions(requestMetadataId, methodId,
                             entity, idType.equals(KEY) ? STRING : idType, LAYER_POSITION,
                             methodSignature.getValue());
-            Validate.notNull(memberTypeAdditions, "No support for " + methodId
+            /*Validate.notNull(memberTypeAdditions, "No support for " + methodId
+                    + " method for domain type " + entity);*/
+            if (memberTypeAdditions != null) {
+                final MethodMetadata requestMethod = getRequestMethod(entity,
+                        methodSignature.getKey(), memberTypeAdditions,
+                        requestMetadataId);
+                requestMethods.put(requestMethod,
+                        memberTypeAdditions.getInvokedField());
+            } else {
+                LOGGER.severe("No support for " + methodId
                     + " method for domain type " + entity);
-            final MethodMetadata requestMethod = getRequestMethod(entity,
-                    methodSignature.getKey(), memberTypeAdditions,
-                    requestMetadataId);
-            requestMethods.put(requestMethod,
-                    memberTypeAdditions.getInvokedField());
+            }
         }
         return requestMethods;
     }
@@ -293,7 +304,7 @@ public class RequestFactoryRequestMetadataProviderImpl extends
         ClassOrInterfaceTypeDetails domainTypeDetails = typeLocationService
                 .getTypeDetails(domainType);
         AnnotationMetadata annotation = domainTypeDetails
-                .getAnnotation(ROO_GWT_BOOTSTRAP);
+                .getAnnotation(ROO_REQUEST_FACTORY);
         String parentProperty = "";
         if (annotation != null) {
             AnnotationAttributeValue<String> parentPropertyValue = annotation

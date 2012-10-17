@@ -1,6 +1,6 @@
 package org.springframework.roo.addon.requestfactory.scaffold;
 
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP_EXCLUDE;
+import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_REQUEST_FACTORY_EXCLUDE;
 import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JdkJavaType.SET;
 import static org.springframework.roo.model.JpaJavaType.EMBEDDABLE;
@@ -629,7 +629,7 @@ public class ScaffoldFieldCommands implements CommandMarker {
         final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
         fieldDetails.decorateAnnotationsList(annotations);
         if (exclude) {
-            annotations.add(new AnnotationMetadataBuilder(ROO_GWT_BOOTSTRAP_EXCLUDE));
+            annotations.add(new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_EXCLUDE));
         }
 
         String initializer = null;

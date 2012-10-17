@@ -5,7 +5,7 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.OLD_REQUEST_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.REQUEST_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
+import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_REQUEST_FACTORY;
 import static org.springframework.roo.model.RooJavaType.ROO_GWT_MIRRORED_FROM;
 import static org.springframework.roo.model.RooJavaType.ROO_GWT_PROXY;
 import static org.springframework.roo.model.RooJavaType.ROO_GWT_REQUEST;
@@ -114,11 +114,11 @@ public class ScaffoldOperationsImpl implements ScaffoldOperations {
         ClassOrInterfaceTypeDetails existing = typeLocationService.getTypeDetails(javaType);
 
         // Test if the annotation already exists on the target type
-        if (existing != null && MemberFindingUtils.getAnnotationOfType(existing.getAnnotations(), ROO_GWT_BOOTSTRAP) == null) {
+        if (existing != null && MemberFindingUtils.getAnnotationOfType(existing.getAnnotations(), ROO_REQUEST_FACTORY) == null) {
             ClassOrInterfaceTypeDetailsBuilder classOrInterfaceTypeDetailsBuilder = new ClassOrInterfaceTypeDetailsBuilder(existing);
 
             // Create Annotation metadata
-            AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(ROO_GWT_BOOTSTRAP);
+            AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY);
             if (parentProperty != null) {
                 annotationBuilder.addStringAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE, parentProperty.getSymbolName());
             }

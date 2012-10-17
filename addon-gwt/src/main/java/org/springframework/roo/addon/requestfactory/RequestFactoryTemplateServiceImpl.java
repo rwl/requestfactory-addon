@@ -4,7 +4,7 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
+import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_REQUEST_FACTORY;
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
 import static org.springframework.roo.model.JdkJavaType.ARRAY_LIST;
@@ -171,7 +171,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                             proxySimpleName);
 
 
-                    AnnotationMetadata annotation = entity.getAnnotation(ROO_GWT_BOOTSTRAP);
+                    AnnotationMetadata annotation = entity.getAnnotation(ROO_REQUEST_FACTORY);
                     if (annotation != null) {
                         AnnotationAttributeValue<String> attribute = annotation
                                 .getAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE);
@@ -386,7 +386,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
 
 //                    for (final ClassOrInterfaceTypeDetails ety : typeLocationService
 //                            .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_BOOTSTRAP)) {
-                        AnnotationMetadata annotation = ety.getAnnotation(ROO_GWT_BOOTSTRAP);
+                        AnnotationMetadata annotation = ety.getAnnotation(ROO_REQUEST_FACTORY);
                         if (annotation == null) continue;
                         AnnotationAttributeValue<String> annotationAttributeValue = annotation
                                 .getAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE);
@@ -445,9 +445,9 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                         + "'");
 
         for (final ClassOrInterfaceTypeDetails gwtBootstrapEntity : typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_BOOTSTRAP)) {
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY)) {
             AnnotationMetadata annotation = gwtBootstrapEntity
-                    .getAnnotation(ROO_GWT_BOOTSTRAP);
+                    .getAnnotation(ROO_REQUEST_FACTORY);
             if (annotation == null) {
                 continue;
             }
@@ -504,7 +504,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                 removeMethodSignature);
 
 
-        AnnotationMetadata annotation = mirroredType.getAnnotation(ROO_GWT_BOOTSTRAP);
+        AnnotationMetadata annotation = mirroredType.getAnnotation(ROO_REQUEST_FACTORY);
         AnnotationAttributeValue<String> annotationAttributeValue = annotation
                 .getAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE);
         String parentPropertyName = "";
@@ -1000,7 +1000,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
     private boolean isRenderProp(final RequestFactoryProxyProperty prop,
             final ClassOrInterfaceTypeDetails entity,
             final String propertyAttribute) {
-        AnnotationMetadata annotation = entity.getAnnotation(ROO_GWT_BOOTSTRAP);
+        AnnotationMetadata annotation = entity.getAnnotation(ROO_REQUEST_FACTORY);
         if (annotation == null) {
             return false;
         }

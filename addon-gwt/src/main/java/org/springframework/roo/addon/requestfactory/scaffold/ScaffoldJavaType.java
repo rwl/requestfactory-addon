@@ -9,9 +9,9 @@ public final class ScaffoldJavaType {
     public static final JavaType KEY_FACTORY = new JavaType(
             "com.google.appengine.api.datastore.KeyFactory");
 
-    public static final JavaType ROO_GWT_BOOTSTRAP = new JavaType(
+    public static final JavaType ROO_REQUEST_FACTORY = new JavaType(
             RooRequestFactory.class.getName());
-    public static final JavaType ROO_GWT_BOOTSTRAP_EXCLUDE = new JavaType(
+    public static final JavaType ROO_REQUEST_FACTORY_EXCLUDE = new JavaType(
             RooRequestFactoryExclude.class.getName());
 
     /**

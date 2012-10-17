@@ -4,7 +4,7 @@ package org.springframework.roo.addon.requestfactory.scaffold;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldDataKeys.COUNT_BY_PARENT_METHOD;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldDataKeys.FIND_BY_STRING_ID_METHOD;
 import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldDataKeys.FIND_ENTRIES_BY_PARENT_METHOD;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_GWT_BOOTSTRAP;
+import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_REQUEST_FACTORY;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 
 import java.util.List;
@@ -57,7 +57,7 @@ public final class ScaffoldMetadataProviderImpl extends AbstractItdMetadataProvi
      */
     protected void activate(ComponentContext context) {
         metadataDependencyRegistry.registerDependency(PhysicalTypeIdentifier.getMetadataIdentiferType(), getProvidesType());
-        addMetadataTrigger(ROO_GWT_BOOTSTRAP);
+        addMetadataTrigger(ROO_REQUEST_FACTORY);
         registerMatchers();
     }
 
@@ -69,7 +69,7 @@ public final class ScaffoldMetadataProviderImpl extends AbstractItdMetadataProvi
      */
     protected void deactivate(ComponentContext context) {
         metadataDependencyRegistry.deregisterDependency(PhysicalTypeIdentifier.getMetadataIdentiferType(), getProvidesType());
-        removeMetadataTrigger(ROO_GWT_BOOTSTRAP);
+        removeMetadataTrigger(ROO_REQUEST_FACTORY);
         customDataKeyDecorator.unregisterMatchers(getClass());
     }
 
@@ -144,7 +144,7 @@ public final class ScaffoldMetadataProviderImpl extends AbstractItdMetadataProvi
      * Define the unique ITD file name extension, here the resulting file name will be **_ROO_Gwt_Bootstrap.aj
      */
     public String getItdUniquenessFilenameSuffix() {
-        return "Gwt_Bootstrap";
+        return "RequestFactory";
     }
 
     protected String getGovernorPhysicalTypeIdentifier(String metadataIdentificationString) {
@@ -171,7 +171,7 @@ public final class ScaffoldMetadataProviderImpl extends AbstractItdMetadataProvi
         final MemberHoldingTypeDetailsMetadataItem<?> governor = (MemberHoldingTypeDetailsMetadataItem<?>) metadataService
                 .get(physicalTypeId);
         if (MemberFindingUtils.getAnnotationOfType(governor,
-                ROO_GWT_BOOTSTRAP) == null) {
+                ROO_REQUEST_FACTORY) == null) {
             // The type is not annotated with @RooGwtBootstrap
             return null;
         }
@@ -181,8 +181,8 @@ public final class ScaffoldMetadataProviderImpl extends AbstractItdMetadataProvi
     @SuppressWarnings("unchecked")
     private void registerMatchers() {
         customDataKeyDecorator.registerMatchers(getClass(),
-                new MethodMatcher(COUNT_BY_PARENT_METHOD, ROO_GWT_BOOTSTRAP, new JavaSymbolName("countByParentMethod"), "count", true, false, "ByParentId"),
-                new MethodMatcher(FIND_ENTRIES_BY_PARENT_METHOD, ROO_GWT_BOOTSTRAP, new JavaSymbolName("findEntriesByParentMethod"), "find", false, true, "EntriesByParentId"),
-                new MethodMatcher(FIND_BY_STRING_ID_METHOD, ROO_GWT_BOOTSTRAP, new JavaSymbolName("findByStringIdMethod"), "find", false, true, "ByStringId"));
+                new MethodMatcher(COUNT_BY_PARENT_METHOD, ROO_REQUEST_FACTORY, new JavaSymbolName("countByParentMethod"), "count", true, false, "ByParentId"),
+                new MethodMatcher(FIND_ENTRIES_BY_PARENT_METHOD, ROO_REQUEST_FACTORY, new JavaSymbolName("findEntriesByParentMethod"), "find", false, true, "EntriesByParentId"),
+                new MethodMatcher(FIND_BY_STRING_ID_METHOD, ROO_REQUEST_FACTORY, new JavaSymbolName("findByStringIdMethod"), "find", false, true, "ByStringId"));
     }
 }

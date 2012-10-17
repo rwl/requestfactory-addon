@@ -98,8 +98,8 @@ public class ScaffoldMetadata extends AbstractItdTypeDetailsProvidingMetadataIte
 
         builder.addMethod(getStringIdGetter());
         builder.addMethod(getStringIdSetter());
-        builder.addMethod(getFindEntriesMethod());
-        builder.addMethod(getCountMethod());
+        builder.addMethod(getFindEntriesByParentMethod());
+        builder.addMethod(getCountByParentMethod());
         builder.addMethod(getFindByStringIdMethod());
 
         // Create a representation of the desired output ITD
@@ -228,7 +228,7 @@ public class ScaffoldMetadata extends AbstractItdTypeDetailsProvidingMetadataIte
         return methodBuilder.build();
     }
 
-    private MethodMetadata getFindEntriesMethod() {
+    private MethodMetadata getFindEntriesByParentMethod() {
         if (parentProperty == null) {
             return null;
         }
@@ -315,7 +315,7 @@ public class ScaffoldMetadata extends AbstractItdTypeDetailsProvidingMetadataIte
         return methodBuilder.build(); // Build and return a MethodMetadata instance
     }
 
-    private MethodMetadata getCountMethod() {
+    private MethodMetadata getCountByParentMethod() {
         if (parentProperty == null) {
             return null;
         }
