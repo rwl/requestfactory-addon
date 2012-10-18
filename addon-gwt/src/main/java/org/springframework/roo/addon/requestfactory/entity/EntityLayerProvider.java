@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.scaffold;
+package org.springframework.roo.addon.requestfactory.entity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,9 +32,9 @@ import org.springframework.roo.support.util.PairList;
  */
 @Component
 @Service
-public class ScaffoldLayerProvider extends CoreLayerProvider {
+public class EntityLayerProvider extends CoreLayerProvider {
 
-    @Reference private ScaffoldMetadataProvider scaffoldMetadataProvider;
+    @Reference private EntityMetadataProvider scaffoldMetadataProvider;
     @Reference private MetadataService metadataService;
     @Reference TypeLocationService typeLocationService;
 
@@ -60,7 +60,7 @@ public class ScaffoldLayerProvider extends CoreLayerProvider {
         Validate.notNull(targetEntity, "Target enitity type required");
 
         // Get the values of this entity's @RooGwtBootstrap annotation
-        final ScaffoldAnnotationValues annotationValues = scaffoldMetadataProvider
+        final EntityAnnotationValues annotationValues = scaffoldMetadataProvider
                 .getAnnotationValues(targetEntity);
         if (annotationValues == null) {
             return null;
@@ -75,7 +75,7 @@ public class ScaffoldLayerProvider extends CoreLayerProvider {
         // Look for an entity layer method with this ID and types of parameter
         final List<JavaType> parameterTypes = new PairList<JavaType, JavaSymbolName>(
                 callerParameters).getKeys();
-        final ScaffoldLayerMethod method = ScaffoldLayerMethod.valueOf(
+        final RequestFactoryEntityLayerMethod method = RequestFactoryEntityLayerMethod.valueOf(
                 methodIdentifier, parameterTypes, targetEntity, idType);
         if (method == null) {
             return null;
@@ -176,7 +176,7 @@ public class ScaffoldLayerProvider extends CoreLayerProvider {
      * @param gwtBootstrapMetadataProvider
      */
     void setJpaActiveRecordMetadataProvider(
-            final ScaffoldMetadataProviderImpl gwtBootstrapMetadataProvider) {
+            final EntityMetadataProviderImpl gwtBootstrapMetadataProvider) {
         this.scaffoldMetadataProvider = gwtBootstrapMetadataProvider;
     }
 

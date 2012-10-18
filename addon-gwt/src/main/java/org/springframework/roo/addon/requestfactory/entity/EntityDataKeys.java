@@ -1,8 +1,8 @@
-package org.springframework.roo.addon.requestfactory.scaffold;
+package org.springframework.roo.addon.requestfactory.entity;
 
 import org.springframework.roo.classpath.customdata.tagkeys.MethodMetadataCustomDataKey;
 
-public final class ScaffoldDataKeys {
+public final class EntityDataKeys {
 
     public static final MethodMetadataCustomDataKey COUNT_BY_PARENT_METHOD = new MethodMetadataCustomDataKey(
             "COUNT_BY_PARENT_METHOD");

@@ -1,7 +1,7 @@
-package org.springframework.roo.addon.requestfactory.scaffold;
+package org.springframework.roo.addon.requestfactory.entity;
 
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY_FACTORY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY_FACTORY;
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
@@ -41,10 +41,10 @@ import org.springframework.roo.project.LogicalPath;
  *
  * @since 1.1.0
  */
-public class ScaffoldMetadata extends AbstractItdTypeDetailsProvidingMetadataItem {
+public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem {
 
     // Constants
-    private static final String PROVIDES_TYPE_STRING = ScaffoldMetadata.class.getName();
+    private static final String PROVIDES_TYPE_STRING = EntityMetadata.class.getName();
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils.create(PROVIDES_TYPE_STRING);
 
     private static final String ENTITY_MANAGER_METHOD_NAME = "entityManager";
@@ -70,16 +70,16 @@ public class ScaffoldMetadata extends AbstractItdTypeDetailsProvidingMetadataIte
     }
 
     private final JpaCrudAnnotationValues crudAnnotationValues;
-    private final ScaffoldAnnotationValues scaffoldAnnotationValues;
+    private final EntityAnnotationValues scaffoldAnnotationValues;
     private final boolean isGaeEnabled;
     private final String entityName;
     private final String plural;
     private final FieldMetadata identifierField;
     private final FieldMetadata parentProperty;
 
-    public ScaffoldMetadata(String identifier, JavaType aspectName, JpaCrudAnnotationValues crudAnnotationValues,
+    public EntityMetadata(String identifier, JavaType aspectName, JpaCrudAnnotationValues crudAnnotationValues,
             PhysicalTypeMetadata governorPhysicalTypeMetadata,
-            ScaffoldAnnotationValues scaffoldAnnotationValues, String plural, FieldMetadata idField, FieldMetadata parentProperty,
+            EntityAnnotationValues scaffoldAnnotationValues, String plural, FieldMetadata idField, FieldMetadata parentProperty,
             final String entityName, final boolean isGaeEnabled) {
         super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");

@@ -2,7 +2,7 @@ package org.springframework.roo.addon.requestfactory.account;
 
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.SIMPLE_GRANTED_AUTHORITY;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.USER_DETAILS;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
 import static org.springframework.roo.model.Jsr303JavaType.NOT_NULL;
 import static org.springframework.roo.model.Jsr303JavaType.SIZE;
 import static org.springframework.roo.model.JdkJavaType.ARRAY_LIST;
@@ -28,7 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.roo.addon.jpa.activerecord.JpaCrudAnnotationValues;
-import org.springframework.roo.addon.requestfactory.scaffold.ListField;
+import org.springframework.roo.addon.requestfactory.entity.ListField;
 import org.springframework.roo.classpath.PhysicalTypeCategory;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;

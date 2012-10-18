@@ -1,6 +1,6 @@
-package org.springframework.roo.addon.requestfactory.scaffold;
+package org.springframework.roo.addon.requestfactory.entity;
 
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_REQUEST_FACTORY_EXCLUDE;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_EXCLUDE;
 import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JdkJavaType.SET;
 import static org.springframework.roo.model.JpaJavaType.EMBEDDABLE;
@@ -71,7 +71,7 @@ import org.springframework.roo.shell.converters.StaticFieldConverter;
  */
 @Component
 @Service
-public class ScaffoldFieldCommands implements CommandMarker {
+public class EntityFieldCommands implements CommandMarker {
 
     private static final String REQUEST_FACTORY_FIELD_BOOLEAN_COMMAND = "web requestfactory scaffold field boolean";
     private static final String REQUEST_FACTORY_FIELD_DATE_COMMAND = "web requestfactory scaffold field date";

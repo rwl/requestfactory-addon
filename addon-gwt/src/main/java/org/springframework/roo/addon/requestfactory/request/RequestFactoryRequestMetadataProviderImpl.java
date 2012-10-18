@@ -8,8 +8,8 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.REQUEST_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.SERVICE_NAME;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_REQUEST_FACTORY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.COUNT_ALL_METHOD;
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.FIND_ALL_METHOD;
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.FIND_ENTRIES_METHOD;
@@ -41,8 +41,8 @@ import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.requestfactory.RequestFactoryFileManager;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.scaffold.RooRequestFactory;
-import org.springframework.roo.addon.requestfactory.scaffold.ScaffoldDataKeys;
+import org.springframework.roo.addon.requestfactory.entity.RooRequestFactory;
+import org.springframework.roo.addon.requestfactory.entity.EntityDataKeys;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.TypeLocationService;
@@ -330,16 +330,16 @@ public class RequestFactoryRequestMetadataProviderImpl extends
         signatures.put(REMOVE_METHOD, proxyParameterAsList);
 
         if (!parentProperty.isEmpty()) {
-            signatures.put(ScaffoldDataKeys.COUNT_BY_PARENT_METHOD, Arrays
+            signatures.put(EntityDataKeys.COUNT_BY_PARENT_METHOD, Arrays
                     .asList(new MethodParameter(STRING, parentProperty + "Id")));
-            signatures.put(ScaffoldDataKeys.FIND_ENTRIES_BY_PARENT_METHOD, Arrays.asList(new MethodParameter(
+            signatures.put(EntityDataKeys.FIND_ENTRIES_BY_PARENT_METHOD, Arrays.asList(new MethodParameter(
                     STRING, parentProperty + "Id"), new MethodParameter(
                     INT_PRIMITIVE, "firstResult"), new MethodParameter(
                     INT_PRIMITIVE, "maxResults")));
         }
 
         if (idType.equals(KEY)) {
-            signatures.put(ScaffoldDataKeys.FIND_BY_STRING_ID_METHOD, Arrays
+            signatures.put(EntityDataKeys.FIND_BY_STRING_ID_METHOD, Arrays
                     .asList(new MethodParameter(STRING, "id")));
         }
 
@@ -362,13 +362,13 @@ public class RequestFactoryRequestMetadataProviderImpl extends
             return VOID_PRIMITIVE;
         }
 
-        if (ScaffoldDataKeys.COUNT_BY_PARENT_METHOD.equals(methodKey)) {
+        if (EntityDataKeys.COUNT_BY_PARENT_METHOD.equals(methodKey)) {
             return LONG_PRIMITIVE;
         }
-        if (ScaffoldDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.equals(methodKey)) {
+        if (EntityDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.equals(methodKey)) {
             return JavaType.listOf(entity);
         }
-        if (ScaffoldDataKeys.FIND_BY_STRING_ID_METHOD.equals(methodKey)) {
+        if (EntityDataKeys.FIND_BY_STRING_ID_METHOD.equals(methodKey)) {
             return entity;
         }
 

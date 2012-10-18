@@ -1,10 +1,10 @@
-package org.springframework.roo.addon.requestfactory.scaffold;
+package org.springframework.roo.addon.requestfactory.entity;
 
 
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldDataKeys.COUNT_BY_PARENT_METHOD;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldDataKeys.FIND_BY_STRING_ID_METHOD;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldDataKeys.FIND_ENTRIES_BY_PARENT_METHOD;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_REQUEST_FACTORY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityDataKeys.COUNT_BY_PARENT_METHOD;
+import static org.springframework.roo.addon.requestfactory.entity.EntityDataKeys.FIND_BY_STRING_ID_METHOD;
+import static org.springframework.roo.addon.requestfactory.entity.EntityDataKeys.FIND_ENTRIES_BY_PARENT_METHOD;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 
 import java.util.List;
@@ -44,7 +44,7 @@ import org.springframework.roo.project.ProjectOperations;
  */
 @Component(immediate = true)
 @Service
-public final class ScaffoldMetadataProviderImpl extends AbstractItdMetadataProvider implements ScaffoldMetadataProvider {
+public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvider implements EntityMetadataProvider {
 
     @Reference private CustomDataKeyDecorator customDataKeyDecorator;
     @Reference private ProjectOperations projectOperations;
@@ -80,11 +80,11 @@ public final class ScaffoldMetadataProviderImpl extends AbstractItdMetadataProvi
 
         final JpaCrudAnnotationValues crudAnnotationValues = new JpaCrudAnnotationValues(governorPhysicalTypeMetadata);
         final JpaEntityAnnotationValues jpaEntityAnnotationValues = new JpaEntityAnnotationValues(governorPhysicalTypeMetadata, ROO_JPA_ENTITY);
-        final ScaffoldAnnotationValues scaffoldAnnotationValues = new ScaffoldAnnotationValues(governorPhysicalTypeMetadata);
+        final EntityAnnotationValues scaffoldAnnotationValues = new EntityAnnotationValues(governorPhysicalTypeMetadata);
 
         // we need the plural
-        JavaType entity = ScaffoldMetadata.getJavaType(metadataIdentificationString);
-        LogicalPath path = ScaffoldMetadata.getPath(metadataIdentificationString);
+        JavaType entity = EntityMetadata.getJavaType(metadataIdentificationString);
+        LogicalPath path = EntityMetadata.getPath(metadataIdentificationString);
         String pluralId = PluralMetadata.createIdentifier(entity, path);
         PluralMetadata pluralMetadata = (PluralMetadata) metadataService.get(pluralId);
         if (pluralMetadata == null) {
@@ -135,7 +135,7 @@ public final class ScaffoldMetadataProviderImpl extends AbstractItdMetadataProvi
         }
 
         // Pass dependencies required by the metadata in through its constructor
-        return new ScaffoldMetadata(metadataIdentificationString, aspectName,
+        return new EntityMetadata(metadataIdentificationString, aspectName,
                 crudAnnotationValues, governorPhysicalTypeMetadata, scaffoldAnnotationValues,
                 pluralMetadata.getPlural(), idField, parentProperty, entityName, isGaeEnabled);
     }
@@ -148,20 +148,20 @@ public final class ScaffoldMetadataProviderImpl extends AbstractItdMetadataProvi
     }
 
     protected String getGovernorPhysicalTypeIdentifier(String metadataIdentificationString) {
-        JavaType javaType = ScaffoldMetadata.getJavaType(metadataIdentificationString);
-        LogicalPath path = ScaffoldMetadata.getPath(metadataIdentificationString);
+        JavaType javaType = EntityMetadata.getJavaType(metadataIdentificationString);
+        LogicalPath path = EntityMetadata.getPath(metadataIdentificationString);
         return PhysicalTypeIdentifier.createIdentifier(javaType, path);
     }
 
     protected String createLocalIdentifier(JavaType javaType, LogicalPath path) {
-        return ScaffoldMetadata.createIdentifier(javaType, path);
+        return EntityMetadata.createIdentifier(javaType, path);
     }
 
     public String getProvidesType() {
-        return ScaffoldMetadata.getMetadataIdentiferType();
+        return EntityMetadata.getMetadataIdentiferType();
     }
 
-    public ScaffoldAnnotationValues getAnnotationValues(final JavaType javaType) {
+    public EntityAnnotationValues getAnnotationValues(final JavaType javaType) {
         Validate.notNull(javaType, "JavaType required");
         final String physicalTypeId = typeLocationService
                 .getPhysicalTypeIdentifier(javaType);
@@ -175,7 +175,7 @@ public final class ScaffoldMetadataProviderImpl extends AbstractItdMetadataProvi
             // The type is not annotated with @RooGwtBootstrap
             return null;
         }
-        return new ScaffoldAnnotationValues(governor);
+        return new EntityAnnotationValues(governor);
     }
 
     @SuppressWarnings("unchecked")

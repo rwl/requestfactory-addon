@@ -1,11 +1,11 @@
-package org.springframework.roo.addon.requestfactory.scaffold;
+package org.springframework.roo.addon.requestfactory.entity;
 
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ENTITY_PROXY;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.OLD_ENTITY_PROXY;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.OLD_REQUEST_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.REQUEST_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_REQUEST_FACTORY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
 import static org.springframework.roo.model.RooJavaType.ROO_GWT_MIRRORED_FROM;
 import static org.springframework.roo.model.RooJavaType.ROO_GWT_PROXY;
 import static org.springframework.roo.model.RooJavaType.ROO_GWT_REQUEST;
@@ -77,7 +77,7 @@ import org.w3c.dom.Element;
  */
 @Component // Use these Apache Felix annotations to register your commands class in the Roo container
 @Service
-public class ScaffoldOperationsImpl implements ScaffoldOperations {
+public class EntityOperationsImpl implements EntityOperations {
 
     /**
      * Use ProjectOperations to install new dependencies, plugins, properties, etc into the project configuration

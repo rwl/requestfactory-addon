@@ -1,8 +1,8 @@
-package org.springframework.roo.addon.requestfactory.scaffold;
+package org.springframework.roo.addon.requestfactory.entity;
 
 import org.springframework.roo.model.JavaType;
 
-public final class ScaffoldJavaType {
+public final class EntityJavaType {
 
     public static final JavaType KEY = new JavaType(
             "com.google.appengine.api.datastore.Key");
@@ -17,6 +17,6 @@ public final class ScaffoldJavaType {
     /**
      * Constructor is private to prevent instantiation
      */
-    private ScaffoldJavaType() {
+    private EntityJavaType() {
     }
 }

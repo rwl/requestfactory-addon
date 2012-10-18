@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.scaffold;
+package org.springframework.roo.addon.requestfactory.entity;
 
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
@@ -11,7 +11,7 @@ import org.springframework.roo.project.Feature;
  *
  * @since 1.1
  */
-public interface ScaffoldOperations {
+public interface EntityOperations {
 
     /**
      * The delimiter for multi-level paths specified by a "<source path="..." />

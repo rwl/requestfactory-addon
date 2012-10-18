@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.scaffold;
+package org.springframework.roo.addon.requestfactory.entity;
 
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
@@ -12,11 +12,11 @@ import org.springframework.roo.shell.CommandMarker;
 
 @Component
 @Service
-public class ScaffoldCommands implements CommandMarker {
+public class EntityCommands implements CommandMarker {
 
     private static final String SCAFFOLD_COMMAND = "web requestfactory scaffold entity";
 
-    @Reference private ScaffoldOperations operations;
+    @Reference private EntityOperations operations;
 
     @CliAvailabilityIndicator({ SCAFFOLD_COMMAND })
     public boolean isCommandAvailable() {

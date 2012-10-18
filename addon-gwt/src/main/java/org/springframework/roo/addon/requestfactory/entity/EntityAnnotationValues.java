@@ -1,7 +1,7 @@
-package org.springframework.roo.addon.requestfactory.scaffold;
+package org.springframework.roo.addon.requestfactory.entity;
 
-import static org.springframework.roo.addon.requestfactory.scaffold.RooRequestFactory.PARENT_PROPERTY_DEFAULT;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_REQUEST_FACTORY;
+import static org.springframework.roo.addon.requestfactory.entity.RooRequestFactory.PARENT_PROPERTY_DEFAULT;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
 
 import org.springframework.roo.classpath.details.annotations.populator.AbstractAnnotationValues;
 import org.springframework.roo.classpath.details.annotations.populator.AutoPopulate;
@@ -11,7 +11,7 @@ import org.springframework.roo.classpath.itd.MemberHoldingTypeDetailsMetadataIte
 /**
  * The values of a parsed {@link RooRequestFactory} annotation.
  */
-public class ScaffoldAnnotationValues extends AbstractAnnotationValues {
+public class EntityAnnotationValues extends AbstractAnnotationValues {
 
     @AutoPopulate private String parent = PARENT_PROPERTY_DEFAULT;
 
@@ -20,7 +20,7 @@ public class ScaffoldAnnotationValues extends AbstractAnnotationValues {
      *
      * @param annotatedType
      */
-    public ScaffoldAnnotationValues(final MemberHoldingTypeDetailsMetadataItem<?> annotatedType) {
+    public EntityAnnotationValues(final MemberHoldingTypeDetailsMetadataItem<?> annotatedType) {
         super(annotatedType, ROO_REQUEST_FACTORY);
         AutoPopulationUtils.populate(this, annotationMetadata);
     }

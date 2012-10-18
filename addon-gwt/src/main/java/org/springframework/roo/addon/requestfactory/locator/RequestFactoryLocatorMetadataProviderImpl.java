@@ -4,8 +4,8 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_LOCATOR;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.KEY_FACTORY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY_FACTORY;
 import static org.springframework.roo.model.JavaType.CLASS;
 import static org.springframework.roo.model.JavaType.STRING;
 

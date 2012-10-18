@@ -1,7 +1,7 @@
 package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
 
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
-import static org.springframework.roo.addon.requestfactory.scaffold.ScaffoldJavaType.ROO_REQUEST_FACTORY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
 import hapax.TemplateDataDictionary;
 import hapax.TemplateDictionary;
 
@@ -37,8 +37,8 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateServic
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
+import org.springframework.roo.addon.requestfactory.entity.RooRequestFactory;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
-import org.springframework.roo.addon.requestfactory.scaffold.RooRequestFactory;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeParsingService;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
