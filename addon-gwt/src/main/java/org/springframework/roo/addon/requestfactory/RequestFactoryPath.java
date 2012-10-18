@@ -9,11 +9,15 @@ import org.springframework.roo.model.JavaPackage;
 public class RequestFactoryPath {
 
     public static final RequestFactoryPath LOCATOR = new RequestFactoryPath(
-            "/server/locator", "module/server/locator/"
-                    + RequestFactoryPath.templateSelector);
+            "/server/locator",
+            "module/server/locator/" + RequestFactoryPath.templateSelector);
+    public static final RequestFactoryPath MANAGED_REQUEST = new RequestFactoryPath(
+            "/client/managed/request",
+            "module/client/request/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath[] ALL_PATHS = new RequestFactoryPath[] {
-            LOCATOR };
+            LOCATOR, MANAGED_REQUEST
+    };
 
     public static final String templateSelector = "*-template.*";
     public static final String wildCardSelector = "*";

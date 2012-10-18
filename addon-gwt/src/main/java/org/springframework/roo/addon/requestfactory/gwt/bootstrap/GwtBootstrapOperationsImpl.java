@@ -4,10 +4,10 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.OLD_ENTITY_PROXY;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.OLD_REQUEST_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.REQUEST_CONTEXT;
-import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_MIRRORED_FROM;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
+import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.project.Path.ROOT;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
 import static org.springframework.roo.project.Path.SRC_MAIN_WEBAPP;
@@ -31,7 +31,6 @@ import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
-import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.account.RooAccount;
 import org.springframework.roo.addon.web.mvc.controller.WebMvcOperations;
@@ -98,7 +97,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
 
     @Reference protected FileManager fileManager;
     @Reference protected RequestFactoryTemplateService requestFactoryTemplateService;
-    @Reference protected RequestFactoryTypeService requestFactoryTypeService;
+    @Reference protected GwtBootstrapTypeService gwtBootstrapTypeService;
     @Reference protected WebMvcOperations webMvcOperations;
     @Reference protected MetadataService metadataService;
 
@@ -218,7 +217,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
 //        requestAll(requestPackage);
         for (final ClassOrInterfaceTypeDetails proxy : typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)) {
-            final ClassOrInterfaceTypeDetails request = requestFactoryTypeService
+            final ClassOrInterfaceTypeDetails request = gwtBootstrapTypeService
                     .lookupRequestFromProxy(proxy);
             if (request == null) {
                 throw new IllegalStateException(
@@ -235,9 +234,9 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
         final ClassOrInterfaceTypeDetails entity = typeLocationService
                 .getTypeDetails(type);
         if (entity != null && !entity.isAbstract()) {
-            final ClassOrInterfaceTypeDetails proxy = requestFactoryTypeService
+            final ClassOrInterfaceTypeDetails proxy = gwtBootstrapTypeService
                     .lookupProxyFromEntity(entity);
-            final ClassOrInterfaceTypeDetails request = requestFactoryTypeService
+            final ClassOrInterfaceTypeDetails request = gwtBootstrapTypeService
                     .lookupRequestFromEntity(entity);
             if (proxy == null || request == null) {
                 throw new IllegalStateException(
@@ -263,7 +262,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
         // Update the GaeHelper type
 //        updateGaeHelper();
 
-        requestFactoryTypeService.buildType(RequestFactoryType.APP_REQUEST_FACTORY,
+        gwtBootstrapTypeService.buildType(RequestFactoryType.APP_REQUEST_FACTORY,
                 requestFactoryTemplateService.getStaticTemplateTypeDetails(
                         RequestFactoryType.APP_REQUEST_FACTORY, projectOperations
                                 .getFocusedProjectMetadata().getModuleName()),
@@ -545,7 +544,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
     }
 
     private void addPackageToGwtXml(final JavaPackage sourcePackage) {
-        String gwtConfig = requestFactoryTypeService.getGwtModuleXml(projectOperations
+        String gwtConfig = gwtBootstrapTypeService.getGwtModuleXml(projectOperations
                 .getFocusedModuleName());
         gwtConfig = StringUtils.stripEnd(gwtConfig, File.separator);
         final String moduleRoot = projectOperations.getPathResolver()
@@ -556,7 +555,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
         final String relativePackage = StringUtils.removeStart(
                 sourcePackage.getFullyQualifiedPackageName(), topLevelPackage
                         + ".");
-        requestFactoryTypeService.addSourcePath(
+        gwtBootstrapTypeService.addSourcePath(
                 relativePackage.replace(".", PATH_DELIMITER),
                 projectOperations.getFocusedModuleName());
     }

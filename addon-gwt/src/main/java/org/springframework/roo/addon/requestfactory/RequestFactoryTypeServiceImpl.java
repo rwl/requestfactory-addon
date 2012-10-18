@@ -1,5 +1,9 @@
 package org.springframework.roo.addon.requestfactory;
 
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_LOCATOR;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_UNMANAGED_REQUEST;
 import static org.springframework.roo.model.JavaType.LONG_OBJECT;
 import static org.springframework.roo.model.JdkJavaType.BIG_DECIMAL;
 import static org.springframework.roo.model.JdkJavaType.DATE;
@@ -7,21 +11,10 @@ import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JdkJavaType.SET;
 import static org.springframework.roo.model.JpaJavaType.EMBEDDABLE;
 
-import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_LOCATOR;
-import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
-import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
-import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_UNMANAGED_REQUEST;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -31,15 +24,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
-import javax.xml.parsers.DocumentBuilder;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
 import org.springframework.roo.classpath.PhysicalTypeCategory;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
@@ -63,25 +52,14 @@ import org.springframework.roo.classpath.itd.InvocableMemberBodyBuilder;
 import org.springframework.roo.classpath.persistence.PersistenceMemberLocator;
 import org.springframework.roo.classpath.scanner.MemberDetails;
 import org.springframework.roo.classpath.scanner.MemberDetailsScanner;
-import org.springframework.roo.file.monitor.event.FileDetails;
 import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.DataType;
-import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
-import org.springframework.roo.model.RooJavaType;
-import org.springframework.roo.process.manager.FileManager;
 import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.Path;
 import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.support.logging.HandlerUtils;
-import org.springframework.roo.support.util.FileUtils;
-import org.springframework.roo.support.util.XmlUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 
 /**
@@ -96,47 +74,16 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
 
     private static final Logger LOGGER = HandlerUtils
             .getLogger(RequestFactoryTypeServiceImpl.class);
-    private static final String PATH = "path";
 
-    @Reference private FileManager fileManager;
-    @Reference private RequestFactoryFileManager requestFactoryFileManager;
-    @Reference private MemberDetailsScanner memberDetailsScanner;
-    @Reference private MetadataService metadataService;
-    @Reference private PersistenceMemberLocator persistenceMemberLocator;
-    @Reference private ProjectOperations projectOperations;
-    @Reference private TypeLocationService typeLocationService;
+    @Reference protected RequestFactoryFileManager requestFactoryFileManager;
+    @Reference protected MemberDetailsScanner memberDetailsScanner;
+    @Reference protected MetadataService metadataService;
+    @Reference protected PersistenceMemberLocator persistenceMemberLocator;
+    @Reference protected ProjectOperations projectOperations;
+    @Reference protected TypeLocationService typeLocationService;
 
     private final Set<String> warnings = new LinkedHashSet<String>();
     private final Timer warningTimer = new Timer();
-
-    public void addSourcePath(final String sourcePath, final String moduleName) {
-        final String gwtXmlPath = getGwtModuleXml(moduleName);
-        Validate.notBlank(gwtXmlPath, "gwt.xml could not be found for module '"
-                + moduleName + "'");
-        final Document gwtXmlDoc = getGwtXmlDocument(gwtXmlPath);
-        final Element gwtXmlRoot = gwtXmlDoc.getDocumentElement();
-        final List<Element> sourceElements = XmlUtils.findElements(
-                "/module/source", gwtXmlRoot);
-        if (!anyExistingSourcePathsIncludePath(sourcePath, sourceElements)) {
-            final Element firstSourceElement = sourceElements.get(0);
-            final Element newSourceElement = gwtXmlDoc.createElement("source");
-            newSourceElement.setAttribute(PATH, sourcePath);
-            gwtXmlRoot.insertBefore(newSourceElement, firstSourceElement);
-            fileManager.createOrUpdateTextFileIfRequired(gwtXmlPath,
-                    XmlUtils.nodeToString(gwtXmlDoc),
-                    "Added source paths to gwt.xml file", true);
-        }
-    }
-
-    private boolean anyExistingSourcePathsIncludePath(final String sourcePath,
-            final Iterable<Element> sourceElements) {
-        for (final Element sourceElement : sourceElements) {
-            if (sourcePath.startsWith(sourceElement.getAttribute(PATH))) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public List<ClassOrInterfaceTypeDetails> buildType(final RequestFactoryType destType,
             final ClassOrInterfaceTypeDetails templateClass,
@@ -277,19 +224,7 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
     public void buildType(final RequestFactoryType type,
             final List<ClassOrInterfaceTypeDetails> templateTypeDetails,
             final String moduleName) {
-        if (RequestFactoryType.LIST_PLACE_RENDERER.equals(type)) {
-            final Map<JavaSymbolName, List<JavaType>> watchedMethods = new HashMap<JavaSymbolName, List<JavaType>>();
-            watchedMethods.put(new JavaSymbolName("render"), Collections
-                    .singletonList(new JavaType(projectOperations
-                            .getTopLevelPackage(moduleName)
-                            .getFullyQualifiedPackageName()
-                            + ".client.scaffold.place.ProxyListPlace")));
-            type.setWatchedMethods(watchedMethods);
-        }
-        else {
-            type.resolveMethodsToWatch(type);
-        }
-
+        type.resolveMethodsToWatch(type);
         type.resolveWatchedFieldNames(type);
         final List<ClassOrInterfaceTypeDetails> typesToBeWritten = new ArrayList<ClassOrInterfaceTypeDetails>();
         for (final ClassOrInterfaceTypeDetails templateTypeDetail : templateTypeDetails) {
@@ -299,7 +234,7 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
         requestFactoryFileManager.write(typesToBeWritten, type.isOverwriteConcrete());
     }
 
-    private void checkPrimitive(final JavaType type) {
+    protected void checkPrimitive(final JavaType type) {
         if (type.isPrimitive() && !JavaType.VOID_PRIMITIVE.equals(type)) {
             final String to = type.getSimpleTypeName();
             final String from = to.toLowerCase();
@@ -311,7 +246,7 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
         }
     }
 
-    private <T extends AbstractIdentifiableAnnotatedJavaStructureBuilder<? extends IdentifiableAnnotatedJavaStructure>> T convertModifier(
+    protected <T extends AbstractIdentifiableAnnotatedJavaStructureBuilder<? extends IdentifiableAnnotatedJavaStructure>> T convertModifier(
             final T builder) {
         if (Modifier.isPrivate(builder.getModifier())) {
             builder.setModifier(Modifier.PROTECTED);
@@ -319,7 +254,7 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
         return builder;
     }
 
-    private ClassOrInterfaceTypeDetailsBuilder createAbstractBuilder(
+    protected ClassOrInterfaceTypeDetailsBuilder createAbstractBuilder(
             final ClassOrInterfaceTypeDetailsBuilder concreteClass,
             final List<MemberHoldingTypeDetails> extendsTypesDetails,
             final String moduleName) {
@@ -397,7 +332,7 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
         return cidBuilder;
     }
 
-    private void displayWarning(final String warning) {
+    protected void displayWarning(final String warning) {
         if (!warnings.contains(warning)) {
             warnings.add(warning);
             LOGGER.warning(warning);
@@ -427,34 +362,6 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
             }
         }
         return extendsTypes;
-    }
-
-    public String getGwtModuleXml(final String moduleName) {
-        final LogicalPath logicalPath = LogicalPath.getInstance(
-                Path.SRC_MAIN_JAVA, moduleName);
-        final String gwtModuleXml = projectOperations.getPathResolver()
-                .getRoot(logicalPath)
-                + File.separatorChar
-                + projectOperations.getTopLevelPackage(moduleName)
-                        .getFullyQualifiedPackageName()
-                        .replace('.', File.separatorChar)
-                + File.separator
-                + "*.gwt.xml";
-        final Set<String> paths = new LinkedHashSet<String>();
-        for (final FileDetails fileDetails : fileManager
-                .findMatchingAntPath(gwtModuleXml)) {
-            paths.add(fileDetails.getCanonicalPath());
-        }
-        if (paths.isEmpty()) {
-            throw new IllegalStateException(
-                    "Each module must have a gwt.xml file");
-        }
-        if (paths.size() > 1) {
-            throw new IllegalStateException(
-                    "Each module can only have only gwt.xml file: "
-                            + paths.size());
-        }
-        return paths.iterator().next();
     }
 
     /**
@@ -521,34 +428,6 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
         return returnType;
     }
 
-    public Document getGwtXmlDocument(final String gwtModuleCanonicalPath) {
-        final DocumentBuilder builder = XmlUtils.getDocumentBuilder();
-        builder.setEntityResolver(new EntityResolver() {
-            public InputSource resolveEntity(final String publicId,
-                    final String systemId) throws SAXException, IOException {
-                if (systemId.endsWith("gwt-module.dtd")) {
-                    return new InputSource(FileUtils.getInputStream(
-                            GwtBootstrapScaffoldMetadata.class,
-                            "templates/gwt-module.dtd"));
-                }
-                // Use the default behaviour
-                return null;
-            }
-        });
-
-        InputStream inputStream = null;
-        try {
-            inputStream = fileManager.getInputStream(gwtModuleCanonicalPath);
-            return builder.parse(inputStream);
-        }
-        catch (final Exception e) {
-            throw new IllegalStateException(e);
-        }
-        finally {
-            IOUtils.closeQuietly(inputStream);
-        }
-    }
-
     public List<MethodMetadata> getProxyMethods(
             final ClassOrInterfaceTypeDetails governorTypeDetails) {
         final List<MethodMetadata> proxyMethods = new ArrayList<MethodMetadata>();
@@ -579,41 +458,25 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
 
     public JavaType getServiceLocator(final String moduleName) {
         return new JavaType(projectOperations.getTopLevelPackage(moduleName)
-                + ".server.locator.GwtServiceLocator");
+                + ".server.locator.RequestFactoryServiceLocator");
     }
 
-    public Collection<JavaPackage> getSourcePackages(final String moduleName) {
-        final Document gwtXmlDoc = getGwtXmlDocument(getGwtModuleXml(moduleName));
-        final Element gwtXmlRoot = gwtXmlDoc.getDocumentElement();
-        final JavaPackage topLevelPackage = projectOperations
-                .getTopLevelPackage(moduleName);
-        final Collection<JavaPackage> sourcePackages = new HashSet<JavaPackage>();
-        for (final Element sourcePathElement : XmlUtils.findElements(
-                "/module/source", gwtXmlRoot)) {
-            final String relativePackage = sourcePathElement.getAttribute(PATH)
-                    .replace(RequestFactoryOperations.PATH_DELIMITER, ".");
-            sourcePackages.add(new JavaPackage(topLevelPackage + "."
-                    + relativePackage));
-        }
-        return sourcePackages;
-    }
-
-    private boolean isAllowableReturnType(final JavaType type) {
+    protected boolean isAllowableReturnType(final JavaType type) {
         return isCommonType(type) || isEntity(type) || isEnum(type);
     }
 
-    private boolean isAllowableReturnType(final MethodMetadata method) {
+    protected boolean isAllowableReturnType(final MethodMetadata method) {
         return isAllowableReturnType(method.getReturnType());
     }
 
-    private boolean isCollectionType(final JavaType returnType) {
+    protected boolean isCollectionType(final JavaType returnType) {
         return returnType.getFullyQualifiedTypeName().equals(
                 LIST.getFullyQualifiedTypeName())
                 || returnType.getFullyQualifiedTypeName().equals(
                         SET.getFullyQualifiedTypeName());
     }
 
-    private boolean isCommonType(final JavaType type) {
+    protected boolean isCommonType(final JavaType type) {
         return isTypeCommon(type) || isCollectionType(type)
                 && type.getParameters().size() == 1
                 && isAllowableReturnType(type.getParameters().get(0));
@@ -625,14 +488,14 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
         return isDomainObject(type, ptmd);
     }
 
-    private boolean isDomainObject(final JavaType returnType,
+    protected boolean isDomainObject(final JavaType returnType,
             final ClassOrInterfaceTypeDetails ptmd) {
         return !isEnum(ptmd) && isEntity(returnType)
                 && !isRequestFactoryCompatible(returnType)
                 && !isEmbeddable(ptmd);
     }
 
-    private boolean isEmbeddable(final ClassOrInterfaceTypeDetails ptmd) {
+    protected boolean isEmbeddable(final ClassOrInterfaceTypeDetails ptmd) {
         if (ptmd == null) {
             return false;
         }
@@ -641,59 +504,37 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
         return annotationMetadata != null;
     }
 
-    private boolean isEntity(final JavaType type) {
+    protected boolean isEntity(final JavaType type) {
         return persistenceMemberLocator.getIdentifierFields(type).size() == 1;
     }
 
-    private boolean isEnum(final ClassOrInterfaceTypeDetails ptmd) {
+    protected boolean isEnum(final ClassOrInterfaceTypeDetails ptmd) {
         return ptmd != null
                 && ptmd.getPhysicalTypeCategory() == PhysicalTypeCategory.ENUMERATION;
     }
 
-    private boolean isEnum(final JavaType type) {
+    protected boolean isEnum(final JavaType type) {
         return isEnum(typeLocationService.getTypeDetails(type));
     }
 
-    public boolean isMethodReturnTypeInSourcePath(final MethodMetadata method,
-            final MemberHoldingTypeDetails memberHoldingTypeDetail,
-            final Iterable<JavaPackage> sourcePackages) {
-        final JavaType returnType = method.getReturnType();
-        final boolean inSourcePath = isTypeInAnySourcePackage(returnType,
-                sourcePackages);
-        if (!inSourcePath
-                && !isCommonType(returnType)
-                && !JavaType.VOID_PRIMITIVE.getFullyQualifiedTypeName().equals(
-                        returnType.getFullyQualifiedTypeName())) {
-            displayWarning("The path to type "
-                    + returnType.getFullyQualifiedTypeName()
-                    + " which is used in type "
-                    + memberHoldingTypeDetail.getName()
-                    + " by the field '"
-                    + method.getMethodName().getSymbolName()
-                    + "' needs to be added to the module's gwt.xml file in order to be used in a Proxy.");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean isPrimitive(final JavaType type) {
+    protected boolean isPrimitive(final JavaType type) {
         return type.isPrimitive() || isCollectionType(type)
                 && type.getParameters().size() == 1
                 && isPrimitive(type.getParameters().get(0));
     }
 
-    private boolean isPublicAccessor(final MethodMetadata method) {
+    protected boolean isPublicAccessor(final MethodMetadata method) {
         return Modifier.isPublic(method.getModifier())
                 && !method.getReturnType().equals(JavaType.VOID_PRIMITIVE)
                 && method.getParameterTypes().isEmpty()
                 && method.getMethodName().getSymbolName().startsWith("get");
     }
 
-    private boolean isRequestFactoryCompatible(final JavaType type) {
+    protected boolean isRequestFactoryCompatible(final JavaType type) {
         return isCommonType(type) || isCollectionType(type);
     }
 
-    private boolean isTypeCommon(final JavaType type) {
+    protected boolean isTypeCommon(final JavaType type) {
         return JavaType.BOOLEAN_OBJECT.equals(type)
                 || JavaType.CHAR_OBJECT.equals(type)
                 || JavaType.BYTE_OBJECT.equals(type)
@@ -710,23 +551,7 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
                         type.getFullyQualifiedTypeName());
     }
 
-    private boolean isTypeInAnySourcePackage(final JavaType type,
-            final Iterable<JavaPackage> sourcePackages) {
-        for (final JavaPackage sourcePackage : sourcePackages) {
-            if (type.getPackage().isWithin(sourcePackage)) {
-                return true; // It's a project type
-            }
-            if (isCollectionType(type)
-                    && type.getParameters().size() == 1
-                    && type.getParameters().get(0).getPackage()
-                            .isWithin(sourcePackage)) {
-                return true; // It's a collection of a project type
-            }
-        }
-        return false;
-    }
-
-    private boolean isValidMethodReturnType(final MethodMetadata method,
+    protected boolean isValidMethodReturnType(final MethodMetadata method,
             final MemberHoldingTypeDetails memberHoldingTypeDetail) {
         final JavaType returnType = method.getReturnType();
         if (isPrimitive(returnType)) {

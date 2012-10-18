@@ -3,11 +3,11 @@ package org.springframework.roo.addon.requestfactory;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.PROXY_FOR;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.PROXY_FOR_NAME;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.RECEIVER;
-import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.SERVICE;
-import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.SERVICE_NAME;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_MIRRORED_FROM;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.SERVICE;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.SERVICE_NAME;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +26,6 @@ import org.springframework.roo.classpath.details.annotations.StringAttributeValu
 import org.springframework.roo.model.DataType;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
-import org.springframework.roo.model.RooJavaType;
 
 /**
  * Utility methods used in the GWT Add-On.
@@ -134,7 +133,7 @@ public final class RequestFactoryUtils {
     public static Map<RequestFactoryType, JavaType> getMirrorTypeMap(
             final JavaType governorType, final JavaPackage topLevelPackage) {
         final Map<RequestFactoryType, JavaType> mirrorTypeMap = new HashMap<RequestFactoryType, JavaType>();
-        for (final RequestFactoryType mirrorType : RequestFactoryType.values()) {
+        for (final RequestFactoryType mirrorType : RequestFactoryType.ALL_TYPES) {
             mirrorTypeMap.put(
                     mirrorType,
                     convertGovernorTypeNameIntoKeyTypeName(governorType,
