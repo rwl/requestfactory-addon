@@ -7,7 +7,7 @@ import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 /**
  * Provides a basic implementation of {@link RequestFactoryFileManager} which encapsulates
  * the file management functionality required by
- * {@link org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadataProviderImpl}
+ * {@link org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadataProviderImpl}
  * .
  * 
  * @author James Tyrrell

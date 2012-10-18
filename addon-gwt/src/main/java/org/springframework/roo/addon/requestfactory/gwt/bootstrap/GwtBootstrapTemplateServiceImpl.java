@@ -38,7 +38,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.entity.RooRequestFactory;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
+import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadata;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeParsingService;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
@@ -687,7 +687,7 @@ public class GwtBootstrapTemplateServiceImpl extends RequestFactoryTemplateServi
                     if (systemId
                             .equals("http://dl.google.com/gwt/DTD/xhtml.ent")) {
                         return new InputSource(FileUtils.getInputStream(
-                                GwtBootstrapScaffoldMetadata.class,
+                                RequestFactoryScaffoldMetadata.class,
                                 "templates/xhtml.ent"));
                     }
 

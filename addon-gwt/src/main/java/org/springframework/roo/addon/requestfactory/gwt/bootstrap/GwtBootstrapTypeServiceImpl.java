@@ -23,7 +23,7 @@ import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.requestfactory.RequestFactoryOperations;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeServiceImpl;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
+import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadata;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MemberHoldingTypeDetails;
 import org.springframework.roo.classpath.details.MethodMetadata;
@@ -140,7 +140,7 @@ public class GwtBootstrapTypeServiceImpl extends RequestFactoryTypeServiceImpl i
                     final String systemId) throws SAXException, IOException {
                 if (systemId.endsWith("gwt-module.dtd")) {
                     return new InputSource(FileUtils.getInputStream(
-                            GwtBootstrapScaffoldMetadata.class,
+                            RequestFactoryScaffoldMetadata.class,
                             "templates/gwt-module.dtd"));
                 }
                 // Use the default behaviour
