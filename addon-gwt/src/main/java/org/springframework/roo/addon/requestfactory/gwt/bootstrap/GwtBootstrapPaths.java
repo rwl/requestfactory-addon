@@ -23,7 +23,6 @@ public class GwtBootstrapPaths {
     public static final RequestFactoryPath SCAFFOLD_UI = new RequestFactoryPath("/client/scaffold/ui", "module/client/scaffold/ui/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath SERVER = new RequestFactoryPath("/server", "module/server/" + RequestFactoryPath.templateSelector); // IOC
     public static final RequestFactoryPath SHARED = new RequestFactoryPath("/shared", "module/shared/" + RequestFactoryPath.templateSelector);
-    public static final RequestFactoryPath SHARED_SCAFFOLD = new RequestFactoryPath("/shared/scaffold", "module/shared/scaffold/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath STYLE = new RequestFactoryPath("/client/style", "module/client/style/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath WEB = new RequestFactoryPath("", "webapp/" + RequestFactoryPath.wildCardSelector);
 
@@ -40,7 +39,7 @@ public class GwtBootstrapPaths {
         MANAGED_UI, MANAGED_TREE, MANAGED_UI_DESKTOP,
         MANAGED_UI_MOBILE, MANAGED_UI_RENDERER, MANAGED_UI_EDITOR,
         SCAFFOLD, SCAFFOLD_ACTIVITY, SCAFFOLD_IOC, SCAFFOLD_PLACE,
-        SCAFFOLD_REQUEST, SCAFFOLD_UI, SERVER, SHARED, SHARED_SCAFFOLD,
+        SCAFFOLD_REQUEST, SCAFFOLD_UI, SERVER, SHARED,
         STYLE, WEB, ACCOUNT_HELPER, SCAFFOLD_ACCOUNT, SERVER_ACCOUNT,
         SHARED_ACCOUNT, ACCOUNT_ROOT, ACCOUNT_UI, ACCOUNT_WEB
     };

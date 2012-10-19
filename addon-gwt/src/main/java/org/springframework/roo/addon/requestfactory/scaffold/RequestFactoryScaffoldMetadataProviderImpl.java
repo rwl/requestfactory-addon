@@ -121,8 +121,7 @@ public class RequestFactoryScaffoldMetadataProviderImpl implements
             return null;
         }
 
-        if (!RequestFactoryUtils.getBooleanAnnotationValue(proxy,
-                ROO_REQUEST_FACTORY_PROXY, "scaffold", false)) {
+        if (!isScaffoldEnabled(proxy)) {
             return null;
         }
 
@@ -139,10 +138,10 @@ public class RequestFactoryScaffoldMetadataProviderImpl implements
         Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap = buildClientSideTypeMap(topLevelPackage, proxy);
         final RequestFactoryTemplateDataHolder templateDataHolder = buildTemplateDataHolder(mirroredType, clientSideTypeMap, moduleName);
 
-        final Map<RequestFactoryType, List<ClassOrInterfaceTypeDetails>> typesToBeWritten = buildTypesToBeWritten(
+        final Map<RequestFactoryType, List<ClassOrInterfaceTypeDetails>> typesToBeWritten = getTypesToBeWritten(
                 mirroredType, topLevelPackage, clientSideTypeMap, proxy, moduleName, templateDataHolder);
 
-        final Map<String, String> xmlToBeWritten = buildXmlToBeWritten(mirroredType, topLevelPackage,
+        final Map<String, String> xmlToBeWritten = getXmlToBeWritten(mirroredType, topLevelPackage,
                 clientSideTypeMap, proxy, moduleName, templateDataHolder);
 
         // Our general strategy is to instantiate GwtScaffoldMetadata, which
@@ -167,6 +166,11 @@ public class RequestFactoryScaffoldMetadataProviderImpl implements
         }
 
         return requestFactoryScaffoldMetadata;
+    }
+
+    protected boolean isScaffoldEnabled(final ClassOrInterfaceTypeDetails proxy) {
+        return RequestFactoryUtils.getBooleanAnnotationValue(proxy,
+                ROO_REQUEST_FACTORY_PROXY, "scaffold", false);
     }
 
     protected void buildTypes(final String moduleName) {
@@ -233,7 +237,7 @@ public class RequestFactoryScaffoldMetadataProviderImpl implements
                         moduleName);
     }
 
-    protected Map<RequestFactoryType, List<ClassOrInterfaceTypeDetails>> buildTypesToBeWritten(
+    protected Map<RequestFactoryType, List<ClassOrInterfaceTypeDetails>> getTypesToBeWritten(
             final ClassOrInterfaceTypeDetails mirroredType, final JavaPackage topLevelPackage,
             final Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap,
             final ClassOrInterfaceTypeDetails proxy, final String moduleName,
@@ -269,7 +273,7 @@ public class RequestFactoryScaffoldMetadataProviderImpl implements
         return typesToBeWritten;
     }
 
-    protected Map<String, String> buildXmlToBeWritten(
+    protected Map<String, String> getXmlToBeWritten(
             final ClassOrInterfaceTypeDetails mirroredType, final JavaPackage topLevelPackage,
             final Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap,
             final ClassOrInterfaceTypeDetails proxy, final String moduleName,

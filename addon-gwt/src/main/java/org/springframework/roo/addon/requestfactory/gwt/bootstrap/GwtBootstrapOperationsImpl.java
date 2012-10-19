@@ -8,6 +8,7 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
+import static org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP_SCAFFOLD;
 import static org.springframework.roo.project.Path.ROOT;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
 import static org.springframework.roo.project.Path.SRC_MAIN_WEBAPP;
@@ -332,30 +333,15 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
 
     private void createScaffold(final ClassOrInterfaceTypeDetails proxy) {
         final AnnotationMetadata annotationMetadata = RequestFactoryUtils
-                .getFirstAnnotation(proxy, ROO_REQUEST_FACTORY_PROXY);
-        if (annotationMetadata != null) {
-            final AnnotationAttributeValue<Boolean> booleanAttributeValue = annotationMetadata
-                    .getAttribute("scaffold");
-            if (booleanAttributeValue == null
-                    || !booleanAttributeValue.getValue()) {
-                final ClassOrInterfaceTypeDetailsBuilder cidBuilder = new ClassOrInterfaceTypeDetailsBuilder(
-                        proxy);
-                final AnnotationMetadataBuilder annotationMetadataBuilder = new AnnotationMetadataBuilder(
-                        annotationMetadata);
-                annotationMetadataBuilder.addBooleanAttribute("scaffold", true);
-                for (final AnnotationMetadataBuilder existingAnnotation : cidBuilder
-                        .getAnnotations()) {
-                    if (existingAnnotation.getAnnotationType().equals(
-                            annotationMetadata.getAnnotationType())) {
-                        cidBuilder.getAnnotations().remove(existingAnnotation);
-                        cidBuilder.getAnnotations().add(
-                                annotationMetadataBuilder);
-                        break;
-                    }
-                }
-                typeManagementService.createOrUpdateTypeOnDisk(cidBuilder
-                        .build());
-            }
+                .getFirstAnnotation(proxy, ROO_GWT_BOOTSTRAP_SCAFFOLD);
+        if (annotationMetadata == null) {
+            final ClassOrInterfaceTypeDetailsBuilder cidBuilder =
+                    new ClassOrInterfaceTypeDetailsBuilder(proxy);
+            final AnnotationMetadataBuilder annotationMetadataBuilder =
+                    new AnnotationMetadataBuilder(ROO_GWT_BOOTSTRAP_SCAFFOLD);
+            cidBuilder.getAnnotations().add(annotationMetadataBuilder);
+            typeManagementService.createOrUpdateTypeOnDisk(cidBuilder
+                    .build());
         }
     }
 

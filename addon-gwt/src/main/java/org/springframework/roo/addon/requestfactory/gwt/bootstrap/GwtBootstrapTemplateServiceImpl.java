@@ -76,7 +76,10 @@ import org.xml.sax.SAXException;
  */
 @Component
 @Service
-public class GwtBootstrapTemplateServiceImpl extends RequestFactoryTemplateServiceImpl implements GwtBootstrapTemplateService {
+public class GwtBootstrapTemplateServiceImpl extends RequestFactoryTemplateServiceImpl
+        implements GwtBootstrapTemplateService {
+
+    private static final String TEMPLATE_DIR = "org/springframework/roo/addon/requestfactory/gwt/bootstrap/scaffold/templates/";
 
     @Reference RequestFactoryTypeService requestFactoryTypeService;
     @Reference LayerService layerService;
@@ -283,8 +286,6 @@ public class GwtBootstrapTemplateServiceImpl extends RequestFactoryTemplateServi
                 GwtBootstrapPaths.SCAFFOLD_PLACE.packageName(topLevelPackage));
         dataDictionary.setVariable("scaffoldUiPackage",
                 GwtBootstrapPaths.SCAFFOLD_UI.packageName(topLevelPackage));
-        dataDictionary.setVariable("sharedScaffoldPackage",
-                GwtBootstrapPaths.SHARED_SCAFFOLD.packageName(topLevelPackage));
         dataDictionary.setVariable("uiPackage",
                 GwtBootstrapPaths.MANAGED_UI.packageName(topLevelPackage));
         dataDictionary.setVariable("uiEditorPackage",
@@ -668,9 +669,6 @@ public class GwtBootstrapTemplateServiceImpl extends RequestFactoryTemplateServi
                 .buildStandardDataDictionary(type, moduleName);
         dataDictionary.setVariable("placePackage", GwtBootstrapPaths.SCAFFOLD_PLACE
                 .packageName(projectOperations.getTopLevelPackage(moduleName)));
-        dataDictionary.setVariable("sharedScaffoldPackage",
-                GwtBootstrapPaths.SHARED_SCAFFOLD.packageName(projectOperations
-                        .getTopLevelPackage(moduleName)));
         dataDictionary.setVariable("sharedAccountPackage", GwtBootstrapPaths.SHARED_ACCOUNT
                 .packageName(projectOperations.getTopLevelPackage(moduleName)));
         return dataDictionary;
@@ -847,14 +845,15 @@ public class GwtBootstrapTemplateServiceImpl extends RequestFactoryTemplateServi
             templateTypeDetailsMap.put(
                     gwtBootstrapType,
                     getTemplateDetails(dataDictionary, gwtBootstrapType.getTemplate(),
-                            mirrorTypeMap.get(gwtBootstrapType), moduleName));
+                            mirrorTypeMap.get(gwtBootstrapType), moduleName, TEMPLATE_DIR));
 
             if (gwtBootstrapType.isCreateUiXml()) {
                 dataDictionary = buildMirrorDataDictionary(gwtBootstrapType,
                         mirroredType, proxy, mirrorTypeMap, clientSideTypeMap,
                         moduleName);
                 final String contents = getTemplateContents(
-                        gwtBootstrapType.getTemplate() + "UiXml", dataDictionary);
+                        gwtBootstrapType.getTemplate() + "UiXml", dataDictionary,
+                        TEMPLATE_DIR);
                 xmlTemplates.put(gwtBootstrapType, contents);
             }
         }
@@ -892,7 +891,8 @@ public class GwtBootstrapTemplateServiceImpl extends RequestFactoryTemplateServi
                     GwtBootstrapPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage) + "."
                             + boundCollectionType + collectionType + "Editor");
             typeDetails.add(getTemplateDetails(dataDictionary,
-                    "CollectionEditor", collectionEditorType, moduleName));
+                    "CollectionEditor", collectionEditorType, moduleName,
+                    TEMPLATE_DIR));
 
             dataDictionary = TemplateDictionary.create();
             dataDictionary.setVariable("packageName",
@@ -907,7 +907,7 @@ public class GwtBootstrapTemplateServiceImpl extends RequestFactoryTemplateServi
             addImport(dataDictionary, proxyProperty.getPropertyType());
 
             final String contents = getTemplateContents("CollectionEditor"
-                    + "UiXml", dataDictionary);
+                    + "UiXml", dataDictionary, TEMPLATE_DIR);
             final String packagePath = projectOperations.getPathResolver()
                     .getFocusedIdentifier(Path.SRC_MAIN_JAVA,
                             GwtBootstrapPaths.MANAGED_UI_EDITOR.getPackagePath(topLevelPackage));

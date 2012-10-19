@@ -100,6 +100,12 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
     }
 
     @Override
+    public boolean isScaffoldAvailable() {
+        return typeLocationService.findClassesOrInterfaceDetailsWithAnnotation(
+                ROO_REQUEST_FACTORY_PROXY).size() > 0;
+    }
+
+    @Override
     public void setupRequestFactoryServer() {
         setupRequestFactory(true);
     }
@@ -172,6 +178,35 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
             final JavaType type) {
         createRequestInterfaceIfNecessary(
                 typeLocationService.getTypeDetails(type), requestPackage);
+    }
+
+    public void scaffoldAll() {
+        for (final ClassOrInterfaceTypeDetails proxy : typeLocationService
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)) {
+            final ClassOrInterfaceTypeDetails request = requestFactoryTypeService
+                    .lookupRequestFromProxy(proxy);
+            if (request == null) {
+                throw new IllegalStateException(
+                        "In order to scaffold, an entity must have a request");
+            }
+            createScaffold(proxy);
+        }
+    }
+
+    public void scaffoldType(final JavaType type) {
+        final ClassOrInterfaceTypeDetails entity = typeLocationService
+                .getTypeDetails(type);
+        if (entity != null && !entity.isAbstract()) {
+            final ClassOrInterfaceTypeDetails proxy = requestFactoryTypeService
+                    .lookupProxyFromEntity(entity);
+            final ClassOrInterfaceTypeDetails request = requestFactoryTypeService
+                    .lookupRequestFromEntity(entity);
+            if (proxy == null || request == null) {
+                throw new IllegalStateException(
+                        "In order to scaffold, an entity must have an associated proxy and request");
+            }
+            createScaffold(proxy);
+        }
     }
 
     @Override
@@ -391,5 +426,34 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
         gwtRequestAttributeValues.add(entityAttributeValue);
         return new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_UNMANAGED_REQUEST,
                 gwtRequestAttributeValues).build();
+    }
+
+    private void createScaffold(final ClassOrInterfaceTypeDetails proxy) {
+        final AnnotationMetadata annotationMetadata = RequestFactoryUtils
+                .getFirstAnnotation(proxy, ROO_REQUEST_FACTORY_PROXY);
+        if (annotationMetadata != null) {
+            final AnnotationAttributeValue<Boolean> booleanAttributeValue = annotationMetadata
+                    .getAttribute("scaffold");
+            if (booleanAttributeValue == null
+                    || !booleanAttributeValue.getValue()) {
+                final ClassOrInterfaceTypeDetailsBuilder cidBuilder = new ClassOrInterfaceTypeDetailsBuilder(
+                        proxy);
+                final AnnotationMetadataBuilder annotationMetadataBuilder = new AnnotationMetadataBuilder(
+                        annotationMetadata);
+                annotationMetadataBuilder.addBooleanAttribute("scaffold", true);
+                for (final AnnotationMetadataBuilder existingAnnotation : cidBuilder
+                        .getAnnotations()) {
+                    if (existingAnnotation.getAnnotationType().equals(
+                            annotationMetadata.getAnnotationType())) {
+                        cidBuilder.getAnnotations().remove(existingAnnotation);
+                        cidBuilder.getAnnotations().add(
+                                annotationMetadataBuilder);
+                        break;
+                    }
+                }
+                typeManagementService.createOrUpdateTypeOnDisk(cidBuilder
+                        .build());
+            }
+        }
     }
 }

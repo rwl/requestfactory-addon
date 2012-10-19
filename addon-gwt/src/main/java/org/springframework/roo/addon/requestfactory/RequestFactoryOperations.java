@@ -21,9 +21,12 @@ public interface RequestFactoryOperations extends Feature {
     String PATH_DELIMITER = "/";
 
     boolean isRequestFactoryServerInstallationPossible();
+
     boolean isRequestFactoryClientInstallationPossible();
 
     boolean isRequestFactoryCommandAvailable();
+
+    boolean isScaffoldAvailable();
 
     void proxyAll(JavaPackage proxyPackage, Pom locatorModule);
 
@@ -34,5 +37,10 @@ public interface RequestFactoryOperations extends Feature {
     void requestType(JavaPackage requestPackage, JavaType type);
 
     void setupRequestFactoryServer();
+
     void setupRequestFactoryClient();
+
+    void scaffoldAll();
+
+    void scaffoldType(JavaType type);
 }

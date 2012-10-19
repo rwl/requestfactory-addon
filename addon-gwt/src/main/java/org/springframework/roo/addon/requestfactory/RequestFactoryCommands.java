@@ -36,6 +36,8 @@ public class RequestFactoryCommands implements CommandMarker {
     private static final String WEB_REQUEST_FACTORY_REQUEST_TYPE_COMMAND = "web requestfactory request type";
     private static final String WEB_REQUEST_FACTORY_PROXY_REQUEST_ALL_COMMAND = "web requestfactory proxy request all";
     private static final String WEB_REQUEST_FACTORY_PROXY_REQUEST_TYPE_COMMAND = "web requestfactory proxy request type";
+    private static final String WEB_REQUEST_FACTORY_SCAFFOLD_ALL_COMMAND = "web requestfactory scaffold all";
+    private static final String WEB_REQUEST_FACTORY_SCAFFOLD_TYPE_COMMAND = "web requestfactory scaffold type";
 
     @Reference protected RequestFactoryOperations requestFactoryOperations;
 
@@ -57,8 +59,16 @@ public class RequestFactoryCommands implements CommandMarker {
             WEB_REQUEST_FACTORY_PROXY_REQUEST_ALL_COMMAND,
             WEB_REQUEST_FACTORY_PROXY_REQUEST_TYPE_COMMAND
     })
-    public boolean isScaffoldAvailable() {
+    public boolean isRequestFactoryCommandAvailable() {
         return requestFactoryOperations.isRequestFactoryCommandAvailable();
+    }
+
+    @CliAvailabilityIndicator({
+            WEB_REQUEST_FACTORY_SCAFFOLD_ALL_COMMAND,
+            WEB_REQUEST_FACTORY_SCAFFOLD_TYPE_COMMAND
+    })
+    public boolean isScaffoldAvailable() {
+        return requestFactoryOperations.isScaffoldAvailable();
     }
 
     @CliCommand(value = WEB_REQUEST_FACTORY_SETUP_SERVER_COMMAND, help = "Install RequestFactory server into your project")
@@ -122,5 +132,15 @@ public class RequestFactoryCommands implements CommandMarker {
 
         requestFactoryOperations.proxyType(proxyPackage, type, locatorModule);
         requestFactoryOperations.requestType(requestPackage, type);
+    }
+
+    @CliCommand(value = WEB_REQUEST_FACTORY_SCAFFOLD_ALL_COMMAND, help = "Locates all proxies in the project and creates the shared scaffold")
+    public void scaffoldAll() {
+        requestFactoryOperations.scaffoldAll();
+    }
+
+    @CliCommand(value = WEB_REQUEST_FACTORY_SCAFFOLD_TYPE_COMMAND, help = "Creates shared scaffold for the specified type")
+    public void scaffoldType(@CliOption(key = "type", mandatory = true, help = "The type to base the created scaffold on") final JavaType type) {
+        requestFactoryOperations.scaffoldType(type);
     }
 }

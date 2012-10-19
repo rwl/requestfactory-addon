@@ -1,5 +1,7 @@
 package org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold;
 
+import static org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP_SCAFFOLD;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -82,6 +84,11 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
     }
 
     @Override
+    protected boolean isScaffoldEnabled(final ClassOrInterfaceTypeDetails proxy) {
+        return proxy.getAnnotation(ROO_GWT_BOOTSTRAP_SCAFFOLD) != null;
+    }
+
+    @Override
     protected void buildType(final RequestFactoryType type, final String moduleName) {
         gwtBootstrapTypeService.buildType(type, gwtBootstrapTemplateService
                 .getStaticTemplateTypeDetails(type, moduleName), moduleName);
@@ -122,7 +129,7 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
                         .getMethodName().getSymbolName());
     }
 
-    protected Map<RequestFactoryType, List<ClassOrInterfaceTypeDetails>> buildTypesToBeWritten(
+    protected Map<RequestFactoryType, List<ClassOrInterfaceTypeDetails>> getTypesToBeWritten(
             final ClassOrInterfaceTypeDetails mirroredType, final JavaPackage topLevelPackage,
             final Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap,
             final ClassOrInterfaceTypeDetails proxy, final String moduleName,
@@ -157,7 +164,7 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
         return typesToBeWritten;
     }
 
-    protected Map<String, String> buildXmlToBeWritten(
+    protected Map<String, String> getXmlToBeWritten(
             final ClassOrInterfaceTypeDetails mirroredType, final JavaPackage topLevelPackage,
             final Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap,
             final ClassOrInterfaceTypeDetails proxy, final String moduleName,

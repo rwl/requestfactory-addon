@@ -15,22 +15,13 @@ import org.apache.commons.lang3.Validate;
 
 /**
  * Loads hapax templates from the classpath.
- * 
+ *
  * @author Alan Stewart
  * @since 1.1
  */
 public class TemplateResourceLoader implements TemplateLoader {
 
     private static final Map<String, Template> cache = new HashMap<String, Template>();
-    private static final String TEMPLATE_DIR = "org/springframework/roo/addon/gwt/scaffold/templates/";
-
-    /**
-     * Creates a TemplateLoader for CTemplate language using the default
-     * template directory
-     */
-    public static TemplateLoader create() {
-        return new TemplateResourceLoader(TEMPLATE_DIR);
-    }
 
     /**
      * Creates a TemplateLoader for CTemplate language

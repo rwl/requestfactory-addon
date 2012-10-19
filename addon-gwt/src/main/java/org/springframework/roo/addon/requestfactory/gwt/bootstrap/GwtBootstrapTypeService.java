@@ -49,4 +49,5 @@ public interface GwtBootstrapTypeService extends RequestFactoryTypeService {
     boolean isMethodReturnTypeInSourcePath(MethodMetadata method,
             MemberHoldingTypeDetails memberHoldingTypeDetail,
             Iterable<JavaPackage> sourcePackages);
+
 }

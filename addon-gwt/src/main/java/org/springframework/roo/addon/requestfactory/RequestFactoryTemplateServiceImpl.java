@@ -31,8 +31,8 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.plural.PluralMetadata;
-import org.springframework.roo.addon.requestfactory.entity.RooRequestFactory;
 import org.springframework.roo.addon.requestfactory.entity.EntityDataKeys;
+import org.springframework.roo.addon.requestfactory.entity.RooRequestFactory;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeParsingService;
@@ -71,6 +71,8 @@ import org.springframework.roo.project.ProjectOperations;
 public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplateService {
 
     private static final int LAYER_POSITION = LayerType.HIGHEST.getPosition();
+
+    private static final String TEMPLATE_DIR = "org/springframework/roo/addon/requestfactory/scaffold/templates/";
 
     @Reference RequestFactoryTypeService requestFactoryTypeService;
     @Reference LayerService layerService;
@@ -406,6 +408,8 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
 
         dataDictionary.setVariable("requestPackage",
                 RequestFactoryPath.MANAGED_REQUEST.packageName(topLevelPackage));
+        dataDictionary.setVariable("sharedScaffoldPackage",
+                RequestFactoryPath.SHARED_SCAFFOLD.packageName(topLevelPackage));
 
         dataDictionary.setVariable("name", simpleTypeName);
         dataDictionary.setVariable("pluralName", plural);
@@ -457,6 +461,9 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
         dataDictionary.setVariable("className", javaType.getSimpleTypeName());
         dataDictionary.setVariable("packageName", javaType.getPackage()
                 .getFullyQualifiedPackageName());
+        dataDictionary.setVariable("sharedScaffoldPackage",
+                RequestFactoryPath.SHARED_SCAFFOLD.packageName(projectOperations
+                        .getTopLevelPackage(moduleName)));
         return dataDictionary;
     }
 
@@ -516,7 +523,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
             templateTypeDetailsMap.put(
                     requestFactoryType,
                     getTemplateDetails(dataDictionary, requestFactoryType.getTemplate(),
-                            mirrorTypeMap.get(requestFactoryType), moduleName));
+                            mirrorTypeMap.get(requestFactoryType), moduleName, TEMPLATE_DIR));
         }
 
         final Map<String, String> xmlMap = new LinkedHashMap<String, String>();
@@ -549,15 +556,16 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                 moduleName);
         templateTypeDetails.add(getTemplateDetails(dataDictionary,
                 type.getTemplate(), getDestinationJavaType(type, moduleName),
-                moduleName));
+                moduleName, TEMPLATE_DIR));
         return templateTypeDetails;
     }
 
     protected String getTemplateContents(final String templateName,
-            final TemplateDataDictionary dataDictionary) {
+            final TemplateDataDictionary dataDictionary,
+            final String templateDirectory) {
         try {
             final TemplateLoader templateLoader = TemplateResourceLoader
-                    .create();
+                    .create(templateDirectory);
             final Template template = templateLoader.getTemplate(templateName);
             return template.renderToString(dataDictionary);
         }
@@ -569,10 +577,10 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
     public ClassOrInterfaceTypeDetails getTemplateDetails(
             final TemplateDataDictionary dataDictionary,
             final String templateFile, final JavaType templateType,
-            final String moduleName) {
+            final String moduleName, final String templateDirectory) {
         try {
             final TemplateLoader templateLoader = TemplateResourceLoader
-                    .create();
+                    .create(templateDirectory);
             final Template template = templateLoader.getTemplate(templateFile);
             Validate.notNull(template, "Template required for '" + templateFile
                     + "'");

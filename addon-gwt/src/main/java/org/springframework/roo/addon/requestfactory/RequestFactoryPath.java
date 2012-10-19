@@ -11,12 +11,17 @@ public class RequestFactoryPath {
     public static final RequestFactoryPath LOCATOR = new RequestFactoryPath(
             "/server/locator",
             "module/server/locator/" + RequestFactoryPath.templateSelector);
+
     public static final RequestFactoryPath MANAGED_REQUEST = new RequestFactoryPath(
             "/client/managed/request",
             "module/client/request/" + RequestFactoryPath.templateSelector);
 
+    public static final RequestFactoryPath SHARED_SCAFFOLD = new RequestFactoryPath(
+            "/shared/scaffold",
+            "module/shared/scaffold/" + RequestFactoryPath.templateSelector);
+
     public static final RequestFactoryPath[] ALL_PATHS = new RequestFactoryPath[] {
-            LOCATOR, MANAGED_REQUEST
+            LOCATOR, MANAGED_REQUEST, SHARED_SCAFFOLD
     };
 
     public static final String templateSelector = "*-template.*";
