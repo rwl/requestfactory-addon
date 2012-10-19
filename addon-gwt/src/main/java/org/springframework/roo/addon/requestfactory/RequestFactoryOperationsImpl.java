@@ -7,21 +7,25 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_UNMANAGED_REQUEST;
+import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_EXCLUDE;
 import static org.springframework.roo.classpath.PhysicalTypeCategory.INTERFACE;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
+import static org.springframework.roo.project.Path.SRC_MAIN_WEBAPP;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapPaths;
 import org.springframework.roo.addon.requestfactory.request.RequestFactoryRequestMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.TypeLocationService;
@@ -42,6 +46,7 @@ import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.Dependency;
+import org.springframework.roo.project.FeatureNames;
 import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.ProjectMetadata;
 import org.springframework.roo.project.ProjectOperations;
@@ -64,21 +69,18 @@ import org.w3c.dom.Element;
  */
 @Component
 @Service
-public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
+public class RequestFactoryOperationsImpl extends BaseOperationsImpl
+        implements RequestFactoryOperations {
 
     private static final String FEATURE_NAME = "requestfactory";
     private static final String REQUEST_FACTORY_GROUP_ID = "com.google.web.bindery";
 
     private static final JavaSymbolName VALUE = new JavaSymbolName("value");
     private static final JavaSymbolName LOCATOR_MODULE = new JavaSymbolName(
-            RooRequestFactoryProxy.LOCATOR_MODULE_ATTRIBUTE);
+            RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE);
 
     @Reference private RequestFactoryTypeService requestFactoryTypeService;
     @Reference private PersistenceMemberLocator persistenceMemberLocator;
-    @Reference private ProjectOperations projectOperations;
-    @Reference private TypeLocationService typeLocationService;
-    @Reference private TypeManagementService typeManagementService;
-    @Reference private MetadataService metadataService;
 
     @Override
     public boolean isRequestFactoryServerInstallationPossible() {
@@ -181,8 +183,19 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
     }
 
     public void scaffoldAll() {
-        for (final ClassOrInterfaceTypeDetails proxy : typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)) {
+        final Set<ClassOrInterfaceTypeDetails> proxys = typeLocationService
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY);
+
+        final String serverModule = RequestFactoryUtils.getStringAnnotationValue(proxys
+                .iterator().next(),
+                ROO_REQUEST_FACTORY_PROXY, RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE,
+                "");
+        final String focusedModule = projectOperations.getFocusedModuleName();
+
+        copyServerDirectoryContents(serverModule.isEmpty() ? focusedModule : serverModule);
+        copySharedDirectoryContents(focusedModule);
+
+        for (final ClassOrInterfaceTypeDetails proxy : proxys) {
             final ClassOrInterfaceTypeDetails request = requestFactoryTypeService
                     .lookupRequestFromProxy(proxy);
             if (request == null) {
@@ -426,6 +439,34 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
         gwtRequestAttributeValues.add(entityAttributeValue);
         return new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_UNMANAGED_REQUEST,
                 gwtRequestAttributeValues).build();
+    }
+
+    private void copyServerDirectoryContents(String module) {
+        for (final RequestFactoryPath path : RequestFactoryPath.SERVER_PATHS) {
+            copyDirectoryContents(path, module);
+        }
+    }
+
+    private void copySharedDirectoryContents(String module) {
+        for (final RequestFactoryPath path : RequestFactoryPath.SHARED_PATHS) {
+            copyDirectoryContents(path, module);
+        }
+    }
+
+    private void copyDirectoryContents(final RequestFactoryPath requestFactoryPath,
+            String module) {
+        final String sourceAntPath = requestFactoryPath.getSourceAntPath();
+        if (sourceAntPath.contains("account")
+                && typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() == 0) {
+            return;
+        }
+        LogicalPath path = LogicalPath.getInstance(SRC_MAIN_JAVA, module);
+        String relativePath = requestFactoryPath.getPackagePath(projectOperations
+                .getFocusedTopLevelPackage());
+        final String targetDirectory = projectOperations.getPathResolver()
+                .getIdentifier(path, relativePath);
+        updateFile(sourceAntPath, targetDirectory, requestFactoryPath.segmentPackage(),
+                false);
     }
 
     private void createScaffold(final ClassOrInterfaceTypeDetails proxy) {

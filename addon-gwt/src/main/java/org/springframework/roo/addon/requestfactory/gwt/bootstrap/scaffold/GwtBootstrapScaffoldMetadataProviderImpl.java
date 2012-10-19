@@ -22,13 +22,17 @@ import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapTe
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapType;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapTypeService;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapUtils;
+import org.springframework.roo.addon.requestfactory.scaffold.AbstractScaffoldMetadataProviderImpl;
 import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadataProviderImpl;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MemberHoldingTypeDetails;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
+import org.springframework.roo.metadata.MetadataDependencyRegistry;
 import org.springframework.roo.metadata.MetadataItem;
+import org.springframework.roo.metadata.MetadataNotificationListener;
+import org.springframework.roo.metadata.MetadataProvider;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
@@ -62,21 +66,20 @@ import org.springframework.roo.project.PathResolver;
  * @since 1.1
  */
 @Component(immediate = true)
-@Service
+@Service//({GwtBootstrapScaffoldMetadataProvider.class,
+//    MetadataProvider.class, MetadataNotificationListener.class})
 public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaffoldMetadataProviderImpl
         implements GwtBootstrapScaffoldMetadataProvider {
 
     @Reference protected GwtBootstrapTemplateService gwtBootstrapTemplateService;
     @Reference protected GwtBootstrapTypeService gwtBootstrapTypeService;
 
-    @Override
     protected void activate(final ComponentContext context) {
         metadataDependencyRegistry.registerDependency(
                 PhysicalTypeIdentifier.getMetadataIdentiferType(),
                 getProvidesType());
     }
 
-    @Override
     protected void deactivate(final ComponentContext context) {
         metadataDependencyRegistry.deregisterDependency(
                 PhysicalTypeIdentifier.getMetadataIdentiferType(),

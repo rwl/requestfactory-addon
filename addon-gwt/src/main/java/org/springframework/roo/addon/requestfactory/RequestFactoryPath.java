@@ -20,9 +20,32 @@ public class RequestFactoryPath {
             "/shared/scaffold",
             "module/shared/scaffold/" + RequestFactoryPath.templateSelector);
 
+    public static final RequestFactoryPath SERVER = new RequestFactoryPath(
+            "/server",
+            "module/server/" + RequestFactoryPath.templateSelector);
+
+    public static final RequestFactoryPath SERVER_ACCOUNT = new RequestFactoryPath(
+            "/server/account",
+            "module/server/account/" + RequestFactoryPath.templateSelector);
+
+    public static final RequestFactoryPath SHARED_ACCOUNT = new RequestFactoryPath(
+            "/shared/account",
+            "module/shared/account/" + RequestFactoryPath.templateSelector);
+
+
     public static final RequestFactoryPath[] ALL_PATHS = new RequestFactoryPath[] {
-            LOCATOR, MANAGED_REQUEST, SHARED_SCAFFOLD
+            LOCATOR, MANAGED_REQUEST, SHARED_SCAFFOLD, SERVER, SERVER_ACCOUNT,
+            SHARED_ACCOUNT
     };
+
+    public static final RequestFactoryPath[] SERVER_PATHS = new RequestFactoryPath[] {
+            SERVER, SERVER_ACCOUNT
+    };
+
+    public static final RequestFactoryPath[] SHARED_PATHS = new RequestFactoryPath[] {
+            LOCATOR, MANAGED_REQUEST, SHARED_SCAFFOLD, SHARED_ACCOUNT
+    };
+
 
     public static final String templateSelector = "*-template.*";
     public static final String wildCardSelector = "*";

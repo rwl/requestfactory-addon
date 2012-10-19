@@ -15,8 +15,6 @@ import static org.springframework.roo.project.Path.SRC_MAIN_WEBAPP;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,31 +26,24 @@ import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
-import org.osgi.service.component.ComponentContext;
+import org.springframework.roo.addon.requestfactory.BaseOperationsImpl;
 import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.account.RooAccount;
 import org.springframework.roo.addon.web.mvc.controller.WebMvcOperations;
-import org.springframework.roo.classpath.TypeLocationService;
-import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.MemberFindingUtils;
-import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
 import org.springframework.roo.file.monitor.event.FileDetails;
-import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
-import org.springframework.roo.process.manager.FileManager;
 import org.springframework.roo.project.Dependency;
 import org.springframework.roo.project.FeatureNames;
 import org.springframework.roo.project.Plugin;
 import org.springframework.roo.project.ProjectMetadata;
-import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.project.Property;
 import org.springframework.roo.project.Repository;
 import org.springframework.roo.project.maven.Pom;
@@ -67,13 +58,12 @@ import org.w3c.dom.Element;
 
 
 /**
- * Implementation of operations this add-on offers.
- *
- * @since 1.1
+ * Implementation of {@link GwtBootstrapOperations}.
  */
-@Component // Use these Apache Felix annotations to register your commands class in the Roo container
+@Component
 @Service
-public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
+public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
+        implements GwtBootstrapOperations {
 
     private static final String FEATURE_NAME = "gwtbootstrap";
     private static final String GWT_BUILD_COMMAND = "com.google.gwt.eclipse.core.gwtProjectValidator";
@@ -81,33 +71,11 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
     private static final String MAVEN_ECLIPSE_PLUGIN = "/project/build/plugins/plugin[artifactId = 'maven-eclipse-plugin']";
     private static final String OUTPUT_DIRECTORY = "${project.build.directory}/${project.build.finalName}/WEB-INF/classes";
 
-    /**
-     * Use ProjectOperations to install new dependencies, plugins, properties, etc into the project configuration
-     */
-    @Reference private ProjectOperations projectOperations;
-
-    /**
-     * Use TypeLocationService to find types which are annotated with a given annotation in the project
-     */
-    @Reference private TypeLocationService typeLocationService;
-
-    /**
-     * Use TypeManagementService to change types
-     */
-    @Reference private TypeManagementService typeManagementService;
-
-    @Reference protected FileManager fileManager;
     @Reference protected RequestFactoryTemplateService requestFactoryTemplateService;
     @Reference protected GwtBootstrapTypeService gwtBootstrapTypeService;
     @Reference protected WebMvcOperations webMvcOperations;
-    @Reference protected MetadataService metadataService;
 
     private Boolean wasGaeEnabled;
-    private ComponentContext context;
-
-    protected void activate(final ComponentContext context) {
-        this.context = context;
-    }
 
     public boolean isGwtInstallationPossible() {
         return projectOperations.isFocusedProjectAvailable()
@@ -384,68 +352,6 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
         }
     }
 
-    private String processTemplate(String input, String segmentPackage) {
-        if (segmentPackage == null) {
-            segmentPackage = "";
-        }
-        final String topLevelPackage = projectOperations.getTopLevelPackage(
-                projectOperations.getFocusedModuleName())
-                .getFullyQualifiedPackageName();
-        input = input.replace("__TOP_LEVEL_PACKAGE__", topLevelPackage);
-        input = input.replace("__SEGMENT_PACKAGE__", segmentPackage);
-        input = input.replace("__PROJECT_NAME__", projectOperations
-                .getProjectName(projectOperations.getFocusedModuleName()));
-
-        if (typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() != 0) {
-            input = input.replace("__ACCOUNT_IMPORT__", "import " + topLevelPackage
-                    + ".client.scaffold.account.*;\n");
-            input = input.replace("__ACCOUNT_HOOKUP__", getAccountHookup());
-            input = input.replace("__ACCOUNT_REQUEST_TRANSPORT__",
-                    ", new AccountAuthRequestTransport(eventBus)");
-            input = input.replace("__IMPORT_ACCOUNT__", getImportAccountHookup());
-            input = input.replace("__IMPORT_ROLE__", getImportRoleHookup());
-        }
-        else {
-            input = input.replace("__ACCOUNT_IMPORT__", "");
-            input = input.replace("__ACCOUNT_HOOKUP__", "");
-            input = input.replace("__ACCOUNT_REQUEST_TRANSPORT__", "");
-            input = input.replace("__IMPORT_ACCOUNT__", "");
-            input = input.replace("__IMPORT_ROLE__", "");
-        }
-        return input;
-    }
-
-    private CharSequence getImportAccountHookup() {
-        JavaType account = typeLocationService
-                .findTypesWithAnnotation(ROO_ACCOUNT)
-                .iterator().next();
-        return "import " + account.getFullyQualifiedTypeName() + ";";
-    }
-
-    private CharSequence getImportRoleHookup() {
-        ClassOrInterfaceTypeDetails account = typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(ROO_ACCOUNT)
-                .iterator().next();
-        AnnotationAttributeValue<String> sharedPackage = account
-                .getAnnotation(ROO_ACCOUNT)
-                .getAttribute(RooAccount.SHARED_PACKAGE_ATTRIBUTE);
-        String rolePackageName;
-        if (sharedPackage == null || sharedPackage.getValue().isEmpty()) {
-            rolePackageName = account.getType().getPackage()
-                    .getFullyQualifiedPackageName();
-        } else {
-            rolePackageName = sharedPackage.getValue();
-        }
-        return "import " + rolePackageName + ".Role;";
-    }
-
-    private CharSequence getAccountHookup() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("new AccountNavTextDriver(requestFactory).setWidget(shell.getNicknameWidget());\n");
-        builder.append("\t\tnew LoginOnAuthenticationFailure().register(eventBus);");
-        return builder.toString();
-    }
-
     private void copyDirectoryContents() {
         for (final RequestFactoryPath path : GwtBootstrapPaths.ALL_PATHS) {
             copyDirectoryContents(path);
@@ -472,61 +378,6 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
                                 .getFocusedTopLevelPackage()));
         updateFile(sourceAntPath, targetDirectory, requestFactoryPath.segmentPackage(),
                 false);
-    }
-
-    private void updateFile(final String sourceAntPath, String targetDirectory,
-            final String segmentPackage, final boolean overwrite) {
-        if (!targetDirectory.endsWith(File.separator)) {
-            targetDirectory += File.separator;
-        }
-        if (!fileManager.exists(targetDirectory)) {
-            fileManager.createDirectory(targetDirectory);
-        }
-
-        final String path = FileUtils.getPath(getClass(), sourceAntPath);
-        final Iterable<URL> urls = OSGiUtils.findEntriesByPattern(
-                context.getBundleContext(), path);
-        Validate.notNull(urls,
-                "Could not search bundles for resources for Ant Path '" + path
-                        + "'");
-
-        for (final URL url : urls) {
-            String fileName = url.getPath().substring(
-                    url.getPath().lastIndexOf('/') + 1);
-            fileName = fileName.replace("-template", "");
-            final String targetFilename = targetDirectory + fileName;
-
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-            try {
-                if (fileManager.exists(targetFilename) && !overwrite) {
-                    continue;
-                }
-                if (targetFilename.endsWith("png")) {
-                    inputStream = url.openStream();
-                    outputStream = fileManager.createFile(targetFilename)
-                            .getOutputStream();
-                    IOUtils.copy(inputStream, outputStream);
-                }
-                else {
-                    // Read template and insert the user's package
-                    String input = IOUtils.toString(url);
-                    input = processTemplate(input, segmentPackage);
-
-                    // Output the file for the user
-                    fileManager.createOrUpdateTextFileIfRequired(
-                            targetFilename, input, true);
-                }
-            }
-            catch (final IOException e) {
-                throw new IllegalStateException("Unable to create '"
-                        + targetFilename + "'", e);
-            }
-            finally {
-                IOUtils.closeQuietly(inputStream);
-                IOUtils.closeQuietly(outputStream);
-            }
-        }
     }
 
     private void addPackageToGwtXml(final JavaPackage sourcePackage) {
@@ -711,7 +562,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
             WebXmlUtils
                     .addFilter(
                             "AccountAuthFilter",
-                            GwtBootstrapPaths.SERVER_ACCOUNT.packageName(projectOperations
+                            RequestFactoryPath.SERVER_ACCOUNT.packageName(projectOperations
                                     .getTopLevelPackage(projectOperations
                                             .getFocusedModuleName()))
                                     + ".AccountAuthFilter",

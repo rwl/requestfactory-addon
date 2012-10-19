@@ -1,13 +1,13 @@
 package {{=packageName}};
 
 import {{=sharedScaffoldPackage}}.ScaffoldRequestFactory;
-{{#account}}import {{=sharedAccountPackage}}.MakesAccountRequests;
-{{/account}}
+{{#hasAccount}}import {{=sharedAccountPackage}}.MakesAccountRequests;
+{{/hasAccount}}
 
 {{#imports}}import {{=import}};
 {{/imports}}
 
-public interface ApplicationRequestFactory extends ScaffoldRequestFactory{{#account}}, MakesAccountRequests{{/account}} {
+public interface ApplicationRequestFactory extends ScaffoldRequestFactory{{#hasAccount}}, MakesAccountRequests{{/hasAccount}} {
 {{#entities}}
 {{=entity}}{{/entities}}
 }

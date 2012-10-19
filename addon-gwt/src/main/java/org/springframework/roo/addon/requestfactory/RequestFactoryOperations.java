@@ -28,9 +28,9 @@ public interface RequestFactoryOperations extends Feature {
 
     boolean isScaffoldAvailable();
 
-    void proxyAll(JavaPackage proxyPackage, Pom locatorModule);
+    void proxyAll(JavaPackage proxyPackage, Pom serverModule);
 
-    void proxyType(JavaPackage proxyPackage, JavaType type, Pom locatorModule);
+    void proxyType(JavaPackage proxyPackage, JavaType type, Pom serverModule);
 
     void requestAll(JavaPackage requestPackage);
 

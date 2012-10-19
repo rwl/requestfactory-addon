@@ -20,6 +20,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.requestfactory.BaseTypeServiceImpl;
 import org.springframework.roo.addon.requestfactory.RequestFactoryOperations;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeServiceImpl;
@@ -44,7 +45,7 @@ import org.xml.sax.SAXException;
 
 @Component
 @Service
-public class GwtBootstrapTypeServiceImpl extends RequestFactoryTypeServiceImpl implements GwtBootstrapTypeService {
+public class GwtBootstrapTypeServiceImpl extends BaseTypeServiceImpl implements GwtBootstrapTypeService {
 
     private static final String PATH = "path";
 

@@ -121,7 +121,7 @@ public class RequestFactoryLocatorMetadataProviderImpl implements
         AnnotationMetadata rooProxyAnnotation = proxy.getAnnotation(ROO_REQUEST_FACTORY_PROXY);
         if (rooProxyAnnotation != null) {
             AnnotationAttributeValue<String> locatorModuleAttributeValue = rooProxyAnnotation
-                    .getAttribute(RooRequestFactoryProxy.LOCATOR_MODULE_ATTRIBUTE);
+                    .getAttribute(RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE);
             if (locatorModuleAttributeValue != null) {
                 String locatorModule = locatorModuleAttributeValue.getValue();
                 if (!locatorModule.isEmpty()) {

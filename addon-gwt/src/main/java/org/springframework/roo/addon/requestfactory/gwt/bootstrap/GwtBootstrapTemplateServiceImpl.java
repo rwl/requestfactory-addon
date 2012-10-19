@@ -30,6 +30,8 @@ import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.requestfactory.BaseTemplateServiceImpl;
+import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHolder;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
@@ -76,18 +78,10 @@ import org.xml.sax.SAXException;
  */
 @Component
 @Service
-public class GwtBootstrapTemplateServiceImpl extends RequestFactoryTemplateServiceImpl
+public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
         implements GwtBootstrapTemplateService {
 
     private static final String TEMPLATE_DIR = "org/springframework/roo/addon/requestfactory/gwt/bootstrap/scaffold/templates/";
-
-    @Reference RequestFactoryTypeService requestFactoryTypeService;
-    @Reference LayerService layerService;
-    @Reference MetadataService metadataService;
-    @Reference PersistenceMemberLocator persistenceMemberLocator;
-    @Reference ProjectOperations projectOperations;
-    @Reference TypeLocationService typeLocationService;
-    @Reference TypeParsingService typeParsingService;
 
     protected TemplateDataDictionary buildDictionary(final RequestFactoryType type,
             final String moduleName) {
@@ -668,8 +662,6 @@ public class GwtBootstrapTemplateServiceImpl extends RequestFactoryTemplateServi
         final TemplateDataDictionary dataDictionary = super
                 .buildStandardDataDictionary(type, moduleName);
         dataDictionary.setVariable("placePackage", GwtBootstrapPaths.SCAFFOLD_PLACE
-                .packageName(projectOperations.getTopLevelPackage(moduleName)));
-        dataDictionary.setVariable("sharedAccountPackage", GwtBootstrapPaths.SHARED_ACCOUNT
                 .packageName(projectOperations.getTopLevelPackage(moduleName)));
         return dataDictionary;
     }

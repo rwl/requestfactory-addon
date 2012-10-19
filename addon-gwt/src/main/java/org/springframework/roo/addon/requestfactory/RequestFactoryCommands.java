@@ -84,7 +84,7 @@ public class RequestFactoryCommands implements CommandMarker {
     @CliCommand(value = WEB_REQUEST_FACTORY_PROXY_ALL_COMMAND, help = "Locates all entities in the project and creates GWT proxies")
     public void proxyAll(
             @CliOption(key = PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.proxy", help = "The package in which created proxies will be placed") final JavaPackage javaPackage,
-            @CliOption(key = RooRequestFactoryProxy.LOCATOR_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom locatorModule) {
+            @CliOption(key = RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom locatorModule) {
 
         requestFactoryOperations.proxyAll(javaPackage, locatorModule);
     }
@@ -93,7 +93,7 @@ public class RequestFactoryCommands implements CommandMarker {
     public void proxyType(
             @CliOption(key = PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.proxy", help = "The package in which created proxies will be placed") final JavaPackage javaPackage,
             @CliOption(key = TYPE_KEY, mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created request on") final JavaType type,
-            @CliOption(key = RooRequestFactoryProxy.LOCATOR_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom locatorModule) {
+            @CliOption(key = RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom locatorModule) {
 
         requestFactoryOperations.proxyType(javaPackage, type, locatorModule);
     }
@@ -117,9 +117,9 @@ public class RequestFactoryCommands implements CommandMarker {
     public void proxyAndRequestAll(
             @CliOption(key = PROXY_PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.proxy", help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
             @CliOption(key = REQUEST_PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.request", help = "The package in which created requests will be placed") final JavaPackage requestPackage,
-            @CliOption(key = RooRequestFactoryProxy.LOCATOR_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom locatorModule) {
+            @CliOption(key = RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate server-side artifacts") final Pom serverModule) {
 
-        requestFactoryOperations.proxyAll(proxyPackage, locatorModule);
+        requestFactoryOperations.proxyAll(proxyPackage, serverModule);
         requestFactoryOperations.requestAll(requestPackage);
     }
 
@@ -128,9 +128,9 @@ public class RequestFactoryCommands implements CommandMarker {
             @CliOption(key = PROXY_PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.proxy", help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
             @CliOption(key = REQUEST_PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.request", help = "The package in which created requests will be placed") final JavaPackage requestPackage,
             @CliOption(key = TYPE_KEY, mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created proxy and request on") final JavaType type,
-            @CliOption(key = RooRequestFactoryProxy.LOCATOR_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom locatorModule) {
+            @CliOption(key = RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate server-side artifacts") final Pom serverModule) {
 
-        requestFactoryOperations.proxyType(proxyPackage, type, locatorModule);
+        requestFactoryOperations.proxyType(proxyPackage, type, serverModule);
         requestFactoryOperations.requestType(requestPackage, type);
     }
 

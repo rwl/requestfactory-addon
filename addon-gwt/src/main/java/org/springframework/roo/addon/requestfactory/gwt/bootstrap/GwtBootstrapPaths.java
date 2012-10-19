@@ -21,15 +21,11 @@ public class GwtBootstrapPaths {
     public static final RequestFactoryPath SCAFFOLD_PLACE = new RequestFactoryPath("/client/scaffold/place", "module/client/scaffold/place/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath SCAFFOLD_REQUEST = new RequestFactoryPath("/client/scaffold/request", "module/client/scaffold/request/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath SCAFFOLD_UI = new RequestFactoryPath("/client/scaffold/ui", "module/client/scaffold/ui/" + RequestFactoryPath.templateSelector);
-    public static final RequestFactoryPath SERVER = new RequestFactoryPath("/server", "module/server/" + RequestFactoryPath.templateSelector); // IOC
-    public static final RequestFactoryPath SHARED = new RequestFactoryPath("/shared", "module/shared/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath STYLE = new RequestFactoryPath("/client/style", "module/client/style/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath WEB = new RequestFactoryPath("", "webapp/" + RequestFactoryPath.wildCardSelector);
 
     public static final RequestFactoryPath ACCOUNT_HELPER = new RequestFactoryPath("/client/scaffold/account/helper", "module/client/scaffold/helper/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath SCAFFOLD_ACCOUNT = new RequestFactoryPath("/client/scaffold/account", "module/client/scaffold/account/" + RequestFactoryPath.templateSelector);
-    public static final RequestFactoryPath SERVER_ACCOUNT = new RequestFactoryPath("/server/account", "module/server/account/" + RequestFactoryPath.templateSelector);
-    public static final RequestFactoryPath SHARED_ACCOUNT = new RequestFactoryPath("/shared/account", "module/shared/account/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath ACCOUNT_ROOT = new RequestFactoryPath("/account", "account/module/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath ACCOUNT_UI = new RequestFactoryPath("/account/client", "module/client/account/ui/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath ACCOUNT_WEB = new RequestFactoryPath(".", "account/webapp/" + RequestFactoryPath.wildCardSelector);
@@ -39,9 +35,9 @@ public class GwtBootstrapPaths {
         MANAGED_UI, MANAGED_TREE, MANAGED_UI_DESKTOP,
         MANAGED_UI_MOBILE, MANAGED_UI_RENDERER, MANAGED_UI_EDITOR,
         SCAFFOLD, SCAFFOLD_ACTIVITY, SCAFFOLD_IOC, SCAFFOLD_PLACE,
-        SCAFFOLD_REQUEST, SCAFFOLD_UI, SERVER, SHARED,
-        STYLE, WEB, ACCOUNT_HELPER, SCAFFOLD_ACCOUNT, SERVER_ACCOUNT,
-        SHARED_ACCOUNT, ACCOUNT_ROOT, ACCOUNT_UI, ACCOUNT_WEB
+        SCAFFOLD_REQUEST, SCAFFOLD_UI,
+        STYLE, WEB, ACCOUNT_HELPER, SCAFFOLD_ACCOUNT,
+        ACCOUNT_ROOT, ACCOUNT_UI, ACCOUNT_WEB
     };
 
     private GwtBootstrapPaths() {

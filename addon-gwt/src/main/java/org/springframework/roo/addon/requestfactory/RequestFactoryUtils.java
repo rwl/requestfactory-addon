@@ -117,6 +117,25 @@ public final class RequestFactoryUtils {
         return valueIfNull;
     }
 
+    public static String getStringAnnotationValue(
+            final ClassOrInterfaceTypeDetails target,
+            final JavaType annotationType, final String attributeName,
+            final String valueIfNull) {
+        final AnnotationMetadata annotation = MemberFindingUtils
+                .getAnnotationOfType(target.getAnnotations(), annotationType);
+        if (annotation == null) {
+            return valueIfNull;
+        }
+        final AnnotationAttributeValue<?> attributeValue = annotation
+                .getAttribute(attributeName);
+        if (attributeValue != null
+                && attributeValue instanceof StringAttributeValue) {
+            final StringAttributeValue stringAttributeValue = (StringAttributeValue) attributeValue;
+            return stringAttributeValue.getValue();
+        }
+        return valueIfNull;
+    }
+
     public static AnnotationMetadata getFirstAnnotation(
             final ClassOrInterfaceTypeDetails cid,
             final JavaType... annotationTypes) {
