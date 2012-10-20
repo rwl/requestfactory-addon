@@ -67,7 +67,7 @@ import org.springframework.roo.project.ProjectOperations;
  * @since 1.1
  */
 @Component(immediate = true)
-public class AbstractScaffoldMetadataProviderImpl {
+public class BaseScaffoldMetadataProviderImpl {
 
     @Reference protected MetadataDependencyRegistry metadataDependencyRegistry;
     @Reference protected RequestFactoryFileManager requestFactoryFileManager;

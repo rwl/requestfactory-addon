@@ -28,35 +28,25 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.requestfactory.BaseTemplateServiceImpl;
-import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHolder;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
-import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateServiceImpl;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
-import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.entity.RooRequestFactory;
-import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadata;
-import org.springframework.roo.classpath.TypeLocationService;
-import org.springframework.roo.classpath.TypeParsingService;
+import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
-import org.springframework.roo.classpath.layers.LayerService;
-import org.springframework.roo.classpath.persistence.PersistenceMemberLocator;
-import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.Path;
-import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.support.util.FileUtils;
 import org.springframework.roo.support.util.XmlUtils;
 import org.w3c.dom.Document;
@@ -677,7 +667,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     if (systemId
                             .equals("http://dl.google.com/gwt/DTD/xhtml.ent")) {
                         return new InputSource(FileUtils.getInputStream(
-                                RequestFactoryScaffoldMetadata.class,
+                                GwtBootstrapScaffoldMetadata.class,
                                 "templates/xhtml.ent"));
                     }
 
@@ -817,7 +807,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 .lookupUnmanagedRequestFromEntity(mirroredType);
         final JavaPackage topLevelPackage = projectOperations
                 .getTopLevelPackage(moduleName);
-        final Map<RequestFactoryType, JavaType> mirrorTypeMap = RequestFactoryUtils.getMirrorTypeMap(
+        final Map<RequestFactoryType, JavaType> mirrorTypeMap = GwtBootstrapUtils.getMirrorTypeMap(
                 mirroredType.getName(), topLevelPackage);
         mirrorTypeMap.put(RequestFactoryType.PROXY, proxy.getName());
         mirrorTypeMap.put(RequestFactoryType.REQUEST, request.getName());
@@ -918,5 +908,17 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
         final StreamResult result = new StreamResult(new StringWriter());
         transformer.transform(source, result);
         return result.getWriter().toString();
+    }
+
+    @Override
+    public List<ClassOrInterfaceTypeDetails> getStaticTemplateTypeDetails(
+            final RequestFactoryType type, final String moduleName) {
+        final List<ClassOrInterfaceTypeDetails> templateTypeDetails = new ArrayList<ClassOrInterfaceTypeDetails>();
+        final TemplateDataDictionary dataDictionary = buildDictionary(type,
+                moduleName);
+        templateTypeDetails.add(getTemplateDetails(dataDictionary,
+                type.getTemplate(), getDestinationJavaType(type, moduleName),
+                moduleName, TEMPLATE_DIR));
+        return templateTypeDetails;
     }
 }

@@ -26,7 +26,7 @@ public class RequestFactoryProxyProperty {
 
     public static String getProxyRendererType(final JavaPackage topLevelPackage,
             final JavaType javaType) {
-        return "";
+        return "Object";
     }
 
     protected List<AnnotationMetadata> annotations;

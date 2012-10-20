@@ -24,10 +24,9 @@ public interface GwtBootstrapOperations extends Feature {
 
     void setupGwtBootstrap();
 
-    void scaffoldAll(JavaPackage proxyPackage, JavaPackage requestPackage);
+    void scaffoldAll();
 
-    void scaffoldType(JavaPackage proxyPackage, JavaPackage requestPackage,
-            JavaType type);
+    void scaffoldType(JavaType type);
 
     void updateGaeConfiguration();
 }

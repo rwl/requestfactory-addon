@@ -12,8 +12,8 @@ public class RequestFactoryPath {
             "/server/locator",
             "module/server/locator/" + RequestFactoryPath.templateSelector);
 
-    public static final RequestFactoryPath MANAGED_REQUEST = new RequestFactoryPath(
-            "/client/managed/request",
+    public static final RequestFactoryPath SHARED_MANAGED_REQUEST = new RequestFactoryPath(
+            "/shared/managed/request",
             "module/client/request/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath SHARED_SCAFFOLD = new RequestFactoryPath(
@@ -34,7 +34,7 @@ public class RequestFactoryPath {
 
 
     public static final RequestFactoryPath[] ALL_PATHS = new RequestFactoryPath[] {
-            LOCATOR, MANAGED_REQUEST, SHARED_SCAFFOLD, SERVER, SERVER_ACCOUNT,
+            LOCATOR, SHARED_MANAGED_REQUEST, SHARED_SCAFFOLD, SERVER, SERVER_ACCOUNT,
             SHARED_ACCOUNT
     };
 
@@ -43,7 +43,7 @@ public class RequestFactoryPath {
     };
 
     public static final RequestFactoryPath[] SHARED_PATHS = new RequestFactoryPath[] {
-            LOCATOR, MANAGED_REQUEST, SHARED_SCAFFOLD, SHARED_ACCOUNT
+            LOCATOR, SHARED_MANAGED_REQUEST, SHARED_SCAFFOLD, SHARED_ACCOUNT
     };
 
 
@@ -99,5 +99,36 @@ public class RequestFactoryPath {
             return "";
         }
         return segmentName.substring(1).replace('/', '.');
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((segmentName == null) ? 0 : segmentName.hashCode());
+        result = prime * result + ((sourceAntPath == null) ? 0 : sourceAntPath.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!getClass().isAssignableFrom(obj.getClass()))
+            return false;
+        RequestFactoryPath other = (RequestFactoryPath) obj;
+        if (segmentName == null) {
+            if (other.segmentName != null)
+                return false;
+        } else if (!segmentName.equals(other.segmentName))
+            return false;
+        if (sourceAntPath == null) {
+            if (other.sourceAntPath != null)
+                return false;
+        } else if (!sourceAntPath.equals(other.sourceAntPath))
+            return false;
+        return true;
     }
 }

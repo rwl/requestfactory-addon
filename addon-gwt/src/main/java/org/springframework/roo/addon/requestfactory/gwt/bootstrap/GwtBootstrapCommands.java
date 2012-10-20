@@ -41,20 +41,13 @@ public class GwtBootstrapCommands implements CommandMarker {
     }
 
     @CliCommand(value = SCAFFOLD_ALL_COMMAND, help = "Locates all entities in the project and creates GWT requests, proxies and creates the scaffold")
-    public void scaffoldAll(
-            @CliOption(key = "proxyPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
-            @CliOption(key = "requestPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created requests will be placed") final JavaPackage requestPackage) {
-
-        operations.scaffoldAll(proxyPackage, requestPackage);
+    public void scaffoldAll() {
+        operations.scaffoldAll();
     }
 
     @CliCommand(value = SCAFFOLD_TYPE_COMMAND, help = "Creates a GWT request, proxy and scaffold for the specified")
-    public void scaffoldType(
-            @CliOption(key = "proxyPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
-            @CliOption(key = "requestPackage", mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The package in which created requests will be placed") final JavaPackage requestPackage,
-            @CliOption(key = "type", mandatory = true, help = "The type to base the created scaffold on") final JavaType type) {
-
-        operations.scaffoldType(proxyPackage, requestPackage, type);
+    public void scaffoldType(@CliOption(key = "type", mandatory = true, help = "The type to base the created scaffold on") final JavaType type) {
+        operations.scaffoldType(type);
     }
 
     @CliCommand(value = SETUP_GAE_COMMAND, help = "Updates the GWT project to support GAE")

@@ -3,15 +3,17 @@ package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
 
 public final class GwtBootstrapUtils {
 
-    public static Map<GwtBootstrapType, JavaType> getMirrorTypeMap(
+    public static Map<RequestFactoryType, JavaType> getMirrorTypeMap(
             final JavaType governorType, final JavaPackage topLevelPackage) {
-        final Map<GwtBootstrapType, JavaType> mirrorTypeMap = new HashMap<GwtBootstrapType, JavaType>();
+        final Map<RequestFactoryType, JavaType> mirrorTypeMap = RequestFactoryUtils
+                .getMirrorTypeMap(governorType, topLevelPackage);
         for (final GwtBootstrapType mirrorType : GwtBootstrapType.ALL_TYPES) {
             mirrorTypeMap.put(
                     mirrorType,

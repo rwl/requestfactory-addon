@@ -110,8 +110,14 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
         }
         return GwtBootstrapPaths.SCAFFOLD_PLACE.packageName(topLevelPackage)
                 + ".CollectionRenderer.of("
-                + new RequestFactoryProxyProperty(topLevelPackage, ptmd, arg)
+                + new GwtBootstrapProxyProperty(topLevelPackage, ptmd, arg)
                         .getRenderer() + ")";
+    }
+
+    @Override
+    public String getProxyRendererType() {
+        return getProxyRendererType(topLevelPackage,
+                isCollectionOfProxy() ? type.getParameters().get(0) : type);
     }
 
     private String getEditor() {

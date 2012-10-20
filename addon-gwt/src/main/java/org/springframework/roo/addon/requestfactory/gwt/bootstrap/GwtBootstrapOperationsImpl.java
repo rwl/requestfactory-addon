@@ -179,11 +179,8 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                 .isFeatureInstalledInFocusedModule(FeatureNames.GAE));
     }
 
-    public void scaffoldAll(final JavaPackage proxyPackage,
-            final JavaPackage requestPackage) {
+    public void scaffoldAll() {
         updateScaffoldBoilerPlate();
-//        proxyAll(proxyPackage);
-//        requestAll(requestPackage);
         for (final ClassOrInterfaceTypeDetails proxy : typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)) {
             final ClassOrInterfaceTypeDetails request = gwtBootstrapTypeService
@@ -196,10 +193,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         }
     }
 
-    public void scaffoldType(final JavaPackage proxyPackage,
-            final JavaPackage requestPackage, final JavaType type) {
-//        proxyType(proxyPackage, type);
-//        requestType(requestPackage, type);
+    public void scaffoldType(final JavaType type) {
         final ClassOrInterfaceTypeDetails entity = typeLocationService
                 .getTypeDetails(type);
         if (entity != null && !entity.isAbstract()) {

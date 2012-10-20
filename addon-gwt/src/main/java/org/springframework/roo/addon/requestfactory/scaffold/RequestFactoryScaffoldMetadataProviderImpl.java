@@ -11,7 +11,7 @@ import org.springframework.roo.project.LogicalPath;
 
 @Component(immediate = true)
 @Service
-public class RequestFactoryScaffoldMetadataProviderImpl extends AbstractScaffoldMetadataProviderImpl implements RequestFactoryScaffoldMetadataProvider {
+public class RequestFactoryScaffoldMetadataProviderImpl extends BaseScaffoldMetadataProviderImpl implements RequestFactoryScaffoldMetadataProvider {
 
     protected void activate(final ComponentContext context) {
         metadataDependencyRegistry.registerDependency(

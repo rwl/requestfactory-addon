@@ -85,26 +85,28 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
     @Override
     public boolean isRequestFactoryServerInstallationPossible() {
         return projectOperations.isFocusedProjectAvailable()
-                && !isInstalledInModule(projectOperations
-                        .getFocusedModuleName());
+                && !isRequestFactoryInstalled(projectOperations
+                        .getFocusedModuleName(), true);
     }
 
     @Override
     public boolean isRequestFactoryClientInstallationPossible() {
         return projectOperations.isFocusedProjectAvailable()
-                && !isInstalledInModule(projectOperations
-                        .getFocusedModuleName());
+                && !isRequestFactoryInstalled(projectOperations
+                        .getFocusedModuleName(), false);
     }
 
     @Override
     public boolean isRequestFactoryCommandAvailable() {
-        return isInstalledInModule(projectOperations.getFocusedModuleName());
+        return projectOperations.isFocusedProjectAvailable()
+                && isInstalledInModule(projectOperations.getFocusedModuleName());
     }
 
     @Override
     public boolean isScaffoldAvailable() {
-        return typeLocationService.findClassesOrInterfaceDetailsWithAnnotation(
-                ROO_REQUEST_FACTORY_PROXY).size() > 0;
+        return projectOperations.isFocusedProjectAvailable()
+                && typeLocationService.findClassesOrInterfaceDetailsWithAnnotation(
+                        ROO_REQUEST_FACTORY_PROXY).size() > 0;
     }
 
     @Override
@@ -229,6 +231,10 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
 
     @Override
     public boolean isInstalledInModule(final String moduleName) {
+        return isRequestFactoryInstalled(moduleName, false);
+    }
+
+    public boolean isRequestFactoryInstalled(final String moduleName, boolean server) {
         final Pom pom = projectOperations.getPomFromModuleName(moduleName);
         if (pom == null) {
             return false;
@@ -236,7 +242,8 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
         for (final Dependency dependency : pom.getDependencies()) {
             if (REQUEST_FACTORY_GROUP_ID.equals(dependency.getGroupId())
                     && dependency.getArtifactId() != null
-                    && dependency.getArtifactId().startsWith("requestfactory-")) {
+                    && dependency.getArtifactId().startsWith("requestfactory-"
+                            + (server ? "server" : "client"))) {
                 return true;
             }
         }

@@ -38,7 +38,7 @@
 			<b:ControlGroup>
 				<b:ControlLabel styleName="{style.label}" for="{{=prop}}">{{=propReadable}}:</b:ControlLabel>
 				<b:Controls>
-					<b:Label ui:field="{{=prop}}"/>
+					<g:Label ui:field="{{=prop}}"/>
 				</b:Controls>
 			</b:ControlGroup>{{/properties}}
 			<b:FormActions>

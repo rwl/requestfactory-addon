@@ -106,10 +106,17 @@ public class BaseTemplateServiceImpl {
     }
 
     protected void addReference(final TemplateDataDictionary dataDictionary,
-            final RequestFactoryType type, final Map<RequestFactoryType, JavaType> mirrorTypeMap) {
-        addImport(dataDictionary, mirrorTypeMap.get(type)
-                .getFullyQualifiedTypeName());
-        dataDictionary.setVariable(type.getName(), mirrorTypeMap.get(type)
+            final RequestFactoryType type, final Map<RequestFactoryType,
+            JavaType> mirrorTypeMap) {
+        JavaType javaType = mirrorTypeMap.get(type);
+        String fullyQualifiedTypeName = null;
+        try {
+            fullyQualifiedTypeName = javaType.getFullyQualifiedTypeName();
+        } catch (NullPointerException e) {
+            throw e;
+        }
+        addImport(dataDictionary, fullyQualifiedTypeName);
+        dataDictionary.setVariable(type.getName(), javaType
                 .getSimpleTypeName());
     }
 
@@ -405,7 +412,7 @@ public class BaseTemplateServiceImpl {
                 .getFullyQualifiedPackageName());
 
         dataDictionary.setVariable("requestPackage",
-                RequestFactoryPath.MANAGED_REQUEST.packageName(topLevelPackage));
+                RequestFactoryPath.SHARED_MANAGED_REQUEST.packageName(topLevelPackage));
         dataDictionary.setVariable("sharedScaffoldPackage",
                 RequestFactoryPath.SHARED_SCAFFOLD.packageName(topLevelPackage));
 

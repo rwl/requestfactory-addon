@@ -2,7 +2,7 @@
 <configuration>
 	<batch>
 	    <properties>
-        	<gwt.version>2.5.0.rc2</gwt.version>
+        	<gwt.version>2.5.0-rc2</gwt.version>
 	    </properties>
 	</batch>
 	<client>
@@ -16,6 +16,11 @@
 	</client>
 	<server>
         <dependencies>
+	        <dependency>
+	            <groupId>org.springframework</groupId>
+	            <artifactId>spring-web</artifactId>
+	            <version>${spring.version}</version>
+	        </dependency>
 		    <dependency>
 		      <groupId>com.google.web.bindery</groupId>
 		      <artifactId>requestfactory-server</artifactId>
