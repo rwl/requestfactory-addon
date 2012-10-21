@@ -8,7 +8,7 @@ import org.springframework.roo.model.JavaPackage;
 
 public class RequestFactoryPath {
 
-    public static final RequestFactoryPath LOCATOR = new RequestFactoryPath(
+    public static final RequestFactoryPath SERVER_LOCATOR = new RequestFactoryPath(
             "/server/locator",
             "module/server/locator/" + RequestFactoryPath.templateSelector);
 
@@ -34,16 +34,16 @@ public class RequestFactoryPath {
 
 
     public static final RequestFactoryPath[] ALL_PATHS = new RequestFactoryPath[] {
-            LOCATOR, SHARED_MANAGED_REQUEST, SHARED_SCAFFOLD, SERVER, SERVER_ACCOUNT,
+            SHARED_MANAGED_REQUEST, SHARED_SCAFFOLD, SERVER, SERVER_ACCOUNT,
             SHARED_ACCOUNT
     };
 
     public static final RequestFactoryPath[] SERVER_PATHS = new RequestFactoryPath[] {
-            SERVER, SERVER_ACCOUNT
+            SERVER, SERVER_LOCATOR, SERVER_ACCOUNT
     };
 
     public static final RequestFactoryPath[] SHARED_PATHS = new RequestFactoryPath[] {
-            LOCATOR, SHARED_MANAGED_REQUEST, SHARED_SCAFFOLD, SHARED_ACCOUNT
+            SERVER_LOCATOR, SHARED_MANAGED_REQUEST, SHARED_SCAFFOLD, SHARED_ACCOUNT
     };
 
 

@@ -117,24 +117,15 @@ public class RequestFactoryLocatorMetadataProviderImpl implements
         final JavaType identifierType = RequestFactoryUtils.convertPrimitiveType(
                 identifierAccessor.getReturnType(), true);
 
-        LogicalPath locatorPath = null;
-        AnnotationMetadata rooProxyAnnotation = proxy.getAnnotation(ROO_REQUEST_FACTORY_PROXY);
-        if (rooProxyAnnotation != null) {
-            AnnotationAttributeValue<String> locatorModuleAttributeValue = rooProxyAnnotation
-                    .getAttribute(RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE);
-            if (locatorModuleAttributeValue != null) {
-                String locatorModule = locatorModuleAttributeValue.getValue();
-                if (!locatorModule.isEmpty()) {
-                    locatorPath = LogicalPath.getInstance(Path.SRC_MAIN_JAVA, locatorModule);
-                }
-            }
-        }
-        if (locatorPath == null) {
-            locatorPath = PhysicalTypeIdentifier.getPath(proxy
-                    .getDeclaredByMetadataId());
-        }
+        String serverModule = RequestFactoryUtils.getStringAnnotationValue(proxy,
+                ROO_REQUEST_FACTORY_PROXY,
+                RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, "");
+        LogicalPath serverPath = !serverModule.isEmpty() ? LogicalPath
+                .getInstance(Path.SRC_MAIN_JAVA, serverModule)
+                : PhysicalTypeIdentifier.getPath(proxy.getDeclaredByMetadataId());
+
         final String locatorPhysicalTypeId = PhysicalTypeIdentifier
-                .createIdentifier(new JavaType(locatorType), locatorPath);
+                .createIdentifier(new JavaType(locatorType), serverPath);
         final ClassOrInterfaceTypeDetailsBuilder cidBuilder = new ClassOrInterfaceTypeDetailsBuilder(
                 locatorPhysicalTypeId);
         final AnnotationMetadataBuilder annotationMetadataBuilder = new AnnotationMetadataBuilder(

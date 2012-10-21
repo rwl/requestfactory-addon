@@ -84,18 +84,18 @@ public class RequestFactoryCommands implements CommandMarker {
     @CliCommand(value = WEB_REQUEST_FACTORY_PROXY_ALL_COMMAND, help = "Locates all entities in the project and creates GWT proxies")
     public void proxyAll(
             @CliOption(key = PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.proxy", help = "The package in which created proxies will be placed") final JavaPackage javaPackage,
-            @CliOption(key = RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom locatorModule) {
+            @CliOption(key = RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom serverModule) {
 
-        requestFactoryOperations.proxyAll(javaPackage, locatorModule);
+        requestFactoryOperations.proxyAll(javaPackage, serverModule);
     }
 
     @CliCommand(value = WEB_REQUEST_FACTORY_PROXY_TYPE_COMMAND, help = "Creates a GWT proxy based on the specified type")
     public void proxyType(
             @CliOption(key = PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.proxy", help = "The package in which created proxies will be placed") final JavaPackage javaPackage,
             @CliOption(key = TYPE_KEY, mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created request on") final JavaType type,
-            @CliOption(key = RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom locatorModule) {
+            @CliOption(key = RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom serverModule) {
 
-        requestFactoryOperations.proxyType(javaPackage, type, locatorModule);
+        requestFactoryOperations.proxyType(javaPackage, type, serverModule);
     }
 
     @CliCommand(value = WEB_REQUEST_FACTORY_REQUEST_ALL_COMMAND, help = "Locates all entities in the project and creates GWT requests")

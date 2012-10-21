@@ -2,7 +2,7 @@
 <configuration>
 	<batch>
 	    <properties>
-        	<gwt.version>2.5.0-rc2</gwt.version>
+        	<gwt.version>2.5.0-rc1</gwt.version>
 	    </properties>
 	</batch>
     <gwt>

@@ -14,7 +14,6 @@ import static org.springframework.roo.classpath.PhysicalTypeCategory.INTERFACE;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
-import static org.springframework.roo.project.Path.SRC_MAIN_WEBAPP;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,11 +24,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapPaths;
 import org.springframework.roo.addon.requestfactory.request.RequestFactoryRequestMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
-import org.springframework.roo.classpath.TypeLocationService;
-import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
@@ -41,15 +37,12 @@ import org.springframework.roo.classpath.details.annotations.AnnotationMetadataB
 import org.springframework.roo.classpath.details.annotations.ArrayAttributeValue;
 import org.springframework.roo.classpath.details.annotations.StringAttributeValue;
 import org.springframework.roo.classpath.persistence.PersistenceMemberLocator;
-import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.Dependency;
-import org.springframework.roo.project.FeatureNames;
 import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.ProjectMetadata;
-import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.project.Property;
 import org.springframework.roo.project.maven.Pom;
 import org.springframework.roo.support.util.CollectionUtils;
@@ -76,7 +69,7 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
     private static final String REQUEST_FACTORY_GROUP_ID = "com.google.web.bindery";
 
     private static final JavaSymbolName VALUE = new JavaSymbolName("value");
-    private static final JavaSymbolName LOCATOR_MODULE = new JavaSymbolName(
+    private static final JavaSymbolName SERVER_MODULE = new JavaSymbolName(
             RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE);
 
     @Reference private RequestFactoryTypeService requestFactoryTypeService;
@@ -148,22 +141,22 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
     }
 
     @Override
-    public void proxyAll(final JavaPackage proxyPackage, final Pom locatorModule) {
+    public void proxyAll(final JavaPackage proxyPackage, final Pom serverModule) {
         for (final ClassOrInterfaceTypeDetails entity : typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
                         ROO_JPA_ACTIVE_RECORD)) {
-            createProxy(entity, proxyPackage, locatorModule);
+            createProxy(entity, proxyPackage, serverModule);
         }
         //copyDirectoryContents(RequestFactoryPath.LOCATOR);
     }
 
     @Override
     public void proxyType(final JavaPackage proxyPackage, final JavaType type,
-            final Pom locatorModule) {
+            final Pom serverModule) {
         final ClassOrInterfaceTypeDetails entity = typeLocationService
                 .getTypeDetails(type);
         if (entity != null) {
-            createProxy(entity, proxyPackage, locatorModule);
+            createProxy(entity, proxyPackage, serverModule);
         }
         //copyDirectoryContents(RequestFactoryPath.LOCATOR);
     }
@@ -251,7 +244,7 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
     }
 
     private void createProxy(final ClassOrInterfaceTypeDetails entity,
-            final JavaPackage destinationPackage, final Pom locatorModule) {
+            final JavaPackage destinationPackage, final Pom serverModule) {
         final ClassOrInterfaceTypeDetails existingProxy = requestFactoryTypeService
                 .lookupProxyFromEntity(entity);
         if (existingProxy != null || entity.isAbstract()) {
@@ -287,10 +280,10 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
                 PROXY_FOR_NAME, attributeValues));
         attributeValues.remove(locatorAttributeValue);
 
-        if (locatorModule != null) {
-            final StringAttributeValue locatorModuleAttributeValue = new StringAttributeValue(
-                    LOCATOR_MODULE, locatorModule.getPath());
-            attributeValues.add(locatorModuleAttributeValue);
+        if (serverModule != null) {
+            final StringAttributeValue serverModuleAttributeValue = new StringAttributeValue(
+                    SERVER_MODULE, serverModule.getModuleName());
+            attributeValues.add(serverModuleAttributeValue);
         }
 
         final List<StringAttributeValue> readOnlyValues = new ArrayList<StringAttributeValue>();

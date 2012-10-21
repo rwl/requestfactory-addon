@@ -3,9 +3,11 @@ package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.requestfactory.RooRequestFactoryProxy;
 import org.springframework.roo.classpath.converters.JavaTypeConverter;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
+import org.springframework.roo.project.maven.Pom;
 import org.springframework.roo.shell.CliAvailabilityIndicator;
 import org.springframework.roo.shell.CliCommand;
 import org.springframework.roo.shell.CliOption;
@@ -41,13 +43,14 @@ public class GwtBootstrapCommands implements CommandMarker {
     }
 
     @CliCommand(value = SCAFFOLD_ALL_COMMAND, help = "Locates all entities in the project and creates GWT requests, proxies and creates the scaffold")
-    public void scaffoldAll() {
-        operations.scaffoldAll();
+    public void scaffoldAll(@CliOption(key = RooGwtBootstrapScaffold.MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate scaffold artifacts") final Pom module) {
+        operations.scaffoldAll(module);
     }
 
     @CliCommand(value = SCAFFOLD_TYPE_COMMAND, help = "Creates a GWT request, proxy and scaffold for the specified")
-    public void scaffoldType(@CliOption(key = "type", mandatory = true, help = "The type to base the created scaffold on") final JavaType type) {
-        operations.scaffoldType(type);
+    public void scaffoldType(@CliOption(key = "type", mandatory = true, help = "The type to base the created scaffold on") final JavaType type,
+            @CliOption(key = RooGwtBootstrapScaffold.MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate scaffold artifacts") final Pom module) {
+        operations.scaffoldType(type, module);
     }
 
     @CliCommand(value = SETUP_GAE_COMMAND, help = "Updates the GWT project to support GAE")

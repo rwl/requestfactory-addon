@@ -124,8 +124,7 @@ public class BaseScaffoldMetadataProviderImpl {
             return null;
         }
 
-        final String moduleName = PhysicalTypeIdentifier.getPath(
-                proxy.getDeclaredByMetadataId()).getModule();
+        final String moduleName = getModuleName(proxy);
         buildTypes(moduleName);
 
         final MetadataItem requestFactoryScaffoldMetadata = createMetadataItem(
@@ -175,6 +174,11 @@ public class BaseScaffoldMetadataProviderImpl {
     protected void buildTypes(final String moduleName) {
         buildType(RequestFactoryType.APP_ENTITY_TYPES_PROCESSOR, moduleName);
         buildType(RequestFactoryType.APP_REQUEST_FACTORY, moduleName);
+    }
+
+    protected String getModuleName(ClassOrInterfaceTypeDetails proxy) {
+        return PhysicalTypeIdentifier.getPath(
+                proxy.getDeclaredByMetadataId()).getModule();
     }
 
     protected Map<JavaSymbolName, RequestFactoryProxyProperty> buildClientSideTypeMap(

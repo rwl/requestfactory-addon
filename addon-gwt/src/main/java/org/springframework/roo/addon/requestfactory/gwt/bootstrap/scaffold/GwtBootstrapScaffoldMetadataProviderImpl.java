@@ -16,23 +16,21 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHolder;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
+import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapPaths;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapProxyProperty;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapTemplateService;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapType;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapTypeService;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapUtils;
-import org.springframework.roo.addon.requestfactory.scaffold.BaseScaffoldMetadataProviderImpl;
+import org.springframework.roo.addon.requestfactory.gwt.bootstrap.RooGwtBootstrapScaffold;
 import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadataProviderImpl;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MemberHoldingTypeDetails;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
-import org.springframework.roo.metadata.MetadataDependencyRegistry;
 import org.springframework.roo.metadata.MetadataItem;
-import org.springframework.roo.metadata.MetadataNotificationListener;
-import org.springframework.roo.metadata.MetadataProvider;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
@@ -113,6 +111,18 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
         buildType(GwtBootstrapType.IS_LEAF_PROCESSOR, moduleName);
         buildType(GwtBootstrapType.PROXY_LIST_NODE_PROCESSOR, moduleName);
         buildType(GwtBootstrapType.PROXY_NODE_PROCESSOR, moduleName);
+    }
+
+    @Override
+    protected String getModuleName(ClassOrInterfaceTypeDetails proxy) {
+        String moduleName = RequestFactoryUtils.getStringAnnotationValue(proxy,
+                ROO_GWT_BOOTSTRAP_SCAFFOLD,
+                RooGwtBootstrapScaffold.MODULE_ATTRIBUTE, "");
+        if (moduleName.isEmpty()) {
+            return super.getModuleName(proxy);
+        } else {
+            return moduleName;
+        }
     }
 
     @Override

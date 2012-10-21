@@ -37,11 +37,14 @@ import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuil
 import org.springframework.roo.classpath.details.MemberFindingUtils;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
+import org.springframework.roo.classpath.details.annotations.StringAttributeValue;
 import org.springframework.roo.file.monitor.event.FileDetails;
 import org.springframework.roo.model.JavaPackage;
+import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.Dependency;
 import org.springframework.roo.project.FeatureNames;
+import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.Plugin;
 import org.springframework.roo.project.ProjectMetadata;
 import org.springframework.roo.project.Property;
@@ -70,6 +73,9 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
     private static final String GWT_PROJECT_NATURE = "com.google.gwt.eclipse.core.gwtNature";
     private static final String MAVEN_ECLIPSE_PLUGIN = "/project/build/plugins/plugin[artifactId = 'maven-eclipse-plugin']";
     private static final String OUTPUT_DIRECTORY = "${project.build.directory}/${project.build.finalName}/WEB-INF/classes";
+
+    private static final JavaSymbolName MODULE_SYMBOL_NAME = new JavaSymbolName(
+            RooGwtBootstrapScaffold.MODULE_ATTRIBUTE);
 
     @Reference protected RequestFactoryTemplateService requestFactoryTemplateService;
     @Reference protected GwtBootstrapTypeService gwtBootstrapTypeService;
@@ -179,8 +185,12 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                 .isFeatureInstalledInFocusedModule(FeatureNames.GAE));
     }
 
-    public void scaffoldAll() {
-        updateScaffoldBoilerPlate();
+    @Override
+    public void scaffoldAll(Pom module) {
+        if (module == null) {
+            module = projectOperations.getFocusedModule();
+        }
+        updateScaffoldBoilerPlate(module);
         for (final ClassOrInterfaceTypeDetails proxy : typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)) {
             final ClassOrInterfaceTypeDetails request = gwtBootstrapTypeService
@@ -189,11 +199,15 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                 throw new IllegalStateException(
                         "In order to scaffold, an entity must have a request");
             }
-            createScaffold(proxy);
+            createScaffold(proxy, module);
         }
     }
 
-    public void scaffoldType(final JavaType type) {
+    @Override
+    public void scaffoldType(final JavaType type, Pom module) {
+        if (module == null) {
+            module = projectOperations.getFocusedModule();
+        }
         final ClassOrInterfaceTypeDetails entity = typeLocationService
                 .getTypeDetails(type);
         if (entity != null && !entity.isAbstract()) {
@@ -205,8 +219,8 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                 throw new IllegalStateException(
                         "In order to scaffold, an entity must have an associated proxy and request");
             }
-            updateScaffoldBoilerPlate();
-            createScaffold(proxy);
+            updateScaffoldBoilerPlate(module);
+            createScaffold(proxy, module);
         }
     }
 
@@ -220,6 +234,9 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
             return;
         }
 
+        final String moduleName = projectOperations
+                .getFocusedProjectMetadata().getModuleName();
+
         wasGaeEnabled = isGaeEnabled;
 
         // Update the GaeHelper type
@@ -227,9 +244,8 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
 
         gwtBootstrapTypeService.buildType(RequestFactoryType.APP_REQUEST_FACTORY,
                 requestFactoryTemplateService.getStaticTemplateTypeDetails(
-                        RequestFactoryType.APP_REQUEST_FACTORY, projectOperations
-                                .getFocusedProjectMetadata().getModuleName()),
-                projectOperations.getFocusedModuleName());
+                        RequestFactoryType.APP_REQUEST_FACTORY, moduleName),
+                        moduleName);
 
         // Ensure the gwt-maven-plugin appropriate to a GAE enabled or disabled
         // environment is updated
@@ -256,7 +272,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         // Copy across any missing files, only if GAE state has changed and is
         // now enabled
         if (isGaeEnabled) {
-            copyDirectoryContents();
+            copyDirectoryContents(moduleName);
         }
     }
 
@@ -277,23 +293,24 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         return false;
     }
 
-    private void updateScaffoldBoilerPlate() {
+    private void updateScaffoldBoilerPlate(final Pom module) {
+        Validate.notNull(module);
+        final String moduleName = module.getModuleName();
+        final LogicalPath path = LogicalPath.getInstance(SRC_MAIN_JAVA,
+                moduleName);
         final String targetDirectory = projectOperations.getPathResolver()
-                .getFocusedIdentifier(
-                        SRC_MAIN_JAVA,
-                        projectOperations
-                                .getTopLevelPackage(
-                                        projectOperations
-                                                .getFocusedModuleName())
+                .getIdentifier(path, projectOperations
+                                .getTopLevelPackage(moduleName)
                                 .getFullyQualifiedPackageName()
                                 .replace('.', File.separatorChar));
         deleteUntouchedSetupFiles("setup/*", targetDirectory);
         deleteUntouchedSetupFiles("setup/client/*", targetDirectory + "/client");
-        copyDirectoryContents();
+        copyDirectoryContents(moduleName);
 //        updateGaeHelper();
     }
 
-    private void createScaffold(final ClassOrInterfaceTypeDetails proxy) {
+    private void createScaffold(final ClassOrInterfaceTypeDetails proxy, final Pom module) {
+        Validate.notNull(module, "GWT scaffold module required");
         final AnnotationMetadata annotationMetadata = RequestFactoryUtils
                 .getFirstAnnotation(proxy, ROO_GWT_BOOTSTRAP_SCAFFOLD);
         if (annotationMetadata == null) {
@@ -301,6 +318,9 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                     new ClassOrInterfaceTypeDetailsBuilder(proxy);
             final AnnotationMetadataBuilder annotationMetadataBuilder =
                     new AnnotationMetadataBuilder(ROO_GWT_BOOTSTRAP_SCAFFOLD);
+            final StringAttributeValue moduleAttributeValue = new StringAttributeValue(
+                    MODULE_SYMBOL_NAME, module.getModuleName());
+            annotationMetadataBuilder.addAttribute(moduleAttributeValue);
             cidBuilder.getAnnotations().add(annotationMetadataBuilder);
             typeManagementService.createOrUpdateTypeOnDisk(cidBuilder
                     .build());
@@ -346,13 +366,14 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         }
     }
 
-    private void copyDirectoryContents() {
+    private void copyDirectoryContents(final String moduleName) {
         for (final RequestFactoryPath path : GwtBootstrapPaths.ALL_PATHS) {
-            copyDirectoryContents(path);
+            copyDirectoryContents(path, moduleName);
         }
     }
 
-    private void copyDirectoryContents(final RequestFactoryPath requestFactoryPath) {
+    private void copyDirectoryContents(final RequestFactoryPath requestFactoryPath,
+            final String moduleName) {
         final String sourceAntPath = requestFactoryPath.getSourceAntPath();
         if (sourceAntPath.contains("gae")
                 && !projectOperations
@@ -363,13 +384,20 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                 && typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() == 0) {
             return;
         }
-        final String targetDirectory = (requestFactoryPath == GwtBootstrapPaths.WEB
-                || requestFactoryPath == GwtBootstrapPaths.ACCOUNT_WEB) ? projectOperations
-                .getPathResolver().getFocusedRoot(SRC_MAIN_WEBAPP)
-                : projectOperations.getPathResolver().getFocusedIdentifier(
-                        SRC_MAIN_JAVA,
-                        requestFactoryPath.getPackagePath(projectOperations
+        final String targetDirectory;
+        final LogicalPath path;
+        if (requestFactoryPath == GwtBootstrapPaths.WEB
+                || requestFactoryPath == GwtBootstrapPaths.ACCOUNT_WEB) {
+            path = LogicalPath.getInstance(SRC_MAIN_WEBAPP, moduleName);
+            targetDirectory = projectOperations.getPathResolver()
+                    .getRoot(path);
+        } else {
+            path = LogicalPath.getInstance(SRC_MAIN_JAVA, moduleName);
+            targetDirectory = projectOperations.getPathResolver()
+                    .getIdentifier(path, requestFactoryPath
+                            .getPackagePath(projectOperations
                                 .getFocusedTopLevelPackage()));
+        }
         updateFile(sourceAntPath, targetDirectory, requestFactoryPath.segmentPackage(),
                 false);
     }
