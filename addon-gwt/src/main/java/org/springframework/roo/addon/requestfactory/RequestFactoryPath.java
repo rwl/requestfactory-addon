@@ -43,7 +43,7 @@ public class RequestFactoryPath {
     };
 
     public static final RequestFactoryPath[] SHARED_PATHS = new RequestFactoryPath[] {
-            SERVER_LOCATOR, SHARED_MANAGED_REQUEST, SHARED_SCAFFOLD, SHARED_ACCOUNT
+            SHARED_MANAGED_REQUEST, SHARED_SCAFFOLD, SHARED_ACCOUNT
     };
 
 

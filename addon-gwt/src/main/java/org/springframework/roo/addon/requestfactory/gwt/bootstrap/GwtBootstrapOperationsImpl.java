@@ -9,6 +9,8 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP_SCAFFOLD;
+import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
+import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 import static org.springframework.roo.project.Path.ROOT;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
 import static org.springframework.roo.project.Path.SRC_MAIN_WEBAPP;
@@ -32,6 +34,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateServic
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.web.mvc.controller.WebMvcOperations;
+import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.MemberFindingUtils;
@@ -307,6 +310,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         deleteUntouchedSetupFiles("setup/client/*", targetDirectory + "/client");
         copyDirectoryContents(moduleName);
 //        updateGaeHelper();
+        updateGwtModuleInheritance(moduleName);
     }
 
     private void createScaffold(final ClassOrInterfaceTypeDetails proxy, final Pom module) {
@@ -363,6 +367,57 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
             }
             catch (final IOException ignored) {
             }
+        }
+    }
+
+    private void updateGwtModuleInheritance(final String scaffoldModule) {
+        final ClassOrInterfaceTypeDetails proxy = typeLocationService
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)
+                .iterator().next();
+        final String proxyModule = PhysicalTypeIdentifier.getPath(
+                proxy.getDeclaredByMetadataId()).getModule();
+        if (proxyModule != scaffoldModule) {
+            copyDirectoryContents(GwtBootstrapPaths.SHARED_MODULE, proxyModule);
+
+            String inherits = projectOperations.getTopLevelPackage(proxyModule)
+                    + "." + GwtBootstrapPaths.SHARED_MODULE_NAME;
+            gwtBootstrapTypeService.addInheritsModule(inherits, scaffoldModule);
+
+            updatePropertiesAndPlugins(proxyModule);
+        }
+
+        final ClassOrInterfaceTypeDetails entity = typeLocationService
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
+                        ROO_JPA_ACTIVE_RECORD).iterator().next();
+        final String entityModule = PhysicalTypeIdentifier.getPath(
+                entity.getDeclaredByMetadataId()).getModule();
+        if (entityModule != scaffoldModule) {
+            copyDirectoryContents(GwtBootstrapPaths.DOMAIN_MODULE, entityModule);
+
+            String inherits = projectOperations.getTopLevelPackage(entityModule)
+                    + "." + GwtBootstrapPaths.DOMAIN_MODULE_NAME;
+            gwtBootstrapTypeService.addInheritsModule(inherits, scaffoldModule);
+
+            updatePropertiesAndPlugins(entityModule);
+        }
+    }
+
+    private void updatePropertiesAndPlugins(final String moduleName) {
+        final Element configuration = XmlUtils.getConfiguration(getClass());
+
+        final List<Element> properties = XmlUtils.findElements(
+                "/configuration/batch/properties/*", configuration);
+        for (Element propertyElement : properties) {
+            projectOperations.addProperty(moduleName,
+                    new Property(propertyElement));
+        }
+
+        final List<Element> plugins = XmlUtils.findElements(
+                "/configuration/shared/plugins/plugin",
+                configuration);
+        for (final Element plugin : plugins) {
+            projectOperations.addBuildPlugin(moduleName,
+                    new Plugin(plugin));
         }
     }
 

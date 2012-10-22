@@ -23,7 +23,6 @@ import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.requestfactory.BaseTypeServiceImpl;
 import org.springframework.roo.addon.requestfactory.RequestFactoryOperations;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
-import org.springframework.roo.addon.requestfactory.RequestFactoryTypeServiceImpl;
 import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadata;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MemberHoldingTypeDetails;
@@ -48,6 +47,8 @@ import org.xml.sax.SAXException;
 public class GwtBootstrapTypeServiceImpl extends BaseTypeServiceImpl implements GwtBootstrapTypeService {
 
     private static final String PATH = "path";
+    private static final String INHERITS = "inherits";
+    private static final String NAME = "name";
 
     @Reference private FileManager fileManager;
 
@@ -75,6 +76,35 @@ public class GwtBootstrapTypeServiceImpl extends BaseTypeServiceImpl implements 
                     getExtendsTypes(templateTypeDetail), moduleName));
         }
         requestFactoryFileManager.write(typesToBeWritten, type.isOverwriteConcrete());
+    }
+
+    public void addInheritsModule(final String inherits, final String moduleName) {
+        final String gwtXmlPath = getGwtModuleXml(moduleName);
+        Validate.notBlank(gwtXmlPath, "gwt.xml could not be found for module '"
+                + moduleName + "'");
+        final Document gwtXmlDoc = getGwtXmlDocument(gwtXmlPath);
+        final Element gwtXmlRoot = gwtXmlDoc.getDocumentElement();
+        final List<Element> inheritsElements = XmlUtils.findElements(
+                "/module/" + INHERITS, gwtXmlRoot);
+        if (!existingInherits(inherits, inheritsElements)) {
+            final Element firstInheritsElement = inheritsElements.get(0);
+            final Element newInheritsElement = gwtXmlDoc.createElement(INHERITS);
+            newInheritsElement.setAttribute(NAME, inherits);
+            gwtXmlRoot.insertBefore(newInheritsElement, firstInheritsElement);
+            fileManager.createOrUpdateTextFileIfRequired(gwtXmlPath,
+                    XmlUtils.nodeToString(gwtXmlDoc),
+                    "Added inherited module to gwt.xml file", true);
+        }
+    }
+
+    private boolean existingInherits(final String inherits,
+            final Iterable<Element> inheritsElements) {
+        for (final Element sourceElement : inheritsElements) {
+            if (inherits.equals(sourceElement.getAttribute(NAME))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addSourcePath(final String sourcePath, final String moduleName) {

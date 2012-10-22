@@ -5,6 +5,26 @@
         	<gwt.version>2.5.0-rc1</gwt.version>
 	    </properties>
 	</batch>
+	<shared>
+        <plugins>
+            <!--
+            shared sources need to be bundled with the jar,
+            so they are visible to GWT's compiler
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>${gwt.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+	</shared>
     <gwt>
         <repositories>
             <repository>

@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.springframework.roo.addon.requestfactory.RequestFactoryOperations;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
-import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeServiceImpl;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MemberHoldingTypeDetails;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
+import org.w3c.dom.Document;
 
 /**
  * Interface for {@link RequestFactoryTypeServiceImpl}.
@@ -93,7 +93,11 @@ public interface GwtBootstrapTypeService {
      */
     void addSourcePath(String sourcePath, String moduleName);
 
+    void addInheritsModule(final String inherits, final String moduleName);
+
     String getGwtModuleXml(String moduleName);
+
+    Document getGwtXmlDocument(final String gwtModuleCanonicalPath);
 
     /**
      * Returns the Java packages within the given module that contain GWT source

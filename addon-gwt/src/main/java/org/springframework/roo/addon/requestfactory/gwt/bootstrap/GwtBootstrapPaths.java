@@ -40,6 +40,12 @@ public class GwtBootstrapPaths {
         ACCOUNT_ROOT, ACCOUNT_UI, ACCOUNT_WEB
     };
 
+    public static final String SHARED_MODULE_NAME = "Shared";
+    public static final String DOMAIN_MODULE_NAME = "Domain";
+
+    public static final RequestFactoryPath SHARED_MODULE = new RequestFactoryPath("/", "module/shared/" + SHARED_MODULE_NAME + ".gwt.xml");
+    public static final RequestFactoryPath DOMAIN_MODULE = new RequestFactoryPath("/", "module/shared/" + DOMAIN_MODULE_NAME + ".gwt.xml");
+
     private GwtBootstrapPaths() {
     }
 }
