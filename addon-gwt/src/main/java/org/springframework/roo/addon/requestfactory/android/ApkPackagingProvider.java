@@ -2,7 +2,9 @@ package org.springframework.roo.addon.requestfactory.android;
 
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -13,6 +15,7 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.JavaPackage;
+import org.springframework.roo.process.manager.MutableFile;
 import org.springframework.roo.project.GAV;
 import org.springframework.roo.project.Path;
 import org.springframework.roo.project.ProjectMetadata;
@@ -28,6 +31,8 @@ import org.w3c.dom.Element;
 @Component
 @Service
 public class ApkPackagingProvider extends AbstractPackagingProvider {
+
+    private static final String SEP = File.separator;
 
     public static final String NAME = "apk";
 
@@ -63,15 +68,38 @@ public class ApkPackagingProvider extends AbstractPackagingProvider {
                 .nodeToString(document), false);
 
         try {
-            final String input = IOUtils.toString(FileUtils.getInputStream(
-                    getClass(), "project-template.properties"));
             fileManager.createOrUpdateTextFileIfRequired(pathResolver
-                    .getIdentifier(
+                    .getIdentifier(Path.ROOT.getModulePathId(moduleName),
+                            "project.properties"), IOUtils
+                            .toString(FileUtils.getInputStream(getClass(),
+                                    "project.properties")), false);
+            /*fileManager.createOrUpdateTextFileIfRequired(pathResolver
+                    .getIdentifier(Path.ROOT.getModulePathId(moduleName),
+                            "res"+SEP+"drawable"+SEP+"icon.png"), IOUtils
+                            .toString(FileUtils.getInputStream(getClass(),
+                                    "icon72.png")), false);*/
+            fileManager.createOrUpdateTextFileIfRequired(pathResolver
+                    .getIdentifier(Path.ROOT.getModulePathId(moduleName),
+                            "res"+SEP+"values"+SEP+"strings.xml"), IOUtils
+                            .toString(FileUtils.getInputStream(getClass(),
+                                    "strings.xml")), false);
+
+            final MutableFile target = fileManager
+                    .createFile(pathResolver.getIdentifier(
                             Path.ROOT.getModulePathId(moduleName),
-                            "project.properties"), input, false);
+                            "res"+SEP+"drawable"+SEP+"icon.png"));
+            OutputStream outputStream = null;
+            try {
+                outputStream = target.getOutputStream();
+                IOUtils.copy(FileUtils.getInputStream(getClass(),
+                        "icon72.png"), outputStream);
+            }
+            finally {
+                IOUtils.closeQuietly(outputStream);
+            }
         } catch (final IOException e) {
             throw new IllegalStateException(
-                    "Unable to create 'project.properties'", e);
+                    "Unable to create APK resource", e);
         }
 
         fileManager.scan();
