@@ -3,6 +3,7 @@ package org.springframework.roo.addon.requestfactory.scaffold;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.service.component.ComponentContext;
+import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.metadata.MetadataItem;
@@ -23,6 +24,12 @@ public class RequestFactoryScaffoldMetadataProviderImpl extends BaseScaffoldMeta
         metadataDependencyRegistry.deregisterDependency(
                 PhysicalTypeIdentifier.getMetadataIdentiferType(),
                 getProvidesType());
+    }
+
+    @Override
+    protected void buildTypes(final String moduleName) {
+        buildType(RequestFactoryType.APP_ENTITY_TYPES_PROCESSOR, moduleName);
+        buildType(RequestFactoryType.APP_REQUEST_FACTORY, moduleName);
     }
 
     @Override

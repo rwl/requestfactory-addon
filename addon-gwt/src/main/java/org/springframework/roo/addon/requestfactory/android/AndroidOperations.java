@@ -1,7 +1,6 @@
 package org.springframework.roo.addon.requestfactory.android;
 
 import org.springframework.roo.model.JavaType;
-import org.springframework.roo.project.Feature;
 import org.springframework.roo.project.maven.Pom;
 
 /**

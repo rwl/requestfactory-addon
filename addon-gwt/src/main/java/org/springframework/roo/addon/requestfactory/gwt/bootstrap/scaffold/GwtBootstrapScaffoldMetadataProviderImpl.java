@@ -164,7 +164,7 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
         final Map<RequestFactoryType, List<ClassOrInterfaceTypeDetails>> typesToBeWritten =
                 new LinkedHashMap<RequestFactoryType, List<ClassOrInterfaceTypeDetails>>();
 
-        final Map<RequestFactoryType, JavaType> mirrorTypeMap = GwtBootstrapUtils.getMirrorTypeMap(
+        final Map<RequestFactoryType, JavaType> mirrorTypeMap = getMirrorTypeMap(
                 mirroredType.getName(), topLevelPackage);
 
         for (final Map.Entry<RequestFactoryType, JavaType> entry : mirrorTypeMap
@@ -205,7 +205,7 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
 
         final Map<String, String> xmlToBeWritten = new LinkedHashMap<String, String>();
 
-        final Map<RequestFactoryType, JavaType> mirrorTypeMap = GwtBootstrapUtils.getMirrorTypeMap(
+        final Map<RequestFactoryType, JavaType> mirrorTypeMap = getMirrorTypeMap(
                 mirroredType.getName(), topLevelPackage);
 
         for (final Map.Entry<RequestFactoryType, JavaType> entry : mirrorTypeMap
@@ -251,6 +251,13 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
             }
         }
         return xmlToBeWritten;
+    }
+
+    @Override
+    protected Map<RequestFactoryType, JavaType> getMirrorTypeMap(
+            final JavaType governorType, final JavaPackage topLevelPackage) {
+        return GwtBootstrapUtils.getMirrorTypeMap(governorType,
+                topLevelPackage);
     }
 
     @Override

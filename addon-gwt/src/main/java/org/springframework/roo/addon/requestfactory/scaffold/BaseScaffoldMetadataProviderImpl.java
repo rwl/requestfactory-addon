@@ -14,8 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
-import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.requestfactory.RequestFactoryFileManager;
 import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHolder;
@@ -172,8 +170,6 @@ public class BaseScaffoldMetadataProviderImpl {
     }
 
     protected void buildTypes(final String moduleName) {
-        buildType(RequestFactoryType.APP_ENTITY_TYPES_PROCESSOR, moduleName);
-        buildType(RequestFactoryType.APP_REQUEST_FACTORY, moduleName);
     }
 
     protected String getModuleName(ClassOrInterfaceTypeDetails proxy) {
@@ -243,7 +239,7 @@ public class BaseScaffoldMetadataProviderImpl {
 
         final Map<RequestFactoryType, List<ClassOrInterfaceTypeDetails>> typesToBeWritten = new LinkedHashMap<RequestFactoryType, List<ClassOrInterfaceTypeDetails>>();
 
-        final Map<RequestFactoryType, JavaType> mirrorTypeMap = RequestFactoryUtils.getMirrorTypeMap(
+        final Map<RequestFactoryType, JavaType> mirrorTypeMap = getMirrorTypeMap(
                 mirroredType.getName(), topLevelPackage);
 //        mirrorTypeMap.put(RequestFactoryType.PROXY, proxy.getName());
 //        mirrorTypeMap.put(RequestFactoryType.REQUEST, request.getName());
@@ -269,6 +265,12 @@ public class BaseScaffoldMetadataProviderImpl {
                             extendsTypes, moduleName));
         }
         return typesToBeWritten;
+    }
+
+    protected Map<RequestFactoryType, JavaType> getMirrorTypeMap(
+            final JavaType governorType, final JavaPackage topLevelPackage) {
+        return RequestFactoryUtils.getMirrorTypeMap(governorType,
+                topLevelPackage);
     }
 
     protected Map<String, String> getXmlToBeWritten(
