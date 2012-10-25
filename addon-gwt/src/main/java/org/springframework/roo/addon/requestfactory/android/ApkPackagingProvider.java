@@ -73,11 +73,6 @@ public class ApkPackagingProvider extends AbstractPackagingProvider {
                             "project.properties"), IOUtils
                             .toString(FileUtils.getInputStream(getClass(),
                                     "project.properties")), false);
-            /*fileManager.createOrUpdateTextFileIfRequired(pathResolver
-                    .getIdentifier(Path.ROOT.getModulePathId(moduleName),
-                            "res"+SEP+"drawable"+SEP+"icon.png"), IOUtils
-                            .toString(FileUtils.getInputStream(getClass(),
-                                    "icon72.png")), false);*/
             fileManager.createOrUpdateTextFileIfRequired(pathResolver
                     .getIdentifier(Path.ROOT.getModulePathId(moduleName),
                             "res"+SEP+"values"+SEP+"strings.xml"), IOUtils
