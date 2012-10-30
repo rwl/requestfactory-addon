@@ -7,7 +7,7 @@ import org.springframework.roo.project.maven.Pom;
 
 /**
  * Methods for various project-related operations.
- * 
+ *
  * @author Ben Alex
  * @since 1.0
  */
@@ -22,7 +22,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param plugin the plugin to add (required)
      */
@@ -36,7 +36,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param plugins the plugins to add (required)
      */
@@ -52,7 +52,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param dependencies the dependencies to add (required)
      */
@@ -68,7 +68,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param dependency the dependency to add (required)
      */
@@ -80,7 +80,7 @@ public interface ProjectOperations {
      * Provides a convenient way for third parties to instruct end users how to
      * use the CLI to add support for their projects without requiring the user
      * to manually edit a pom.xml or write an add-on.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param groupId the group id of the dependency (required)
      * @param artifactId the artifact id of the dependency (required)
@@ -95,7 +95,7 @@ public interface ProjectOperations {
      * Provides a convenient way for third parties to instruct end users how to
      * use the CLI to add support for their projects without requiring the user
      * to manually edit a pom.xml or write an add-on.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param groupId the group id of the dependency (required)
      * @param artifactId the artifact id of the dependency (required)
@@ -111,7 +111,7 @@ public interface ProjectOperations {
      * Provides a convenient way for third parties to instruct end users how to
      * use the CLI to add support for their projects without requiring the user
      * to manually edit a pom.xml or write an add-on.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param groupId the group id of the dependency (required)
      * @param artifactId the artifact id of the dependency (required)
@@ -132,7 +132,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param filter the filter to add (required)
      */
@@ -140,7 +140,7 @@ public interface ProjectOperations {
 
     /**
      * Adds the given module as a dependency of the currently focused module.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      */
     void addModuleDependency(String moduleName);
@@ -154,7 +154,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param repositories a list of plugin repositories to add (required)
      */
@@ -170,7 +170,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param repository the plugin repository to add (required)
      */
@@ -185,7 +185,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param property the property to add (required)
      */
@@ -200,7 +200,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param repositories a list of repositories to add (required)
      */
@@ -216,7 +216,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param repository the repository to add (required)
      */
@@ -230,7 +230,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param resource the resource to add (required)
      */
@@ -244,7 +244,7 @@ public interface ProjectOperations {
      * <p>
      * This method is deprecated - use {@link #updateBuildPlugin(Plugin)}
      * instead.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param plugin the build plugin to update (required)
      */
@@ -254,14 +254,14 @@ public interface ProjectOperations {
     /**
      * Returns the {@link Pom} of the currently focussed module, or if no module
      * has the focus, the root {@link Pom}.
-     * 
+     *
      * @return <code>null</code> if none of the above descriptors exist
      */
     Pom getFocusedModule();
 
     /**
      * Returns the name of the currently focussed module.
-     * 
+     *
      * @return an empty string if no module has the focus, otherwise a
      *         fully-qualified name separated by {@link java.io.File#separator}
      */
@@ -269,7 +269,7 @@ public interface ProjectOperations {
 
     /**
      * Returns the metadata for the currently focussed module.
-     * 
+     *
      * @return <code>null</code> if no project metadata is available
      */
     ProjectMetadata getFocusedProjectMetadata();
@@ -286,7 +286,7 @@ public interface ProjectOperations {
 
     /**
      * Returns the module to which the given file belongs
-     * 
+     *
      * @param fileIdentifier the canonical path to look up
      * @return see above
      */
@@ -294,7 +294,7 @@ public interface ProjectOperations {
 
     /**
      * Returns the names of each module in the user's project
-     * 
+     *
      * @return a non-<code>null</code> list
      */
     Collection<String> getModuleNames();
@@ -302,14 +302,14 @@ public interface ProjectOperations {
     /**
      * Convenience method to return the {@link PathResolver} from the project's
      * {@link ProjectMetadata}.
-     * 
+     *
      * @return the {@link PathResolver}, or null if the project is unavailable
      */
     PathResolver getPathResolver();
 
     /**
      * Returns the given module's {@link Pom}
-     * 
+     *
      * @param moduleName the fully-qualified name of the module (required)
      * @return
      */
@@ -317,14 +317,14 @@ public interface ProjectOperations {
 
     /**
      * Returns the {@link Pom}s for all modules of the user's project
-     * 
+     *
      * @return a non-<code>null</code> collection
      */
     Collection<Pom> getPoms();
 
     /**
      * Returns the {@link ProjectMetadata} for the given module.
-     * 
+     *
      * @param moduleName the module whose metadata is being requested (can be
      *            empty to signify the root or only module)
      * @return <code>null</code> if the metadata is not available
@@ -346,7 +346,7 @@ public interface ProjectOperations {
     /**
      * Indicates whether the supplied feature is installed in any module of a
      * project.
-     * 
+     *
      * @param featureName the name of the feature (see {@link FeatureNames} for
      *            available features)
      * @return true if the feature is installed in any module, otherwise false
@@ -354,9 +354,20 @@ public interface ProjectOperations {
     boolean isFeatureInstalled(String featureName);
 
     /**
+     * Indicates whether the supplied feature is installed in the module with
+     * the supplied name.
+     *
+     * @param featureName the name of the feature (see {@link FeatureNames} for
+     *            available features)
+     * @param moduleName the name of the module to check
+     * @return true if the feature is installed the module, otherwise false
+     */
+    boolean isFeatureInstalledInModule(String featureName, String moduleName);
+
+    /**
      * Indicates whether any of the supplied features are installed in the
      * focused module.
-     * 
+     *
      * @param featureNames the names of the features (see {@link FeatureNames}
      *            for available features)
      * @return true if any of the supplied features are installed in the focused
@@ -367,28 +378,28 @@ public interface ProjectOperations {
     /**
      * Indicates whether the module whose name has the focus, if any, is
      * available.
-     * 
+     *
      * @return see above
      */
     boolean isFocusedProjectAvailable();
 
     /**
      * Indicates whether the user can create a new project module
-     * 
+     *
      * @return see above
      */
     boolean isModuleCreationAllowed();
 
     /**
      * Indicates whether the user can change the focused module
-     * 
+     *
      * @return see above
      */
     boolean isModuleFocusAllowed();
 
     /**
      * Indicates whether a module with the given name is available.
-     * 
+     *
      * @param moduleName the name of the module to act upon (can be blank)
      * @return see above
      */
@@ -397,7 +408,7 @@ public interface ProjectOperations {
     /**
      * Removes any plugins with the same groupId and artifactId as the given
      * plugin.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param plugin the plugin to remove (can be <code>null</code>)
      * @throws IllegalArgumentException if this method is called before the
@@ -409,7 +420,7 @@ public interface ProjectOperations {
     /**
      * Removes any plugins with the same groupId and artifactId as the given
      * plugin and immediately writes the pom to the file system.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param plugin the plugin to remove (can be <code>null</code>)
      * @throws IllegalArgumentException if this method is called before the
@@ -421,7 +432,7 @@ public interface ProjectOperations {
     /**
      * Removes any plugins with the same groupId and artifactId as any of the
      * given plugins.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param plugins the plugins to remove; can be <code>null</code>, any
      *            <code>null</code> elements will be quietly ignored
@@ -441,7 +452,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param dependencies the dependencies to remove (required)
      */
@@ -457,7 +468,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param dependency the dependency to remove (required)
      */
@@ -469,7 +480,7 @@ public interface ProjectOperations {
      * Provides a convenient way for third parties to instruct end users how to
      * use the CLI to remove an unwanted dependency from their projects without
      * requiring the user to manually edit a pom.xml or write an add-on.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param groupId the group id of the dependency (required)
      * @param artifactId the artifact id of the dependency (required)
@@ -484,7 +495,7 @@ public interface ProjectOperations {
      * Provides a convenient way for third parties to instruct end users how to
      * use the CLI to remove an unwanted dependency from their projects without
      * requiring the user to manually edit a pom.xml or write an add-on.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param groupId the group id of the dependency (required)
      * @param artifactId the artifact id of the dependency (required)
@@ -503,7 +514,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param filter the filter to remove (required)
      */
@@ -519,7 +530,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param repository the plugin repository to remove (required)
      */
@@ -534,7 +545,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param property the property to remove (required)
      */
@@ -549,7 +560,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param repository the repository to remove (required)
      */
@@ -563,7 +574,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param resource the resource to remove (required)
      */
@@ -571,7 +582,7 @@ public interface ProjectOperations {
 
     /**
      * Sets the currently focused module
-     * 
+     *
      * @param module the module to focus upon (required)
      */
     void setModule(Pom module);
@@ -581,7 +592,7 @@ public interface ProjectOperations {
      * silently returns. If it is not present, removes any build plugin which
      * matches {@link ProjectMetadata#getBuildPluginsExcludingVersion(Plugin)}.
      * Always adds the presented plugin.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param plugin the build plugin to update (required)
      */
@@ -596,7 +607,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param dependency the dependency to update (required)
      * @param dependencyScope the dependency scope. May be null, in which case
@@ -613,7 +624,7 @@ public interface ProjectOperations {
      * An exception is thrown if this method is called before there is
      * {@link ProjectMetadata} available, or if the on-disk representation
      * cannot be modified for any reason.
-     * 
+     *
      * @param moduleName the name of the module to act upon (required)
      * @param projectType the project type to update (required)
      */

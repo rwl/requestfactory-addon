@@ -50,7 +50,7 @@ import org.springframework.roo.project.ProjectOperations;
 
 /**
  * Implementation of {@link JpaActiveRecordMetadataProvider}.
- * 
+ *
  * @author Ben Alex
  * @since 1.0
  */
@@ -199,7 +199,7 @@ public class JpaActiveRecordMetadataProviderImpl extends
                     ProjectMetadata.getProjectIdentifier(moduleName),
                     metadataIdentificationString);
             isGaeEnabled = projectOperations
-                    .isFeatureInstalledInFocusedModule(FeatureNames.GAE);
+                    .isFeatureInstalledInModule(FeatureNames.GAE, moduleName);
         }
 
         return new JpaActiveRecordMetadata(metadataIdentificationString,

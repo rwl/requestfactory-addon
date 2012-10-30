@@ -53,7 +53,7 @@ import org.springframework.roo.project.ProjectOperations;
 
 /**
  * Implementation of {@link IntegrationTestMetadataProvider}.
- * 
+ *
  * @author Ben Alex
  * @since 1.0
  */
@@ -104,7 +104,7 @@ public class IntegrationTestMetadataProviderImpl extends
     /**
      * Returns the {@link JavaType} for the given entity's "data on demand"
      * class.
-     * 
+     *
      * @param entity the entity for which to get the DoD type
      * @return a non-<code>null</code> type (which may or may not exist yet)
      */
@@ -306,7 +306,7 @@ public class IntegrationTestMetadataProviderImpl extends
         final boolean isGaeEnabled = projectOperations
                 .isProjectAvailable(moduleName)
                 && projectOperations
-                        .isFeatureInstalledInFocusedModule(FeatureNames.GAE);
+                        .isFeatureInstalledInModule(FeatureNames.GAE, moduleName);
 
         return new IntegrationTestMetadata(metadataIdentificationString,
                 aspectName, governorPhysicalTypeMetadata, annotationValues,
@@ -347,7 +347,7 @@ public class IntegrationTestMetadataProviderImpl extends
     /**
      * Handles a generic change (i.e. with no explicit downstream dependency) to
      * the given physical type
-     * 
+     *
      * @param physicalType the type that changed (required)
      */
     private void handleGenericChangeToPhysicalType(final JavaType physicalType) {
@@ -364,7 +364,7 @@ public class IntegrationTestMetadataProviderImpl extends
                 .getProjectMetadata(moduleName);
         if (projectMetadata != null && projectMetadata.isValid()) {
             final boolean isGaeEnabled = projectOperations
-                    .isFeatureInstalledInFocusedModule(FeatureNames.GAE);
+                    .isFeatureInstalledInModule(FeatureNames.GAE, moduleName);
             // We need to determine if the persistence state has changed, we do
             // this by comparing the last known state to the current state
             final boolean hasGaeStateChanged = wasGaeEnabled == null

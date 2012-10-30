@@ -91,7 +91,7 @@ public final class AccountMetadataProviderImpl extends AbstractItdMetadataProvid
                     ProjectMetadata.getProjectIdentifier(moduleName),
                     metadataIdentificationString);
             isGaeEnabled = projectOperations
-                    .isFeatureInstalledInFocusedModule(FeatureNames.GAE);
+                    .isFeatureInstalledInModule(FeatureNames.GAE, moduleName);
         }
 
         return new AccountMetadata(metadataIdentificationString, aspectName, governorPhysicalTypeMetadata, crudAnnotationValues, typeManagementService, typeLocationService, entityName, sharedPackageName, isGaeEnabled);

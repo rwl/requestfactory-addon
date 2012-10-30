@@ -131,7 +131,7 @@ public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvide
                     ProjectMetadata.getProjectIdentifier(moduleName),
                     metadataIdentificationString);
             isGaeEnabled = projectOperations
-                    .isFeatureInstalledInFocusedModule(FeatureNames.GAE);
+                    .isFeatureInstalledInModule(FeatureNames.GAE, moduleName);
         }
 
         // Pass dependencies required by the metadata in through its constructor

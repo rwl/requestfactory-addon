@@ -3,9 +3,6 @@ package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
-import org.springframework.roo.addon.requestfactory.RooRequestFactoryProxy;
-import org.springframework.roo.classpath.converters.JavaTypeConverter;
-import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.maven.Pom;
 import org.springframework.roo.shell.CliAvailabilityIndicator;
@@ -19,7 +16,7 @@ public class GwtBootstrapCommands implements CommandMarker {
 
     private static final String SCAFFOLD_ALL_COMMAND = "web requestfactory gwt bootstrap scaffold all";
     private static final String SCAFFOLD_TYPE_COMMAND = "web requestfactory gwt bootstrap scaffold type";
-    private static final String SETUP_GAE_COMMAND = "web requestfactory setup gae";
+    private static final String UPDATE_GAE_COMMAND = "web requestfactory gwt bootstrap update gae";
     private static final String SETUP_GWT_BOOTSTRAP_COMMAND = "web requestfactory gwt bootstrap setup";
 
     @Reference private GwtBootstrapOperations operations;
@@ -27,7 +24,7 @@ public class GwtBootstrapCommands implements CommandMarker {
     @CliAvailabilityIndicator({
             SCAFFOLD_ALL_COMMAND,
             SCAFFOLD_TYPE_COMMAND,
-            SETUP_GAE_COMMAND })
+            UPDATE_GAE_COMMAND })
     public boolean isScaffoldAvailable() {
         return operations.isScaffoldAvailable();
     }
@@ -53,7 +50,7 @@ public class GwtBootstrapCommands implements CommandMarker {
         operations.scaffoldType(type, module);
     }
 
-    @CliCommand(value = SETUP_GAE_COMMAND, help = "Updates the GWT project to support GAE")
+    @CliCommand(value = UPDATE_GAE_COMMAND, help = "Updates the GWT project to support GAE")
     public void updateGaeConfiguration() {
         operations.updateGaeConfiguration();
     }

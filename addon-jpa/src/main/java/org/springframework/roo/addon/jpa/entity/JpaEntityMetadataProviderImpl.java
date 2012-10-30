@@ -66,7 +66,7 @@ import org.springframework.roo.support.util.CollectionUtils;
 
 /**
  * The {@link JpaEntityMetadataProvider} implementation.
- * 
+ *
  * @author Andrew Swan
  * @since 1.2.0
  */
@@ -161,7 +161,7 @@ public class JpaEntityMetadataProviderImpl extends
     /**
      * Returns the {@link Identifier} for the entity identified by the given
      * metadata ID.
-     * 
+     *
      * @param metadataIdentificationString
      * @return <code>null</code> if there isn't one
      */
@@ -190,7 +190,7 @@ public class JpaEntityMetadataProviderImpl extends
 
     /**
      * Returns the {@link JpaEntityAnnotationValues} for the given domain type
-     * 
+     *
      * @param governorPhysicalType (required)
      * @return a non-<code>null</code> instance
      */
@@ -242,7 +242,7 @@ public class JpaEntityMetadataProviderImpl extends
                     ProjectMetadata.getProjectIdentifier(moduleName),
                     metadataIdentificationString);
             isGaeEnabled = projectOperations
-                    .isFeatureInstalledInFocusedModule(FeatureNames.GAE);
+                    .isFeatureInstalledInModule(FeatureNames.GAE, moduleName);
             isDatabaseDotComEnabled = projectOperations
                     .isFeatureInstalledInFocusedModule(FeatureNames.DATABASE_DOT_COM);
         }

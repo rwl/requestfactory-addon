@@ -11,12 +11,14 @@ import static org.springframework.roo.addon.requestfactory.account.AccountJavaTy
 import static org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP_SCAFFOLD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
+import static org.springframework.roo.model.SpringJavaType.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN;
 import static org.springframework.roo.project.Path.ROOT;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
 import static org.springframework.roo.project.Path.SRC_MAIN_WEBAPP;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +30,10 @@ import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.jpa.GaeOperations;
 import org.springframework.roo.addon.requestfactory.BaseOperationsImpl;
 import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
-import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.web.mvc.controller.WebMvcOperations;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
@@ -42,12 +44,13 @@ import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.StringAttributeValue;
 import org.springframework.roo.file.monitor.event.FileDetails;
-import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.Dependency;
 import org.springframework.roo.project.FeatureNames;
 import org.springframework.roo.project.LogicalPath;
+import org.springframework.roo.project.Path;
+import org.springframework.roo.project.PathResolver;
 import org.springframework.roo.project.Plugin;
 import org.springframework.roo.project.ProjectMetadata;
 import org.springframework.roo.project.Property;
@@ -83,6 +86,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
     @Reference protected RequestFactoryTemplateService requestFactoryTemplateService;
     @Reference protected GwtBootstrapTypeService gwtBootstrapTypeService;
     @Reference protected WebMvcOperations webMvcOperations;
+    @Reference protected PathResolver pathResolver;
 
     private Boolean wasGaeEnabled;
 
@@ -229,7 +233,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
 
     public void updateGaeConfiguration() {
         final boolean isGaeEnabled = projectOperations
-                .isFeatureInstalledInFocusedModule(FeatureNames.GAE);
+                .isFeatureInstalled(FeatureNames.GAE);
         final boolean hasGaeStateChanged = wasGaeEnabled == null
                 || isGaeEnabled != wasGaeEnabled;
         if (!isInstalledInModule(projectOperations.getFocusedModuleName())
@@ -245,10 +249,10 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         // Update the GaeHelper type
 //        updateGaeHelper();
 
-        gwtBootstrapTypeService.buildType(RequestFactoryType.APP_REQUEST_FACTORY,
+        /*gwtBootstrapTypeService.buildType(RequestFactoryType.APP_REQUEST_FACTORY,
                 requestFactoryTemplateService.getStaticTemplateTypeDetails(
                         RequestFactoryType.APP_REQUEST_FACTORY, moduleName),
-                        moduleName);
+                        moduleName);*/
 
         // Ensure the gwt-maven-plugin appropriate to a GAE enabled or disabled
         // environment is updated
@@ -277,7 +281,162 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         if (isGaeEnabled) {
             copyDirectoryContents(moduleName);
         }
+
+
+        final String entityModuleName = getEntityModuleName();
+        final String focusedModuleName = projectOperations.getFocusedModuleName();
+
+        if (!entityModuleName.equals(focusedModuleName)) {
+            final String appenginePath = pathResolver.getFocusedIdentifier(
+                    Path.SRC_MAIN_WEBAPP, "WEB-INF/appengine-web.xml");
+            final boolean appenginePathExists = fileManager.exists(appenginePath);
+
+            final InputStream inputStream;
+            if (appenginePathExists) {
+                inputStream = fileManager.getInputStream(appenginePath);
+            }
+            else {
+                inputStream = FileUtils.getInputStream(GaeOperations.class,
+                        "appengine-web-template.xml");
+            }
+            final Document appengine = XmlUtils.readXml(inputStream);
+
+            final Element root = appengine.getDocumentElement();
+            final Element applicationElement = XmlUtils.findFirstElement(
+                    "/appengine-web-app/application", root);
+            final String artifactId = projectOperations
+                    .getPomFromModuleName(moduleName).getArtifactId();
+            final String textContent = StringUtils.defaultIfEmpty(artifactId,
+                    projectOperations.getProjectName(moduleName));
+            if (!textContent.equals(applicationElement.getTextContent())) {
+                applicationElement.setTextContent(textContent);
+                fileManager.createOrUpdateTextFileIfRequired(appenginePath,
+                        XmlUtils.nodeToString(appengine), false);
+            }
+
+
+            final String persistenceXmlPath = projectOperations.getPathResolver()
+                    .getIdentifier(LogicalPath.getInstance(Path.SRC_MAIN_RESOURCES,
+                            entityModuleName), "META-INF/persistence.xml");
+
+            final String contextPath = projectOperations.getPathResolver()
+                    .getIdentifier(LogicalPath.getInstance(Path.SPRING_CONFIG_ROOT,
+                            entityModuleName), "applicationContext.xml");
+            final Document appCtx = XmlUtils.readXml(fileManager
+                    .getInputStream(contextPath));
+            final Element rootCtx = appCtx.getDocumentElement();
+            final Element entityManagerFactory = XmlUtils.findFirstElement(
+                    "/beans/bean[@id = 'entityManagerFactory']", rootCtx);
+            if (entityManagerFactory != null) {
+                entityManagerFactory.setAttribute("class",
+                        LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN
+                        .getFullyQualifiedTypeName());
+
+                final Element pacakgesToScan = appCtx.createElement(PROPERTY);
+                pacakgesToScan.setAttribute(NAME, "pacakgesToScan");
+                pacakgesToScan.setAttribute(VALUE, projectOperations
+                        .getTopLevelPackage(entityModuleName)
+                        .getFullyQualifiedPackageName());
+                entityManagerFactory.appendChild(pacakgesToScan);
+
+                final Element persistenceProviderClass = appCtx.createElement(PROPERTY);
+                persistenceProviderClass.setAttribute(NAME, "persistenceProviderClass");
+                persistenceProviderClass.setAttribute(VALUE, "org.datanucleus.api.jpa.PersistenceProviderImpl");
+                entityManagerFactory.appendChild(persistenceProviderClass);
+
+                final Element jpaPropertyMap = appCtx.createElement(PROPERTY);
+                jpaPropertyMap.setAttribute(NAME, "jpaPropertyMap");
+                entityManagerFactory.appendChild(jpaPropertyMap);
+
+                final Element map = appCtx.createElement("map");
+                jpaPropertyMap.appendChild(map);
+
+                if (fileManager.exists(contextPath)) {
+                    final Document persistenceXml = XmlUtils.readXml(fileManager
+                            .getInputStream(contextPath));
+                    final Element rootPersistenceXml = persistenceXml.getDocumentElement();
+
+                    for (final Element propertyElement : XmlUtils.findElements(
+                            "/persistence/persistence-unit/properties/*",
+                            rootPersistenceXml)) {
+                        final Element property = appCtx.createElement(PROPERTY);
+                        property.setAttribute(KEY, propertyElement.getAttribute(NAME));
+                        property.setAttribute(VALUE, propertyElement.getAttribute(VALUE));
+                        map.appendChild(property);
+                    }
+                } else {
+                    final Element nontransactionalRead = appCtx.createElement(PROPERTY);
+                    nontransactionalRead.setAttribute(KEY, "datanucleus.NontransactionalRead");
+                    nontransactionalRead.setAttribute(VALUE, TRUE);
+                    map.appendChild(nontransactionalRead);
+
+                    final Element nontransactionalWrite = appCtx.createElement(PROPERTY);
+                    nontransactionalWrite.setAttribute(KEY, "datanucleus.NontransactionalWrite");
+                    nontransactionalWrite.setAttribute(VALUE, TRUE);
+                    map.appendChild(nontransactionalWrite);
+
+                    final Element autoCreateSchema = appCtx.createElement(PROPERTY);
+                    autoCreateSchema.setAttribute(KEY, "datanucleus.autoCreateSchema");
+                    autoCreateSchema.setAttribute(VALUE, FALSE);
+                    map.appendChild(autoCreateSchema);
+
+                    final Element connectionURL = appCtx.createElement(PROPERTY);
+                    connectionURL.setAttribute(KEY, "datanucleus.ConnectionURL");
+                    connectionURL.setAttribute(VALUE, "appengine");
+                    map.appendChild(connectionURL);
+
+                    final Element connectionUserName = appCtx.createElement(PROPERTY);
+                    connectionUserName.setAttribute(KEY, "datanucleus.ConnectionUserName");
+                    connectionUserName.setAttribute(VALUE, "");
+                    map.appendChild(connectionUserName);
+
+                    final Element connectionPassword = appCtx.createElement(PROPERTY);
+                    connectionPassword.setAttribute(KEY, "datanucleus.ConnectionPassword");
+                    connectionPassword.setAttribute(VALUE, "");
+                    map.appendChild(connectionPassword);
+
+                    final Element autoCreateTables = appCtx.createElement(PROPERTY);
+                    autoCreateTables.setAttribute(KEY, "datanucleus.autoCreateTables");
+                    autoCreateTables.setAttribute(VALUE, TRUE);
+                    map.appendChild(autoCreateTables);
+
+                    final Element autoCreateColumns = appCtx.createElement(PROPERTY);
+                    autoCreateColumns.setAttribute(KEY, "datanucleus.autoCreateColumns");
+                    autoCreateColumns.setAttribute(VALUE, FALSE);
+                    map.appendChild(autoCreateColumns);
+
+                    final Element autoCreateConstraints = appCtx.createElement(PROPERTY);
+                    autoCreateConstraints.setAttribute(KEY, "datanucleus.autoCreateConstraints");
+                    autoCreateConstraints.setAttribute(VALUE, FALSE);
+                    map.appendChild(autoCreateConstraints);
+
+                    final Element validateTables = appCtx.createElement(PROPERTY);
+                    validateTables.setAttribute(KEY, "datanucleus.validateTables");
+                    validateTables.setAttribute(VALUE, FALSE);
+                    map.appendChild(validateTables);
+
+                    final Element validateConstraints = appCtx.createElement(PROPERTY);
+                    validateConstraints.setAttribute(KEY, "datanucleus.validateConstraints");
+                    validateConstraints.setAttribute(VALUE, FALSE);
+                    map.appendChild(validateConstraints);
+
+                    final Element addClassTransformer = appCtx.createElement(PROPERTY);
+                    addClassTransformer.setAttribute(KEY, "datanucleus.jpa.addClassTransformer");
+                    addClassTransformer.setAttribute(VALUE, FALSE);
+                    map.appendChild(addClassTransformer);
+                }
+            }
+
+            fileManager.delete(persistenceXmlPath);
+        }
     }
+
+    private static final String PROPERTY = "property";
+    private static final String NAME = "name";
+    private static final String KEY = "key";
+    private static final String VALUE = "value";
+    private static final String TRUE = "true";
+    private static final String FALSE = "false";
 
     public String getName() {
         return FEATURE_NAME;
@@ -371,12 +530,8 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
     }
 
     private void updateGwtModuleInheritance(final String scaffoldModule) {
-        final ClassOrInterfaceTypeDetails proxy = typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)
-                .iterator().next();
-        final String proxyModule = PhysicalTypeIdentifier.getPath(
-                proxy.getDeclaredByMetadataId()).getModule();
-        if (proxyModule != scaffoldModule) {
+        final String proxyModule = getProxyModuleName();
+        if (!proxyModule.equals(scaffoldModule)) {
             copyDirectoryContents(GwtBootstrapPaths.SHARED_MODULE, proxyModule);
 
             String inherits = projectOperations.getTopLevelPackage(proxyModule)
@@ -386,12 +541,8 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
             updatePropertiesAndPlugins(proxyModule);
         }
 
-        final ClassOrInterfaceTypeDetails entity = typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
-                        ROO_JPA_ACTIVE_RECORD).iterator().next();
-        final String entityModule = PhysicalTypeIdentifier.getPath(
-                entity.getDeclaredByMetadataId()).getModule();
-        if (entityModule != scaffoldModule) {
+        final String entityModule = getEntityModuleName();
+        if (!entityModule.equals(scaffoldModule)) {
             copyDirectoryContents(GwtBootstrapPaths.DOMAIN_MODULE, entityModule);
 
             String inherits = projectOperations.getTopLevelPackage(entityModule)
@@ -400,6 +551,24 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
 
             updatePropertiesAndPlugins(entityModule);
         }
+    }
+
+    private String getProxyModuleName() {
+        final ClassOrInterfaceTypeDetails proxy = typeLocationService
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)
+                .iterator().next();
+        final String proxyModule = PhysicalTypeIdentifier.getPath(
+                proxy.getDeclaredByMetadataId()).getModule();
+        return proxyModule;
+    }
+
+    private String getEntityModuleName() {
+        final ClassOrInterfaceTypeDetails entity = typeLocationService
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
+                        ROO_JPA_ACTIVE_RECORD).iterator().next();
+        final String entityModule = PhysicalTypeIdentifier.getPath(
+                entity.getDeclaredByMetadataId()).getModule();
+        return entityModule;
     }
 
     private void updatePropertiesAndPlugins(final String moduleName) {
@@ -432,7 +601,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         final String sourceAntPath = requestFactoryPath.getSourceAntPath();
         if (sourceAntPath.contains("gae")
                 && !projectOperations
-                        .isFeatureInstalledInFocusedModule(FeatureNames.GAE)) {
+                        .isFeatureInstalledInModule(FeatureNames.GAE, moduleName)) {
             return;
         }
         if (sourceAntPath.contains("account")
@@ -457,7 +626,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                 false);
     }
 
-    private void addPackageToGwtXml(final JavaPackage sourcePackage) {
+    /*private void addPackageToGwtXml(final JavaPackage sourcePackage) {
         String gwtConfig = gwtBootstrapTypeService.getGwtModuleXml(projectOperations
                 .getFocusedModuleName());
         gwtConfig = StringUtils.stripEnd(gwtConfig, File.separator);
@@ -472,7 +641,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         gwtBootstrapTypeService.addSourcePath(
                 relativePackage.replace(".", PATH_DELIMITER),
                 projectOperations.getFocusedModuleName());
-    }
+    }*/
 
     private String getPomPath() {
         return projectOperations.getPathResolver().getFocusedIdentifier(ROOT,
