@@ -175,21 +175,23 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
 
         final Element configuration = XmlUtils.getConfiguration(getClass());
 
+        boolean isGaeEnabled = projectOperations.isFeatureInstalledInModule(
+                FeatureNames.GAE, getEntityModuleName());
+
         // Add POM properties
-        updateProperties(configuration);
+        updateProperties(configuration, isGaeEnabled);
 
         // Add POM repositories
-        updateRepositories(configuration);
+        updateRepositories(configuration, isGaeEnabled);
 
         // Add dependencies
-        updateDependencies(configuration);
+        updateDependencies(configuration, isGaeEnabled);
 
         // Update web.xml
         updateWebXml();
 
         // Update gwt-maven-plugin and others
-        updateBuildPlugins(projectOperations
-                .isFeatureInstalledInFocusedModule(FeatureNames.GAE));
+        updateBuildPlugins(configuration, isGaeEnabled);
     }
 
     @Override
@@ -231,6 +233,14 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         }
     }
 
+    private static final String PROPERTY = "property";
+    private static final String ENTRY = "entry";
+    private static final String NAME = "name";
+    private static final String KEY = "key";
+    private static final String VALUE = "value";
+    private static final String TRUE = "true";
+    private static final String FALSE = "false";
+
     public void updateGaeConfiguration() {
         final boolean isGaeEnabled = projectOperations
                 .isFeatureInstalled(FeatureNames.GAE);
@@ -256,7 +266,8 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
 
         // Ensure the gwt-maven-plugin appropriate to a GAE enabled or disabled
         // environment is updated
-        updateBuildPlugins(isGaeEnabled);
+        final Element configuration = XmlUtils.getConfiguration(getClass());
+        updateBuildPlugins(configuration, isGaeEnabled);
 
         // If there is a class that could possibly import from the appengine
         // sdk, denoted here as having Gae in the type name,
@@ -267,7 +278,6 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         final Set<FileDetails> files = fileManager.findMatchingAntPath(rootPath
                 + "/**/*Gae*.java");
         if (!files.isEmpty()) {
-            final Element configuration = XmlUtils.getConfiguration(getClass());
             final Element gaeDependency = XmlUtils
                     .findFirstElement(
                             "/configuration/gae/dependencies/dependency",
@@ -286,7 +296,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         final String entityModuleName = getEntityModuleName();
         final String focusedModuleName = projectOperations.getFocusedModuleName();
 
-        if (!entityModuleName.equals(focusedModuleName)) {
+        if (!entityModuleName.equals(focusedModuleName) && isGaeEnabled) {
             final String appenginePath = pathResolver.getFocusedIdentifier(
                     Path.SRC_MAIN_WEBAPP, "WEB-INF/appengine-web.xml");
             final boolean appenginePathExists = fileManager.exists(appenginePath);
@@ -322,18 +332,24 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
             final String contextPath = projectOperations.getPathResolver()
                     .getIdentifier(LogicalPath.getInstance(Path.SPRING_CONFIG_ROOT,
                             entityModuleName), "applicationContext.xml");
+
             final Document appCtx = XmlUtils.readXml(fileManager
                     .getInputStream(contextPath));
             final Element rootCtx = appCtx.getDocumentElement();
             final Element entityManagerFactory = XmlUtils.findFirstElement(
                     "/beans/bean[@id = 'entityManagerFactory']", rootCtx);
-            if (entityManagerFactory != null) {
+
+            if (entityManagerFactory != null && !entityManagerFactory
+                    .getAttribute("class").equals(
+                            LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN
+                            .getFullyQualifiedTypeName())) {
+
                 entityManagerFactory.setAttribute("class",
                         LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN
                         .getFullyQualifiedTypeName());
 
                 final Element pacakgesToScan = appCtx.createElement(PROPERTY);
-                pacakgesToScan.setAttribute(NAME, "pacakgesToScan");
+                pacakgesToScan.setAttribute(NAME, "packagesToScan");
                 pacakgesToScan.setAttribute(VALUE, projectOperations
                         .getTopLevelPackage(entityModuleName)
                         .getFullyQualifiedPackageName());
@@ -353,90 +369,85 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
 
                 if (fileManager.exists(contextPath)) {
                     final Document persistenceXml = XmlUtils.readXml(fileManager
-                            .getInputStream(contextPath));
+                            .getInputStream(persistenceXmlPath));
                     final Element rootPersistenceXml = persistenceXml.getDocumentElement();
 
                     for (final Element propertyElement : XmlUtils.findElements(
                             "/persistence/persistence-unit/properties/*",
                             rootPersistenceXml)) {
-                        final Element property = appCtx.createElement(PROPERTY);
+                        final Element property = appCtx.createElement(ENTRY);
                         property.setAttribute(KEY, propertyElement.getAttribute(NAME));
                         property.setAttribute(VALUE, propertyElement.getAttribute(VALUE));
                         map.appendChild(property);
                     }
                 } else {
-                    final Element nontransactionalRead = appCtx.createElement(PROPERTY);
+                    final Element nontransactionalRead = appCtx.createElement(ENTRY);
                     nontransactionalRead.setAttribute(KEY, "datanucleus.NontransactionalRead");
                     nontransactionalRead.setAttribute(VALUE, TRUE);
                     map.appendChild(nontransactionalRead);
 
-                    final Element nontransactionalWrite = appCtx.createElement(PROPERTY);
+                    final Element nontransactionalWrite = appCtx.createElement(ENTRY);
                     nontransactionalWrite.setAttribute(KEY, "datanucleus.NontransactionalWrite");
                     nontransactionalWrite.setAttribute(VALUE, TRUE);
                     map.appendChild(nontransactionalWrite);
 
-                    final Element autoCreateSchema = appCtx.createElement(PROPERTY);
+                    final Element autoCreateSchema = appCtx.createElement(ENTRY);
                     autoCreateSchema.setAttribute(KEY, "datanucleus.autoCreateSchema");
                     autoCreateSchema.setAttribute(VALUE, FALSE);
                     map.appendChild(autoCreateSchema);
 
-                    final Element connectionURL = appCtx.createElement(PROPERTY);
+                    final Element connectionURL = appCtx.createElement(ENTRY);
                     connectionURL.setAttribute(KEY, "datanucleus.ConnectionURL");
                     connectionURL.setAttribute(VALUE, "appengine");
                     map.appendChild(connectionURL);
 
-                    final Element connectionUserName = appCtx.createElement(PROPERTY);
+                    final Element connectionUserName = appCtx.createElement(ENTRY);
                     connectionUserName.setAttribute(KEY, "datanucleus.ConnectionUserName");
                     connectionUserName.setAttribute(VALUE, "");
                     map.appendChild(connectionUserName);
 
-                    final Element connectionPassword = appCtx.createElement(PROPERTY);
+                    final Element connectionPassword = appCtx.createElement(ENTRY);
                     connectionPassword.setAttribute(KEY, "datanucleus.ConnectionPassword");
                     connectionPassword.setAttribute(VALUE, "");
                     map.appendChild(connectionPassword);
 
-                    final Element autoCreateTables = appCtx.createElement(PROPERTY);
+                    final Element autoCreateTables = appCtx.createElement(ENTRY);
                     autoCreateTables.setAttribute(KEY, "datanucleus.autoCreateTables");
                     autoCreateTables.setAttribute(VALUE, TRUE);
                     map.appendChild(autoCreateTables);
 
-                    final Element autoCreateColumns = appCtx.createElement(PROPERTY);
+                    final Element autoCreateColumns = appCtx.createElement(ENTRY);
                     autoCreateColumns.setAttribute(KEY, "datanucleus.autoCreateColumns");
                     autoCreateColumns.setAttribute(VALUE, FALSE);
                     map.appendChild(autoCreateColumns);
 
-                    final Element autoCreateConstraints = appCtx.createElement(PROPERTY);
+                    final Element autoCreateConstraints = appCtx.createElement(ENTRY);
                     autoCreateConstraints.setAttribute(KEY, "datanucleus.autoCreateConstraints");
                     autoCreateConstraints.setAttribute(VALUE, FALSE);
                     map.appendChild(autoCreateConstraints);
 
-                    final Element validateTables = appCtx.createElement(PROPERTY);
+                    final Element validateTables = appCtx.createElement(ENTRY);
                     validateTables.setAttribute(KEY, "datanucleus.validateTables");
                     validateTables.setAttribute(VALUE, FALSE);
                     map.appendChild(validateTables);
 
-                    final Element validateConstraints = appCtx.createElement(PROPERTY);
+                    final Element validateConstraints = appCtx.createElement(ENTRY);
                     validateConstraints.setAttribute(KEY, "datanucleus.validateConstraints");
                     validateConstraints.setAttribute(VALUE, FALSE);
                     map.appendChild(validateConstraints);
 
-                    final Element addClassTransformer = appCtx.createElement(PROPERTY);
+                    final Element addClassTransformer = appCtx.createElement(ENTRY);
                     addClassTransformer.setAttribute(KEY, "datanucleus.jpa.addClassTransformer");
                     addClassTransformer.setAttribute(VALUE, FALSE);
                     map.appendChild(addClassTransformer);
                 }
+                fileManager.createOrUpdateTextFileIfRequired(contextPath,
+                        XmlUtils.nodeToString(rootCtx), false);
             }
 
             fileManager.delete(persistenceXmlPath);
         }
     }
-
-    private static final String PROPERTY = "property";
-    private static final String NAME = "name";
-    private static final String KEY = "key";
-    private static final String VALUE = "value";
-    private static final String TRUE = "true";
-    private static final String FALSE = "false";
 
     public String getName() {
         return FEATURE_NAME;
@@ -575,7 +586,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         final Element configuration = XmlUtils.getConfiguration(getClass());
 
         final List<Element> properties = XmlUtils.findElements(
-                "/configuration/batch/properties/*", configuration);
+                "/configuration/gwt/properties/*", configuration);
         for (Element propertyElement : properties) {
             projectOperations.addProperty(moduleName,
                     new Property(propertyElement));
@@ -648,12 +659,13 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                 "pom.xml");
     }
 
-    private void updateBuildPlugins(final boolean isGaeEnabled) {
+    private void updateBuildPlugins(final Element configuration,
+            final boolean isGaeEnabled) {
         // Update the POM
         final String xPathExpression = "/configuration/"
                 + (isGaeEnabled ? "gae" : "gwt") + "/plugins/plugin";
         final List<Element> pluginElements = XmlUtils.findElements(
-                xPathExpression, XmlUtils.getConfiguration(getClass()));
+                xPathExpression, configuration);
         for (final Element pluginElement : pluginElements) {
             final Plugin defaultPlugin = new Plugin(pluginElement);
             for (final Plugin plugin : projectOperations.getFocusedModule()
@@ -696,22 +708,37 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                 XmlUtils.nodeToString(document), false);
     }
 
-    private void updateProperties(final Element configuration) {
-        final List<Element> properties = XmlUtils.findElements(
-                "/configuration/batch/properties/*", configuration);
-        for (Element propertyElement : properties) {
+    private void updateProperties(final Element configuration,
+            final boolean isGaeEnabled) {
+        for (Element propertyElement : XmlUtils.findElements(
+                "/configuration/gwt/properties/*", configuration)) {
             projectOperations.addProperty(
                     projectOperations.getFocusedModuleName(),
                     new Property(propertyElement));
         }
+
+        if (isGaeEnabled) {
+            for (Element propertyElement : XmlUtils.findElements(
+                    "/configuration/gae/properties/*", configuration)) {
+                projectOperations.addProperty(
+                        projectOperations.getFocusedModuleName(),
+                        new Property(propertyElement));
+            }
+        }
     }
 
-    private void updateDependencies(final Element configuration) {
+    private void updateDependencies(final Element configuration,
+            final boolean isGaeEnabled) {
         final List<Dependency> dependencies = new ArrayList<Dependency>();
-        final List<Element> gwtDependencies = XmlUtils.findElements(
-                "/configuration/gwt/dependencies/dependency", configuration);
-        for (final Element dependencyElement : gwtDependencies) {
+        for (final Element dependencyElement : XmlUtils.findElements(
+                "/configuration/gwt/dependencies/dependency", configuration)) {
             dependencies.add(new Dependency(dependencyElement));
+        }
+        if (isGaeEnabled) {
+            for (final Element dependencyElement : XmlUtils.findElements(
+                    "/configuration/gae/dependencies/dependency", configuration)) {
+                dependencies.add(new Dependency(dependencyElement));
+            }
         }
         projectOperations.removeDependencies(
                 projectOperations.getFocusedModuleName(), dependencies);
@@ -769,23 +796,35 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                 XmlUtils.nodeToString(document), false);
     }
 
-    private void updateRepositories(final Element configuration) {
+    private void updateRepositories(final Element configuration,
+            final boolean isGaeEnabled) {
         final List<Repository> repositories = new ArrayList<Repository>();
 
-        final List<Element> gwtRepositories = XmlUtils.findElements(
-                "/configuration/gwt/repositories/repository", configuration);
-        for (final Element repositoryElement : gwtRepositories) {
+        for (final Element repositoryElement : XmlUtils.findElements(
+                "/configuration/gwt/repositories/repository", configuration)) {
             repositories.add(new Repository(repositoryElement));
+        }
+        if (isGaeEnabled) {
+            for (final Element repositoryElement : XmlUtils.findElements(
+                    "/configuration/gae/repositories/repository", configuration)) {
+                repositories.add(new Repository(repositoryElement));
+            }
         }
         projectOperations.addRepositories(
                 projectOperations.getFocusedModuleName(), repositories);
 
         repositories.clear();
-        final List<Element> gwtPluginRepositories = XmlUtils.findElements(
+        for (final Element repositoryElement : XmlUtils.findElements(
                 "/configuration/gwt/pluginRepositories/pluginRepository",
-                configuration);
-        for (final Element repositoryElement : gwtPluginRepositories) {
+                configuration)) {
             repositories.add(new Repository(repositoryElement));
+        }
+        if (isGaeEnabled) {
+            for (final Element repositoryElement : XmlUtils.findElements(
+                    "/configuration/gae/pluginRepositories/pluginRepository",
+                    configuration)) {
+                repositories.add(new Repository(repositoryElement));
+            }
         }
         projectOperations.addPluginRepositories(
                 projectOperations.getFocusedModuleName(), repositories);
