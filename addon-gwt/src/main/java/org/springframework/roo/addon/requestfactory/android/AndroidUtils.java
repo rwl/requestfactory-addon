@@ -13,7 +13,7 @@ public final class AndroidUtils {
     public static Map<RequestFactoryType, JavaType> getMirrorTypeMap(
             final JavaType governorType, final JavaPackage topLevelPackage) {
         final Map<RequestFactoryType, JavaType> mirrorTypeMap = new HashMap<RequestFactoryType, JavaType>();
-        for (final RequestFactoryType mirrorType : AndroidTypes.ALL_TYPES) {
+        for (final RequestFactoryType mirrorType : AndroidType.ALL_TYPES) {
             mirrorTypeMap.put(
                     mirrorType,
                     RequestFactoryUtils.convertGovernorTypeNameIntoKeyTypeName(governorType,

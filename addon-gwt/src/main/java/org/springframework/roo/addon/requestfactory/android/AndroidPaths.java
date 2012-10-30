@@ -1,13 +1,20 @@
 package org.springframework.roo.addon.requestfactory.android;
 
+import java.io.File;
+
 import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 
 public class AndroidPaths {
 
-    public static final RequestFactoryPath MANAGED_ACTIVITY = new RequestFactoryPath("/client/managed/activity", "module/client/managed/activity/" + RequestFactoryPath.templateSelector); // GWT_SCAFFOLD
+    private static final String SEP = File.separator;
+
+    public static final String RES_LAYOUT = SEP + "res" + SEP + "layout";
+
+    public static final RequestFactoryPath ACTIVITY = new RequestFactoryPath("/activity", "module/activity/" + RequestFactoryPath.templateSelector);
+//    public static final RequestFactoryPath RES_LAYOUT = new RequestFactoryPath("/res/layout", "module/layout/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath[] ALL_PATHS = new RequestFactoryPath[] {
-        MANAGED_ACTIVITY
+        ACTIVITY
     };
 
     private AndroidPaths() {

@@ -2,22 +2,36 @@ package org.springframework.roo.addon.requestfactory.android.scaffold;
 
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ANDROID_SCAFFOLD;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.service.component.ComponentContext;
+import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
+import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
+import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHolder;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
+import org.springframework.roo.addon.requestfactory.android.AndroidPaths;
+import org.springframework.roo.addon.requestfactory.android.AndroidTemplateService;
+import org.springframework.roo.addon.requestfactory.android.AndroidType;
 import org.springframework.roo.addon.requestfactory.android.AndroidUtils;
 import org.springframework.roo.addon.requestfactory.android.RooAndroidScaffold;
 import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadataProviderImpl;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
+import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.metadata.MetadataItem;
 import org.springframework.roo.model.JavaPackage;
+import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
+import org.springframework.roo.project.Path;
+import org.springframework.roo.project.PathResolver;
 
 /**
  * Monitors Java types and if necessary creates/updates/deletes the Android
@@ -27,6 +41,8 @@ import org.springframework.roo.project.LogicalPath;
 @Service
 public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldMetadataProviderImpl
         implements AndroidScaffoldMetadataProvider {
+
+    @Reference AndroidTemplateService androidTemplateService;
 
     protected void activate(final ComponentContext context) {
         metadataDependencyRegistry.registerDependency(
@@ -65,6 +81,60 @@ public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldM
         } else {
             return moduleName;
         }
+    }
+
+    @Override
+    protected Map<String, String> getXmlToBeWritten(
+            final ClassOrInterfaceTypeDetails mirroredType, final JavaPackage topLevelPackage,
+            final Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap,
+            final ClassOrInterfaceTypeDetails proxy, final String moduleName,
+            final RequestFactoryTemplateDataHolder templateDataHolder) {
+
+        final Map<String, String> xmlToBeWritten = new LinkedHashMap<String, String>();
+
+        final Map<RequestFactoryType, JavaType> mirrorTypeMap = getMirrorTypeMap(
+                mirroredType.getName(), topLevelPackage);
+
+        for (final Map.Entry<RequestFactoryType, JavaType> entry : mirrorTypeMap
+                .entrySet()) {
+            final RequestFactoryType requestFactoryType = entry.getKey();
+            if (!(requestFactoryType instanceof AndroidType)) {
+                continue;
+            }
+            final AndroidType androidType = (AndroidType) entry.getKey();
+            final JavaType javaType = entry.getValue();
+            if (!androidType.isMirrorType()) {
+                continue;
+            }
+            androidType.dynamicallyResolveFieldsToWatch(clientSideTypeMap);
+            androidType.dynamicallyResolveMethodsToWatch(proxy.getName(),
+                    clientSideTypeMap, topLevelPackage);
+
+            if (androidType.isCreateViewXml()) {
+                final RequestFactoryPath requestFactoryPath = androidType.getPath();
+                final PathResolver pathResolver = projectOperations
+                        .getPathResolver();
+                final String layoutPath = pathResolver.getIdentifier(
+                        LogicalPath.getInstance(Path.ROOT,
+                                moduleName), AndroidPaths.RES_LAYOUT);
+                final String packagePath = pathResolver
+                        .getIdentifier(LogicalPath.getInstance(
+                                Path.SRC_MAIN_JAVA, moduleName), requestFactoryPath
+                                .getPackagePath(topLevelPackage));
+
+                final String targetDirectory = requestFactoryPath == AndroidPaths.ACTIVITY ? layoutPath
+                        : packagePath;
+                final String destFile = targetDirectory + File.separatorChar
+                        + javaType.getSimpleTypeName() + "View.xml";
+                final String contents = androidTemplateService.buildViewXml(
+                        templateDataHolder.getXmlTemplates().get(androidType),
+                        destFile,
+                        new ArrayList<MethodMetadata>(proxy
+                                .getDeclaredMethods()));
+                xmlToBeWritten.put(destFile, contents);
+            }
+        }
+        return xmlToBeWritten;
     }
 
     @Override
