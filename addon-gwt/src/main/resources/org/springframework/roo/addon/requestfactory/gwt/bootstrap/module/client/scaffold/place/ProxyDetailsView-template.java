@@ -14,11 +14,16 @@ public interface ProxyDetailsView<P> extends TakesValue<P>, IsWidget {
 	 * Implemented by the owner of the view.
 	 */
 	interface Delegate {
-		
 		void deleteClicked();
 
 		void editClicked();
 	}
 
-	boolean confirm(String msg);
+    interface ConfirmationCallback {
+        void confirm();
+
+        void cancel();
+    }
+
+	void confirm(String msg, ConfirmationCallback callback);
 }

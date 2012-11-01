@@ -2,8 +2,6 @@ package {{=packageName}};
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -11,62 +9,99 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.dom.client.event.touch.HasTouchHandlers;
+import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
+import com.googlecode.mgwt.ui.client.widget.HeaderButton;
+import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
+import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
+import com.googlecode.mgwt.ui.client.dialog.ConfirmDialog.ConfirmCallback;
+import com.googlecode.mgwt.ui.client.dialog.Dialogs;
 
 {{#imports}}import {{=import}};
 {{/imports}}
+
+import {{=uiPackage}}.renderer.{{=proxyRendererType}};
+
 /**
  * Details view for {{=name}} proxys.
  */
 public class {{=className}} extends Composite implements {{=detailsView}} {
-	interface Binder extends UiBinder<HTMLPanel, {{=className}}> {}
+  interface Binder extends UiBinder<LayoutPanel, {{=className}}> {}
 
-	private static final Binder BINDER = GWT.create(Binder.class);
+  private static final Binder BINDER = GWT.create(Binder.class);
 
-	private static {{=className}} instance;
+  private static {{=className}} instance;
 
-	public static {{=className}} instance() {
-		if (instance == null) {
-			instance = new {{=className}}();
-		}
-		return instance;
-	}
+  public static {{=className}} instance() {
+    if (instance == null) {
+      instance = new {{=className}}();
+    }
+    return instance;
+  }
 
-	{{=proxy}} proxy;
-	{{#fields}}
-	@UiField Element {{=field}};{{/fields}}	
-	@UiField HasClickHandlers delete;
+  {{=proxy}} proxy;
+  {{#fields}}
+  @UiField Label {{=field}};{{/fields}}
+  @UiField HasTouchHandlers delete;
 
-	private Delegate delegate;
+  @UiField HTML title;
+  @UiField HasTouchHandlers back;
+  @UiField HasTouchHandlers edit;
 
-	public {{=className}}() {
-		initWidget(BINDER.createAndBindUi(this));
-	}
+  private Delegate delegate;
 
-  	public Widget asWidget() {
-		return this;
-	}
-  
-	public boolean confirm(String msg) {
-		return Window.confirm(msg);
-	}
+  public {{=className}}() {
+    initWidget(BINDER.createAndBindUi(this));
+    edit.addTouchStartHandler(new TouchStartHandler() {
+      @Override
+      public void onTouchStart(TouchStartEvent event) {
+        {{=className}}.this.delegate.editClicked();
+      }
+    });
 
-	public {{=proxy}} getValue() {
-		return proxy;
-	}
+    delete.addTouchStartHandler(new TouchStartHandler() {
+    @Override
+    public void onTouchStart(TouchStartEvent event) {
+      {{=className}}.this.delegate.deleteClicked();
+    }
+  });
+  }
 
-	@UiHandler("delete")
-	public void onDeleteClicked(ClickEvent e) {
-		delegate.deleteClicked();
-	}
+    public Widget asWidget() {
+    return this;
+  }
 
-	public void setDelegate(Delegate delegate) {
-		this.delegate = delegate;
-	}
+  public void confirm(String msg, ConfirmationCallback callback) {
+    final ConfirmationCallback fcallback = callback;
+    Dialogs.confirm("Confirm Deletion", msg, new ConfirmCallback() {
+      @Override
+      public void onOk() {
+        fcallback.confirm();
+      }
+      @Override
+      public void onCancel() {
+        fcallback.cancel();
+      }
+    });
+  }
 
-	public void setValue({{=proxy}} proxy) {
-		this.proxy = proxy;{{#managedProperties}}
-		{{=prop}}.setInnerText(proxy.{{=propGetter}}() == null ? "" : {{=propFormatter}}(proxy.{{=propGetter}}()));{{/managedProperties}}
-	}
+  public {{=proxy}} getValue() {
+    return proxy;
+  }
+
+  public void setDelegate(Delegate delegate) {
+    this.delegate = delegate;
+  }
+
+  public void setValue({{=proxy}} proxy) {
+    this.proxy = proxy;
+    this.title.setText({{=proxyRendererType}}.instance().render(proxy));
+    {{#managedProperties}}
+    {{=prop}}.setText(proxy.{{=propGetter}}() == null ? "" : {{=propFormatter}}(proxy.{{=propGetter}}()));{{/managedProperties}}
+  }
 }

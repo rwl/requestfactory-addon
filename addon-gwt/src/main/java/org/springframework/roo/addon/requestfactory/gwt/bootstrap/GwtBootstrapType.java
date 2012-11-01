@@ -101,7 +101,7 @@ public class GwtBootstrapType extends RequestFactoryType {
         } else if (this == MOBILE_DETAILS_VIEW) {
             watchedFieldNames.addAll(proxyFieldTypeMap.keySet());
             watchedFieldNames.addAll(convertToJavaSymbolNames("proxy",
-                    "displayRenderer"));
+                    "displayRenderer", "title"));
         } else if (this == DESKTOP_EDIT_VIEW) {
             watchedFieldNames.addAll(proxyFieldTypeMap.keySet());
         } else if (this == MOBILE_EDIT_VIEW) {

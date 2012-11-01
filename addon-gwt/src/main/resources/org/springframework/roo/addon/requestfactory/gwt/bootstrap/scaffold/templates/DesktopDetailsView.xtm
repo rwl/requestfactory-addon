@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.Label;
 
 import {{=placePackage}}.ProxyListView;
+import {{=placePackage}}.ProxyDetailsView.ConfirmationCallback;
 {{#imports}}import {{=import}};
 {{/imports}}
 /**
@@ -54,8 +55,12 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
 		return this;
 	}
 
-	public boolean confirm(String msg) {
-		return Window.confirm(msg);
+    public void confirm(String msg, ConfirmationCallback callback) {
+        if (Window.confirm(msg)) {
+        	callback.confirm();
+        } else {
+        	callback.cancel();
+        }
 	}
 
 	public {{=proxy}} getValue() {
