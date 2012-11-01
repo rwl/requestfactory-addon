@@ -42,9 +42,10 @@ public abstract class AbstractProxyListActivity<P extends EntityProxy> implement
 	private final Map<EntityProxyId<P>, Integer> idToRow = new HashMap<EntityProxyId<P>, Integer>();
 	private final Map<EntityProxyId<P>, P> idToProxy = new HashMap<EntityProxyId<P>, P>();
 
-	private final PlaceController placeController;
 	private final SingleSelectionModel<P> selectionModel;
 	private final Class<P> proxyClass;
+
+	protected final PlaceController placeController;
 	protected final String parentId;
 
 	private HandlerRegistration rangeChangeHandler;

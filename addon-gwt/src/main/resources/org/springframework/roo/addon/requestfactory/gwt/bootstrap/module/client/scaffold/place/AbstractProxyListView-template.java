@@ -1,12 +1,15 @@
 package __TOP_LEVEL_PACKAGE__.client.scaffold.place;
 
-import com.github.gwtbootstrap.client.ui.Button;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasData;
+import com.googlecode.mgwt.dom.client.event.touch.HasTouchHandlers;
+import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 
 /**
  * Abstract implementation of ProxyListView.
@@ -30,7 +33,7 @@ public abstract class AbstractProxyListView<P extends EntityProxy> extends Compo
 		this.delegate = delegate;
 	}
 
-	protected void init(Widget root, HasData<P> display, Button newButton) {
+	protected void init(Widget root, HasData<P> display, HasClickHandlers newButton, HasClickHandlers backButton) {
 		super.initWidget(root);
 		this.display = display;
 
@@ -39,7 +42,32 @@ public abstract class AbstractProxyListView<P extends EntityProxy> extends Compo
 				delegate.createClicked();
 			}
 		});
+
+        backButton.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                delegate.backClicked();
+            }
+        });
 	}
+
+    protected void init(Widget root, HasData<P> display, HasTouchHandlers newButton, HasTouchHandlers backButton) {
+        super.initWidget(root);
+        this.display = display;
+
+        newButton.addTouchStartHandler(new TouchStartHandler() {
+            @Override
+            public void onTouchStart(TouchStartEvent event) {
+                delegate.createClicked();
+            }
+        });
+
+        backButton.addTouchStartHandler(new TouchStartHandler() {
+            @Override
+            public void onTouchStart(TouchStartEvent event) {
+                delegate.backClicked();
+            }
+        });
+    }
 
 	protected void initWidget(Widget widget) {
 		throw new UnsupportedOperationException("AbstractRecordListView must be initialized via init(Widget, HasData<P>, Button) ");

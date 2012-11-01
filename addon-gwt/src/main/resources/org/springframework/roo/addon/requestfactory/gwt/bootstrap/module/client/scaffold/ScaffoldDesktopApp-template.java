@@ -63,13 +63,6 @@ public class ScaffoldDesktopApp extends ScaffoldApp {
     }
 
     private void init() {
-        GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
-            public void onUncaughtException(Throwable e) {
-                Window.alert("Error: " + e.getMessage());
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            }
-        });
-
         if (LogConfiguration.loggingIsEnabled()) {
             // Add remote logging handler
             RequestFactoryLogHandler.LoggingRequestProvider provider = new RequestFactoryLogHandler.LoggingRequestProvider() {

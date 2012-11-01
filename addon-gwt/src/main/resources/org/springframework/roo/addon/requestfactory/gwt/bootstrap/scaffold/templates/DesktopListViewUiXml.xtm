@@ -3,7 +3,6 @@
   xmlns:g='urn:import:com.google.gwt.user.client.ui'
   xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
   xmlns:c="urn:import:com.google.gwt.user.cellview.client">
-<ui:image field="createButton" src="../../../style/images/createButton.png"/>
 
 <ui:style>
   .controls {
@@ -40,6 +39,7 @@
     <div style='height:3em;'></div>
     <b:CellTable width='100%' ui:field='table' pageSize='10'/>
     <div class='{style.controls}'>
+      <b:Button type="LINK" icon="CIRCLE_ARROW_LEFT" ui:field="backButton">Back</b:Button>
       <b:Button type="LINK" icon="PLUS_SIGN" ui:field='newButton'>Create {{=name}}</b:Button>
       <!-- <b:SimplePager display='{table}' location='RIGHT' fastForwardRows='50'/> -->
       <c:SimplePager display='{table}' location='RIGHT'/>

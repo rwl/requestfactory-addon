@@ -8,6 +8,8 @@ import com.google.gwt.view.client.Range;
 
 import {{=placePackage}}.AbstractProxyListActivity;
 import {{=placePackage}}.ProxyListView;
+import {{=placePackage}}.ProxyPlace;
+import {{=placePackage}}.ProxyPlace.Operation;
 {{#imports}}import {{=import}};
 {{/imports}}
 
@@ -19,13 +21,15 @@ import java.util.List;
 public class {{=className}} extends AbstractProxyListActivity<{{=proxy}}> implements {{=isScaffoldMobileActivity}} {
 
 	private final {{=requestFactory}} requests;
-    private final String parentId;
 
 	public {{=className}}({{=requestFactory}} requests,
       ProxyListView<{{=proxy}}> view, PlaceController placeController, String parentId) {
 		super(placeController, view, {{=proxy}}.class, parentId);
 		this.requests = requests;
-		this.parentId = parentId;
+	}
+
+	public void backClicked() {
+        {{=gotoParentPlaceStmt}}
 	}
 
 	public Place getBackButtonPlace() {

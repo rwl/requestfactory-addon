@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configuration>
-	<shared>
+  <shared>
         <plugins>
             <!--
             shared sources need to be bundled with the jar,
@@ -19,11 +19,11 @@
                 </executions>
             </plugin>
         </plugins>
-	</shared>
+  </shared>
     <gwt>
-	    <properties>
-        	<gwt.version>2.5.0-rc1</gwt.version>
-	    </properties>
+      <properties>
+          <gwt.version>2.5.0-rc1</gwt.version>
+      </properties>
         <repositories>
             <repository>
                 <id>maven.springframework.org.external</id>
@@ -81,6 +81,11 @@
                 <groupId>com.github.gwtbootstrap</groupId>
                 <artifactId>gwt-bootstrap</artifactId>
                 <version>2.1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.mgwt</groupId>
+                <artifactId>mgwt</artifactId>
+                <version>1.1.2</version>
             </dependency>
         </dependencies>
         <plugins>

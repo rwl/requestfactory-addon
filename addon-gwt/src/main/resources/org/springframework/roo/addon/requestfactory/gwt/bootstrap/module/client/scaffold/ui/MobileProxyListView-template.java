@@ -11,8 +11,11 @@ import com.google.gwt.text.shared.SafeHtmlRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.github.gwtbootstrap.client.ui.Button;
+import com.googlecode.mgwt.ui.client.widget.HeaderButton;
+import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 
 /**
  * An implementation of {@link ProxyListView} used in mobile applications
@@ -27,7 +30,10 @@ public abstract class MobileProxyListView<P extends EntityProxy> extends Abstrac
 	private static final Binder BINDER = GWT.create(Binder.class);
 
 	@UiField(provided = true) CellList<P> list;
-	@UiField Button newButton;
+    @UiField HeaderPanel header;
+    @UiField HeaderButton backButton;
+    @UiField HTML title;
+    @UiField HeaderButton newButton;
 
 	/**
 	 * Constructor.
@@ -44,9 +50,9 @@ public abstract class MobileProxyListView<P extends EntityProxy> extends Abstrac
 			}
 		};
 		this.list = new CellList<P>(cell, ScaffoldMobileApp.getMobileListResources());
-		init(BINDER.createAndBindUi(this), list, newButton);
+		init(BINDER.createAndBindUi(this), list, newButton, backButton);
 
 		// Initialize the widget.
-		this.newButton.setText(buttonText);
+		//this.newButton.setText(buttonText);
 	}
 }

@@ -35,6 +35,7 @@ public class {{=className}} extends AbstractProxyListView<{{=proxy}}> {
 	@UiField(provided = true)
 	CellTable<{{=proxy}}> table = new CellTable<{{=proxy}}>(10, GWT.<CellTable.SelectableResources>create(CellTable.SelectableResources.class));
 	@UiField Button newButton;
+    @UiField Button backButton;
 
 	private Set<String> paths = new HashSet<String>();
 
@@ -47,7 +48,7 @@ public class {{=className}} extends AbstractProxyListView<{{=proxy}}> {
 	}
 
 	public {{=className}}() {
-		init(BINDER.createAndBindUi(this), table, newButton);
+		init(BINDER.createAndBindUi(this), table, newButton, backButton);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 			init();
 	}

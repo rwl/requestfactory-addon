@@ -317,18 +317,14 @@ public class BaseTemplateServiceImpl {
                 removeMethodSignature);
 
 
-        AnnotationMetadata annotation = mirroredType.getAnnotation(ROO_REQUEST_FACTORY);
-        AnnotationAttributeValue<String> annotationAttributeValue = annotation
-                .getAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE);
-        String parentPropertyName = "";
-        if (annotationAttributeValue != null) {
-            parentPropertyName = annotationAttributeValue.getValue();
-        }
+        final String parentPropertyName = RequestFactoryUtils
+                .getStringAnnotationValue(mirroredType, ROO_REQUEST_FACTORY,
+                        RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE, "");
 
-        JavaType altIdType = idType.equals(KEY) ? STRING : idType;
+        final JavaType nonKeyIdType = idType.equals(KEY) ? STRING : idType;
 
-        String countMethodId, findMethodId, countCall, findCall;
-        List<MethodParameter> findParameters, countParamemters;
+        final String countMethodId, findMethodId, countCall, findCall;
+        final List<MethodParameter> findParameters, countParamemters;
         if (parentPropertyName.isEmpty()) {
             countMethodId = CustomDataKeys.COUNT_ALL_METHOD.name();
             findMethodId = CustomDataKeys.FIND_ENTRIES_METHOD.name();
@@ -344,19 +340,20 @@ public class BaseTemplateServiceImpl {
             countCall = "(parentId)";
             findCall = "(parentId, range.getStart(), range.getLength())";
             countParamemters = Arrays.asList(new MethodParameter(
-                    altIdType, parentPropertyName + "Id"));
+                    nonKeyIdType, parentPropertyName + "Id"));
             findParameters = Arrays.asList(new MethodParameter(
-                    altIdType, parentPropertyName + "Id"), new MethodParameter(
+                    nonKeyIdType, parentPropertyName + "Id"), new MethodParameter(
                     INT_PRIMITIVE, "firstResult"), new MethodParameter(
                     INT_PRIMITIVE, "maxResults"));
 
-            FieldMetadata parentProperty = mirroredType
+            final FieldMetadata parentProperty = mirroredType
                     .getField(new JavaSymbolName(parentPropertyName));
             Validate.notNull(parentProperty, "Parent property not found");
-            String parentTypeName = parentProperty.getFieldType().getSimpleTypeName();
-            String parentProxyName = parentTypeName + "Proxy";
+            final JavaType parentType = parentProperty.getFieldType();
+            final String parentTypeName = parentType.getSimpleTypeName();
+            final String parentProxyName = parentTypeName + "Proxy";
 
-            String setProxyParentStmt = "if (proxy.get"
+            final String setProxyParentStmt = "if (proxy.get"
                     + StringUtils.capitalize(parentPropertyName) + "() == null) {\n"
                     + "factory." + StringUtils.uncapitalize(parentTypeName)
                     + "Request().find" + parentTypeName + "ByStringId"
@@ -368,11 +365,30 @@ public class BaseTemplateServiceImpl {
                     + "});\n"
                     + "}\n";
             dataDictionary.setVariable("setProxyParentStmt", setProxyParentStmt);
+
+            final ClassOrInterfaceTypeDetails parentDetails = typeLocationService
+                    .getTypeDetails(parentType);
+            final String grandParentPropertyName = RequestFactoryUtils
+                    .getStringAnnotationValue(parentDetails, ROO_REQUEST_FACTORY,
+                            RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE, "");
+
+            final String gotoParentPlaceStmt = "requests." + StringUtils.uncapitalize(parentTypeName)
+                    + "Request().find" + parentTypeName + "ByStringId(parentId)"
+                    + (grandParentPropertyName.isEmpty() ? "" : ".with(\"" + grandParentPropertyName + "\")")
+                    + ".fire(new Receiver<" + parentProxyName + ">() {\n"
+                    + "@Override\n"
+                    + "public void onSuccess(" + parentProxyName + " response) {\n"
+                    + "placeController.goTo(new ProxyPlace(response.stableId(), Operation.DETAILS, "
+                    + (grandParentPropertyName.isEmpty() ? "null" : "response.get" + StringUtils.capitalize(grandParentPropertyName) + "().getStringId()")
+                    + "));\n"
+                    + "}\n"
+                    + "});";
+            dataDictionary.setVariable("gotoParentPlaceStmt", gotoParentPlaceStmt);
         }
 
         final MemberTypeAdditions findMethodAdditions = layerService
                 .getMemberTypeAdditions(metadataIdentificationString,
-                        findMethodId, entity, altIdType, LAYER_POSITION,
+                        findMethodId, entity, nonKeyIdType, LAYER_POSITION,
                         findParameters);
         Validate.notNull(findMethodAdditions,
                 "Find entries method is not available for entity '" + entityName + "'");
@@ -381,7 +397,7 @@ public class BaseTemplateServiceImpl {
 
         final MemberTypeAdditions countMethodAdditions = layerService
                 .getMemberTypeAdditions(metadataIdentificationString,
-                        countMethodId, entity, altIdType, LAYER_POSITION,
+                        countMethodId, entity, nonKeyIdType, LAYER_POSITION,
                         countParamemters);
         Validate.notNull(countMethodAdditions,
                 "Count method is not available for entity '" + entityName + "'");
