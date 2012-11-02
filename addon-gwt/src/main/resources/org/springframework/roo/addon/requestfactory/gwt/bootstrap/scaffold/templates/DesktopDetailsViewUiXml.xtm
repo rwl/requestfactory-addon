@@ -33,7 +33,7 @@
       <h3 class='{style.header}'><ui:msg><span ui:field='displayRenderer' /></ui:msg></h3>
     </div>
 
-	<b:Form addStyleNames="{style.fields}" type="HORIZONTAL" id="boundElementHolder">
+	<b:Form addStyleNames="{style.fields}" type="HORIZONTAL" debugId="boundElementHolder">
 		<b:Fieldset>{{#properties}}
 			<b:ControlGroup>
 				<b:ControlLabel styleName="{style.label}" for="{{=prop}}">{{=propReadable}}:</b:ControlLabel>

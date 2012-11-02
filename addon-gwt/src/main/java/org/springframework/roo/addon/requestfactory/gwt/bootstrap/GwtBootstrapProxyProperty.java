@@ -68,6 +68,38 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
                 : "b:ValueListBox";
     }
 
+    public String getMobileBinder() {
+        if (type.equals(JavaType.DOUBLE_OBJECT)) {
+            return "m:MDoubleBox";
+        }
+        if (type.equals(LONG_OBJECT)) {
+            return "m:MLongBox";
+        }
+        if (type.equals(JavaType.INT_OBJECT)) {
+            return "m:MIntegerBox";
+        }
+        if (type.equals(JavaType.FLOAT_OBJECT)) {
+            return "m:MDoubleBox";
+        }
+        if (type.equals(JavaType.BYTE_OBJECT)) {
+            return "r:ByteBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'";
+        }
+        if (type.equals(JavaType.SHORT_OBJECT)) {
+            return "r:ShortBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'";
+        }
+        if (type.equals(JavaType.CHAR_OBJECT)) {
+            return "r:CharBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'";
+        }
+        if (type.equals(BIG_DECIMAL)) {
+            return "r:BigDecimalBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'";
+        }
+        return isCollection() ? "e:" + getSetEditor()
+                : isDate() ? "m:MDateBox"
+                : isBoolean() ? "m:MCheckBox"
+                : isString() ? "m:MTextBox"
+                : "b:ValueListBox";
+    }
+
     public String forEditView() {
         String initializer = "";
 
@@ -91,6 +123,29 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
                 initializer);
     }
 
+    public String forMobileEditView() {
+        String initializer = "";
+
+        if (isBoolean()) {
+            initializer = " = " + getMobileCheckboxSubtype();
+        }
+
+        if (isEnum() && !isCollection()) {
+            initializer = String.format(" = new ValueListBox<%s>(%s)",
+                    type.getFullyQualifiedTypeName(), getRenderer());
+        }
+
+        if (isProxy()) {
+            initializer = String
+                    .format(" = new ValueListBox<%1$s>(%2$s.instance(), new com.google.web.bindery.requestfactory.gwt.ui.client.EntityProxyKeyProvider<%1$s>())",
+                            type.getFullyQualifiedTypeName(),
+                            getProxyRendererType());
+        }
+
+        return String.format("@UiField %s %s %s", getMobileEditor(), getName(),
+                initializer);
+    }
+
     public String forMobileListView(final String rendererName) {
         return new StringBuilder("if (value.").append(getGetter())
                 .append("() != null) {\n\t\t\t\tsb.appendEscaped(")
@@ -101,6 +156,11 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
     public String getCheckboxSubtype() {
         // TODO: Ugly hack, fix in M4
         return "new CheckBox() { public void setValue(Boolean value) { super.setValue(value == null ? Boolean.FALSE : value); } }";
+    }
+
+    public String getMobileCheckboxSubtype() {
+        // TODO: Ugly hack, fix in M4
+        return "new MCheckBox() { public void setValue(Boolean value) { super.setValue(value == null ? Boolean.FALSE : value); } }";
     }
 
     public String getCollectionRenderer() {
@@ -150,6 +210,39 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
         }
         return isCollection() ? getSetEditor() : isDate() ? "DateBox"
                 : isString() ? "TextBox" : "(provided = true) ValueListBox<"
+                        + type.getFullyQualifiedTypeName() + ">";
+    }
+
+    private String getMobileEditor() {
+        if (type.equals(JavaType.DOUBLE_OBJECT)) {
+            return "MDoubleBox";
+        }
+        if (type.equals(LONG_OBJECT)) {
+            return "MLongBox";
+        }
+        if (type.equals(JavaType.INT_OBJECT)) {
+            return "MIntegerBox";
+        }
+        if (type.equals(JavaType.FLOAT_OBJECT)) {
+            return "MDoubleBox";
+        }
+        if (type.equals(JavaType.BYTE_OBJECT)) {
+            return "ByteBox";
+        }
+        if (type.equals(JavaType.SHORT_OBJECT)) {
+            return "ShortBox";
+        }
+        if (type.equals(JavaType.CHAR_OBJECT)) {
+            return "CharBox";
+        }
+        if (type.equals(BIG_DECIMAL)) {
+            return "BigDecimalBox";
+        }
+        if (isBoolean()) {
+            return "(provided = true) MCheckBox";
+        }
+        return isCollection() ? getSetEditor() : isDate() ? "MDateBox"
+                : isString() ? "MTextBox" : "(provided = true) ValueListBox<"
                         + type.getFullyQualifiedTypeName() + ">";
     }
 

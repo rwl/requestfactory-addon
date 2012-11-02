@@ -5,28 +5,25 @@
   xmlns:b='urn:import:com.github.gwtbootstrap.client.ui'
   xmlns:r='urn:import:{{=scaffoldUiPackage}}'
   xmlns:a='urn:import:{{=uiPackage}}'
-  xmlns:e='urn:import:{{=uiEditorPackage}}'>
-  <ui:style>
-    .outer {
-      padding: 10px;
-    }
-    .error {
-      padding-left: 0.5em;
-      background-color: red;
-    }
-    .label {
-      font-weight: bold;
-    }
-    .value {
-      padding-bottom: 10px;
-    }
-  </ui:style>
+  xmlns:e='urn:import:{{=uiEditorPackage}}'
+  xmlns:m='urn:import:com.googlecode.mgwt.ui.client.widget'>
 
-  <g:HTMLPanel debugId="boundElementHolder" styleName='{style.outer}'>
-    <div ui:field='errors' class='{style.error}'></div>
-    {{#editableProperties}}
-    <div id='{{=prop}}'><div class='{style.label}'>{{=propReadable}}</div><div class='{style.value}'><{{=propBinder}} ui:field='{{=prop}}'/></div></div>{{/editableProperties}}
+  <m:LayoutPanel>
+    <m:HeaderPanel>
+      <m:left>
+          <m:HeaderButton backButton="true" ui:field="cancel">Cancel</m:HeaderButton>
+      </m:left>
+      <m:center>
+          <g:HTML ui:field="title"/>
+      </m:center>
+    </m:HeaderPanel>
 
-    <b:Button ui:field='save'>Save</b:Button>
-  </g:HTMLPanel>
+    <m:WidgetList debugId="boundElementHolder">{{#editableProperties}}
+      <m:FormListEntry debugId='{{=prop}}' text='{{=propReadable}}'>
+        <{{=mobilePropBinder}} ui:field="{{=prop}}"/>
+      </m:FormListEntry>{{/editableProperties}}
+    </m:WidgetList>
+
+    <m:Button ui:field="save">Save</m:Button>
+  </m:LayoutPanel>
 </ui:UiBinder>

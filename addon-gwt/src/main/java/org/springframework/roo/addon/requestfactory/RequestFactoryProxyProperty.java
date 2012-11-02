@@ -56,23 +56,31 @@ public class RequestFactoryProxyProperty {
     }
 
     public String getBinder() {
-        return "";
+        throw new UnsupportedOperationException();
+    }
+
+    public String getMobileBinder() {
+        throw new UnsupportedOperationException();
     }
 
     public String forEditView() {
-        return "";
+        throw new UnsupportedOperationException();
+    }
+
+    public String forMobileEditView() {
+        throw new UnsupportedOperationException();
     }
 
     public String forMobileListView(final String rendererName) {
-        return "";
+        throw new UnsupportedOperationException();
     }
 
     public String getCheckboxSubtype() {
-        return "";
+        throw new UnsupportedOperationException();
     }
 
     public String getCollectionRenderer() {
-        return "";
+        throw new UnsupportedOperationException();
     }
 
     protected String getDateTimeFormat() {
@@ -185,19 +193,19 @@ public class RequestFactoryProxyProperty {
     }
 
     public String getRenderer() {
-        return "";
+        throw new UnsupportedOperationException();
     }
 
     public JavaType getSetEditorType() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public String getSetValuePickerMethod() {
-        return "";
+        throw new UnsupportedOperationException();
     }
 
     public String getSetEmptyValuePickerMethod() {
-        return "";
+        throw new UnsupportedOperationException();
     }
 
     public String getSetValuePickerMethodName() {

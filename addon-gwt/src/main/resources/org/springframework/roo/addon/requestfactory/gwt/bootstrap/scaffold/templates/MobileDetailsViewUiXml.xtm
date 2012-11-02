@@ -16,7 +16,7 @@
   <m:LayoutPanel>
     <m:HeaderPanel>
       <m:left>
-          <m:HeaderButton backButton='true' ui:field="back">Up</m:HeaderButton>
+          <m:HeaderButton backButton='true' ui:field="back">Back</m:HeaderButton>
       </m:left>
       <m:center>
           <g:HTML ui:field="title"/>

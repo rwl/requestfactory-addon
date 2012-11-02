@@ -7,6 +7,7 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.editor.client.EditorError;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryEditorDriver;
 import com.google.web.bindery.requestfactory.shared.RequestFactory;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -15,17 +16,22 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.github.gwtbootstrap.client.ui.Button;
-import com.github.gwtbootstrap.client.ui.CheckBox;
-import com.github.gwtbootstrap.client.ui.DoubleBox;
-import com.github.gwtbootstrap.client.ui.IntegerBox;
-import com.github.gwtbootstrap.client.ui.LongBox;
-import com.github.gwtbootstrap.client.ui.TextBox;
+import com.googlecode.mgwt.ui.client.widget.MCheckBox;
+import com.googlecode.mgwt.ui.client.widget.MDoubleBox;
+import com.googlecode.mgwt.ui.client.widget.MIntegerBox;
+import com.googlecode.mgwt.ui.client.widget.MLongBox;
+import com.googlecode.mgwt.ui.client.widget.MTextBox;
+import com.googlecode.mgwt.ui.client.widget.MDateBox;
+import com.googlecode.mgwt.dom.client.event.touch.HasTouchHandlers;
+import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
+import com.googlecode.mgwt.ui.client.dialog.Dialogs;
+import com.googlecode.mgwt.ui.client.widget.Button;
+import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 import com.github.gwtbootstrap.client.ui.ValueListBox;
-import com.github.gwtbootstrap.client.ui.Button;
-import com.github.gwtbootstrap.client.ui.AlertBlock;
-import com.github.gwtbootstrap.datepicker.client.ui.DateBox;
+
 import {{=scaffoldUiPackage}}.ui.*;
 
 import {{=placePackage}}.ProxyEditView;
@@ -40,70 +46,95 @@ import java.util.List;
  */
 public class {{=className}} extends Composite implements {{=editActivityWrapper}}.View<{{=className}}> {
 
-	interface Binder extends UiBinder<HTMLPanel, {{=className}}> {
-	}
+    interface Binder extends UiBinder<LayoutPanel, {{=className}}> {
+    }
 
-	interface Driver extends
-		RequestFactoryEditorDriver<{{=proxy}}, {{=className}}> {
-	}
+    interface Driver extends
+        RequestFactoryEditorDriver<{{=proxy}}, {{=className}}> {
+    }
 
-	private static final Binder BINDER = GWT.create(Binder.class);
+    private static final Binder BINDER = GWT.create(Binder.class);
 
-	private static {{=className}} instance;
+    private static {{=className}} instance;
 
-	public static {{=className}} instance() {
-		if (instance == null) {
-			instance = new {{=className}}();
-		}
-		return instance;
-	}
+    public static {{=className}} instance() {
+        if (instance == null) {
+            instance = new {{=className}}();
+        }
+        return instance;
+    }
 
-	{{#editViewProps}}
-	{{=prop}};{{/editViewProps}}
-	@UiField Button save;
-	@UiField DivElement errors;
+    {{#mobileEditViewProps}}
+    {{=prop}};{{/mobileEditViewProps}}
+    @UiField Button save;
+    @UiField HasTouchHandlers cancel;
 
-	private Delegate delegate;
+    @UiField @Ignore HTML title;
 
-	public {{=className}}() {
-		initWidget(BINDER.createAndBindUi(this));
-	}
+    private Delegate delegate;
 
-	@Override
-	public RequestFactoryEditorDriver<{{=proxy}}, {{=className}}> createEditorDriver() {
-		RequestFactoryEditorDriver<{{=proxy}}, {{=className}}> driver = GWT.create(Driver.class);
-		driver.initialize(this);
-		return driver;
-	}
+    private HandlerRegistration saveRegistration;
 
-	{{#setEnumValuePickers}}
-	{{=setValuePicker}}{{/setEnumValuePickers}}
+    public {{=className}}() {
+        initWidget(BINDER.createAndBindUi(this));
+        addSaveHandler();
+        cancel.addTouchStartHandler(new TouchStartHandler() {
 
-	{{#setProxyValuePickers}}
-	{{=setValuePicker}}{{/setProxyValuePickers}}
+            @Override
+            public void onTouchStart(TouchStartEvent event) {
+                {{=className}}.this.delegate.cancelClicked();
+            }
+        });
+    }
 
-	public void setCreating(boolean creating) {
-	}
+    @Override
+    public RequestFactoryEditorDriver<{{=proxy}}, {{=className}}> createEditorDriver() {
+        RequestFactoryEditorDriver<{{=proxy}}, {{=className}}> driver = GWT.create(Driver.class);
+        driver.initialize(this);
+        return driver;
+    }
 
-	public void setDelegate(Delegate delegate) {
-		this.delegate = delegate;
-	}
+    {{#setEnumValuePickers}}
+    {{=setValuePicker}}{{/setEnumValuePickers}}
 
-	public void setEnabled(boolean enabled) {
-		save.setEnabled(enabled);
-	}
+    {{#setProxyValuePickers}}
+    {{=setValuePicker}}{{/setProxyValuePickers}}
 
-	public void showErrors(List<EditorError> errors) {
-		SafeHtmlBuilder b = new SafeHtmlBuilder();
-		for (EditorError error : errors) {
-      b.appendEscaped(error.getPath()).appendEscaped(": ");
-			b.appendEscaped(error.getMessage()).appendHtmlConstant("<br>");
-		}
-		this.errors.setInnerHTML(b.toSafeHtml().asString());
-	}
+    public void setCreating(boolean creating) {
+	    title.setHTML(creating ? "Create" : "Edit");
+    }
 
-	@UiHandler("save")
-	void onSave(ClickEvent event) {
-		delegate.saveClicked();
-	}
+    public void setDelegate(Delegate delegate) {
+        this.delegate = delegate;
+    }
+
+    private void addSaveHandler() {
+        saveRegistration = save.addTouchStartHandler(new TouchStartHandler() {
+            @Override
+            public void onTouchStart(TouchStartEvent event) {
+                {{=className}}.this.delegate.saveClicked();
+            }
+        });
+    }
+
+    public void setEnabled(boolean enabled) {
+        if (enabled && saveRegistration == null) {
+            addSaveHandler();
+        } else if (saveRegistration != null) {
+            saveRegistration.removeHandler();
+            saveRegistration = null;
+        }
+    }
+
+    public void showErrors(List<EditorError> errors) {
+        if (errors.size() == 0) return;
+        SafeHtmlBuilder b = new SafeHtmlBuilder();
+        for (int i = 0; i < errors.size(); i++) {
+        EditorError error = errors.get(i);
+            b.appendEscaped(error.getPath()).appendEscaped(": ");
+            b.appendEscaped(error.getMessage());
+            if (i < errors.size() - 1) b.appendEscaped(", ");
+        }
+        Dialogs.alert("Error", b.toSafeHtml().asString(), null);
+    }
 }

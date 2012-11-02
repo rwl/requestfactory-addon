@@ -43,7 +43,6 @@ public class {{=className}} {
   }
 
   private Activity makeCreateActivity(String parentId) {
-    final String finalParentId = parentId;
     {{=desktopEditView}}.instance().setCreating(true);
     Activity activity = new {{=editActivity}}({{=proxy}}.class, null, factory, ScaffoldApp.isMobile() ? {{=mobileEditView}}.instance() : {{=desktopEditView}}.instance(), placeController, parentId);
 

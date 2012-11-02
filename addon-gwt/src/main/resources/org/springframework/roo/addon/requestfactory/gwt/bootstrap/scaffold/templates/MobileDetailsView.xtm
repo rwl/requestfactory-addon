@@ -31,77 +31,84 @@ import {{=uiPackage}}.renderer.{{=proxyRendererType}};
  * Details view for {{=name}} proxys.
  */
 public class {{=className}} extends Composite implements {{=detailsView}} {
-  interface Binder extends UiBinder<LayoutPanel, {{=className}}> {}
+    interface Binder extends UiBinder<LayoutPanel, {{=className}}> {}
 
-  private static final Binder BINDER = GWT.create(Binder.class);
+    private static final Binder BINDER = GWT.create(Binder.class);
 
-  private static {{=className}} instance;
+    private static {{=className}} instance;
 
-  public static {{=className}} instance() {
-    if (instance == null) {
-      instance = new {{=className}}();
+    public static {{=className}} instance() {
+        if (instance == null) {
+            instance = new {{=className}}();
+        }
+        return instance;
     }
-    return instance;
-  }
 
-  {{=proxy}} proxy;
-  {{#fields}}
-  @UiField Label {{=field}};{{/fields}}
-  @UiField HasTouchHandlers delete;
+    {{=proxy}} proxy;
+    {{#fields}}
+    @UiField Label {{=field}};{{/fields}}
+    @UiField HasTouchHandlers delete;
 
-  @UiField HTML title;
-  @UiField HasTouchHandlers back;
-  @UiField HasTouchHandlers edit;
+    @UiField HTML title;
+    @UiField HasTouchHandlers back;
+    @UiField HasTouchHandlers edit;
 
-  private Delegate delegate;
+    private Delegate delegate;
 
-  public {{=className}}() {
-    initWidget(BINDER.createAndBindUi(this));
-    edit.addTouchStartHandler(new TouchStartHandler() {
-      @Override
-      public void onTouchStart(TouchStartEvent event) {
-        {{=className}}.this.delegate.editClicked();
-      }
-    });
+    public {{=className}}() {
+        initWidget(BINDER.createAndBindUi(this));
+        edit.addTouchStartHandler(new TouchStartHandler() {
+            @Override
+            public void onTouchStart(TouchStartEvent event) {
+                {{=className}}.this.delegate.editClicked();
+            }
+        });
 
-    delete.addTouchStartHandler(new TouchStartHandler() {
-    @Override
-    public void onTouchStart(TouchStartEvent event) {
-      {{=className}}.this.delegate.deleteClicked();
+        delete.addTouchStartHandler(new TouchStartHandler() {
+            @Override
+            public void onTouchStart(TouchStartEvent event) {
+                {{=className}}.this.delegate.deleteClicked();
+            }
+        });
+
+        back.addTouchStartHandler(new TouchStartHandler() {
+            @Override
+            public void onTouchStart(TouchStartEvent event) {
+                {{=className}}.this.delegate.backClicked();
+            }
+        });
     }
-  });
-  }
 
-    public Widget asWidget() {
-    return this;
-  }
+        public Widget asWidget() {
+        return this;
+    }
 
-  public void confirm(String msg, ConfirmationCallback callback) {
-    final ConfirmationCallback fcallback = callback;
-    Dialogs.confirm("Confirm Deletion", msg, new ConfirmCallback() {
-      @Override
-      public void onOk() {
-        fcallback.confirm();
-      }
-      @Override
-      public void onCancel() {
-        fcallback.cancel();
-      }
-    });
-  }
+    public void confirm(String msg, ConfirmationCallback callback) {
+        final ConfirmationCallback fcallback = callback;
+        Dialogs.confirm("Confirm Deletion", msg, new ConfirmCallback() {
+            @Override
+            public void onOk() {
+                fcallback.confirm();
+            }
+            @Override
+            public void onCancel() {
+                fcallback.cancel();
+            }
+        });
+    }
 
-  public {{=proxy}} getValue() {
-    return proxy;
-  }
+    public {{=proxy}} getValue() {
+        return proxy;
+    }
 
-  public void setDelegate(Delegate delegate) {
-    this.delegate = delegate;
-  }
+    public void setDelegate(Delegate delegate) {
+        this.delegate = delegate;
+    }
 
-  public void setValue({{=proxy}} proxy) {
-    this.proxy = proxy;
-    this.title.setText({{=proxyRendererType}}.instance().render(proxy));
-    {{#managedProperties}}
-    {{=prop}}.setText(proxy.{{=propGetter}}() == null ? "" : {{=propFormatter}}(proxy.{{=propGetter}}()));{{/managedProperties}}
-  }
+    public void setValue({{=proxy}} proxy) {
+        this.proxy = proxy;
+        this.title.setText({{=proxyRendererType}}.instance().render(proxy));
+        {{#managedProperties}}
+        {{=prop}}.setText(proxy.{{=propGetter}}() == null ? "" : {{=propFormatter}}(proxy.{{=propGetter}}()));{{/managedProperties}}
+    }
 }

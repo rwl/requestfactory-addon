@@ -36,7 +36,7 @@
 
     <b:AlertBlock type="ERROR" close="false" animation="true" visible="false" heading="Error" ui:field="errors"/>
 
-	<b:Form addStyleNames="{style.fields}" type="HORIZONTAL" id="boundElementHolder">
+	<b:Form addStyleNames="{style.fields}" type="HORIZONTAL" debugId="boundElementHolder">
 		<b:Fieldset>{{#editableProperties}}
 			<b:ControlGroup>
 				<b:ControlLabel for="{{=prop}}">{{=propReadable}}:</b:ControlLabel>

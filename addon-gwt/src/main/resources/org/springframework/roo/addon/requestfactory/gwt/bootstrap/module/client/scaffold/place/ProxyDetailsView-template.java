@@ -10,14 +10,16 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface ProxyDetailsView<P> extends TakesValue<P>, IsWidget {
 
-	/**
-	 * Implemented by the owner of the view.
-	 */
-	interface Delegate {
-		void deleteClicked();
+    /**
+     * Implemented by the owner of the view.
+     */
+    interface Delegate {
+        void deleteClicked();
 
-		void editClicked();
-	}
+        void editClicked();
+
+        void backClicked();
+    }
 
     interface ConfirmationCallback {
         void confirm();
@@ -25,5 +27,5 @@ public interface ProxyDetailsView<P> extends TakesValue<P>, IsWidget {
         void cancel();
     }
 
-	void confirm(String msg, ConfirmationCallback callback);
+    void confirm(String msg, ConfirmationCallback callback);
 }

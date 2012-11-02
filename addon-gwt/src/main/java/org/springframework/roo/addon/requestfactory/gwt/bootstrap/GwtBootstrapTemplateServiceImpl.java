@@ -504,9 +504,12 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
             if (!isReadOnly(requestFactoryProxyProperty.getName(), mirroredType)) {
                 // if the property is in the existingFields list, do not add it
                 if (!existingEditViewFields
-                        .contains(requestFactoryProxyProperty.getName()))
+                        .contains(requestFactoryProxyProperty.getName())) {
                     dataDictionary.addSection("editViewProps").setVariable(
                             "prop", requestFactoryProxyProperty.forEditView());
+                    dataDictionary.addSection("mobileEditViewProps").setVariable(
+                            "prop", requestFactoryProxyProperty.forMobileEditView());
+                }
 
                 final TemplateDataDictionary editableSection = dataDictionary
                         .addSection("editableProperties");
@@ -525,6 +528,8 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                         requestFactoryProxyProperty.getRenderer());
                 editableSection.setVariable("propBinder",
                         requestFactoryProxyProperty.getBinder());
+                editableSection.setVariable("mobilePropBinder",
+                        requestFactoryProxyProperty.getMobileBinder());
                 editableSection.setVariable("propReadable",
                         requestFactoryProxyProperty.getReadableName());
             }
