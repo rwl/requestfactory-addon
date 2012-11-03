@@ -7,32 +7,28 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.inject.Inject;
 
 import {{=placePackage}}.ProxyPlace;
+
 {{#imports}}import {{=import}};
 {{/imports}}
+
 /**
  * Instantiates detail activities.
  */
 public class ApplicationDetailsActivities implements ActivityMapper {
-  private final {{=requestFactory}} requests;
-  private final PlaceController placeController;
+{{#entities}}
+    @Inject {{=entitySimpleName}}ActivitiesMapper {{=entitySimpleNameUncapitalize}}ActivitiesMapper;{{/entities}}
 
-  @Inject
-  public ApplicationDetailsActivities({{=requestFactory}} requestFactory, PlaceController placeController) {
-    this.requests = requestFactory;
-    this.placeController = placeController;
-  }
-
-  public Activity getActivity(Place place) {
-    if (!(place instanceof ProxyPlace)) {
-      return null;
+    public Activity getActivity(Place place) {
+        if (!(place instanceof ProxyPlace)) {
+            return null;
+        }
+        final ProxyPlace proxyPlace = (ProxyPlace) place;
+        return new ApplicationEntityTypesProcessor<Activity>() {{{#entities}}
+            @Override
+            public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
+                setResult({{=entitySimpleNameUncapitalize}}ActivitiesMapper.getActivity(proxyPlace));
+            }
+            {{/entities}}
+        }.process(proxyPlace.getProxyClass());
     }
-
-    final ProxyPlace proxyPlace = (ProxyPlace) place;
-    final String parentId = proxyPlace.getParentId();
-
-    return new ApplicationEntityTypesProcessor<Activity>() {{{#entities}}
-      @Override
-{{=entity}}{{/entities}}
-    }.process(proxyPlace.getProxyClass());
-  }
 }

@@ -1,0 +1,16 @@
+package {{=packageName}};
+
+import com.google.gwt.place.shared.PlaceController;
+import com.google.inject.Inject;
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+public class {{=className}} extends {{=name}}EditActivityWrapper {
+
+	@Inject
+	public {{=className}}(ApplicationRequestFactory requests, PlaceController placeController) {
+		super(requests, placeController);
+		this.view.setCreating(true);
+	}
+}

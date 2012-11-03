@@ -24,14 +24,15 @@ import org.springframework.roo.model.JavaType;
 
 public class GwtBootstrapType extends RequestFactoryType {
 
-    public static final GwtBootstrapType ACTIVITIES_MAPPER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ActivitiesMapper", "activitiesMapper", "ActivitiesMapper", false, true, false);
+    public static final GwtBootstrapType ACTIVITIES_MAPPER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ActivitiesMapper", "activitiesMapper", "ActivitiesMapper", false, false, false);
 
     public static final GwtBootstrapType DETAIL_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "DetailsActivity", "detailsActivity", "DetailsActivity", false, true, false);
-    public static final GwtBootstrapType DETAILS_ACTIVITIES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "detailsActivities", "ApplicationDetailsActivities", false, true, false);
+    public static final GwtBootstrapType DETAILS_ACTIVITIES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "detailsActivities", "ApplicationDetailsActivities", false, false, false);
     public static final GwtBootstrapType DETAILS_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI, true, "DetailsView", "detailsView", "DetailsView", false, false, false);
     public static final GwtBootstrapType DESKTOP_DETAILS_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopDetailsView", "desktopDetailsView", "DesktopDetailsView", true, true, false);
     public static final GwtBootstrapType EDIT_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "EditActivity", "editActivity", "EditActivity", false, false, false);
     public static final GwtBootstrapType EDIT_ACTIVITY_WRAPPER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "EditActivityWrapper", "editActivityWrapper", "EditActivityWrapper", false, true, false);
+    public static final GwtBootstrapType CREATE_ACTIVITY_WRAPPER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "CreateActivityWrapper", "createActivityWrapper", "CreateActivityWrapper", false, false, false);
     public static final GwtBootstrapType EDIT_RENDERER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_RENDERER, true, "ProxyRenderer", "renderer", "EditRenderer", false, false, false);
     public static final GwtBootstrapType EDIT_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI, true, "EditView", "editView", "EditView", false, false, false);
     public static final GwtBootstrapType DESKTOP_EDIT_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopEditView", "desktopEditView", "DesktopEditView", true, true, false);
@@ -40,7 +41,7 @@ public class GwtBootstrapType extends RequestFactoryType {
     public static final GwtBootstrapType LIST_EDITOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_EDITOR, true, "ListEditor", "listEditor", "ListEditor", true, true, false);
     public static final GwtBootstrapType LIST_PLACE_RENDERER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_RENDERER, false, "", "listPlaceRenderer", "ApplicationListPlaceRenderer", false, true, false);
     public static final GwtBootstrapType DESKTOP_LIST_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopListView", "desktopListView", "DesktopListView", true, true, false);
-    public static final GwtBootstrapType MASTER_ACTIVITIES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "masterActivities", "ApplicationMasterActivities", false, true, false);
+    public static final GwtBootstrapType MASTER_ACTIVITIES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "masterActivities", "ApplicationMasterActivities", false, false, false);
 
     public static final GwtBootstrapType DATA_PROVIDER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_TREE, true, "DataProvider", "dataProvider", "DataProvider", false, false, false);
     public static final GwtBootstrapType IS_LEAF_PROCESSOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_TREE, false, "", "isLeafProcessor", "IsLeafProcessor", false, false, false);
@@ -61,7 +62,7 @@ public class GwtBootstrapType extends RequestFactoryType {
 
     public static final GwtBootstrapType[] ALL_TYPES = new GwtBootstrapType[] {
         ACTIVITIES_MAPPER, DETAIL_ACTIVITY, DETAILS_ACTIVITIES, DETAILS_VIEW,
-        DESKTOP_DETAILS_VIEW, EDIT_ACTIVITY, EDIT_ACTIVITY_WRAPPER,
+        DESKTOP_DETAILS_VIEW, EDIT_ACTIVITY, EDIT_ACTIVITY_WRAPPER, CREATE_ACTIVITY_WRAPPER,
         EDIT_RENDERER, EDIT_VIEW, DESKTOP_EDIT_VIEW, IS_SCAFFOLD_MOBILE_ACTIVITY,
         LIST_ACTIVITY, LIST_EDITOR, LIST_PLACE_RENDERER, DESKTOP_LIST_VIEW,
         MASTER_ACTIVITIES, DATA_PROVIDER, IS_LEAF_PROCESSOR, PROXY_LIST_NODE_PROCESSOR,
@@ -239,17 +240,22 @@ public class GwtBootstrapType extends RequestFactoryType {
                     MOBILE_EDIT_VIEW, REQUEST);
         } else if (type == DETAIL_ACTIVITY) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    IS_SCAFFOLD_MOBILE_ACTIVITY, DETAILS_VIEW);
+                    IS_SCAFFOLD_MOBILE_ACTIVITY, DETAILS_VIEW,
+                    SCAFFOLD_APP);
         } else if (type == EDIT_ACTIVITY) {
             return Arrays.asList(EDIT_VIEW,
                     APP_REQUEST_FACTORY, REQUEST);
         } else if (type == EDIT_ACTIVITY_WRAPPER) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    IS_SCAFFOLD_MOBILE_ACTIVITY, EDIT_VIEW);
+                    IS_SCAFFOLD_MOBILE_ACTIVITY, EDIT_VIEW,
+                    SCAFFOLD_APP);
+        } else if (type == CREATE_ACTIVITY_WRAPPER) {
+            return Arrays.asList(APP_REQUEST_FACTORY,
+                    EDIT_ACTIVITY_WRAPPER);
         } else if (type == LIST_ACTIVITY) {
             return Arrays.asList(APP_REQUEST_FACTORY,
                     IS_SCAFFOLD_MOBILE_ACTIVITY,
-                    SCAFFOLD_MOBILE_APP);
+                    SCAFFOLD_MOBILE_APP, SCAFFOLD_APP);
         } else if (type == MOBILE_LIST_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {MOBILE_PROXY_LIST_VIEW,
                     SCAFFOLD_MOBILE_APP});

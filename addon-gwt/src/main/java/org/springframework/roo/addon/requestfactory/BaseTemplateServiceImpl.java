@@ -426,6 +426,8 @@ public class BaseTemplateServiceImpl {
         dataDictionary.setVariable("className", javaType.getSimpleTypeName());
         dataDictionary.setVariable("packageName", javaType.getPackage()
                 .getFullyQualifiedPackageName());
+        dataDictionary.setVariable("topLevelPackage", projectOperations
+                .getTopLevelPackage(moduleName).getFullyQualifiedPackageName());
 
         dataDictionary.setVariable("requestPackage",
                 RequestFactoryPath.SHARED_MANAGED_REQUEST.packageName(topLevelPackage));
@@ -482,6 +484,8 @@ public class BaseTemplateServiceImpl {
         dataDictionary.setVariable("className", javaType.getSimpleTypeName());
         dataDictionary.setVariable("packageName", javaType.getPackage()
                 .getFullyQualifiedPackageName());
+        dataDictionary.setVariable("topLevelPackage", projectOperations
+                .getTopLevelPackage(moduleName).getFullyQualifiedPackageName());
         dataDictionary.setVariable("sharedScaffoldPackage",
                 RequestFactoryPath.SHARED_SCAFFOLD.packageName(projectOperations
                         .getTopLevelPackage(moduleName)));

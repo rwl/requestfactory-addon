@@ -95,6 +95,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     final TemplateDataDictionary section = dataDictionary
                             .addSection("entities");
                     section.setVariable("entitySimpleName", entitySimpleName);
+                    section.setVariable("entitySimpleNameUncapitalize", StringUtils.uncapitalize(entitySimpleName));
                     section.setVariable("entityFullPath", proxySimpleName);
                     addImport(dataDictionary, entitySimpleName,
                             GwtBootstrapType.LIST_ACTIVITY, moduleName);
@@ -138,7 +139,16 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                             .getSimpleTypeName();
                     final String entitySimpleName = entity.getName()
                             .getSimpleTypeName();
-                    final String entityExpression = new StringBuilder(
+                    final TemplateDataDictionary section = dataDictionary
+                            .addSection("entities");
+                    section.setVariable("entitySimpleName", entitySimpleName);
+                    section.setVariable("entitySimpleNameUncapitalize",
+                            StringUtils.uncapitalize(entitySimpleName));
+                    section.setVariable("entityFullPath", proxySimpleName);
+                    section.setVariable("proxySimpleName", proxySimpleName);
+                    section.setVariable("proxySimpleNameUncapitalize",
+                            StringUtils.uncapitalize(proxySimpleName));
+                    /*final String entityExpression = new StringBuilder(
                             "\t\t\tpublic void handle")
                             .append(entitySimpleName)
                             .append("(")
@@ -149,7 +159,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                             .append("ActivitiesMapper(requests, placeController).getActivity(proxyPlace, parentId));\n\t\t\t}")
                             .toString();
                     dataDictionary.addSection("entities").setVariable("entity",
-                            entityExpression);
+                            entityExpression);*/
                     addImport(dataDictionary, proxy.getName()
                             .getFullyQualifiedTypeName());
                     addImport(
@@ -272,6 +282,10 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 GwtBootstrapPaths.SCAFFOLD_UI.packageName(topLevelPackage));
         dataDictionary.setVariable("uiPackage",
                 GwtBootstrapPaths.MANAGED_UI.packageName(topLevelPackage));
+        dataDictionary.setVariable("desktopUiPackage",
+                GwtBootstrapPaths.MANAGED_UI_DESKTOP.packageName(topLevelPackage));
+        dataDictionary.setVariable("mobileUiPackage",
+                GwtBootstrapPaths.MANAGED_UI_MOBILE.packageName(topLevelPackage));
         dataDictionary.setVariable("uiEditorPackage",
                 GwtBootstrapPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage));
 

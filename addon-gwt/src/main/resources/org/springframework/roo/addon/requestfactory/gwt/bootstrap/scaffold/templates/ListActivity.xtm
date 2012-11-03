@@ -5,11 +5,15 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.gwt.view.client.Range;
+import com.google.inject.Inject;
 
 import {{=placePackage}}.AbstractProxyListActivity;
 import {{=placePackage}}.ProxyListView;
 import {{=placePackage}}.ProxyPlace;
 import {{=placePackage}}.ProxyPlace.Operation;
+import {{=desktopUiPackage}}.{{=name}}DesktopListView;
+import {{=mobileUiPackage}}.{{=name}}MobileListView;
+
 {{#imports}}import {{=import}};
 {{/imports}}
 
@@ -20,43 +24,47 @@ import java.util.List;
  */
 public class {{=className}} extends AbstractProxyListActivity<{{=proxy}}> implements {{=isScaffoldMobileActivity}} {
 
-	private final {{=requestFactory}} requests;
+    private final {{=requestFactory}} requests;
 
-	public {{=className}}({{=requestFactory}} requests,
-      ProxyListView<{{=proxy}}> view, PlaceController placeController, String parentId) {
-		super(placeController, view, {{=proxy}}.class, parentId);
-		this.requests = requests;
-	}
+    @Inject
+    public {{=className}}({{=requestFactory}} requests, PlaceController placeController) {
+        super(placeController);
+        this.requests = requests;
+    }
 
-	public void backClicked() {
+    public void backClicked() {
         {{=gotoParentPlaceStmt}}
-	}
+    }
 
-	public Place getBackButtonPlace() {
-		return ScaffoldMobileApp.ROOT_PLACE;
-	}
+    public Place getBackButtonPlace() {
+        return ScaffoldMobileApp.ROOT_PLACE;
+    }
 
-	public String getBackButtonText() {
-		return "Entities";
-	}
+    public String getBackButtonText() {
+        return "Entities";
+    }
 
-	public Place getEditButtonPlace() {
-		return null;
-	}
+    public Place getEditButtonPlace() {
+        return null;
+    }
 
-	public String getTitleText() {
-		return "{{=pluralName}}";
-	}
+    public String getTitleText() {
+        return "{{=pluralName}}";
+    }
 
-	public boolean hasEditButton() {
-		return false;
-	}
+    public boolean hasEditButton() {
+        return false;
+    }
 
-	protected Request<List<{{=proxy}}>> createRangeRequest(Range range) {
-		return requests.{{=nameUncapitalized}}Request().{{=findEntitiesMethod}};
-	}
+    protected Request<List<{{=proxy}}>> createRangeRequest(Range range) {
+        return requests.{{=nameUncapitalized}}Request().{{=findEntitiesMethod}};
+    }
 
-	protected void fireCountRequest(Receiver<Long> callback) {
-		requests.{{=nameUncapitalized}}Request().{{=countEntitiesMethod}}.fire(callback);
-	}
+    protected void fireCountRequest(Receiver<Long> callback) {
+        requests.{{=nameUncapitalized}}Request().{{=countEntitiesMethod}}.fire(callback);
+    }
+
+    protected ProxyListView<{{=proxy}}> initView() {
+        return ScaffoldApp.isMobile() ? {{=name}}MobileListView.instance() : {{=name}}DesktopListView.instance();
+    }
 }

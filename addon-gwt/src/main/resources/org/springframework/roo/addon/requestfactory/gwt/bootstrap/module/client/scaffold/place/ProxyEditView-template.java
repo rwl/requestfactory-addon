@@ -13,20 +13,22 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface ProxyEditView<P extends EntityProxy, V extends ProxyEditView<P, V>> extends IsWidget, HasEditorErrors<P> {
 
-	/**
-	 * @return a new {@link RequestFactoryEditorDriver} initialized to run this editor
-	 */
-	RequestFactoryEditorDriver<P, V> createEditorDriver();
+    /**
+     * @return a new {@link RequestFactoryEditorDriver} initialized to run this editor
+     */
+    RequestFactoryEditorDriver<P, V> createEditorDriver();
 
-	/**
-	 * Implemented by the owner of the view.
-	 */
-	interface Delegate {
-		
-		void cancelClicked();
+    /**
+     * Implemented by the owner of the view.
+     */
+    interface Delegate {
 
-		void saveClicked();
-	}
+        void cancelClicked();
 
-	void setEnabled(boolean b);
+        void saveClicked();
+    }
+
+    void setEnabled(boolean b);
+
+    void setCreating(boolean b);
 }

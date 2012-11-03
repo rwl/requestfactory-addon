@@ -3,13 +3,18 @@ package {{=packageName}};
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.requestfactory.shared.EntityProxyId;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.inject.Inject;
 
 import {{=placePackage}}.ProxyPlace;
 import {{=placePackage}}.ProxyListPlace;
 import {{=placePackage}}.ProxyEditView;
+import {{=desktopUiPackage}}.{{=name}}DesktopEditView;
+import {{=mobileUiPackage}}.{{=name}}MobileEditView;
+
 {{#imports}}import {{=import}};
 {{/imports}}
 
@@ -25,91 +30,98 @@ import java.util.List;
  */
 public class {{=className}} implements Activity, {{=isScaffoldMobileActivity}} {
 
-  /**
-   * The view used by this activity.
-   *
-   * @param <V> the type of the ProxyEditView
-   */
-  public interface View<V extends {{=editView}}<V>> extends {{=editView}}<V>
-  {
-    {{#setEnumValuePickers}}
-    void {{=setValuePickerName}}(Collection<{{=valueType}}> values);
-    {{/setEnumValuePickers}}
-    {{#setProxyValuePickers}}
-    void {{=setValuePickerName}}(Collection<{{=valueType}}> values);
-    {{/setProxyValuePickers}}
-  }
+    /**
+     * The view used by this activity.
+     *
+     * @param <V> the type of the ProxyEditView
+     */
+    public interface View<V extends {{=editView}}<V>> extends {{=editView}}<V>
+    {
+        {{#setEnumValuePickers}}
+        void {{=setValuePickerName}}(Collection<{{=valueType}}> values);
+        {{/setEnumValuePickers}}
+        {{#setProxyValuePickers}}
+        void {{=setValuePickerName}}(Collection<{{=valueType}}> values);
+        {{/setProxyValuePickers}}
+    }
 
-  private final EntityProxyId<{{=proxy}}> proxyId;
-  private final ApplicationRequestFactory requests;
-  private final View<?> view;
-  private final Activity wrapped;
-  private final String parentId;
+    private final EntityProxyId<{{=proxy}}> proxyId;
+    private final ApplicationRequestFactory requests;
+    private final View<?> view;
+    private final Activity wrapped;
+    private final String parentId;
 
-  public {{=className}}(ApplicationRequestFactory requests,
-        View<?> view, Activity activity, EntityProxyId<{{=proxy}}> proxyId, String parentId) {
-    this.requests = requests;
-    this.view = view;
-    this.wrapped = activity;
-    this.proxyId = proxyId;
-    this.parentId = parentId;
-  }
+    @Inject
+    public {{=className}}(ApplicationRequestFactory requests, PlaceController placeController) {
+        this.requests = requests;
+        ProxyPlace proxyPlace = (ProxyPlace) placeController.getWhere();
+        this.view = ScaffoldApp.isMobile() ? {{=name}}MobileEditView.instance() : {{=name}}DesktopEditView.instance();
+        this.proxyId = coerceId(proxyPlace);
+        this.parentId = proxyPlace.getParentId();
+        this.wrapped = new {{=name}}EditActivity({{=proxy}}.class, this.proxyId, requests, this.view, placeController, parentId);
+        this.view.setCreating(true);
+    }
 
-  public Place getBackButtonPlace() {
-    return (proxyId == null) ? new ProxyListPlace({{=proxy}}.class, parentId) :
-      new ProxyPlace(proxyId, ProxyPlace.Operation.DETAILS, parentId);
-  }
+    @SuppressWarnings("unchecked")
+    private EntityProxyId<{{=proxy}}> coerceId(ProxyPlace place) {
+        return (EntityProxyId<{{=proxy}}>) place.getProxyId();
+    }
 
-  public String getBackButtonText() {
-    return "Cancel";
-  }
+    public Place getBackButtonPlace() {
+        return (proxyId == null) ? new ProxyListPlace({{=proxy}}.class, parentId) :
+            new ProxyPlace(proxyId, ProxyPlace.Operation.DETAILS, parentId);
+    }
 
-  public Place getEditButtonPlace() {
-    return null;
-  }
+    public String getBackButtonText() {
+        return "Cancel";
+    }
 
-  public String getTitleText() {
-    return (proxyId == null) ? "New {{=name}}" : "Edit {{=name}}";
-  }
+    public Place getEditButtonPlace() {
+        return null;
+    }
 
-  public boolean hasEditButton() {
-    return false;
-  }
+    public String getTitleText() {
+        return (proxyId == null) ? "New {{=name}}" : "Edit {{=name}}";
+    }
 
-  @Override
-  public String mayStop() {
-    return wrapped.mayStop();
-  }
+    public boolean hasEditButton() {
+        return false;
+    }
 
-  @Override
-  public void onCancel() {
-    wrapped.onCancel();
-  }
+    @Override
+    public String mayStop() {
+        return wrapped.mayStop();
+    }
 
-  @Override
-  public void onStop() {
-    wrapped.onStop();
-  }
+    @Override
+    public void onCancel() {
+        wrapped.onCancel();
+    }
 
-  @Override
-  public void start(AcceptsOneWidget display, EventBus eventBus) 
-  	{{{#setEnumValuePickers}}
-    view.{{=setValuePickerName}}(Arrays.asList({{=valueType}}.values()));
-    {{/setEnumValuePickers}}
+    @Override
+    public void onStop() {
+        wrapped.onStop();
+    }
 
-    {{#setProxyValuePickers}}
-    view.{{=setValuePickerName}}(Collections.<{{=valueType}}> emptyList());
-    requests.{{=requestInterface}}().{{=findMethod}}.with(
-        {{=rendererType}}.instance().getPaths()).fire(
-            new Receiver<List<{{=valueType}}>>() {
-                public void onSuccess(List<{{=valueType}}> response) {
-                    List<{{=valueType}}> values = new ArrayList<{{=valueType}}>();
-                    values.add(null);
-                    values.addAll(response);
-                    view.{{=setValuePickerName}}(values);
-            }
-    });
-    {{/setProxyValuePickers}}
-    wrapped.start(display, eventBus);
-  }
+    @Override
+    public void start(AcceptsOneWidget display, EventBus eventBus)
+        {{{#setEnumValuePickers}}
+        view.{{=setValuePickerName}}(Arrays.asList({{=valueType}}.values()));
+        {{/setEnumValuePickers}}
+
+        {{#setProxyValuePickers}}
+        view.{{=setValuePickerName}}(Collections.<{{=valueType}}> emptyList());
+        requests.{{=requestInterface}}().{{=findMethod}}.with(
+                {{=rendererType}}.instance().getPaths()).fire(
+                        new Receiver<List<{{=valueType}}>>() {
+                                public void onSuccess(List<{{=valueType}}> response) {
+                                        List<{{=valueType}}> values = new ArrayList<{{=valueType}}>();
+                                        values.add(null);
+                                        values.addAll(response);
+                                        view.{{=setValuePickerName}}(values);
+                        }
+        });
+        {{/setProxyValuePickers}}
+        wrapped.start(display, eventBus);
+    }
 }
