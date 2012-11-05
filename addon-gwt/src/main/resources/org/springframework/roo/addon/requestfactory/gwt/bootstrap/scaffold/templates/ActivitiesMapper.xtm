@@ -20,11 +20,11 @@ import {{=topLevelPackage}}.client.scaffold.activity.AsyncActivityProxyProvider;
  */
 public class {{=className}} implements ActivityMapper {
 
-    @Inject AsyncActivityProxyProvider<EmployeeDetailsActivity> {{=name}}DetailsActivityProvider;
+    @Inject AsyncActivityProxyProvider<{{=name}}DetailsActivity> {{=name}}DetailsActivityProvider;
 
-    @Inject AsyncActivityProxyProvider<EmployeeEditActivityWrapper> {{=name}}EditActivityProvider;
+    @Inject AsyncActivityProxyProvider<{{=name}}EditActivityWrapper> {{=name}}EditActivityProvider;
 
-    @Inject AsyncActivityProxyProvider<EmployeeCreateActivityWrapper> {{=name}}CreateActivityProvider;
+    @Inject AsyncActivityProxyProvider<{{=name}}CreateActivityWrapper> {{=name}}CreateActivityProvider;
 
     public Activity getActivity(Place place) {
         if (!(place instanceof ProxyPlace)) {

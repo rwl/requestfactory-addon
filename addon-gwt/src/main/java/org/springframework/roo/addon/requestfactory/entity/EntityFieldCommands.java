@@ -1,12 +1,13 @@
 package org.springframework.roo.addon.requestfactory.entity;
 
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_EXCLUDE;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_READ_ONLY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNOWNED;
 import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JdkJavaType.SET;
 import static org.springframework.roo.model.JpaJavaType.EMBEDDABLE;
 import static org.springframework.roo.model.JpaJavaType.ENTITY;
 import static org.springframework.roo.model.SpringJavaType.PERSISTENT;
-
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -60,7 +61,6 @@ import org.springframework.roo.shell.CliAvailabilityIndicator;
 import org.springframework.roo.shell.CliCommand;
 import org.springframework.roo.shell.CliOption;
 import org.springframework.roo.shell.CommandMarker;
-import org.springframework.roo.shell.converters.StaticFieldConverter;
 
 /**
  * Additional shell commands for the purpose of creating fields.
@@ -89,7 +89,6 @@ public class EntityFieldCommands implements CommandMarker {
     @Reference private MemberDetailsScanner memberDetailsScanner;
     @Reference private MetadataService metadataService;
     @Reference private ProjectOperations projectOperations;
-    @Reference private StaticFieldConverter staticFieldConverter;
     @Reference private TypeLocationService typeLocationService;
     @Reference private TypeManagementService typeManagementService;
 
@@ -102,17 +101,6 @@ public class EntityFieldCommands implements CommandMarker {
         legalNumericPrimitives.add(Long.class.getName());
         legalNumericPrimitives.add(Float.class.getName());
         legalNumericPrimitives.add(Double.class.getName());
-        /*staticFieldConverter.add(Cardinality.class);
-        staticFieldConverter.add(Fetch.class);
-        staticFieldConverter.add(EnumType.class);
-        staticFieldConverter.add(DateTime.class);*/
-    }
-
-    protected void deactivate(final ComponentContext context) {
-        /*staticFieldConverter.remove(Cardinality.class);
-        staticFieldConverter.remove(Fetch.class);
-        staticFieldConverter.remove(EnumType.class);
-        staticFieldConverter.remove(DateTime.class);*/
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_BOOLEAN_COMMAND, help = "Adds a private boolean field to an existing Java source file")
@@ -129,7 +117,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "primitive", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to use a primitive type") final boolean primitive,
             @CliOption(key = "transient", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to mark the field as transient") final boolean transientModifier,
             @CliOption(key = "permitReservedWords", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether reserved words are ignored by Roo") final boolean permitReservedWords,
-            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the GWT Bootstrap UI") final boolean exclude) {
+            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the RequestFactory proxy") final boolean exclude,
+            @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be read only in the RequestFactory proxy") final boolean readOnly) {
 
         final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
                 .getTypeDetails(typeName);
@@ -155,7 +144,7 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setValue(value);
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
+        insertField(fieldDetails, permitReservedWords, transientModifier, exclude, readOnly);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_DATE_COMMAND, help = "Adds a private date field to an existing Java source file")
@@ -176,7 +165,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "dateFormat", mandatory = false, unspecifiedDefaultValue = "MEDIUM", specifiedDefaultValue = "MEDIUM", help = "Indicates the style of the date format (ignored if dateTimeFormatPattern is specified)") final DateTime dateFormat,
             @CliOption(key = "timeFormat", mandatory = false, unspecifiedDefaultValue = "NONE", specifiedDefaultValue = "NONE", help = "Indicates the style of the time format (ignored if dateTimeFormatPattern is specified)") final DateTime timeFormat,
             @CliOption(key = "dateTimeFormatPattern", mandatory = false, help = "Indicates a DateTime format pattern such as yyyy-MM-dd hh:mm:ss a") final String pattern,
-            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the GWT Bootstrap UI") final boolean exclude) {
+            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the RequestFactory proxy") final boolean exclude,
+            @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be read only in the RequestFactory proxy") final boolean readOnly) {
 
         final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
                 .getTypeDetails(typeName);
@@ -215,7 +205,7 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setValue(value);
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
+        insertField(fieldDetails, permitReservedWords, transientModifier, exclude, readOnly);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_EMBEDDED_COMMAND, help = "Adds a private @Embedded field to an existing Java source file ")
@@ -224,7 +214,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "type", mandatory = true, optionContext = "project", help = "The Java type of the @Embeddable class") final JavaType fieldType,
             @CliOption(key = "class", mandatory = false, unspecifiedDefaultValue = "*", optionContext = "update,project", help = "The name of the @Entity class to receive this field") final JavaType typeName,
             @CliOption(key = "permitReservedWords", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether reserved words are ignored by Roo") final boolean permitReservedWords,
-            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the GWT Bootstrap UI") final boolean exclude) {
+            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the RequestFactory proxy") final boolean exclude,
+            @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be read only in the RequestFactory proxy") final boolean readOnly) {
 
         // Check if the field type is a JPA @Embeddable class
         final ClassOrInterfaceTypeDetails cid = typeLocationService
@@ -263,7 +254,7 @@ public class EntityFieldCommands implements CommandMarker {
         final EmbeddedField fieldDetails = new EmbeddedField(
                 physicalTypeIdentifier, fieldType, fieldName);
 
-        insertField(fieldDetails, permitReservedWords, false, exclude);
+        insertField(fieldDetails, permitReservedWords, false, exclude, readOnly);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_ENUM_COMMAND, help = "Adds a private enum field to an existing Java source file")
@@ -278,7 +269,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "comment", mandatory = false, help = "An optional comment for JavaDocs") final String comment,
             @CliOption(key = "transient", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to mark the field as transient") final boolean transientModifier,
             @CliOption(key = "permitReservedWords", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether reserved words are ignored by Roo") final boolean permitReservedWords,
-            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the GWT Bootstrap UI") final boolean exclude) {
+            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the RequestFactory proxy") final boolean exclude,
+            @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be read only in the RequestFactory proxy") final boolean readOnly) {
 
         final ClassOrInterfaceTypeDetails cid = typeLocationService
                 .getTypeDetails(typeName);
@@ -300,7 +292,7 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setComment(comment);
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
+        insertField(fieldDetails, permitReservedWords, transientModifier, exclude, readOnly);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_NUMBER_COMMAND, help = "Adds a private numeric field to an existing Java source file")
@@ -323,7 +315,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "primitive", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to use a primitive type if possible") final boolean primitive,
             @CliOption(key = "unique", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether to mark the field with a unique constraint") final boolean unique,
             @CliOption(key = "permitReservedWords", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether reserved words are ignored by Roo") final boolean permitReservedWords,
-            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the GWT Bootstrap UI") final boolean exclude) {
+            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the RequestFactory proxy") final boolean exclude,
+            @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be read only in the RequestFactory proxy") final boolean readOnly) {
 
         final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
                 .getTypeDetails(typeName);
@@ -377,7 +370,7 @@ public class EntityFieldCommands implements CommandMarker {
                 fieldDetails.isDigitsSetCorrectly(),
                 "Must specify both --digitsInteger and --digitsFractional for @Digits to be added");
 
-        insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
+        insertField(fieldDetails, permitReservedWords, transientModifier, exclude, readOnly);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_REFERENCE_COMMAND, help = "Adds a private reference field to an existing Java source file (eg the 'many' side of a many-to-one)")
@@ -394,7 +387,9 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "comment", mandatory = false, help = "An optional comment for JavaDocs") final String comment,
             @CliOption(key = "transient", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to mark the field as transient") final boolean transientModifier,
             @CliOption(key = "permitReservedWords", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether reserved words are ignored by Roo") final boolean permitReservedWords,
-            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the GWT Bootstrap UI") final boolean exclude) {
+            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the RequestFactory proxy") final boolean exclude,
+            @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be read only in the RequestFactory proxy") final boolean readOnly,
+            @CliOption(key = "unowned", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to mark the field as an unowned") final boolean unowned) {
 
         final ClassOrInterfaceTypeDetails cid = typeLocationService
                 .getTypeDetails(fieldType);
@@ -443,7 +438,13 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setComment(comment);
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
+        final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        fieldDetails.decorateAnnotationsList(annotations);
+        if (unowned) {
+            annotations.add(new AnnotationMetadataBuilder(UNOWNED));
+        }
+
+        insertField(fieldDetails, permitReservedWords, transientModifier, exclude, readOnly, annotations);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_SET_COMMAND, help = "Adds a private Set field to an existing Java source file (eg the 'one' side of a many-to-one)")
@@ -461,7 +462,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "comment", mandatory = false, help = "An optional comment for JavaDocs") final String comment,
             @CliOption(key = "transient", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to mark the field as transient") final boolean transientModifier,
             @CliOption(key = "permitReservedWords", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether reserved words are ignored by Roo") final boolean permitReservedWords,
-            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the GWT Bootstrap UI") final boolean exclude) {
+            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the RequestFactory proxy") final boolean exclude,
+            @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be read only in the RequestFactory proxy") final boolean readOnly) {
 
         final ClassOrInterfaceTypeDetails cid = typeLocationService
                 .getTypeDetails(fieldType);
@@ -522,7 +524,7 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setComment(comment);
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
+        insertField(fieldDetails, permitReservedWords, transientModifier, exclude, readOnly);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_STRING_COMMAND, help = "Adds a private string field to an existing Java source file")
@@ -542,7 +544,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "transient", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to mark the field as transient") final boolean transientModifier,
             @CliOption(key = "unique", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether to mark the field with a unique constraint") final boolean unique,
             @CliOption(key = "permitReservedWords", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether reserved words are ignored by Roo") final boolean permitReservedWords,
-            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the GWT Bootstrap UI") final boolean exclude) {
+            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the RequestFactory proxy") final boolean exclude,
+            @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be read only in the RequestFactory proxy") final boolean readOnly) {
 
         final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
                 .getTypeDetails(typeName);
@@ -583,7 +586,7 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setValue(value);
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
+        insertField(fieldDetails, permitReservedWords, transientModifier, exclude, readOnly);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_FILE_COMMAND, help = "Adds a byte array field for storing uploaded file contents (JSF-scaffolded UIs only)")
@@ -595,7 +598,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "column", mandatory = false, help = "The JPA @Column name") final String column,
             @CliOption(key = "notNull", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Whether this value cannot be null") final boolean notNull,
             @CliOption(key = "permitReservedWords", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether reserved words are ignored by Roo") final boolean permitReservedWords,
-            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the GWT Bootstrap UI") final boolean exclude) {
+            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the RequestFactory proxy") final boolean exclude,
+            @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be read only in the RequestFactory proxy") final boolean readOnly) {
 
         final ClassOrInterfaceTypeDetails cid = typeLocationService
                 .getTypeDetails(typeName);
@@ -611,12 +615,24 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setColumn(column);
         }
 
-        insertField(fieldDetails, permitReservedWords, false, exclude);
+        insertField(fieldDetails, permitReservedWords, false, exclude, readOnly);
     }
 
     private void insertField(final FieldDetails fieldDetails,
             final boolean permitReservedWords, final boolean transientModifier,
-            final boolean exclude) {
+            final boolean exclude, final boolean readOnly) {
+
+        final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        fieldDetails.decorateAnnotationsList(annotations);
+
+        insertField(fieldDetails, permitReservedWords, transientModifier,
+                exclude, readOnly, annotations);
+    }
+
+    private void insertField(final FieldDetails fieldDetails,
+            final boolean permitReservedWords, final boolean transientModifier,
+            final boolean exclude, final boolean readOnly,
+            final List<AnnotationMetadataBuilder> annotations) {
         if (!permitReservedWords) {
             ReservedWords.verifyReservedWordsNotPresent(fieldDetails
                     .getFieldName());
@@ -626,10 +642,11 @@ public class EntityFieldCommands implements CommandMarker {
             }
         }
 
-        final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
-        fieldDetails.decorateAnnotationsList(annotations);
         if (exclude) {
             annotations.add(new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_EXCLUDE));
+        }
+        if (readOnly) {
+            annotations.add(new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_READ_ONLY));
         }
 
         String initializer = null;
@@ -667,7 +684,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "value", mandatory = false, help = "Inserts an optional Spring @Value annotation with the given content") final String value,
             @CliOption(key = "transient", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to mark the field as transient") final boolean transientModifier,
             @CliOption(key = "permitReservedWords", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether reserved words are ignored by Roo") final boolean permitReservedWords,
-            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the GWT Bootstrap UI") final boolean exclude) {
+            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the RequestFactory proxy") final boolean exclude,
+            @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be read only in the RequestFactory proxy") final boolean readOnly) {
 
         final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
                 .getTypeDetails(typeName);
@@ -687,7 +705,7 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setColumn(column);
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
+        insertField(fieldDetails, permitReservedWords, transientModifier, exclude, readOnly);
     }
 
     @CliAvailabilityIndicator({ REQUEST_FACTORY_FIELD_OTHER_COMMAND, REQUEST_FACTORY_FIELD_NUMBER_COMMAND, REQUEST_FACTORY_FIELD_STRING_COMMAND,
@@ -719,7 +737,7 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "comment", mandatory = false, help = "An optional comment for JavaDocs") final String comment,
             @CliOption(key = "transient", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to mark the field as transient") final boolean transientModifier,
             @CliOption(key = "permitReservedWords", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether reserved words are ignored by Roo") final boolean permitReservedWords) {
-        addFieldList(fieldName, fieldType, typeName, mappedBy, notNull, nullRequired, sizeMin, sizeMax, cardinality, fetch, comment, transientModifier, permitReservedWords, false);
+        addFieldList(fieldName, fieldType, typeName, mappedBy, notNull, nullRequired, sizeMin, sizeMax, cardinality, fetch, comment, transientModifier, permitReservedWords, false, false);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_LIST_COMMAND, help = "Adds a private List field to an existing Java source file (eg the 'one' side of a many-to-one)")
@@ -737,13 +755,14 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "comment", mandatory = false, help = "An optional comment for JavaDocs") final String comment,
             @CliOption(key = "transient", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to mark the field as transient") final boolean transientModifier,
             @CliOption(key = "permitReservedWords", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether reserved words are ignored by Roo") final boolean permitReservedWords,
-            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the GWT Bootstrap UI") final boolean exclude) {
-        addFieldList(fieldName, fieldType, typeName, mappedBy, notNull, nullRequired, sizeMin, sizeMax, cardinality, fetch, comment, transientModifier, permitReservedWords, exclude);
+            @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be excluded from the RequestFactory proxy") final boolean exclude,
+            @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "The name of the field or accessor method to be read only in the RequestFactory proxy") final boolean readOnly) {
+        addFieldList(fieldName, fieldType, typeName, mappedBy, notNull, nullRequired, sizeMin, sizeMax, cardinality, fetch, comment, transientModifier, permitReservedWords, exclude, readOnly);
     }
 
     private void addFieldList(JavaSymbolName fieldName, JavaType fieldType, JavaType typeName, JavaSymbolName mappedBy,
             boolean notNull, boolean nullRequired, Integer sizeMin, Integer sizeMax, Cardinality cardinality, Fetch fetch,
-            String comment, boolean transientModifier, boolean permitReservedWords, final boolean exclude) {
+            String comment, boolean transientModifier, boolean permitReservedWords, final boolean exclude, final boolean readOnly) {
 
         final ClassOrInterfaceTypeDetails cid = typeLocationService
                 .getTypeDetails(fieldType);
@@ -804,6 +823,6 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setComment(comment);
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier, exclude);
+        insertField(fieldDetails, permitReservedWords, transientModifier, exclude, readOnly);
     }
 }
