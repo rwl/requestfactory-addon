@@ -115,8 +115,8 @@ public class {{=className}} implements Activity, {{=isScaffoldMobileActivity}} {
                 {{=rendererType}}.instance().getPaths()).fire(
                         new Receiver<List<{{=valueType}}>>() {
                                 public void onSuccess(List<{{=valueType}}> response) {
-                                        List<{{=valueType}}> values = new ArrayList<{{=valueType}}>();
-                                        values.add(null);
+                                        List<{{=valueType}}> values = new ArrayList<{{=valueType}}>();{{#nullable}}
+                                        values.add(null);{{/nullable}}
                                         values.addAll(response);
                                         view.{{=setValuePickerName}}(values);
                         }

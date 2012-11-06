@@ -13,6 +13,7 @@ import static org.springframework.roo.model.JdkJavaType.ARRAY_LIST;
 import static org.springframework.roo.model.JdkJavaType.HASH_SET;
 import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JdkJavaType.SET;
+import static org.springframework.roo.model.Jsr303JavaType.NOT_NULL;
 import hapax.Template;
 import hapax.TemplateDataDictionary;
 import hapax.TemplateDictionary;
@@ -651,6 +652,21 @@ public class BaseTemplateServiceImpl {
         if (governorTypeDetails.getMethod(property.getGetterSymbolName()) != null
                 && governorTypeDetails.getMethod(property.getGetterSymbolName())
                 .getAnnotation(ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE) != null) {
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean isNotNull(final RequestFactoryProxyProperty property,
+            final ClassOrInterfaceTypeDetails governorTypeDetails) {
+        if (governorTypeDetails.getField(property.getSymbolName()) != null
+                && governorTypeDetails.getField(property.getSymbolName())
+                .getAnnotation(NOT_NULL) != null) {
+            return true;
+        }
+        if (governorTypeDetails.getMethod(property.getGetterSymbolName()) != null
+                && governorTypeDetails.getMethod(property.getGetterSymbolName())
+                .getAnnotation(NOT_NULL) != null) {
             return true;
         }
         return false;

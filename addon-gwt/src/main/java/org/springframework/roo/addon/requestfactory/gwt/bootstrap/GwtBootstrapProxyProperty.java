@@ -279,14 +279,18 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
                 + "." + getSetEditor());
     }
 
-    public String getSetValuePickerMethod() {
+    public String getSetValuePickerMethod(final boolean nullable) {
         return "\tpublic void "
                 + getSetValuePickerMethodName()
                 + "(Collection<"
                 + (isCollection() ? type.getParameters().get(0)
                         .getSimpleTypeName() : type.getSimpleTypeName())
-                + "> values) {\n" + "\t\t" + getName()
-                + ".setAcceptableValues(values);\n" + "\t}\n";
+                + "> values) {\n"
+                + "\t\t" + getName() + ".setAcceptableValues(values);\n"
+                + (nullable ? "" : "\t\tif (values.size() > 0) {\n"
+                    + "\t\t\t" + getName() + ".setValue(values.iterator().next(), false);\n"
+                    + "\t\t}\n")
+                + "\t}\n";
     }
 
     public String getSetEmptyValuePickerMethod() {

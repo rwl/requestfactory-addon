@@ -208,7 +208,7 @@ public class RequestFactoryProxyProperty {
         throw new UnsupportedOperationException();
     }
 
-    public String getSetValuePickerMethod() {
+    public String getSetValuePickerMethod(final boolean nullable) {
         throw new UnsupportedOperationException();
     }
 

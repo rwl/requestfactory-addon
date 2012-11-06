@@ -566,6 +566,8 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                         final TemplateDataDictionary section = dataDictionary
                                 .addSection(requestFactoryProxyProperty.isEnum() ? "setEnumValuePickers"
                                         : "setProxyValuePickers");
+                        final boolean nullable = !isNotNull(
+                                requestFactoryProxyProperty, mirroredType);
                         // The methods is required to satisfy the interface.
                         // However, if the field is in the existingFields lists, the
                         // method must be empty because the field will not be added
@@ -576,11 +578,14 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                                         .getName()) ? requestFactoryProxyProperty
                                         .getSetEmptyValuePickerMethod()
                                         : requestFactoryProxyProperty
-                                                .getSetValuePickerMethod());
+                                                .getSetValuePickerMethod(nullable));
                         section.setVariable("setValuePickerName",
                                 requestFactoryProxyProperty.getSetValuePickerMethodName());
                         section.setVariable("valueType", requestFactoryProxyProperty
                                 .getValueType().getSimpleTypeName());
+                        if (nullable) {
+                            section.showSection("nullable");
+                        }
                         section.setVariable("rendererType",
                                 requestFactoryProxyProperty.getProxyRendererType());
                         if (requestFactoryProxyProperty.isProxy()

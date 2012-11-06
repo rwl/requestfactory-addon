@@ -149,6 +149,7 @@ public class EntityFieldCommands implements CommandMarker {
         }
 
         insertField(fieldDetails, permitReservedWords, transientModifier,
+                null,
                 exclude, readOnly, invisible, uneditable);
     }
 
@@ -213,6 +214,7 @@ public class EntityFieldCommands implements CommandMarker {
         }
 
         insertField(fieldDetails, permitReservedWords, transientModifier,
+                null,
                 exclude, readOnly, invisible, uneditable);
     }
 
@@ -264,8 +266,8 @@ public class EntityFieldCommands implements CommandMarker {
         final EmbeddedField fieldDetails = new EmbeddedField(
                 physicalTypeIdentifier, fieldType, fieldName);
 
-        insertField(fieldDetails, permitReservedWords, false, exclude,
-                readOnly, invisible, uneditable);
+        insertField(fieldDetails, permitReservedWords, false,
+                null, exclude, readOnly, invisible, uneditable);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_ENUM_COMMAND, help = "Adds a private enum field to an existing Java source file")
@@ -280,6 +282,7 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "comment", mandatory = false, help = "An optional comment for JavaDocs") final String comment,
             @CliOption(key = "transient", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to mark the field as transient") final boolean transientModifier,
             @CliOption(key = "permitReservedWords", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether reserved words are ignored by Roo") final boolean permitReservedWords,
+            @CliOption(key = "default", mandatory = false, help = "Enum value to use in the initializer") final String defaultValue,
             @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be excluded from the RequestFactory proxy") final boolean exclude,
             @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be read only in the RequestFactory proxy") final boolean readOnly,
             @CliOption(key = "invisible", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is not to be included in views of the proxy") final boolean invisible,
@@ -305,7 +308,13 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setComment(comment);
         }
 
+        String initializer = null;
+        if (defaultValue != null) {
+            initializer = fieldType.getSimpleTypeName() + "." + defaultValue;
+        }
+
         insertField(fieldDetails, permitReservedWords, transientModifier,
+                initializer,
                 exclude, readOnly, invisible, uneditable);
     }
 
@@ -386,7 +395,7 @@ public class EntityFieldCommands implements CommandMarker {
                 fieldDetails.isDigitsSetCorrectly(),
                 "Must specify both --digitsInteger and --digitsFractional for @Digits to be added");
 
-        insertField(fieldDetails, permitReservedWords, transientModifier,
+        insertField(fieldDetails, permitReservedWords, transientModifier, null,
                 exclude, readOnly, invisible, uneditable);
     }
 
@@ -463,7 +472,7 @@ public class EntityFieldCommands implements CommandMarker {
             annotations.add(new AnnotationMetadataBuilder(UNOWNED));
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier,
+        insertField(fieldDetails, permitReservedWords, transientModifier, null,
                 exclude, readOnly, invisible, uneditable, annotations);
     }
 
@@ -546,7 +555,7 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setComment(comment);
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier,
+        insertField(fieldDetails, permitReservedWords, transientModifier, null,
                 exclude, readOnly, invisible, uneditable);
     }
 
@@ -611,7 +620,7 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setValue(value);
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier,
+        insertField(fieldDetails, permitReservedWords, transientModifier, null,
                 exclude, readOnly, invisible, uneditable);
     }
 
@@ -643,12 +652,13 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setColumn(column);
         }
 
-        insertField(fieldDetails, permitReservedWords, false, exclude,
+        insertField(fieldDetails, permitReservedWords, false, null, exclude,
                 readOnly, invisible, uneditable);
     }
 
     private void insertField(final FieldDetails fieldDetails,
             final boolean permitReservedWords, final boolean transientModifier,
+            final String initializer,
             final boolean exclude, final boolean readOnly,
             final boolean invisible, final boolean uneditable) {
 
@@ -656,11 +666,13 @@ public class EntityFieldCommands implements CommandMarker {
         fieldDetails.decorateAnnotationsList(annotations);
 
         insertField(fieldDetails, permitReservedWords, transientModifier,
+                initializer,
                 exclude, readOnly, invisible, uneditable, annotations);
     }
 
     private void insertField(final FieldDetails fieldDetails,
             final boolean permitReservedWords, final boolean transientModifier,
+            String initializer,
             final boolean exclude, final boolean readOnly,
             final boolean invisible, final boolean uneditable,
             final List<AnnotationMetadataBuilder> annotations) {
@@ -686,7 +698,6 @@ public class EntityFieldCommands implements CommandMarker {
             annotations.add(new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE));
         }
 
-        String initializer = null;
         if (fieldDetails instanceof CollectionField) {
             final CollectionField collectionField = (CollectionField) fieldDetails;
             initializer = "new " + collectionField.getInitializer() + "()";
@@ -744,7 +755,7 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setColumn(column);
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier,
+        insertField(fieldDetails, permitReservedWords, transientModifier, null,
                 exclude, readOnly, invisible, uneditable);
     }
 
@@ -866,6 +877,6 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setComment(comment);
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier, exclude, readOnly, invisible, uneditable);
+        insertField(fieldDetails, permitReservedWords, transientModifier, null, exclude, readOnly, invisible, uneditable);
     }
 }
