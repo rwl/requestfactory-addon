@@ -28,9 +28,9 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
 	private static {{=className}} instance;
 
 	{{=proxy}} proxy;
-	{{#fields}}
-	@UiField SpanElement {{=field}};{{/fields}}	
-	
+	{{#properties}}
+	@UiField SpanElement {{=prop}};{{/properties}}
+
 	@UiField SpanElement displayRenderer;
 	@UiField HasClickHandlers edit;
 	@UiField HasClickHandlers delete;

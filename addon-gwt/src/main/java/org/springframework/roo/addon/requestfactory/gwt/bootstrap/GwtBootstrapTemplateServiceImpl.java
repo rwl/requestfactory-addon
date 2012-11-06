@@ -473,7 +473,8 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
             }
 
             // if the property is in the existingFields list, do not add it
-            if (!existingDetailsViewFields.contains(requestFactoryProxyProperty.getName())) {
+            if (!existingDetailsViewFields.contains(requestFactoryProxyProperty.getName())
+                    && !isInvisible(requestFactoryProxyProperty, mirroredType)) {
                 dataDictionary.addSection("fields").setVariable("field",
                         requestFactoryProxyProperty.getName());
 
@@ -497,25 +498,28 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                         requestFactoryProxyProperty.getReadableName());
             }
 
-            final TemplateDataDictionary propertiesSection = dataDictionary
-                    .addSection("properties");
-            propertiesSection.setVariable("prop", requestFactoryProxyProperty.getName());
-            propertiesSection.setVariable(
-                    "propId",
-                    proxyType.getSimpleTypeName() + "_"
-                            + requestFactoryProxyProperty.getName());
-            propertiesSection.setVariable("propGetter",
-                    requestFactoryProxyProperty.getGetter());
-            propertiesSection.setVariable("propType",
-                    requestFactoryProxyProperty.getType());
-            propertiesSection.setVariable("propFormatter",
-                    requestFactoryProxyProperty.getFormatter());
-            propertiesSection.setVariable("propRenderer",
-                    requestFactoryProxyProperty.getRenderer());
-            propertiesSection.setVariable("propReadable",
-                    requestFactoryProxyProperty.getReadableName());
+            if (!isInvisible(requestFactoryProxyProperty, mirroredType)) {
+                final TemplateDataDictionary propertiesSection = dataDictionary
+                        .addSection("properties");
+                propertiesSection.setVariable("prop", requestFactoryProxyProperty.getName());
+                propertiesSection.setVariable(
+                        "propId",
+                        proxyType.getSimpleTypeName() + "_"
+                                + requestFactoryProxyProperty.getName());
+                propertiesSection.setVariable("propGetter",
+                        requestFactoryProxyProperty.getGetter());
+                propertiesSection.setVariable("propType",
+                        requestFactoryProxyProperty.getType());
+                propertiesSection.setVariable("propFormatter",
+                        requestFactoryProxyProperty.getFormatter());
+                propertiesSection.setVariable("propRenderer",
+                        requestFactoryProxyProperty.getRenderer());
+                propertiesSection.setVariable("propReadable",
+                        requestFactoryProxyProperty.getReadableName());
+            }
 
-            if (!isReadOnly(requestFactoryProxyProperty.getName(), mirroredType)) {
+            if (!isReadOnly(requestFactoryProxyProperty.getName(), mirroredType)
+                    && !isUneditable(requestFactoryProxyProperty, mirroredType)) {
                 // if the property is in the existingFields list, do not add it
                 if (!existingEditViewFields
                         .contains(requestFactoryProxyProperty.getName())) {
@@ -558,42 +562,44 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     .getName())) {
                 if (requestFactoryProxyProperty.isProxy() || requestFactoryProxyProperty.isEnum()
                         || requestFactoryProxyProperty.isCollectionOfProxy()) {
-                    final TemplateDataDictionary section = dataDictionary
-                            .addSection(requestFactoryProxyProperty.isEnum() ? "setEnumValuePickers"
-                                    : "setProxyValuePickers");
-                    // The methods is required to satisfy the interface.
-                    // However, if the field is in the existingFields lists, the
-                    // method must be empty because the field will not be added
-                    // to the managed view.
-                    section.setVariable(
-                            "setValuePicker",
-                            existingEditViewFields.contains(requestFactoryProxyProperty
-                                    .getName()) ? requestFactoryProxyProperty
-                                    .getSetEmptyValuePickerMethod()
-                                    : requestFactoryProxyProperty
-                                            .getSetValuePickerMethod());
-                    section.setVariable("setValuePickerName",
-                            requestFactoryProxyProperty.getSetValuePickerMethodName());
-                    section.setVariable("valueType", requestFactoryProxyProperty
-                            .getValueType().getSimpleTypeName());
-                    section.setVariable("rendererType",
-                            requestFactoryProxyProperty.getProxyRendererType());
-                    if (requestFactoryProxyProperty.isProxy()
-                            || requestFactoryProxyProperty.isCollectionOfProxy()) {
-                        String propTypeName = StringUtils
-                                .uncapitalize(requestFactoryProxyProperty
-                                        .isCollectionOfProxy() ? requestFactoryProxyProperty
-                                        .getPropertyType().getParameters()
-                                        .get(0).getSimpleTypeName()
-                                        : requestFactoryProxyProperty.getPropertyType()
-                                                .getSimpleTypeName());
-                        propTypeName = propTypeName.substring(0,
-                                propTypeName.indexOf("Proxy"));
-                        section.setVariable("requestInterface", propTypeName
-                                + "Request");
-                        section.setVariable("findMethod",
-                                "find" + StringUtils.capitalize(propTypeName)
-                                        + "Entries(0, 50)");
+                    if (!isUneditable(requestFactoryProxyProperty, mirroredType)) {
+                        final TemplateDataDictionary section = dataDictionary
+                                .addSection(requestFactoryProxyProperty.isEnum() ? "setEnumValuePickers"
+                                        : "setProxyValuePickers");
+                        // The methods is required to satisfy the interface.
+                        // However, if the field is in the existingFields lists, the
+                        // method must be empty because the field will not be added
+                        // to the managed view.
+                        section.setVariable(
+                                "setValuePicker",
+                                existingEditViewFields.contains(requestFactoryProxyProperty
+                                        .getName()) ? requestFactoryProxyProperty
+                                        .getSetEmptyValuePickerMethod()
+                                        : requestFactoryProxyProperty
+                                                .getSetValuePickerMethod());
+                        section.setVariable("setValuePickerName",
+                                requestFactoryProxyProperty.getSetValuePickerMethodName());
+                        section.setVariable("valueType", requestFactoryProxyProperty
+                                .getValueType().getSimpleTypeName());
+                        section.setVariable("rendererType",
+                                requestFactoryProxyProperty.getProxyRendererType());
+                        if (requestFactoryProxyProperty.isProxy()
+                                || requestFactoryProxyProperty.isCollectionOfProxy()) {
+                            String propTypeName = StringUtils
+                                    .uncapitalize(requestFactoryProxyProperty
+                                            .isCollectionOfProxy() ? requestFactoryProxyProperty
+                                            .getPropertyType().getParameters()
+                                            .get(0).getSimpleTypeName()
+                                            : requestFactoryProxyProperty.getPropertyType()
+                                                    .getSimpleTypeName());
+                            propTypeName = propTypeName.substring(0,
+                                    propTypeName.indexOf("Proxy"));
+                            section.setVariable("requestInterface", propTypeName
+                                    + "Request");
+                            section.setVariable("findMethod",
+                                    "find" + StringUtils.capitalize(propTypeName)
+                                            + "Entries(0, 50)");
+                        }
                     }
                     maybeAddImport(dataDictionary, importSet,
                             requestFactoryProxyProperty.getPropertyType());

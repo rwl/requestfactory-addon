@@ -175,8 +175,16 @@ public class RequestFactoryProxyProperty {
         return getter;
     }
 
+    public JavaSymbolName getGetterSymbolName() {
+        return new JavaSymbolName(getter);
+    }
+
     public String getName() {
         return name;
+    }
+
+    public JavaSymbolName getSymbolName() {
+        return new JavaSymbolName(name);
     }
 
     public JavaType getPropertyType() {

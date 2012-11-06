@@ -17,6 +17,10 @@ public final class EntityJavaType {
             RooRequestFactoryExclude.class.getName());
     public static final JavaType ROO_REQUEST_FACTORY_READ_ONLY = new JavaType(
             RooRequestFactoryReadOnly.class.getName());
+    public static final JavaType ROO_REQUEST_FACTORY_SCAFFOLD_INVISIBLE = new JavaType(
+            RooRequestFactoryScaffoldInvisible.class.getName());
+    public static final JavaType ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE = new JavaType(
+            RooRequestFactoryScaffoldUneditable.class.getName());
 
     /**
      * Constructor is private to prevent instantiation

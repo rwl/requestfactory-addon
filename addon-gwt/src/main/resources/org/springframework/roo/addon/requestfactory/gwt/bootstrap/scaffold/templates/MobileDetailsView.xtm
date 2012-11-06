@@ -45,8 +45,8 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
     }
 
     {{=proxy}} proxy;
-    {{#fields}}
-    @UiField Label {{=field}};{{/fields}}
+    {{#properties}}
+    @UiField Label {{=prop}};{{/properties}}
     @UiField HasTouchHandlers delete;
 
     @UiField HTML title;

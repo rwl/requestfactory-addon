@@ -5,6 +5,8 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_SCAFFOLD_INVISIBLE;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE;
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
 import static org.springframework.roo.model.JdkJavaType.ARRAY_LIST;
@@ -622,6 +624,36 @@ public class BaseTemplateServiceImpl {
         catch (final Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    protected boolean isInvisible(final RequestFactoryProxyProperty property,
+            final ClassOrInterfaceTypeDetails governorTypeDetails) {
+        if (governorTypeDetails.getField(property.getSymbolName()) != null
+                && governorTypeDetails.getField(property.getSymbolName())
+                .getAnnotation(ROO_REQUEST_FACTORY_SCAFFOLD_INVISIBLE) != null) {
+            return true;
+        }
+        if (governorTypeDetails.getMethod(property.getGetterSymbolName()) != null
+                && governorTypeDetails.getMethod(property.getGetterSymbolName())
+                .getAnnotation(ROO_REQUEST_FACTORY_SCAFFOLD_INVISIBLE) != null) {
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean isUneditable(final RequestFactoryProxyProperty property,
+            final ClassOrInterfaceTypeDetails governorTypeDetails) {
+        if (governorTypeDetails.getField(property.getSymbolName()) != null
+                && governorTypeDetails.getField(property.getSymbolName())
+                .getAnnotation(ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE) != null) {
+            return true;
+        }
+        if (governorTypeDetails.getMethod(property.getGetterSymbolName()) != null
+                && governorTypeDetails.getMethod(property.getGetterSymbolName())
+                .getAnnotation(ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE) != null) {
+            return true;
+        }
+        return false;
     }
 
     protected boolean isReadOnly(final String name,

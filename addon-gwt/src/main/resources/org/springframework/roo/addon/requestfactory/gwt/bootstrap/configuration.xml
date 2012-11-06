@@ -110,6 +110,7 @@
                     <logLevel>INFO</logLevel>
                     <style>PRETTY</style>
                     <runTarget>/index.html</runTarget>
+                    <extraJvmArgs>-XX:MaxPermSize=512M -Xmx1024m</extraJvmArgs>
                     <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
                     <!-- <modules>
                         <module>${project.groupId}.ApplicationScaffold</module>
@@ -208,7 +209,7 @@
                         <module>${project.groupId}.ApplicationScaffold</module>
                     </modules> -->
                     <server>com.google.appengine.tools.development.gwt.AppEngineLauncher</server>
-                    <extraJvmArgs>"-javaagent:${gae.home}/lib/agent/appengine-agent.jar" -Xmx1024m</extraJvmArgs>
+                    <extraJvmArgs>"-javaagent:${gae.home}/lib/agent/appengine-agent.jar" -XX:MaxPermSize=512M -Xmx1024m</extraJvmArgs>
                     <copyWebapp>true</copyWebapp>
                     <appEngineVersion>1.6.5</appEngineVersion>
                 </configuration>

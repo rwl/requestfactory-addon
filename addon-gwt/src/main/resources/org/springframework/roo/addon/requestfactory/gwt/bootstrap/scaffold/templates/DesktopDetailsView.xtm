@@ -30,8 +30,8 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
 	private static {{=className}} instance;
 
 	{{=proxy}} proxy;
-	{{#fields}}
-	@UiField Label {{=field}};{{/fields}}
+	{{#properties}}
+	@UiField Label {{=prop}};{{/properties}}
 
 	@UiField SpanElement displayRenderer;
 	@UiField HasClickHandlers edit;
