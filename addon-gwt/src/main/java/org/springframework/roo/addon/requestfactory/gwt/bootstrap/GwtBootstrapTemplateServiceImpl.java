@@ -36,6 +36,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateServic
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.entity.RooRequestFactory;
+import org.springframework.roo.addon.requestfactory.entity.TextType;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
@@ -461,6 +462,11 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 dateProperty = requestFactoryProxyProperty;
             }
 
+            final String helpText = getHelpText(requestFactoryProxyProperty
+                    .getSymbolName(), mirroredType);
+            final TextType textType = getTextType(requestFactoryProxyProperty
+                    .getSymbolName(), mirroredType);
+
             if (requestFactoryProxyProperty.isProxy()
                     || requestFactoryProxyProperty.isCollectionOfProxy()) {
                 if (proxyFields != null) {
@@ -516,6 +522,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                         requestFactoryProxyProperty.getRenderer());
                 propertiesSection.setVariable("propReadable",
                         requestFactoryProxyProperty.getReadableName());
+                propertiesSection.setVariable("helpText", helpText);
             }
 
             if (!isReadOnly(requestFactoryProxyProperty.getName(), mirroredType)
@@ -524,9 +531,9 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 if (!existingEditViewFields
                         .contains(requestFactoryProxyProperty.getName())) {
                     dataDictionary.addSection("editViewProps").setVariable(
-                            "prop", requestFactoryProxyProperty.forEditView());
+                            "prop", requestFactoryProxyProperty.forEditView(textType));
                     dataDictionary.addSection("mobileEditViewProps").setVariable(
-                            "prop", requestFactoryProxyProperty.forMobileEditView());
+                            "prop", requestFactoryProxyProperty.forMobileEditView(textType));
                 }
 
                 final TemplateDataDictionary editableSection = dataDictionary
@@ -545,11 +552,12 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 editableSection.setVariable("propRenderer",
                         requestFactoryProxyProperty.getRenderer());
                 editableSection.setVariable("propBinder",
-                        requestFactoryProxyProperty.getBinder());
+                        requestFactoryProxyProperty.getBinder(textType));
                 editableSection.setVariable("mobilePropBinder",
-                        requestFactoryProxyProperty.getMobileBinder());
+                        requestFactoryProxyProperty.getMobileBinder(textType));
                 editableSection.setVariable("propReadable",
                         requestFactoryProxyProperty.getReadableName());
+                editableSection.setVariable("helpText", helpText);
             }
 
             dataDictionary.setVariable("proxyRendererType",

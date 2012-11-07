@@ -9,8 +9,8 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_UNMANAGED_REQUEST;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_EXCLUDE;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_READ_ONLY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.EXCLUDE;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.READ_ONLY;
 import static org.springframework.roo.classpath.PhysicalTypeCategory.INTERFACE;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
@@ -306,18 +306,18 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
                 readOnlyValues.add(new StringAttributeValue(VALUE, "stringId"));
             }
         }
-        for (FieldMetadata fieldMetadata : entity.getFieldsWithAnnotation(ROO_REQUEST_FACTORY_READ_ONLY)) {
+        for (FieldMetadata fieldMetadata : entity.getFieldsWithAnnotation(READ_ONLY)) {
             readOnlyValues.add(new StringAttributeValue(VALUE, fieldMetadata.getFieldName().getSymbolName()));
         }
         final ArrayAttributeValue<StringAttributeValue> readOnlyAttribute = new ArrayAttributeValue<StringAttributeValue>(
                 new JavaSymbolName("readOnly"), readOnlyValues);
         attributeValues.add(readOnlyAttribute);
 
-        for (FieldMetadata fieldMetadata : entity.getFieldsWithAnnotation(ROO_REQUEST_FACTORY_EXCLUDE)) {
+        for (FieldMetadata fieldMetadata : entity.getFieldsWithAnnotation(EXCLUDE)) {
             excludeValues.add(new StringAttributeValue(VALUE, fieldMetadata.getFieldName().getSymbolName()));
         }
         for (MethodMetadata methodMetadata : entity.getMethods()) {
-            if (methodMetadata.getAnnotation(ROO_REQUEST_FACTORY_EXCLUDE) != null) {
+            if (methodMetadata.getAnnotation(EXCLUDE) != null) {
                 excludeValues.add(new StringAttributeValue(VALUE, StringUtils.uncapitalize(BeanInfoUtils
                         .getPropertyNameForJavaBeanMethod(methodMetadata)
                         .getSymbolName())));

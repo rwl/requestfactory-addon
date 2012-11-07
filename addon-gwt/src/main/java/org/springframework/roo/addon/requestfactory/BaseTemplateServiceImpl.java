@@ -3,10 +3,13 @@ package org.springframework.roo.addon.requestfactory;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.INSTANCE_REQUEST;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.HELP_TEXT;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.INVISIBLE;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.PASSWORD;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_SCAFFOLD_INVISIBLE;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.TEXT_AREA;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNEDITABLE;
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
 import static org.springframework.roo.model.JdkJavaType.ARRAY_LIST;
@@ -35,6 +38,7 @@ import org.apache.felix.scr.annotations.Reference;
 import org.springframework.roo.addon.plural.PluralMetadata;
 import org.springframework.roo.addon.requestfactory.entity.EntityDataKeys;
 import org.springframework.roo.addon.requestfactory.entity.RooRequestFactory;
+import org.springframework.roo.addon.requestfactory.entity.TextType;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeParsingService;
@@ -631,12 +635,12 @@ public class BaseTemplateServiceImpl {
             final ClassOrInterfaceTypeDetails governorTypeDetails) {
         if (governorTypeDetails.getField(property.getSymbolName()) != null
                 && governorTypeDetails.getField(property.getSymbolName())
-                .getAnnotation(ROO_REQUEST_FACTORY_SCAFFOLD_INVISIBLE) != null) {
+                .getAnnotation(INVISIBLE) != null) {
             return true;
         }
         if (governorTypeDetails.getMethod(property.getGetterSymbolName()) != null
                 && governorTypeDetails.getMethod(property.getGetterSymbolName())
-                .getAnnotation(ROO_REQUEST_FACTORY_SCAFFOLD_INVISIBLE) != null) {
+                .getAnnotation(INVISIBLE) != null) {
             return true;
         }
         return false;
@@ -646,12 +650,12 @@ public class BaseTemplateServiceImpl {
             final ClassOrInterfaceTypeDetails governorTypeDetails) {
         if (governorTypeDetails.getField(property.getSymbolName()) != null
                 && governorTypeDetails.getField(property.getSymbolName())
-                .getAnnotation(ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE) != null) {
+                .getAnnotation(UNEDITABLE) != null) {
             return true;
         }
         if (governorTypeDetails.getMethod(property.getGetterSymbolName()) != null
                 && governorTypeDetails.getMethod(property.getGetterSymbolName())
-                .getAnnotation(ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE) != null) {
+                .getAnnotation(UNEDITABLE) != null) {
             return true;
         }
         return false;
@@ -683,6 +687,36 @@ public class BaseTemplateServiceImpl {
         }
 
         return readOnly.contains(name);
+    }
+
+    protected TextType getTextType(final JavaSymbolName fieldName,
+            final ClassOrInterfaceTypeDetails governorTypeDetails) {
+        FieldMetadata fieldMetadata = governorTypeDetails.getField(fieldName);
+        if (fieldMetadata != null) {
+            if (fieldMetadata.getAnnotation(TEXT_AREA) != null) {
+                return TextType.MULTILINE;
+            } else if (fieldMetadata.getAnnotation(PASSWORD) != null) {
+                return TextType.PASSWORD;
+            }
+        }
+        return TextType.NORMAL;
+    }
+
+    protected String getHelpText(final JavaSymbolName fieldName,
+            final ClassOrInterfaceTypeDetails governorTypeDetails) {
+        FieldMetadata fieldMetadata = governorTypeDetails.getField(fieldName);
+        if (fieldMetadata != null) {
+            AnnotationMetadata annotationMetadata = fieldMetadata
+                    .getAnnotation(HELP_TEXT);
+            if (annotationMetadata != null) {
+                AnnotationAttributeValue<String> aav = annotationMetadata
+                        .getAttribute("value");
+                if (aav != null) {
+                    return "<b:HelpBlock>" + aav.getValue() + "</b:HelpBlock>";
+                }
+            }
+        }
+        return "";
     }
 
     protected boolean isSameBaseType(final JavaType type1, final JavaType type2) {

@@ -2,8 +2,8 @@ package org.springframework.roo.addon.requestfactory.entity;
 
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY_FACTORY;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_SCAFFOLD_INVISIBLE;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.INVISIBLE;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNEDITABLE;
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
@@ -123,8 +123,8 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         }
 
         List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
-        annotations.add(new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_SCAFFOLD_INVISIBLE));
-        annotations.add(new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE));
+        annotations.add(new AnnotationMetadataBuilder(INVISIBLE));
+        annotations.add(new AnnotationMetadataBuilder(UNEDITABLE));
         List<JavaType> throwsTypes = new ArrayList<JavaType>();
         List<AnnotatedJavaType> parameterTypes = new ArrayList<AnnotatedJavaType>();
         List<JavaSymbolName> parameterNames = new ArrayList<JavaSymbolName>();

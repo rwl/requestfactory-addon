@@ -23,6 +23,8 @@ import com.googlecode.mgwt.ui.client.widget.MDoubleBox;
 import com.googlecode.mgwt.ui.client.widget.MIntegerBox;
 import com.googlecode.mgwt.ui.client.widget.MLongBox;
 import com.googlecode.mgwt.ui.client.widget.MTextBox;
+import com.googlecode.mgwt.ui.client.widget.MTextArea;
+import com.googlecode.mgwt.ui.client.widget.MPasswordTextBox;
 import com.googlecode.mgwt.ui.client.widget.MDateBox;
 import com.googlecode.mgwt.dom.client.event.touch.HasTouchHandlers;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;

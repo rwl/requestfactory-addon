@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
+import org.springframework.roo.addon.requestfactory.entity.TextType;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.model.JavaPackage;
@@ -36,7 +37,8 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
         super(topLevelPackage, ptmd, type, name, annotations, getter);
     }
 
-    public String getBinder() {
+    @Override
+    public String getBinder(final TextType textType) {
         if (type.equals(JavaType.DOUBLE_OBJECT)) {
             return "b:DoubleBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'";
         }
@@ -64,11 +66,12 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
         return isCollection() ? "e:" + getSetEditor()
                 : isDate() ? "d:DateBox"
                 : isBoolean() ? "b:CheckBox"
-                : isString() ? "b:TextBox b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'"
+                : isString() ? "b:" + getTextEditor(textType) + " b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'"
                 : "b:ValueListBox";
     }
 
-    public String getMobileBinder() {
+    @Override
+    public String getMobileBinder(final TextType textType) {
         if (type.equals(JavaType.DOUBLE_OBJECT)) {
             return "m:MDoubleBox";
         }
@@ -96,11 +99,12 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
         return isCollection() ? "e:" + getSetEditor()
                 : isDate() ? "m:MDateBox"
                 : isBoolean() ? "m:MCheckBox"
-                : isString() ? "m:MTextBox"
+                : isString() ? "m:" + getMobileTextEditor(textType)
                 : "b:ValueListBox";
     }
 
-    public String forEditView() {
+    @Override
+    public String forEditView(final TextType textType) {
         String initializer = "";
 
         if (isBoolean()) {
@@ -119,11 +123,12 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
                             getProxyRendererType());
         }
 
-        return String.format("@UiField %s %s %s", getEditor(), getName(),
+        return String.format("@UiField %s %s %s", getEditor(textType), getName(),
                 initializer);
     }
 
-    public String forMobileEditView() {
+    @Override
+    public String forMobileEditView(final TextType textType) {
         String initializer = "";
 
         if (isBoolean()) {
@@ -142,7 +147,7 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
                             getProxyRendererType());
         }
 
-        return String.format("@UiField %s %s %s", getMobileEditor(), getName(),
+        return String.format("@UiField %s %s %s", getMobileEditor(textType), getName(),
                 initializer);
     }
 
@@ -180,7 +185,7 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
                 isCollectionOfProxy() ? type.getParameters().get(0) : type);
     }
 
-    private String getEditor() {
+    private String getEditor(final TextType textType) {
         if (type.equals(JavaType.DOUBLE_OBJECT)) {
             return "DoubleBox";
         }
@@ -209,11 +214,11 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
             return "(provided = true) CheckBox";
         }
         return isCollection() ? getSetEditor() : isDate() ? "DateBox"
-                : isString() ? "TextBox" : "(provided = true) ValueListBox<"
+                : isString() ? getTextEditor(textType) : "(provided = true) ValueListBox<"
                         + type.getFullyQualifiedTypeName() + ">";
     }
 
-    private String getMobileEditor() {
+    private String getMobileEditor(final TextType textType) {
         if (type.equals(JavaType.DOUBLE_OBJECT)) {
             return "MDoubleBox";
         }
@@ -242,8 +247,34 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
             return "(provided = true) MCheckBox";
         }
         return isCollection() ? getSetEditor() : isDate() ? "MDateBox"
-                : isString() ? "MTextBox" : "(provided = true) ValueListBox<"
+                : isString() ? getMobileTextEditor(textType) : "(provided = true) ValueListBox<"
                         + type.getFullyQualifiedTypeName() + ">";
+    }
+
+    private String getTextEditor(final TextType textType) {
+        switch (textType) {
+        case NORMAL:
+            return "TextBox";
+        case PASSWORD:
+            return "PasswordTextBox";
+        case MULTILINE:
+            return "TextArea";
+        default:
+            return "TextBox";
+        }
+    }
+
+    private String getMobileTextEditor(final TextType textType) {
+        switch (textType) {
+        case NORMAL:
+            return "MTextBox";
+        case PASSWORD:
+            return "MPasswordTextBox";
+        case MULTILINE:
+            return "MTextArea";
+        default:
+            return "MTextBox";
+        }
     }
 
     public String getRenderer() {

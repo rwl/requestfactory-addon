@@ -22,6 +22,8 @@ import com.github.gwtbootstrap.client.ui.DoubleBox;
 import com.github.gwtbootstrap.client.ui.IntegerBox;
 import com.github.gwtbootstrap.client.ui.LongBox;
 import com.github.gwtbootstrap.client.ui.TextBox;
+import com.github.gwtbootstrap.client.ui.TextArea;
+import com.github.gwtbootstrap.client.ui.PasswordTextBox;
 import com.github.gwtbootstrap.client.ui.ValueListBox;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.AlertBlock;

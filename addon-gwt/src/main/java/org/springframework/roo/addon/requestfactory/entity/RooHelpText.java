@@ -6,6 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
-@Target( { ElementType.FIELD, ElementType.METHOD } )
-public @interface RooRequestFactoryReadOnly {
+@Target( { ElementType.FIELD } )
+public @interface RooHelpText {
+
+    String value() default "";
 }

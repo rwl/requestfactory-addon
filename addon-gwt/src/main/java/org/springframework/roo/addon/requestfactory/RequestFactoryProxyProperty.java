@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.springframework.roo.addon.requestfactory.entity.TextType;
 import org.springframework.roo.classpath.PhysicalTypeCategory;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MemberFindingUtils;
@@ -55,19 +56,19 @@ public class RequestFactoryProxyProperty {
         this.getter = getter;
     }
 
-    public String getBinder() {
+    public String getBinder(final TextType textType) {
         throw new UnsupportedOperationException();
     }
 
-    public String getMobileBinder() {
+    public String getMobileBinder(final TextType textType) {
         throw new UnsupportedOperationException();
     }
 
-    public String forEditView() {
+    public String forEditView(final TextType textType) {
         throw new UnsupportedOperationException();
     }
 
-    public String forMobileEditView() {
+    public String forMobileEditView(final TextType textType) {
         throw new UnsupportedOperationException();
     }
 

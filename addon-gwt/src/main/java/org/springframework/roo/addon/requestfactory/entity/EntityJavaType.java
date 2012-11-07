@@ -11,16 +11,25 @@ public final class EntityJavaType {
     public static final JavaType UNOWNED = new JavaType(
             "com.google.appengine.datanucleus.annotations.Unowned");
 
+    public static final JavaType TEXT_TYPE = new JavaType(
+            TextType.class.getName());
+
     public static final JavaType ROO_REQUEST_FACTORY = new JavaType(
             RooRequestFactory.class.getName());
-    public static final JavaType ROO_REQUEST_FACTORY_EXCLUDE = new JavaType(
-            RooRequestFactoryExclude.class.getName());
-    public static final JavaType ROO_REQUEST_FACTORY_READ_ONLY = new JavaType(
-            RooRequestFactoryReadOnly.class.getName());
-    public static final JavaType ROO_REQUEST_FACTORY_SCAFFOLD_INVISIBLE = new JavaType(
-            RooRequestFactoryScaffoldInvisible.class.getName());
-    public static final JavaType ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE = new JavaType(
-            RooRequestFactoryScaffoldUneditable.class.getName());
+    public static final JavaType EXCLUDE = new JavaType(
+            RooExclude.class.getName());
+    public static final JavaType READ_ONLY = new JavaType(
+            RooReadOnly.class.getName());
+    public static final JavaType INVISIBLE = new JavaType(
+            RooInvisible.class.getName());
+    public static final JavaType UNEDITABLE = new JavaType(
+            RooUneditable.class.getName());
+    public static final JavaType HELP_TEXT = new JavaType(
+            RooHelpText.class.getName());
+    public static final JavaType TEXT_AREA = new JavaType(
+            RooTextArea.class.getName());
+    public static final JavaType PASSWORD = new JavaType(
+            RooPassword.class.getName());
 
     /**
      * Constructor is private to prevent instantiation

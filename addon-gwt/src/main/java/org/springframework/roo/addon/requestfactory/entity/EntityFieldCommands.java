@@ -1,9 +1,13 @@
 package org.springframework.roo.addon.requestfactory.entity;
 
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_EXCLUDE;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_READ_ONLY;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_SCAFFOLD_INVISIBLE;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.EXCLUDE;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.READ_ONLY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.INVISIBLE;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNEDITABLE;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.HELP_TEXT;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.TEXT_AREA;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.PASSWORD;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.TEXT_TYPE;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNOWNED;
 import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JdkJavaType.SET;
@@ -17,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
@@ -63,6 +68,7 @@ import org.springframework.roo.shell.CliAvailabilityIndicator;
 import org.springframework.roo.shell.CliCommand;
 import org.springframework.roo.shell.CliOption;
 import org.springframework.roo.shell.CommandMarker;
+import org.springframework.roo.support.logging.HandlerUtils;
 
 /**
  * Additional shell commands for the purpose of creating fields.
@@ -74,6 +80,8 @@ import org.springframework.roo.shell.CommandMarker;
 @Component
 @Service
 public class EntityFieldCommands implements CommandMarker {
+
+    private static final Logger LOGGER = HandlerUtils.getLogger(EntityFieldCommands.class);
 
     private static final String REQUEST_FACTORY_FIELD_BOOLEAN_COMMAND = "web requestfactory scaffold field boolean";
     private static final String REQUEST_FACTORY_FIELD_DATE_COMMAND = "web requestfactory scaffold field date";
@@ -122,7 +130,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be excluded from the RequestFactory proxy") final boolean exclude,
             @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be read only in the RequestFactory proxy") final boolean readOnly,
             @CliOption(key = "invisible", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is not to be included in views of the proxy") final boolean invisible,
-            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable) {
+            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable,
+            @CliOption(key = "helpText", mandatory = false, help = "Help text available in form editors") final String helpText) {
 
         final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
                 .getTypeDetails(typeName);
@@ -150,7 +159,7 @@ public class EntityFieldCommands implements CommandMarker {
 
         insertField(fieldDetails, permitReservedWords, transientModifier,
                 null,
-                exclude, readOnly, invisible, uneditable);
+                exclude, readOnly, invisible, uneditable, helpText);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_DATE_COMMAND, help = "Adds a private date field to an existing Java source file")
@@ -174,7 +183,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be excluded from the RequestFactory proxy") final boolean exclude,
             @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be read only in the RequestFactory proxy") final boolean readOnly,
             @CliOption(key = "invisible", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is not to be included in views of the proxy") final boolean invisible,
-            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable) {
+            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable,
+            @CliOption(key = "helpText", mandatory = false, help = "Help text available in form editors") final String helpText) {
 
         final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
                 .getTypeDetails(typeName);
@@ -215,7 +225,7 @@ public class EntityFieldCommands implements CommandMarker {
 
         insertField(fieldDetails, permitReservedWords, transientModifier,
                 null,
-                exclude, readOnly, invisible, uneditable);
+                exclude, readOnly, invisible, uneditable, helpText);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_EMBEDDED_COMMAND, help = "Adds a private @Embedded field to an existing Java source file ")
@@ -227,7 +237,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be excluded from the RequestFactory proxy") final boolean exclude,
             @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be read only in the RequestFactory proxy") final boolean readOnly,
             @CliOption(key = "invisible", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is not to be included in views of the proxy") final boolean invisible,
-            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable) {
+            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable,
+            @CliOption(key = "helpText", mandatory = false, help = "Help text available in form editors") final String helpText) {
 
         // Check if the field type is a JPA @Embeddable class
         final ClassOrInterfaceTypeDetails cid = typeLocationService
@@ -267,7 +278,7 @@ public class EntityFieldCommands implements CommandMarker {
                 physicalTypeIdentifier, fieldType, fieldName);
 
         insertField(fieldDetails, permitReservedWords, false,
-                null, exclude, readOnly, invisible, uneditable);
+                null, exclude, readOnly, invisible, uneditable, helpText);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_ENUM_COMMAND, help = "Adds a private enum field to an existing Java source file")
@@ -286,7 +297,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be excluded from the RequestFactory proxy") final boolean exclude,
             @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be read only in the RequestFactory proxy") final boolean readOnly,
             @CliOption(key = "invisible", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is not to be included in views of the proxy") final boolean invisible,
-            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable) {
+            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable,
+            @CliOption(key = "helpText", mandatory = false, help = "Help text available in form editors") final String helpText) {
 
         final ClassOrInterfaceTypeDetails cid = typeLocationService
                 .getTypeDetails(typeName);
@@ -315,7 +327,7 @@ public class EntityFieldCommands implements CommandMarker {
 
         insertField(fieldDetails, permitReservedWords, transientModifier,
                 initializer,
-                exclude, readOnly, invisible, uneditable);
+                exclude, readOnly, invisible, uneditable, helpText);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_NUMBER_COMMAND, help = "Adds a private numeric field to an existing Java source file")
@@ -341,7 +353,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be excluded from the RequestFactory proxy") final boolean exclude,
             @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be read only in the RequestFactory proxy") final boolean readOnly,
             @CliOption(key = "invisible", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is not to be included in views of the proxy") final boolean invisible,
-            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable) {
+            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable,
+            @CliOption(key = "helpText", mandatory = false, help = "Help text available in form editors") final String helpText) {
 
         final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
                 .getTypeDetails(typeName);
@@ -396,7 +409,7 @@ public class EntityFieldCommands implements CommandMarker {
                 "Must specify both --digitsInteger and --digitsFractional for @Digits to be added");
 
         insertField(fieldDetails, permitReservedWords, transientModifier, null,
-                exclude, readOnly, invisible, uneditable);
+                exclude, readOnly, invisible, uneditable, helpText);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_REFERENCE_COMMAND, help = "Adds a private reference field to an existing Java source file (eg the 'many' side of a many-to-one)")
@@ -417,7 +430,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be read only in the RequestFactory proxy") final boolean readOnly,
             @CliOption(key = "invisible", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is not to be included in views of the proxy") final boolean invisible,
             @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable,
-            @CliOption(key = "unowned", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to mark the field as an unowned") final boolean unowned) {
+            @CliOption(key = "unowned", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to mark the field as an unowned") final boolean unowned,
+            @CliOption(key = "helpText", mandatory = false, help = "Help text available in form editors") final String helpText) {
 
         final ClassOrInterfaceTypeDetails cid = typeLocationService
                 .getTypeDetails(fieldType);
@@ -473,7 +487,7 @@ public class EntityFieldCommands implements CommandMarker {
         }
 
         insertField(fieldDetails, permitReservedWords, transientModifier, null,
-                exclude, readOnly, invisible, uneditable, annotations);
+                exclude, readOnly, invisible, uneditable, helpText, annotations);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_SET_COMMAND, help = "Adds a private Set field to an existing Java source file (eg the 'one' side of a many-to-one)")
@@ -494,7 +508,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be excluded from the RequestFactory proxy") final boolean exclude,
             @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be read only in the RequestFactory proxy") final boolean readOnly,
             @CliOption(key = "invisible", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is not to be included in views of the proxy") final boolean invisible,
-            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable) {
+            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable,
+            @CliOption(key = "helpText", mandatory = false, help = "Help text available in form editors") final String helpText) {
 
         final ClassOrInterfaceTypeDetails cid = typeLocationService
                 .getTypeDetails(fieldType);
@@ -556,7 +571,7 @@ public class EntityFieldCommands implements CommandMarker {
         }
 
         insertField(fieldDetails, permitReservedWords, transientModifier, null,
-                exclude, readOnly, invisible, uneditable);
+                exclude, readOnly, invisible, uneditable, helpText);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_STRING_COMMAND, help = "Adds a private string field to an existing Java source file")
@@ -579,7 +594,10 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be excluded from the RequestFactory proxy") final boolean exclude,
             @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be read only in the RequestFactory proxy") final boolean readOnly,
             @CliOption(key = "invisible", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is not to be included in views of the proxy") final boolean invisible,
-            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable) {
+            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable,
+            @CliOption(key = "helpText", mandatory = false, help = "Help text available in form editors") final String helpText,
+            @CliOption(key = "password", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that a password widget is to be used in form editors") final boolean password,
+            @CliOption(key = "textArea", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that a multi-line text widget is to be used in form editors") final boolean textArea) {
 
         final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
                 .getTypeDetails(typeName);
@@ -620,8 +638,20 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setValue(value);
         }
 
+        if (password && textArea) {
+            LOGGER.severe("Multi-line password fields are not supported");
+        }
+
+        final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        fieldDetails.decorateAnnotationsList(annotations);
+        if (textArea) {
+            annotations.add(new AnnotationMetadataBuilder(TEXT_AREA));
+        } else if (password) {
+            annotations.add(new AnnotationMetadataBuilder(PASSWORD));
+        }
+
         insertField(fieldDetails, permitReservedWords, transientModifier, null,
-                exclude, readOnly, invisible, uneditable);
+                exclude, readOnly, invisible, uneditable, helpText, annotations);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_FILE_COMMAND, help = "Adds a byte array field for storing uploaded file contents (JSF-scaffolded UIs only)")
@@ -636,7 +666,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be excluded from the RequestFactory proxy") final boolean exclude,
             @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be read only in the RequestFactory proxy") final boolean readOnly,
             @CliOption(key = "invisible", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is not to be included in views of the proxy") final boolean invisible,
-            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable) {
+            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable,
+            @CliOption(key = "helpText", mandatory = false, help = "Help text available in form editors") final String helpText) {
 
         final ClassOrInterfaceTypeDetails cid = typeLocationService
                 .getTypeDetails(typeName);
@@ -653,21 +684,23 @@ public class EntityFieldCommands implements CommandMarker {
         }
 
         insertField(fieldDetails, permitReservedWords, false, null, exclude,
-                readOnly, invisible, uneditable);
+                readOnly, invisible, uneditable, helpText);
     }
 
     private void insertField(final FieldDetails fieldDetails,
             final boolean permitReservedWords, final boolean transientModifier,
             final String initializer,
             final boolean exclude, final boolean readOnly,
-            final boolean invisible, final boolean uneditable) {
+            final boolean invisible, final boolean uneditable,
+            final String helpText) {
 
         final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
         fieldDetails.decorateAnnotationsList(annotations);
 
         insertField(fieldDetails, permitReservedWords, transientModifier,
                 initializer,
-                exclude, readOnly, invisible, uneditable, annotations);
+                exclude, readOnly, invisible, uneditable, helpText,
+                annotations);
     }
 
     private void insertField(final FieldDetails fieldDetails,
@@ -675,6 +708,7 @@ public class EntityFieldCommands implements CommandMarker {
             String initializer,
             final boolean exclude, final boolean readOnly,
             final boolean invisible, final boolean uneditable,
+            final String helpText,
             final List<AnnotationMetadataBuilder> annotations) {
         if (!permitReservedWords) {
             ReservedWords.verifyReservedWordsNotPresent(fieldDetails
@@ -686,16 +720,22 @@ public class EntityFieldCommands implements CommandMarker {
         }
 
         if (exclude) {
-            annotations.add(new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_EXCLUDE));
+            annotations.add(new AnnotationMetadataBuilder(EXCLUDE));
         }
         if (readOnly) {
-            annotations.add(new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_READ_ONLY));
+            annotations.add(new AnnotationMetadataBuilder(READ_ONLY));
         }
         if (invisible) {
-            annotations.add(new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_SCAFFOLD_INVISIBLE));
+            annotations.add(new AnnotationMetadataBuilder(INVISIBLE));
         }
         if (uneditable) {
-            annotations.add(new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_SCAFFOLD_UNEDITABLE));
+            annotations.add(new AnnotationMetadataBuilder(UNEDITABLE));
+        }
+        if (helpText != null) {
+            AnnotationMetadataBuilder builder = new AnnotationMetadataBuilder(
+                    HELP_TEXT);
+            builder.addStringAttribute("value", helpText);
+            annotations.add(builder);
         }
 
         if (fieldDetails instanceof CollectionField) {
@@ -735,7 +775,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be excluded from the RequestFactory proxy") final boolean exclude,
             @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be read only in the RequestFactory proxy") final boolean readOnly,
             @CliOption(key = "invisible", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is not to be included in views of the proxy") final boolean invisible,
-            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable) {
+            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable,
+            @CliOption(key = "helpText", mandatory = false, help = "Help text available in form editors") final String helpText) {
 
         final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
                 .getTypeDetails(typeName);
@@ -756,7 +797,7 @@ public class EntityFieldCommands implements CommandMarker {
         }
 
         insertField(fieldDetails, permitReservedWords, transientModifier, null,
-                exclude, readOnly, invisible, uneditable);
+                exclude, readOnly, invisible, uneditable, helpText);
     }
 
     @CliAvailabilityIndicator({ REQUEST_FACTORY_FIELD_OTHER_COMMAND, REQUEST_FACTORY_FIELD_NUMBER_COMMAND, REQUEST_FACTORY_FIELD_STRING_COMMAND,
@@ -788,7 +829,7 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "comment", mandatory = false, help = "An optional comment for JavaDocs") final String comment,
             @CliOption(key = "transient", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates to mark the field as transient") final boolean transientModifier,
             @CliOption(key = "permitReservedWords", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether reserved words are ignored by Roo") final boolean permitReservedWords) {
-        addFieldList(fieldName, fieldType, typeName, mappedBy, notNull, nullRequired, sizeMin, sizeMax, cardinality, fetch, comment, transientModifier, permitReservedWords, false, false, false, false);
+        addFieldList(fieldName, fieldType, typeName, mappedBy, notNull, nullRequired, sizeMin, sizeMax, cardinality, fetch, comment, transientModifier, permitReservedWords, false, false, false, false, null);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_LIST_COMMAND, help = "Adds a private List field to an existing Java source file (eg the 'one' side of a many-to-one)")
@@ -809,14 +850,15 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "exclude", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be excluded from the RequestFactory proxy") final boolean exclude,
             @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be read only in the RequestFactory proxy") final boolean readOnly,
             @CliOption(key = "invisible", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is not to be included in views of the proxy") final boolean invisible,
-            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable) {
-        addFieldList(fieldName, fieldType, typeName, mappedBy, notNull, nullRequired, sizeMin, sizeMax, cardinality, fetch, comment, transientModifier, permitReservedWords, exclude, readOnly, invisible, uneditable);
+            @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable,
+            @CliOption(key = "helpText", mandatory = false, help = "Help text available in form editors") final String helpText) {
+        addFieldList(fieldName, fieldType, typeName, mappedBy, notNull, nullRequired, sizeMin, sizeMax, cardinality, fetch, comment, transientModifier, permitReservedWords, exclude, readOnly, invisible, uneditable, helpText);
     }
 
     private void addFieldList(JavaSymbolName fieldName, JavaType fieldType, JavaType typeName, JavaSymbolName mappedBy,
             boolean notNull, boolean nullRequired, Integer sizeMin, Integer sizeMax, Cardinality cardinality, Fetch fetch,
             String comment, boolean transientModifier, boolean permitReservedWords, final boolean exclude, final boolean readOnly,
-            final boolean invisible, final boolean uneditable) {
+            final boolean invisible, final boolean uneditable, final String helpText) {
 
         final ClassOrInterfaceTypeDetails cid = typeLocationService
                 .getTypeDetails(fieldType);
@@ -877,6 +919,6 @@ public class EntityFieldCommands implements CommandMarker {
             fieldDetails.setComment(comment);
         }
 
-        insertField(fieldDetails, permitReservedWords, transientModifier, null, exclude, readOnly, invisible, uneditable);
+        insertField(fieldDetails, permitReservedWords, transientModifier, null, exclude, readOnly, invisible, uneditable, helpText);
     }
 }
