@@ -7,8 +7,8 @@ import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.HELP_TEXT;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.TEXT_AREA;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.PASSWORD;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.TEXT_TYPE;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNOWNED;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNITS;
 import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JdkJavaType.SET;
 import static org.springframework.roo.model.JpaJavaType.EMBEDDABLE;
@@ -354,7 +354,8 @@ public class EntityFieldCommands implements CommandMarker {
             @CliOption(key = "readOnly", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is to be read only in the RequestFactory proxy") final boolean readOnly,
             @CliOption(key = "invisible", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates that the field is not to be included in views of the proxy") final boolean invisible,
             @CliOption(key = "uneditable", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicated that the field is not to be included when editing the proxy") final boolean uneditable,
-            @CliOption(key = "helpText", mandatory = false, help = "Help text available in form editors") final String helpText) {
+            @CliOption(key = "helpText", mandatory = false, help = "Help text available in form editors") final String helpText,
+            @CliOption(key = "units", mandatory = false, help = "Units of the numerical value, available in form editors") final String units) {
 
         final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
                 .getTypeDetails(typeName);
@@ -408,8 +409,17 @@ public class EntityFieldCommands implements CommandMarker {
                 fieldDetails.isDigitsSetCorrectly(),
                 "Must specify both --digitsInteger and --digitsFractional for @Digits to be added");
 
+        final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        fieldDetails.decorateAnnotationsList(annotations);
+        if (units != null) {
+            AnnotationMetadataBuilder builder = new AnnotationMetadataBuilder(
+                    UNITS);
+            builder.addStringAttribute("value", units);
+            annotations.add(builder);
+        }
+
         insertField(fieldDetails, permitReservedWords, transientModifier, null,
-                exclude, readOnly, invisible, uneditable, helpText);
+                exclude, readOnly, invisible, uneditable, helpText, annotations);
     }
 
     @CliCommand(value = REQUEST_FACTORY_FIELD_REFERENCE_COMMAND, help = "Adds a private reference field to an existing Java source file (eg the 'many' side of a many-to-one)")

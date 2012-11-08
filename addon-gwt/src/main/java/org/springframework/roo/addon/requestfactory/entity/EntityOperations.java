@@ -1,9 +1,9 @@
 package org.springframework.roo.addon.requestfactory.entity;
 
-import org.springframework.roo.model.JavaPackage;
+import java.util.Set;
+
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
-import org.springframework.roo.project.Feature;
 
 /**
  * Interface of operations this add-on offers. Typically used by a
@@ -24,4 +24,8 @@ public interface EntityOperations {
     void annotateType(JavaType type, final JavaSymbolName parentProperty,
             final JavaSymbolName primaryProperty,
             final JavaSymbolName secondaryProperty);
+
+    void annotateTypeWithPlural(JavaType type, final String name);
+
+    void annotateTypeWithToString(JavaType target, Set<String> excludeFields, String methodName);
 }

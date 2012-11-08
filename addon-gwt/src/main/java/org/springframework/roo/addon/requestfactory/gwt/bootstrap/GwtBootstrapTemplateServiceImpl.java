@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.plural.PluralMetadata;
 import org.springframework.roo.addon.requestfactory.BaseTemplateServiceImpl;
 import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHolder;
@@ -38,6 +39,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.entity.RooRequestFactory;
 import org.springframework.roo.addon.requestfactory.entity.TextType;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
+import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.FieldMetadata;
@@ -120,9 +122,18 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                             .getSimpleTypeName();
                     final String proxySimpleName = proxy.getName()
                             .getSimpleTypeName();
+
+                    final String pluralMetadataKey = PluralMetadata.createIdentifier(
+                            entity.getName(), PhysicalTypeIdentifier
+                                    .getPath(entity.getDeclaredByMetadataId()));
+                    final PluralMetadata pluralMetadata = (PluralMetadata) metadataService
+                            .get(pluralMetadataKey);
+                    final String plural = pluralMetadata.getPlural();
+
                     final TemplateDataDictionary section = dataDictionary
                             .addSection("entities");
                     section.setVariable("entitySimpleName", entitySimpleName);
+                    section.setVariable("entityPluralName", plural);
                     section.setVariable("entityFullPath", proxySimpleName);
                     addImport(dataDictionary, proxy.getName()
                             .getFullyQualifiedTypeName());
@@ -466,6 +477,8 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     .getSymbolName(), mirroredType);
             final TextType textType = getTextType(requestFactoryProxyProperty
                     .getSymbolName(), mirroredType);
+            final String units = getUnits(requestFactoryProxyProperty
+                    .getSymbolName(), mirroredType);
 
             if (requestFactoryProxyProperty.isProxy()
                     || requestFactoryProxyProperty.isCollectionOfProxy()) {
@@ -523,6 +536,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 propertiesSection.setVariable("propReadable",
                         requestFactoryProxyProperty.getReadableName());
                 propertiesSection.setVariable("helpText", helpText);
+                propertiesSection.setVariable("units", units);
             }
 
             if (!isReadOnly(requestFactoryProxyProperty.getName(), mirroredType)
@@ -558,6 +572,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 editableSection.setVariable("propReadable",
                         requestFactoryProxyProperty.getReadableName());
                 editableSection.setVariable("helpText", helpText);
+                editableSection.setVariable("units", units);
             }
 
             dataDictionary.setVariable("proxyRendererType",

@@ -10,6 +10,7 @@ import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.TEXT_AREA;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNEDITABLE;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNITS;
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
 import static org.springframework.roo.model.JdkJavaType.ARRAY_LIST;
@@ -446,7 +447,6 @@ public class BaseTemplateServiceImpl {
         dataDictionary.setVariable("nameUncapitalized",
                 StringUtils.uncapitalize(simpleTypeName));
         dataDictionary.setVariable("proxy", proxyType.getSimpleTypeName());
-        dataDictionary.setVariable("pluralName", plural);
 
         return dataDictionary;
     }
@@ -713,6 +713,23 @@ public class BaseTemplateServiceImpl {
                         .getAttribute("value");
                 if (aav != null) {
                     return "<b:HelpBlock>" + aav.getValue() + "</b:HelpBlock>";
+                }
+            }
+        }
+        return "";
+    }
+
+    protected String getUnits(final JavaSymbolName fieldName,
+            final ClassOrInterfaceTypeDetails governorTypeDetails) {
+        FieldMetadata fieldMetadata = governorTypeDetails.getField(fieldName);
+        if (fieldMetadata != null) {
+            AnnotationMetadata annotationMetadata = fieldMetadata
+                    .getAnnotation(UNITS);
+            if (annotationMetadata != null) {
+                AnnotationAttributeValue<String> aav = annotationMetadata
+                        .getAttribute("value");
+                if (aav != null) {
+                    return "<b:HelpInline>" + aav.getValue() + "</b:HelpInline>";
                 }
             }
         }
