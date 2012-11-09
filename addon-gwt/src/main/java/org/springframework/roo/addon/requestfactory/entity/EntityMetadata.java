@@ -2,8 +2,6 @@ package org.springframework.roo.addon.requestfactory.entity;
 
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY_FACTORY;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.INVISIBLE;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNEDITABLE;
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
@@ -50,6 +48,8 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils.create(PROVIDES_TYPE_STRING);
 
     private static final String ENTITY_MANAGER_METHOD_NAME = "entityManager";
+
+    public static final JavaSymbolName STRING_ID_GETTER = new JavaSymbolName("getStringId");
 
     public static final String getMetadataIdentiferType() {
         return PROVIDES_TYPE;
@@ -113,18 +113,14 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
             return null;
         }
 
-        JavaSymbolName methodName = new JavaSymbolName("getStringId");
-
         // Check if a method with the same signature already exists in the target type
-        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
+        final MethodMetadata method = methodExists(STRING_ID_GETTER, new ArrayList<AnnotatedJavaType>());
         if (method != null) {
             // If it already exists, just return the method and omit its generation via the ITD
             return method;
         }
 
         List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
-        annotations.add(new AnnotationMetadataBuilder(INVISIBLE));
-        annotations.add(new AnnotationMetadataBuilder(UNEDITABLE));
         List<JavaType> throwsTypes = new ArrayList<JavaType>();
         List<AnnotatedJavaType> parameterTypes = new ArrayList<AnnotatedJavaType>();
         List<JavaSymbolName> parameterNames = new ArrayList<JavaSymbolName>();
@@ -139,7 +135,7 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
 
         // Use the MethodMetadataBuilder for easy creation of MethodMetadata
         MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(getId(),
-                Modifier.PUBLIC, methodName, STRING, parameterTypes, parameterNames, bodyBuilder);
+                Modifier.PUBLIC, STRING_ID_GETTER, STRING, parameterTypes, parameterNames, bodyBuilder);
         methodBuilder.setAnnotations(annotations);
         methodBuilder.setThrowsTypes(throwsTypes);
 

@@ -38,6 +38,7 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.springframework.roo.addon.plural.PluralMetadata;
 import org.springframework.roo.addon.requestfactory.entity.EntityDataKeys;
+import org.springframework.roo.addon.requestfactory.entity.EntityMetadata;
 import org.springframework.roo.addon.requestfactory.entity.RooRequestFactory;
 import org.springframework.roo.addon.requestfactory.entity.TextType;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
@@ -343,6 +344,8 @@ public class BaseTemplateServiceImpl {
                     INT_PRIMITIVE, "firstResult"), new MethodParameter(
                     INT_PRIMITIVE, "maxResults"));
         } else {
+            dataDictionary.showSection("hasParent");
+
             countMethodId = EntityDataKeys.COUNT_BY_PARENT_METHOD.name();
             findMethodId = EntityDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.name();
             countCall = "(parentId)";
@@ -633,16 +636,37 @@ public class BaseTemplateServiceImpl {
 
     protected boolean isInvisible(final RequestFactoryProxyProperty property,
             final ClassOrInterfaceTypeDetails governorTypeDetails) {
-        if (governorTypeDetails.getField(property.getSymbolName()) != null
-                && governorTypeDetails.getField(property.getSymbolName())
+        final JavaSymbolName field = property.getSymbolName();
+        if (governorTypeDetails.getField(field) != null
+                && governorTypeDetails.getField(field)
                 .getAnnotation(INVISIBLE) != null) {
             return true;
         }
-        if (governorTypeDetails.getMethod(property.getGetterSymbolName()) != null
-                && governorTypeDetails.getMethod(property.getGetterSymbolName())
+
+        final JavaSymbolName getter = property.getGetterSymbolName();
+        if (governorTypeDetails.getMethod(getter) != null
+                && governorTypeDetails.getMethod(getter)
                 .getAnnotation(INVISIBLE) != null) {
             return true;
         }
+
+        final JavaType entity = governorTypeDetails.getType();
+        if (persistenceMemberLocator.getVersionAccessor(entity) != null
+                && persistenceMemberLocator.getVersionAccessor(entity)
+                .getMethodName().equals(getter)) {
+            return true;
+        }
+        if (persistenceMemberLocator.getIdentifierAccessor(entity) != null
+                && persistenceMemberLocator.getIdentifierAccessor(entity)
+                .getMethodName().equals(getter)) {
+            return true;
+        }
+
+        if (KEY.equals(persistenceMemberLocator.getIdentifierType(entity))
+                && getter.equals(EntityMetadata.STRING_ID_GETTER)) {
+            return true;
+        }
+
         return false;
     }
 
