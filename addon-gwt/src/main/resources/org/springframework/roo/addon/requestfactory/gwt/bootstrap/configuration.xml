@@ -22,7 +22,7 @@
   </shared>
     <gwt>
       <properties>
-          <gwt.version>2.5.0-rc1</gwt.version>
+          <gwt.version>2.5.0</gwt.version>
       </properties>
         <repositories>
             <repository>
@@ -80,7 +80,7 @@
             <dependency>
                 <groupId>com.github.gwtbootstrap</groupId>
                 <artifactId>gwt-bootstrap</artifactId>
-                <version>2.1.0.0-SNAPSHOT</version>
+                <version>2.2.1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.googlecode.mgwt</groupId>
