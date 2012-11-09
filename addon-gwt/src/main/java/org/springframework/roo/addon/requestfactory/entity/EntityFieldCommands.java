@@ -83,18 +83,20 @@ public class EntityFieldCommands implements CommandMarker {
 
     private static final Logger LOGGER = HandlerUtils.getLogger(EntityFieldCommands.class);
 
-    private static final String REQUEST_FACTORY_FIELD_BOOLEAN_COMMAND = "web requestfactory scaffold field boolean";
-    private static final String REQUEST_FACTORY_FIELD_DATE_COMMAND = "web requestfactory scaffold field date";
-    private static final String REQUEST_FACTORY_FIELD_EMBEDDED_COMMAND = "web requestfactory scaffold field embedded";
-    private static final String REQUEST_FACTORY_FIELD_ENUM_COMMAND = "web requestfactory scaffold field enum";
-    private static final String REQUEST_FACTORY_FIELD_NUMBER_COMMAND = "web requestfactory scaffold field number";
-    private static final String REQUEST_FACTORY_FIELD_REFERENCE_COMMAND = "web requestfactory scaffold field reference";
-    private static final String REQUEST_FACTORY_FIELD_SET_COMMAND = "web requestfactory scaffold field set";
-    private static final String REQUEST_FACTORY_FIELD_STRING_COMMAND = "web requestfactory scaffold field string";
-    private static final String REQUEST_FACTORY_FIELD_FILE_COMMAND = "web requestfactory scaffold field file";
-    private static final String REQUEST_FACTORY_FIELD_OTHER_COMMAND = "web requestfactory scaffold field other";
+    public static final String REQUEST_FACTORY_FIELD_COMMAND_PREFIX = "web requestfactory scaffold";
+    
+    private static final String REQUEST_FACTORY_FIELD_BOOLEAN_COMMAND = REQUEST_FACTORY_FIELD_COMMAND_PREFIX + " field boolean";
+    private static final String REQUEST_FACTORY_FIELD_DATE_COMMAND = REQUEST_FACTORY_FIELD_COMMAND_PREFIX + " field date";
+    private static final String REQUEST_FACTORY_FIELD_EMBEDDED_COMMAND = REQUEST_FACTORY_FIELD_COMMAND_PREFIX + " field embedded";
+    private static final String REQUEST_FACTORY_FIELD_ENUM_COMMAND = REQUEST_FACTORY_FIELD_COMMAND_PREFIX + " field enum";
+    private static final String REQUEST_FACTORY_FIELD_NUMBER_COMMAND = REQUEST_FACTORY_FIELD_COMMAND_PREFIX + " field number";
+    private static final String REQUEST_FACTORY_FIELD_REFERENCE_COMMAND = REQUEST_FACTORY_FIELD_COMMAND_PREFIX + " field reference";
+    private static final String REQUEST_FACTORY_FIELD_SET_COMMAND = REQUEST_FACTORY_FIELD_COMMAND_PREFIX + " field set";
+    private static final String REQUEST_FACTORY_FIELD_STRING_COMMAND = REQUEST_FACTORY_FIELD_COMMAND_PREFIX + " field string";
+    private static final String REQUEST_FACTORY_FIELD_FILE_COMMAND = REQUEST_FACTORY_FIELD_COMMAND_PREFIX + " field file";
+    private static final String REQUEST_FACTORY_FIELD_OTHER_COMMAND = REQUEST_FACTORY_FIELD_COMMAND_PREFIX + " field other";
     private static final String FIELD_LIST_COMMAND = "field list";
-    private static final String REQUEST_FACTORY_FIELD_LIST_COMMAND = "web requestfactory scaffold field list";
+    private static final String REQUEST_FACTORY_FIELD_LIST_COMMAND = REQUEST_FACTORY_FIELD_COMMAND_PREFIX + " field list";
 
     @Reference private MemberDetailsScanner memberDetailsScanner;
     @Reference private MetadataService metadataService;
