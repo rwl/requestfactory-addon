@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<configuration>
-    <springWebFlow>
-        <dependencies>
-            <dependency org="org.springframework.webflow" name="spring-webflow" rev="2.3.0.RELEASE" />
-        </dependencies>
-    </springWebFlow>
-</configuration>
