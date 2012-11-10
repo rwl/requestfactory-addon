@@ -321,9 +321,6 @@ public class RequestFactoryRequestMetadataProviderImpl extends
         signatures.put(FIND_ENTRIES_METHOD, Arrays.asList(new MethodParameter(
                 INT_PRIMITIVE, "firstResult"), new MethodParameter(
                 INT_PRIMITIVE, "maxResults")));
-        /* Not required and incompatible with Key IDs
-        signatures.put(FIND_METHOD,
-                Arrays.asList(new MethodParameter(idType, "id")));*/
         final List<MethodParameter> proxyParameterAsList = Arrays
                 .asList(new MethodParameter(domainType, "proxy"));
         signatures.put(PERSIST_METHOD, proxyParameterAsList);
@@ -331,9 +328,9 @@ public class RequestFactoryRequestMetadataProviderImpl extends
 
         if (!parentProperty.isEmpty()) {
             signatures.put(EntityDataKeys.COUNT_BY_PARENT_METHOD, Arrays
-                    .asList(new MethodParameter(STRING, parentProperty + "Id")));
+                    .asList(new MethodParameter(KEY.equals(idType) ? STRING : idType, parentProperty + "Id")));
             signatures.put(EntityDataKeys.FIND_ENTRIES_BY_PARENT_METHOD, Arrays.asList(new MethodParameter(
-                    STRING, parentProperty + "Id"), new MethodParameter(
+                    KEY.equals(idType) ? STRING : idType, parentProperty + "Id"), new MethodParameter(
                     INT_PRIMITIVE, "firstResult"), new MethodParameter(
                     INT_PRIMITIVE, "maxResults")));
         }
@@ -341,6 +338,9 @@ public class RequestFactoryRequestMetadataProviderImpl extends
         if (idType.equals(KEY)) {
             signatures.put(EntityDataKeys.FIND_BY_STRING_ID_METHOD, Arrays
                     .asList(new MethodParameter(STRING, "id")));
+        } else {
+            signatures.put(FIND_METHOD,
+                    Arrays.asList(new MethodParameter(idType, "id")));
         }
 
         return signatures;

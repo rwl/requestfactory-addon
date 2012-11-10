@@ -42,7 +42,6 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
         config.addAction(ActionConfigFactory.executeAction("web requestfactory setup addon"));
         config.addAction(ActionConfigFactory.executeAction("module create --moduleName domain --topLevelPackage ${topLevelPackage} --parent ${topLevelPackage}:${projectName}:" + VERSION));
         config.addAction(ActionConfigFactory.executeAction("logging setup --level INFO"));
-        config.addAction(ActionConfigFactory.executeAction("dependency add --artifactId datanucleus-enhancer --groupId org.datanucleus --version 3.1.1 --scope RUNTIME"));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
 //        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui --topLevelPackage ${topLevelPackage} --parent ${topLevelPackage}:${projectName}:" + VERSION + " --packaging PARENT_POM"));
 //        config.addAction(ActionConfigFactory.executeAction("module create --moduleName server --topLevelPackage ${topLevelPackage} --parent ${topLevelPackage}:ui:" + VERSION));

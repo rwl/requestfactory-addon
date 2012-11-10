@@ -36,6 +36,6 @@ public class {{=className}} extends AbstractListDataProvider<{{=proxy}}> {
 
 	@Override
 	protected String getServerId({{=proxy}} proxy) {
-		return proxy.getStringId();
+		return String.valueOf(proxy.{{=getId}}());
 	}
 }

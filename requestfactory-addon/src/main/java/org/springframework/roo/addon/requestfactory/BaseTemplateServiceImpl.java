@@ -331,6 +331,8 @@ public class BaseTemplateServiceImpl {
                         RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE, "");
 
         final JavaType nonKeyIdType = idType.equals(KEY) ? STRING : idType;
+        final String getId = idType.equals(KEY) ? "getStringId" : "getId";
+        dataDictionary.setVariable("getId", getId);
 
         final String countMethodId, findMethodId, countCall, findCall;
         final List<MethodParameter> findParameters, countParamemters;
@@ -348,8 +350,9 @@ public class BaseTemplateServiceImpl {
 
             countMethodId = EntityDataKeys.COUNT_BY_PARENT_METHOD.name();
             findMethodId = EntityDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.name();
-            countCall = "(parentId)";
-            findCall = "(parentId, range.getStart(), range.getLength())";
+            final String parentId = nonKeyIdType.getSimpleTypeName() + ".valueOf(parentId)";
+            countCall = "(" + parentId + ")";
+            findCall = "(" + parentId + ", range.getStart(), range.getLength())";
             countParamemters = Arrays.asList(new MethodParameter(
                     nonKeyIdType, parentPropertyName + "Id"));
             findParameters = Arrays.asList(new MethodParameter(
@@ -367,8 +370,8 @@ public class BaseTemplateServiceImpl {
             final String setProxyParentStmt = "if (proxy.get"
                     + StringUtils.capitalize(parentPropertyName) + "() == null) {\n"
                     + "factory." + StringUtils.uncapitalize(parentTypeName)
-                    + "Request().find" + parentTypeName + "ByStringId"
-                    + "(parentId).fire(new Receiver<" + parentProxyName + ">() {\n"
+                    + "Request().find" + parentTypeName + (KEY.equals(idType) ? "ByStringId" : "")
+                    + "(" + parentId + ").fire(new Receiver<" + parentProxyName + ">() {\n"
                     + "@Override\n"
                     + "public void onSuccess(" + parentProxyName + " response) {\n"
                     + "proxy.set" + StringUtils.capitalize(parentPropertyName) + "(response);\n"
@@ -384,13 +387,14 @@ public class BaseTemplateServiceImpl {
                             RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE, "");
 
             final String gotoParentPlaceStmt = "requests." + StringUtils.uncapitalize(parentTypeName)
-                    + "Request().find" + parentTypeName + "ByStringId(parentId)"
+                    + "Request().find" + parentTypeName + (KEY.equals(idType) ? "ByStringId" : "")
+                    + "(" + parentId + ")"
                     + (grandParentPropertyName.isEmpty() ? "" : ".with(\"" + grandParentPropertyName + "\")")
                     + ".fire(new Receiver<" + parentProxyName + ">() {\n"
                     + "@Override\n"
                     + "public void onSuccess(" + parentProxyName + " response) {\n"
                     + "placeController.goTo(new ProxyPlace(response.stableId(), Operation.DETAILS, "
-                    + (grandParentPropertyName.isEmpty() ? "null" : "response.get" + StringUtils.capitalize(grandParentPropertyName) + "().getStringId()")
+                    + (grandParentPropertyName.isEmpty() ? "null" : "String.valueOf(response.get" + StringUtils.capitalize(grandParentPropertyName) + "()." + getId + "())")
                     + "));\n"
                     + "}\n"
                     + "});";
