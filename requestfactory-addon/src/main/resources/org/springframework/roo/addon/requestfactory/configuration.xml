@@ -6,9 +6,10 @@
 	    </properties>
         <dependencies>
 		    <dependency>
-		      <groupId>com.github.rwl</groupId>
-		      <artifactId>org.springframework.roo.addon.requestfactory</artifactId>
-		      <version>${requestfactory.addon.version}</version>
+		        <groupId>com.github.rwl</groupId>
+		        <artifactId>org.springframework.roo.addon.requestfactory</artifactId>
+		        <version>${requestfactory.addon.version}</version>
+                <scope>provided</scope>
 		    </dependency>
         </dependencies>
 	</addon>
@@ -18,9 +19,9 @@
 	    </properties>
         <dependencies>
 		    <dependency>
-		      <groupId>com.google.web.bindery</groupId>
-		      <artifactId>requestfactory-client</artifactId>
-		      <version>${gwt.version}</version>
+		        <groupId>com.google.web.bindery</groupId>
+		        <artifactId>requestfactory-client</artifactId>
+		        <version>${gwt.version}</version>
 		    </dependency>
         </dependencies>
 	</client>
@@ -35,24 +36,24 @@
 	            <version>${spring.version}</version>
 	        </dependency>
 		    <dependency>
-		      <groupId>com.google.web.bindery</groupId>
-		      <artifactId>requestfactory-server</artifactId>
-		      <version>${gwt.version}</version>
+		        <groupId>com.google.web.bindery</groupId>
+		        <artifactId>requestfactory-server</artifactId>
+		        <version>${gwt.version}</version>
 		    </dependency>
 		    <dependency>
-		      <groupId>org.hibernate</groupId>
-		      <artifactId>hibernate-validator</artifactId>
-		      <version>4.1.0.Final</version>
-		      <exclusions>
-		        <exclusion>
-		          <groupId>javax.xml.bind</groupId>
-		          <artifactId>jaxb-api</artifactId>
-		        </exclusion>
-		        <exclusion>
-		          <groupId>com.sun.xml.bind</groupId>
-		          <artifactId>jaxb-impl</artifactId>
-		        </exclusion>
-		      </exclusions>
+		        <groupId>org.hibernate</groupId>
+		        <artifactId>hibernate-validator</artifactId>
+		        <version>4.1.0.Final</version>
+		        <exclusions>
+		            <exclusion>
+		                <groupId>javax.xml.bind</groupId>
+		                <artifactId>jaxb-api</artifactId>
+		            </exclusion>
+		            <exclusion>
+		                <groupId>com.sun.xml.bind</groupId>
+		                <artifactId>jaxb-impl</artifactId>
+		            </exclusion>
+		        </exclusions>
 		    </dependency>
         </dependencies>
     </server>
