@@ -56,8 +56,8 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
         config.addAction(ActionConfigFactory.executeAction("module create --moduleName gwt --topLevelPackage ${topLevelPackage} --parent ${topLevelPackage}:${projectName}:" + VERSION));
         config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage} --artifactId domain --version " + VERSION));
         config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage} --artifactId shared --version " + VERSION));
-//        config.addAction(ActionConfigFactory.focusModuleAction("~"));
-//        config.addAction(ActionConfigFactory.executeAction("module create --moduleName android --topLevelPackage ${topLevelPackage} --parent ${topLevelPackage}:${projectName}:" + VERSION + " --packaging APK"));
+        config.addAction(ActionConfigFactory.focusModuleAction("~"));
+        config.addAction(ActionConfigFactory.executeAction("module create --moduleName android --topLevelPackage ${topLevelPackage} --parent ${topLevelPackage}:${projectName}:" + VERSION + " --packaging APK"));
         return config;
     }
 

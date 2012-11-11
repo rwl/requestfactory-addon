@@ -251,6 +251,7 @@ public class BaseTemplateServiceImpl {
             final String moduleName) {
         final JavaType proxyType = proxy.getName();
         final JavaType javaType = mirrorTypeMap.get(type);
+        Validate.notNull(javaType);
 
         final TemplateDataDictionary dataDictionary = TemplateDictionary
                 .create();

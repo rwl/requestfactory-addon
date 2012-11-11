@@ -1,22 +1,16 @@
 package org.springframework.roo.addon.requestfactory.android;
 
-import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
 import hapax.TemplateDataDictionary;
-import hapax.TemplateDictionary;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.transform.Transformer;
@@ -35,18 +29,13 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHo
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.entity.RooRequestFactory;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
-import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.classpath.details.MethodMetadata;
-import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
-import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
-import org.springframework.roo.project.Path;
 import org.springframework.roo.support.util.FileUtils;
 import org.springframework.roo.support.util.XmlUtils;
 import org.w3c.dom.Document;
@@ -72,6 +61,35 @@ public class AndroidTemplateServiceImpl extends BaseTemplateServiceImpl
         implements AndroidTemplateService {
 
     private static final String TEMPLATE_DIR = "org/springframework/roo/addon/requestfactory/android/scaffold/templates/";
+
+    @Override
+    protected TemplateDataDictionary buildMirrorDataDictionary(
+            final RequestFactoryType type, final ClassOrInterfaceTypeDetails mirroredType,
+            final ClassOrInterfaceTypeDetails proxy,
+            final Map<RequestFactoryType, JavaType> mirrorTypeMap,
+            final Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap,
+            final String moduleName) {
+
+        final TemplateDataDictionary dataDictionary = super.buildMirrorDataDictionary(
+                type, mirroredType, proxy, mirrorTypeMap, clientSideTypeMap, moduleName);
+
+        final JavaType javaType = mirrorTypeMap.get(type);
+        Validate.notNull(javaType);
+
+        final JavaType entity = mirroredType.getName();
+        final String entityName = entity.getFullyQualifiedTypeName();
+        final JavaType idType = persistenceMemberLocator
+                .getIdentifierType(entity);
+        Validate.notNull(idType,
+                "Identifier type is not available for entity '" + entityName + "'");
+        
+        final String viewName = javaType.getSimpleTypeName()
+                .replaceAll("(\\p{Ll})(\\p{Lu})", "$1_$2").toLowerCase()
+                + "_view";
+        dataDictionary.setVariable("viewName", viewName);
+        
+        return dataDictionary;
+    }
 
     public String buildViewXml(final String templateContents,
             final String destFile, final List<MethodMetadata> proxyMethods) {
@@ -220,5 +238,68 @@ public class AndroidTemplateServiceImpl extends BaseTemplateServiceImpl
         final StreamResult result = new StreamResult(new StringWriter());
         transformer.transform(source, result);
         return result.getWriter().toString();
+    }
+
+    public RequestFactoryTemplateDataHolder getMirrorTemplateTypeDetails(
+            final ClassOrInterfaceTypeDetails mirroredType,
+            final Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap,
+            final String moduleName) {
+        final ClassOrInterfaceTypeDetails proxy = requestFactoryTypeService
+                .lookupProxyFromEntity(mirroredType);
+        final ClassOrInterfaceTypeDetails request = requestFactoryTypeService
+                .lookupUnmanagedRequestFromEntity(mirroredType);
+        final JavaPackage topLevelPackage = projectOperations
+                .getTopLevelPackage(moduleName);
+        final Map<RequestFactoryType, JavaType> mirrorTypeMap = RequestFactoryUtils
+                .getMirrorTypeMap(mirroredType.getName(), topLevelPackage);
+        mirrorTypeMap.putAll(AndroidUtils.getMirrorTypeMap(
+                mirroredType.getName(), topLevelPackage));
+        mirrorTypeMap.put(RequestFactoryType.PROXY, proxy.getName());
+        mirrorTypeMap.put(RequestFactoryType.REQUEST, request.getName());
+
+        final Map<RequestFactoryType, ClassOrInterfaceTypeDetails> templateTypeDetailsMap = new LinkedHashMap<RequestFactoryType, ClassOrInterfaceTypeDetails>();
+        final Map<RequestFactoryType, String> xmlTemplates = new LinkedHashMap<RequestFactoryType, String>();
+        for (final AndroidType androidType : AndroidType.getAndroidMirrorTypes()) {
+            if (androidType.getTemplate() == null) {
+                continue;
+            }
+            TemplateDataDictionary dataDictionary = buildMirrorDataDictionary(
+                    androidType, mirroredType, proxy, mirrorTypeMap,
+                    clientSideTypeMap, moduleName);
+            androidType.dynamicallyResolveFieldsToWatch(clientSideTypeMap);
+            androidType.dynamicallyResolveMethodsToWatch(mirroredType.getName(),
+                    clientSideTypeMap, topLevelPackage);
+            templateTypeDetailsMap.put(
+                    androidType,
+                    getTemplateDetails(dataDictionary, androidType.getTemplate(),
+                            mirrorTypeMap.get(androidType), moduleName, TEMPLATE_DIR));
+
+            if (androidType.isCreateViewXml()) {
+                dataDictionary = buildMirrorDataDictionary(androidType,
+                        mirroredType, proxy, mirrorTypeMap, clientSideTypeMap,
+                        moduleName);
+                final String contents = getTemplateContents(
+                        androidType.getTemplate() + "ViewXml", dataDictionary,
+                        TEMPLATE_DIR);
+                xmlTemplates.put(androidType, contents);
+            }
+        }
+
+        final Map<String, String> xmlMap = new LinkedHashMap<String, String>();
+        final List<ClassOrInterfaceTypeDetails> typeDetails = new ArrayList<ClassOrInterfaceTypeDetails>();
+
+        return new RequestFactoryTemplateDataHolder(templateTypeDetailsMap, xmlTemplates,
+                typeDetails, xmlMap);
+    }
+
+    public List<ClassOrInterfaceTypeDetails> getStaticTemplateTypeDetails(
+            final RequestFactoryType type, final String moduleName) {
+        final List<ClassOrInterfaceTypeDetails> templateTypeDetails = new ArrayList<ClassOrInterfaceTypeDetails>();
+        final TemplateDataDictionary dataDictionary = buildDictionary(type,
+                moduleName);
+        templateTypeDetails.add(getTemplateDetails(dataDictionary,
+                type.getTemplate(), getDestinationJavaType(type, moduleName),
+                moduleName, TEMPLATE_DIR));
+        return templateTypeDetails;
     }
 }

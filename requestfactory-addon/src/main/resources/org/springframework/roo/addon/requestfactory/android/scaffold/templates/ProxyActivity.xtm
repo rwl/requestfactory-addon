@@ -1,0 +1,14 @@
+package {{=packageName}};
+
+import android.os.Bundle;
+import roboguice.activity.RoboActivity;
+import org.mothwatch.R;
+
+public class {{=className}} extends RoboActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.{{=viewName}});
+    }
+}

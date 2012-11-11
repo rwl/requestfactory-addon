@@ -860,8 +860,10 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 .lookupUnmanagedRequestFromEntity(mirroredType);
         final JavaPackage topLevelPackage = projectOperations
                 .getTopLevelPackage(moduleName);
-        final Map<RequestFactoryType, JavaType> mirrorTypeMap = GwtBootstrapUtils.getMirrorTypeMap(
-                mirroredType.getName(), topLevelPackage);
+        final Map<RequestFactoryType, JavaType> mirrorTypeMap = RequestFactoryUtils
+                .getMirrorTypeMap(mirroredType.getName(), topLevelPackage);
+        mirrorTypeMap.putAll(GwtBootstrapUtils.getMirrorTypeMap(
+                mirroredType.getName(), topLevelPackage));
         mirrorTypeMap.put(RequestFactoryType.PROXY, proxy.getName());
         mirrorTypeMap.put(RequestFactoryType.REQUEST, request.getName());
 

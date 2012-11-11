@@ -68,6 +68,12 @@ public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldM
     }
 
     @Override
+    protected void buildType(final RequestFactoryType type, final String moduleName) {
+        requestFactoryTypeService.buildType(type, androidTemplateService
+                .getStaticTemplateTypeDetails(type, moduleName), moduleName);
+    }
+
+    @Override
     protected void buildTypes(final String moduleName) {
     }
 
@@ -111,7 +117,7 @@ public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldM
                     clientSideTypeMap, topLevelPackage);
 
             if (androidType.isCreateViewXml()) {
-                final RequestFactoryPath requestFactoryPath = androidType.getPath();
+                final RequestFactoryPath path = androidType.getPath();
                 final PathResolver pathResolver = projectOperations
                         .getPathResolver();
                 final String layoutPath = pathResolver.getIdentifier(
@@ -119,17 +125,18 @@ public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldM
                                 moduleName), AndroidPaths.RES_LAYOUT);
                 final String packagePath = pathResolver
                         .getIdentifier(LogicalPath.getInstance(
-                                Path.SRC_MAIN_JAVA, moduleName), requestFactoryPath
+                                Path.SRC_MAIN_JAVA, moduleName), path
                                 .getPackagePath(topLevelPackage));
 
-                final String targetDirectory = requestFactoryPath == AndroidPaths.ACTIVITY ? layoutPath
-                        : packagePath;
+                final String targetDirectory = path == AndroidPaths.ACTIVITY ?
+                        layoutPath : packagePath;
                 final String destFile = targetDirectory + File.separatorChar
-                        + javaType.getSimpleTypeName() + "View.xml";
+                        + javaType.getSimpleTypeName()
+                        .replaceAll("(\\p{Ll})(\\p{Lu})", "$1_$2").toLowerCase()
+                        + "_view.xml";
                 final String contents = androidTemplateService.buildViewXml(
                         templateDataHolder.getXmlTemplates().get(androidType),
-                        destFile,
-                        new ArrayList<MethodMetadata>(proxy
+                        destFile, new ArrayList<MethodMetadata>(proxy
                                 .getDeclaredMethods()));
                 xmlToBeWritten.put(destFile, contents);
             }
@@ -140,6 +147,16 @@ public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldM
     @Override
     protected MetadataItem createMetadataItem(final String metadataIdentificationString) {
         return new AndroidScaffoldMetadata(metadataIdentificationString);
+    }
+
+    @Override
+    protected RequestFactoryTemplateDataHolder buildTemplateDataHolder(
+            final ClassOrInterfaceTypeDetails mirroredType,
+            Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap,
+            final String moduleName) {
+        return androidTemplateService
+                .getMirrorTemplateTypeDetails(mirroredType, clientSideTypeMap,
+                        moduleName);
     }
 
     @Override
