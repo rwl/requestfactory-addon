@@ -1,5 +1,14 @@
 package org.springframework.roo.addon.requestfactory.entity;
 
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooExclude;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooHelpText;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooInvisible;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooPassword;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooReadOnly;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactory;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooTextArea;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooUneditable;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooUnits;
 import org.springframework.roo.model.JavaType;
 
 public final class EntityJavaType {
@@ -12,23 +21,23 @@ public final class EntityJavaType {
             "com.google.appengine.datanucleus.annotations.Unowned");
 
     public static final JavaType ROO_REQUEST_FACTORY = new JavaType(
-            RooRequestFactory.class.getName());
+            RooRequestFactory.class);
     public static final JavaType EXCLUDE = new JavaType(
-            RooExclude.class.getName());
+            RooExclude.class);
     public static final JavaType READ_ONLY = new JavaType(
-            RooReadOnly.class.getName());
+            RooReadOnly.class);
     public static final JavaType INVISIBLE = new JavaType(
-            RooInvisible.class.getName());
+            RooInvisible.class);
     public static final JavaType UNEDITABLE = new JavaType(
-            RooUneditable.class.getName());
+            RooUneditable.class);
     public static final JavaType HELP_TEXT = new JavaType(
-            RooHelpText.class.getName());
+            RooHelpText.class);
     public static final JavaType TEXT_AREA = new JavaType(
-            RooTextArea.class.getName());
+            RooTextArea.class);
     public static final JavaType PASSWORD = new JavaType(
-            RooPassword.class.getName());
+            RooPassword.class);
     public static final JavaType UNITS = new JavaType(
-            RooUnits.class.getName());
+            RooUnits.class);
 
     /**
      * Constructor is private to prevent instantiation

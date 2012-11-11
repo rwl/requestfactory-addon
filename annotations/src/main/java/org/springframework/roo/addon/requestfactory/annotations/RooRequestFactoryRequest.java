@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory;
+package org.springframework.roo.addon.requestfactory.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

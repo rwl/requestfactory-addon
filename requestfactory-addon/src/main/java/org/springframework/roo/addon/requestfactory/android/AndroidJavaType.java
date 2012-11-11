@@ -1,5 +1,6 @@
 package org.springframework.roo.addon.requestfactory.android;
 
+import org.springframework.roo.addon.requestfactory.annotations.android.RooAndroidScaffold;
 import org.springframework.roo.model.JavaType;
 
 public final class AndroidJavaType {

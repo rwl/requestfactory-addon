@@ -3,6 +3,7 @@ package org.springframework.roo.addon.requestfactory;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.requestfactory.annotations.RooRequestFactoryProxy;
 import org.springframework.roo.classpath.converters.JavaTypeConverter;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;

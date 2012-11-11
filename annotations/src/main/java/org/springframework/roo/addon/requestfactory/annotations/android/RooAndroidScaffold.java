@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.entity;
+package org.springframework.roo.addon.requestfactory.annotations.android;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,8 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
-@Target( { ElementType.FIELD } )
-public @interface RooHelpText {
+@Target(ElementType.TYPE)
+public @interface RooAndroidScaffold {
 
-    String value() default "";
+    String MODULE_ATTRIBUTE = "module";
+
+    String module();
 }

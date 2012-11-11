@@ -1,8 +1,9 @@
 package org.springframework.roo.addon.requestfactory.entity;
 
-import static org.springframework.roo.addon.requestfactory.entity.RooRequestFactory.PARENT_PROPERTY_DEFAULT;
+import static org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactory.PARENT_PROPERTY_DEFAULT;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
 
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactory;
 import org.springframework.roo.classpath.details.annotations.populator.AbstractAnnotationValues;
 import org.springframework.roo.classpath.details.annotations.populator.AutoPopulate;
 import org.springframework.roo.classpath.details.annotations.populator.AutoPopulationUtils;

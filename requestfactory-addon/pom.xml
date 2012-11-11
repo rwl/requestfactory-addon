@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.github.rwl</groupId>
+    <parent>
+        <groupId>com.github.rwl</groupId>
+        <artifactId>requestfactory-addon</artifactId>
+        <version>0.1.0.BUILD-SNAPSHOT</version>
+    </parent>
     <version>0.1.0.BUILD-SNAPSHOT</version>
     <artifactId>org.springframework.roo.addon.requestfactory</artifactId>
     <packaging>bundle</packaging>
     <name>Spring Roo - Addon - Request Factory</name>
     <description>Support for GWT, Android and iOS UI scaffolding using RequestFactory.</description>
-    <url>http://github.com/rwl/requestfactory-addon</url>
-    <organization>
-        <name>Richard Lincoln</name>
-    </organization>
     <properties>
         <roo.version>1.2.3.BUILD-SNAPSHOT</roo.version>
         <hapax.version>2.3.4.0010</hapax.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <repositories>
         <repository>
@@ -136,6 +135,11 @@
             <artifactId>org.springframework.roo.addon.tailor</artifactId>
             <version>${roo.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.rwl</groupId>
+            <artifactId>org.springframework.roo.addon.requestfactory.annotations</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -203,15 +207,6 @@
                         <Bundle-Copyright>Copyright 2012 ${project.organization.name}. All Rights Reserved.</Bundle-Copyright>
                         <Bundle-DocURL>${project.url}</Bundle-DocURL>
                     </instructions>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
                 </configuration>
             </plugin>
             <plugin>

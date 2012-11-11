@@ -1,9 +1,9 @@
 package org.springframework.roo.addon.requestfactory.account;
 
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
-import static org.springframework.roo.addon.requestfactory.account.RooAccount.SHARED_PACKAGE_DEFAULT;
+import static org.springframework.roo.addon.requestfactory.annotations.account.RooAccount.SHARED_PACKAGE_DEFAULT;
 
-import org.springframework.roo.addon.requestfactory.entity.RooRequestFactory;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactory;
 import org.springframework.roo.classpath.details.annotations.populator.AbstractAnnotationValues;
 import org.springframework.roo.classpath.details.annotations.populator.AutoPopulate;
 import org.springframework.roo.classpath.details.annotations.populator.AutoPopulationUtils;

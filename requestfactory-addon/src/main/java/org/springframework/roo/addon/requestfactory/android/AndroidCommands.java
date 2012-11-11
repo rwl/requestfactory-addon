@@ -3,6 +3,7 @@ package org.springframework.roo.addon.requestfactory.android;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.requestfactory.annotations.android.RooAndroidScaffold;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.maven.Pom;
 import org.springframework.roo.shell.CliAvailabilityIndicator;

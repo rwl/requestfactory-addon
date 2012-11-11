@@ -1,5 +1,10 @@
 package org.springframework.roo.addon.requestfactory;
 
+import org.springframework.roo.addon.requestfactory.annotations.RooRequestFactoryLocator;
+import org.springframework.roo.addon.requestfactory.annotations.RooRequestFactoryMirroredFrom;
+import org.springframework.roo.addon.requestfactory.annotations.RooRequestFactoryProxy;
+import org.springframework.roo.addon.requestfactory.annotations.RooRequestFactoryRequest;
+import org.springframework.roo.addon.requestfactory.annotations.RooRequestFactoryUnmanagedRequest;
 import org.springframework.roo.model.JavaType;
 
 public final class RequestFactoryJavaType {
@@ -36,15 +41,15 @@ public final class RequestFactoryJavaType {
             "com.google.web.bindery.requestfactory.shared.ServiceName");
 
     public static final JavaType ROO_REQUEST_FACTORY_LOCATOR = new JavaType(
-            "org.springframework.roo.addon.requestfactory.RooRequestFactoryLocator");
+            RooRequestFactoryLocator.class);
     public static final JavaType ROO_REQUEST_FACTORY_MIRRORED_FROM = new JavaType(
-            "org.springframework.roo.addon.requestfactory.RooRequestFactoryMirroredFrom");
+            RooRequestFactoryMirroredFrom.class);
     public static final JavaType ROO_REQUEST_FACTORY_PROXY = new JavaType(
-            "org.springframework.roo.addon.requestfactory.RooRequestFactoryProxy");
+            RooRequestFactoryProxy.class);
     public static final JavaType ROO_REQUEST_FACTORY_REQUEST = new JavaType(
-            "org.springframework.roo.addon.requestfactory.RooRequestFactoryRequest");
+            RooRequestFactoryRequest.class);
     public static final JavaType ROO_REQUEST_FACTORY_UNMANAGED_REQUEST = new JavaType(
-            "org.springframework.roo.addon.requestfactory.RooRequestFactoryUnmanagedRequest");
+            RooRequestFactoryUnmanagedRequest.class);
 
     /**
      * Constructor is private to prevent instantiation

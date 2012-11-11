@@ -10,6 +10,7 @@ import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.requestfactory.BaseOperationsImpl;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
+import org.springframework.roo.addon.requestfactory.annotations.android.RooAndroidScaffold;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;

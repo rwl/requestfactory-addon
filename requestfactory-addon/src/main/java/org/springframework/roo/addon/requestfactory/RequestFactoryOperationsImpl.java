@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.requestfactory.annotations.RooRequestFactoryProxy;
 import org.springframework.roo.addon.requestfactory.request.RequestFactoryRequestMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.details.BeanInfoUtils;

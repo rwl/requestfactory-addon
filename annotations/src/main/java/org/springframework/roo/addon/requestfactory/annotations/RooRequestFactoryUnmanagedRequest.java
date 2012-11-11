@@ -1,11 +1,12 @@
-package org.springframework.roo.addon.requestfactory.entity;
+package org.springframework.roo.addon.requestfactory.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
-@Target( { ElementType.FIELD, ElementType.METHOD } )
-public @interface RooInvisible {
+public @interface RooRequestFactoryUnmanagedRequest {
+    String value();
 }

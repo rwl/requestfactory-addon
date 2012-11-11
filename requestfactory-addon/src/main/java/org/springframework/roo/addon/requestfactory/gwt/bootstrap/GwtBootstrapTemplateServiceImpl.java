@@ -36,7 +36,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHo
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.entity.RooRequestFactory;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactory;
 import org.springframework.roo.addon.requestfactory.entity.TextType;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;

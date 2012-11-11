@@ -20,7 +20,7 @@ import org.springframework.roo.addon.requestfactory.android.AndroidPaths;
 import org.springframework.roo.addon.requestfactory.android.AndroidTemplateService;
 import org.springframework.roo.addon.requestfactory.android.AndroidType;
 import org.springframework.roo.addon.requestfactory.android.AndroidUtils;
-import org.springframework.roo.addon.requestfactory.android.RooAndroidScaffold;
+import org.springframework.roo.addon.requestfactory.annotations.android.RooAndroidScaffold;
 import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadataProviderImpl;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;

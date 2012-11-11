@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory;
+package org.springframework.roo.addon.requestfactory.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,21 +7,19 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
-public @interface RooRequestFactoryProxy {
+public @interface RooRequestFactoryMirroredFrom {
 
-    String SERVER_MODULE_ATTRIBUTE = "serverModule";
-    String SERVER_MODULE_DEFAULT = "";
+    boolean dontIncludeProxyMethods() default true;
 
     String[] exclude() default {};
+
+    boolean ignoreProxyExclusions() default false;
+
+    boolean ignoreProxyReadOnly() default false;
 
     String[] readOnly() default {};
 
     boolean scaffold() default false;
 
-    /**
-     * @return the fully-qualified type name this key instance was mirrored from
-     */
     String value();
-
-    String serverModule() default SERVER_MODULE_DEFAULT;
 }
