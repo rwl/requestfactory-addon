@@ -14,7 +14,7 @@ import org.springframework.roo.addon.tailor.actions.ActionConfigFactory;
 @Component
 @Service
 public class RequestFactoryTailorConfiguration implements TailorConfigurationFactory {
-    
+
     private static final String VERSION = "0.1.0.BUILD-SNAPSHOT";
 
     @Override
@@ -27,10 +27,8 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
         config.addCommandConfig(createDomainFocusCommandConfig("enum type"));
         config.addCommandConfig(createCommandConfigFieldSetup());
         config.addCommandConfig(createProxyRequestCommandConfig());
-//        config.addCommandConfig(createModuleFocusCommandConfig("web requestfactory gwt bootstrap", "ui/gwt"));
-//        config.addCommandConfig(createModuleFocusCommandConfig("web requestfactory android", "ui/android"));
-        config.addCommandConfig(createModuleFocusCommandConfig("web requestfactory gwt bootstrap", "gwt"));
-        config.addCommandConfig(createModuleFocusCommandConfig("web requestfactory android", "android"));
+        config.addCommandConfig(createModuleFocusCommandConfig("web requestfactory gwt bootstrap", "ui/gwt"));
+        config.addCommandConfig(createModuleFocusCommandConfig("web requestfactory android", "ui/android"));
         return Arrays.asList(config);
     }
 
@@ -40,24 +38,23 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
         config.addAction(ActionConfigFactory.defaultArgumentAction("packaging", "PARENT_POM"));
         config.addAction(ActionConfigFactory.executeAction());
         config.addAction(ActionConfigFactory.executeAction("web requestfactory setup addon"));
-        config.addAction(ActionConfigFactory.executeAction("module create --moduleName domain --topLevelPackage ${topLevelPackage} --parent ${topLevelPackage}:${projectName}:" + VERSION));
+        config.addAction(ActionConfigFactory.executeAction("module create --moduleName domain --topLevelPackage ${topLevelPackage} --artifactId ${projectName}-domain --parent ${topLevelPackage}:${projectName}:" + VERSION));
         config.addAction(ActionConfigFactory.executeAction("logging setup --level INFO"));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
-//        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui --topLevelPackage ${topLevelPackage} --parent ${topLevelPackage}:${projectName}:" + VERSION + " --packaging PARENT_POM"));
-//        config.addAction(ActionConfigFactory.executeAction("module create --moduleName server --topLevelPackage ${topLevelPackage} --parent ${topLevelPackage}:ui:" + VERSION));
-        config.addAction(ActionConfigFactory.executeAction("module create --moduleName server --topLevelPackage ${topLevelPackage} --parent ${topLevelPackage}:${projectName}:" + VERSION));
+        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui --topLevelPackage ${topLevelPackage} --artifactId ${projectName}-ui --parent ${topLevelPackage}:${projectName}:" + VERSION + " --packaging PARENT_POM"));
+        config.addAction(ActionConfigFactory.executeAction("module create --moduleName server --topLevelPackage ${topLevelPackage} --artifactId ${projectName}-server --parent ${topLevelPackage}:ui:" + VERSION));
         config.addAction(ActionConfigFactory.executeAction("web requestfactory setup server"));
-        config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage} --artifactId domain --version " + VERSION));
+        config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage} --artifactId ${projectName}-domain --version " + VERSION));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
-        config.addAction(ActionConfigFactory.executeAction("module create --moduleName shared --topLevelPackage ${topLevelPackage} --parent ${topLevelPackage}:${projectName}:" + VERSION));
+        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui/shared --topLevelPackage ${topLevelPackage} --artifactId ${projectName}-shared --parent ${topLevelPackage}:${projectName}-ui:" + VERSION));
         config.addAction(ActionConfigFactory.executeAction("web requestfactory setup client"));
         config.addAction(ActionConfigFactory.executeAction("web requestfactory setup server"));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
-        config.addAction(ActionConfigFactory.executeAction("module create --moduleName gwt --topLevelPackage ${topLevelPackage} --parent ${topLevelPackage}:${projectName}:" + VERSION));
-        config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage} --artifactId domain --version " + VERSION));
-        config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage} --artifactId shared --version " + VERSION));
+        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui/gwt --topLevelPackage ${topLevelPackage} --artifactId ${projectName}-gwt --parent ${topLevelPackage}:${projectName}-ui:" + VERSION));
+        config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage} --artifactId ${projectName}-domain --version " + VERSION));
+        config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage} --artifactId ${projectName}-shared --version " + VERSION));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
-        config.addAction(ActionConfigFactory.executeAction("module create --moduleName android --topLevelPackage ${topLevelPackage} --parent ${topLevelPackage}:${projectName}:" + VERSION + " --packaging APK"));
+        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui/android --topLevelPackage ${topLevelPackage} --artifactId ${projectName}-android --parent ${topLevelPackage}:${projectName}-ui:" + VERSION + " --packaging APK"));
         return config;
     }
 
@@ -88,11 +85,9 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
     private CommandConfiguration createProxyRequestCommandConfig() {
         CommandConfiguration config = new CommandConfiguration();
         config.setCommandName("web requestfactory proxy request all");
-//      config.addAction(ActionConfigFactory.defaultArgumentAction("serverModule", "ui/server"));
-//      config.addAction(ActionConfigFactory.focusModuleAction("ui/shared"));
-        config.addAction(ActionConfigFactory.defaultArgumentAction("serverModule", "server"));
-        config.addAction(ActionConfigFactory.focusModuleAction("shared"));
+        config.addAction(ActionConfigFactory.defaultArgumentAction("serverModule", "ui/server"));
+        config.addAction(ActionConfigFactory.focusModuleAction("ui/shared"));
         config.addAction(ActionConfigFactory.executeAction());
         return config;
-    }  
+    }
 }
