@@ -110,6 +110,22 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                             GwtBootstrapType.MOBILE_LIST_VIEW, moduleName);
                 }
             }
+        } else if (type == GwtBootstrapType.APPLICATION_MESSAGES) {
+            for (final ClassOrInterfaceTypeDetails proxy : proxies) {
+                if (!RequestFactoryUtils.scaffoldProxy(proxy)) {
+                    continue;
+                }
+                final ClassOrInterfaceTypeDetails entity = requestFactoryTypeService
+                        .lookupEntityFromProxy(proxy);
+                if (entity != null
+                        && !Modifier.isAbstract(entity.getModifier())) {
+                    final String entitySimpleName = entity.getName()
+                            .getSimpleTypeName();
+                    final TemplateDataDictionary section = dataDictionary
+                            .addSection("entities");
+                    section.setVariable("entitySimpleName", entitySimpleName);
+                }
+            }
         } else if (type == GwtBootstrapType.LIST_PLACE_RENDERER) {
             for (final ClassOrInterfaceTypeDetails proxy : proxies) {
                 if (!RequestFactoryUtils.scaffoldProxy(proxy)) {

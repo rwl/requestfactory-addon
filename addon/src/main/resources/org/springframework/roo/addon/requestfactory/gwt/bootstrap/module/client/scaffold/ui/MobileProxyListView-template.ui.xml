@@ -15,13 +15,13 @@
 	<m:LayoutPanel>
         <m:HeaderPanel ui:field="header">
             <m:left>
-                <m:HeaderButton backButton='true' ui:field="backButton">Back</m:HeaderButton>
+                <m:HeaderButton backButton='true' ui:field="backButton"/>
             </m:left>
             <m:center>
                 <g:HTML ui:field="title"/>
             </m:center>
             <m:right>
-                <m:HeaderButton forwardButton="false" ui:field="newButton">New</m:HeaderButton>
+                <m:HeaderButton forwardButton="false" ui:field="newButton"/>
             </m:right>
         </m:HeaderPanel>
 		<c:SimplePager display='{list}' location='RIGHT'/>

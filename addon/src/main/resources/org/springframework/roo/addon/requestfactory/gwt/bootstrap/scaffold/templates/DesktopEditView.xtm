@@ -41,90 +41,92 @@ import java.util.List;
  */
 public class {{=className}} extends Composite implements {{=editActivityWrapper}}.View<{{=className}}> {
 
-	interface Binder extends UiBinder<HTMLPanel, {{=className}}> {
-	}
+    interface Binder extends UiBinder<HTMLPanel, {{=className}}> {
+    }
 
-	interface Driver extends
+    interface Driver extends
       RequestFactoryEditorDriver<{{=proxy}}, {{=className}}> {
-	}
+    }
 
-	private static final Binder BINDER = GWT.create(Binder.class);
+    private static final Binder BINDER = GWT.create(Binder.class);
 
-	private static {{=className}} instance;
+    private static {{=className}} instance;
 
-	{{#editViewProps}}
-	{{=prop}};{{/editViewProps}}
+    private ApplicationMessages messages = GWT.create(ApplicationMessages.class);
 
-	@UiField Button cancel;
-	@UiField SubmitButton save;
+    {{#editViewProps}}
+    {{=prop}};{{/editViewProps}}
+
+    @UiField Button cancel;
+    @UiField SubmitButton save;
     @UiField AlertBlock errors;
 
-	@UiField Element editTitle;
-	@UiField Element createTitle;
+    @UiField Element title;
 
-	private Delegate delegate;
+    private Delegate delegate;
 
-  public static {{=className}} instance() {
-    if (instance == null) {
-      instance = new {{=className}}();
+    public static {{=className}} instance() {
+        if (instance == null) {
+            instance = new {{=className}}();
+        }
+        return instance;
     }
-    return instance;
-  }
 
-	public {{=className}}() {
-		initWidget(BINDER.createAndBindUi(this));
-	}
+    public {{=className}}() {
+        initWidget(BINDER.createAndBindUi(this));
+        this.cancel.setText(messages.cancel());
+        this.save.setText(messages.save());
+    }
 
-  @Override
-  public RequestFactoryEditorDriver<{{=proxy}}, {{=className}}> createEditorDriver() {
-    RequestFactoryEditorDriver<{{=proxy}}, {{=className}}> driver = GWT.create(Driver.class);
-    driver.initialize(this);
-    return driver;
-  }
+    @Override
+    public RequestFactoryEditorDriver<{{=proxy}}, {{=className}}> createEditorDriver() {
+        RequestFactoryEditorDriver<{{=proxy}}, {{=className}}> driver = GWT.create(Driver.class);
+        driver.initialize(this);
+        return driver;
+    }
 
 {{#setEnumValuePickers}}{{=setValuePicker}}{{/setEnumValuePickers}}
 {{#setProxyValuePickers}}{{=setValuePicker}}{{/setProxyValuePickers}}
-	public void setCreating(boolean creating) {
-		if (creating) {
-			editTitle.getStyle().setDisplay(Display.NONE);
-			createTitle.getStyle().clearDisplay();
-		} else {
-			editTitle.getStyle().clearDisplay();
-			createTitle.getStyle().setDisplay(Display.NONE);
-		}
-	}
 
-	public void setDelegate(Delegate delegate) {
-		this.delegate = delegate;
-	}
-
-	public void setEnabled(boolean enabled) {
-		save.setEnabled(enabled);
-	}
-
-  public void showErrors(List<EditorError> errors) {
-    SafeHtmlBuilder b = new SafeHtmlBuilder();
-    for (EditorError error : errors) {
-        b.appendEscaped(error.getPath()).appendEscaped(": ");
-        b.appendEscaped(error.getMessage());
+    public void setCreating(boolean creating) {
+        if (creating) {
+            title.setInnerText(messages.create{{=name}}());
+        } else {
+            title.setInnerText(messages.edit{{=name}}());
+        }
     }
 
-    String text = b.toSafeHtml().asString();
-    if (text.isEmpty()) {
-        this.errors.setVisible(false);
-    } else {
-        this.errors.setText(text);
-        this.errors.setVisible(true);
+    public void setDelegate(Delegate delegate) {
+        this.delegate = delegate;
     }
-  }
 
-	@UiHandler("cancel")
-	void onCancel(ClickEvent event) {
-		delegate.cancelClicked();
-	}
+    public void setEnabled(boolean enabled) {
+        save.setEnabled(enabled);
+    }
 
-	@UiHandler("save")
-	void onSave(ClickEvent event) {
-		delegate.saveClicked();
-	}
+    public void showErrors(List<EditorError> errors) {
+        SafeHtmlBuilder b = new SafeHtmlBuilder();
+        for (EditorError error : errors) {
+            b.appendEscaped(error.getPath()).appendEscaped(": ");
+            b.appendEscaped(error.getMessage());
+        }
+
+        String text = b.toSafeHtml().asString();
+        if (text.isEmpty()) {
+            this.errors.setVisible(false);
+        } else {
+            this.errors.setText(text);
+            this.errors.setVisible(true);
+        }
+    }
+
+    @UiHandler("cancel")
+    void onCancel(ClickEvent event) {
+        delegate.cancelClicked();
+    }
+
+    @UiHandler("save")
+    void onSave(ClickEvent event) {
+        delegate.saveClicked();
+    }
 }

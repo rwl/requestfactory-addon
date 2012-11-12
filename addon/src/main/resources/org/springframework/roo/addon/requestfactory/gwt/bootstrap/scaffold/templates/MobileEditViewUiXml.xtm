@@ -11,7 +11,7 @@
   <m:LayoutPanel>
     <m:HeaderPanel>
       <m:left>
-          <m:HeaderButton backButton="true" ui:field="cancel">Cancel</m:HeaderButton>
+          <m:HeaderButton backButton="true" ui:field="cancel"/>
       </m:left>
       <m:center>
           <g:HTML ui:field="title"/>
@@ -24,6 +24,6 @@
       </m:FormListEntry>{{/editableProperties}}
     </m:WidgetList>
 
-    <m:Button ui:field="save">Save</m:Button>
+    <m:Button ui:field="save"/>
   </m:LayoutPanel>
 </ui:UiBinder>

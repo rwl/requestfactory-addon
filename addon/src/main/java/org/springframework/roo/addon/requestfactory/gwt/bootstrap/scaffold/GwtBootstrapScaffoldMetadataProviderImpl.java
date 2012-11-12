@@ -111,6 +111,7 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
         buildType(GwtBootstrapType.IS_LEAF_PROCESSOR, moduleName);
         buildType(GwtBootstrapType.PROXY_LIST_NODE_PROCESSOR, moduleName);
         buildType(GwtBootstrapType.PROXY_NODE_PROCESSOR, moduleName);
+        buildType(GwtBootstrapType.APPLICATION_MESSAGES, moduleName);
     }
 
     @Override

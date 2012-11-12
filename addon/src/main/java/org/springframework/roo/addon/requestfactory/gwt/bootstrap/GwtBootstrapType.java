@@ -25,7 +25,6 @@ import org.springframework.roo.model.JavaType;
 public class GwtBootstrapType extends RequestFactoryType {
 
     public static final GwtBootstrapType ACTIVITIES_MAPPER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ActivitiesMapper", "activitiesMapper", "ActivitiesMapper", false, false, false);
-
     public static final GwtBootstrapType DETAIL_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "DetailsActivity", "detailsActivity", "DetailsActivity", false, true, false);
     public static final GwtBootstrapType DETAILS_ACTIVITIES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "detailsActivities", "ApplicationDetailsActivities", false, false, false);
     public static final GwtBootstrapType DETAILS_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI, true, "DetailsView", "detailsView", "DetailsView", false, false, false);
@@ -42,6 +41,8 @@ public class GwtBootstrapType extends RequestFactoryType {
     public static final GwtBootstrapType LIST_PLACE_RENDERER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_RENDERER, false, "", "listPlaceRenderer", "ApplicationListPlaceRenderer", false, true, false);
     public static final GwtBootstrapType DESKTOP_LIST_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopListView", "desktopListView", "DesktopListView", true, true, false);
     public static final GwtBootstrapType MASTER_ACTIVITIES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "masterActivities", "ApplicationMasterActivities", false, false, false);
+    
+    public static final GwtBootstrapType APPLICATION_MESSAGES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED, false, "", "applicationMessages", "ApplicationMessages", false, false, false);
 
     public static final GwtBootstrapType DATA_PROVIDER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_TREE, true, "DataProvider", "dataProvider", "DataProvider", false, false, false);
     public static final GwtBootstrapType IS_LEAF_PROCESSOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_TREE, false, "", "isLeafProcessor", "IsLeafProcessor", false, false, false);
@@ -68,7 +69,7 @@ public class GwtBootstrapType extends RequestFactoryType {
         MASTER_ACTIVITIES, DATA_PROVIDER, IS_LEAF_PROCESSOR, PROXY_LIST_NODE_PROCESSOR,
         PROXY_NODE_PROCESSOR, MOBILE_ACTIVITIES, MOBILE_DETAILS_VIEW,
         MOBILE_EDIT_VIEW, MOBILE_LIST_VIEW, MOBILE_PROXY_LIST_VIEW,
-        SET_EDITOR, SCAFFOLD_APP, SCAFFOLD_DESKTOP_APP, SCAFFOLD_MOBILE_APP
+        SET_EDITOR, SCAFFOLD_APP, SCAFFOLD_DESKTOP_APP, SCAFFOLD_MOBILE_APP, APPLICATION_MESSAGES
     };
 
     public static List<GwtBootstrapType> getGwtBootstrapMirrorTypes() {
@@ -259,16 +260,20 @@ public class GwtBootstrapType extends RequestFactoryType {
         } else if (type == MOBILE_LIST_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {MOBILE_PROXY_LIST_VIEW,
                     SCAFFOLD_MOBILE_APP});
+        } else if (type == DESKTOP_LIST_VIEW) {
+            return Arrays.asList(new RequestFactoryType[] {APPLICATION_MESSAGES});
         } else if (type == DESKTOP_EDIT_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {EDIT_ACTIVITY_WRAPPER,
-                    EDIT_VIEW});
+                    EDIT_VIEW, APPLICATION_MESSAGES});
         } else if (type == MOBILE_EDIT_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {EDIT_ACTIVITY_WRAPPER,
-                    EDIT_VIEW});
+                    EDIT_VIEW, APPLICATION_MESSAGES});
         } else if (type == DESKTOP_DETAILS_VIEW) {
-            return Arrays.asList(new RequestFactoryType[] {DETAILS_VIEW});
+            return Arrays.asList(new RequestFactoryType[] {DETAILS_VIEW,
+                    APPLICATION_MESSAGES});
         } else if (type == MOBILE_DETAILS_VIEW) {
-            return Arrays.asList(new RequestFactoryType[] {DETAILS_VIEW});
+            return Arrays.asList(new RequestFactoryType[] {DETAILS_VIEW,
+                    APPLICATION_MESSAGES});
         } else if (type == LIST_PLACE_RENDERER) {
             return Arrays.asList(APP_ENTITY_TYPES_PROCESSOR);
         } else if (type == MASTER_ACTIVITIES) {

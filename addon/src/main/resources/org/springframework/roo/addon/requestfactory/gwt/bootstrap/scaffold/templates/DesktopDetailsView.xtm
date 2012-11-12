@@ -3,7 +3,6 @@ package {{=packageName}};
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -14,6 +13,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.Label;
+import com.github.gwtbootstrap.client.ui.Button;
 
 import {{=placePackage}}.ProxyListView;
 import {{=placePackage}}.ProxyDetailsView.ConfirmationCallback;
@@ -29,13 +29,15 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
 
 	private static {{=className}} instance;
 
+    private ApplicationMessages messages = GWT.create(ApplicationMessages.class);
+
 	{{=proxy}} proxy;
 	{{#properties}}
 	@UiField Label {{=prop}};{{/properties}}
 
 	@UiField SpanElement displayRenderer;
-	@UiField HasClickHandlers edit;
-	@UiField HasClickHandlers delete;
+	@UiField Button edit;
+	@UiField Button delete;
 
 	private Delegate delegate;
 
@@ -49,6 +51,8 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
 
 	public {{=className}}() {
 		initWidget(BINDER.createAndBindUi(this));
+        this.edit.setText(messages.edit());
+        this.delete.setText(messages.delete());
 	}
 
 	public Widget asWidget() {

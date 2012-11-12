@@ -3,6 +3,7 @@ package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 import __TOP_LEVEL_PACKAGE__.client.proxy.AccountProxy;
 import __TOP_LEVEL_PACKAGE__.shared.account.MakesAccountRequests;
 import __TOP_LEVEL_PACKAGE__.shared.account.OpenIdAccountServiceRequest;
+import __TOP_LEVEL_PACKAGE__.client.managed.ApplicationMessages;
 
 import com.google.gwt.user.client.ui.HasText;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -12,6 +13,8 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
  */
 public class AccountNavTextDriver {
 	private final MakesAccountRequests requests;
+
+    private final ApplicationMessages messages = GWT.create(ApplicationMessages.class);
 
 	public AccountNavTextDriver(MakesAccountRequests requests) {
 		this.requests = requests;
@@ -34,7 +37,9 @@ public class AccountNavTextDriver {
 					} else {
 						identifier = "";
 					}
-					widget.setText(identifier);
+					widget.setText(messages.signedInAs(identifier));
+				} else {
+				    widget.setText(messages.notSignedIn());
 				}
 			}
 		});

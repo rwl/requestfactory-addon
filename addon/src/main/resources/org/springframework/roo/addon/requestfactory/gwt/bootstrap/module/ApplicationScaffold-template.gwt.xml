@@ -9,6 +9,7 @@
 	<inherits name='com.google.gwt.logging.Logging'/>
 	<inherits name="com.google.gwt.inject.Inject"/>
 	<inherits name="com.google.gwt.text.Text"/>
+	<inherits name="com.google.gwt.i18n.I18N"/>
 
 	<inherits name="com.github.gwtbootstrap.Bootstrap" />
 	<inherits name='com.github.gwtbootstrap.datepicker.Datepicker' />

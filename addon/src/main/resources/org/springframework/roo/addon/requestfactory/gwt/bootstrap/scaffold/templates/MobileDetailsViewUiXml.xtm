@@ -16,13 +16,13 @@
   <m:LayoutPanel>
     <m:HeaderPanel>
       <m:left>
-          <m:HeaderButton backButton='true' ui:field="back">Back</m:HeaderButton>
+          <m:HeaderButton backButton='true' ui:field="back"/>
       </m:left>
       <m:center>
           <g:HTML ui:field="title"/>
       </m:center>
       <m:right>
-          <m:HeaderButton forwardButton="false" ui:field="edit">Edit</m:HeaderButton>
+          <m:HeaderButton forwardButton="false" ui:field="edit"/>
       </m:right>
     </m:HeaderPanel>
 
@@ -32,6 +32,6 @@
       </m:FormListEntry>{{/properties}}
     </m:WidgetList>
 
-    <m:Button ui:field='delete'>Delete</m:Button>
+    <m:Button ui:field='delete'/>
   </m:LayoutPanel>
 </ui:UiBinder>

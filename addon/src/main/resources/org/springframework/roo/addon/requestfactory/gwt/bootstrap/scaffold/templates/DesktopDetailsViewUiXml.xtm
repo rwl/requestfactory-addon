@@ -42,8 +42,8 @@
 				</b:Controls>
 			</b:ControlGroup>{{/properties}}
 			<b:FormActions>
-				<b:Button addStyleNames="{style.button}" icon="EDIT" type="PRIMARY" ui:field="edit">Edit</b:Button>
-				<b:Button addStyleNames="{style.button}" icon="REMOVE" ui:field="delete">Delete</b:Button>
+				<b:Button addStyleNames="{style.button}" icon="EDIT" type="PRIMARY" ui:field="edit"/>
+				<b:Button addStyleNames="{style.button}" icon="REMOVE" ui:field="delete"/>
 			</b:FormActions>
 		</b:Fieldset>
 	</b:Form>

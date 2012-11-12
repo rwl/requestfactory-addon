@@ -21,6 +21,7 @@ import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 import com.googlecode.mgwt.ui.client.dialog.ConfirmDialog.ConfirmCallback;
 import com.googlecode.mgwt.ui.client.dialog.Dialogs;
+import com.googlecode.mgwt.ui.client.widget.Button;
 
 {{#imports}}import {{=import}};
 {{/imports}}
@@ -44,14 +45,16 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
         return instance;
     }
 
+    private ApplicationMessages messages = GWT.create(ApplicationMessages.class);
+
     {{=proxy}} proxy;
     {{#properties}}
     @UiField Label {{=prop}};{{/properties}}
-    @UiField HasTouchHandlers delete;
+    @UiField Button delete;
 
     @UiField HTML title;
-    @UiField HasTouchHandlers back;
-    @UiField HasTouchHandlers edit;
+    @UiField HeaderButton back;
+    @UiField HeaderButton edit;
 
     private Delegate delegate;
 
@@ -77,9 +80,13 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
                 {{=className}}.this.delegate.backClicked();
             }
         });
+
+        this.edit.setText(messages.edit());
+        this.delete.setText(messages.delete());
+        this.back.setText(messages.back());
     }
 
-        public Widget asWidget() {
+    public Widget asWidget() {
         return this;
     }
 

@@ -96,7 +96,7 @@
 			<b:Navbar height="44px">
 				<b:Brand>Data Browser</b:Brand>
 				<b:Nav alignment="RIGHT">
-					<b:NavText ui:field="nickname">Not Signed In</b:NavText>
+					<b:NavText ui:field="nickname"/>
 					<b:Tooltip text="Sign Out" placement="BOTTOM" showDelay="1000">
 						<b:NavLink icon="SIGNOUT" ui:field="signout"/>
 					</b:Tooltip>
@@ -122,7 +122,7 @@
 		<g:center>
 			<g:FlowPanel styleName='{style.content} {style.widescreen}'>
 				<g:FlowPanel>
-					<g:NotificationMole animationDuration='0' message='loading...' ui:field='mole'></g:NotificationMole>
+					<g:NotificationMole animationDuration='0' ui:field='mole'></g:NotificationMole>
 					<g:SimplePanel styleName="{style.entityDetails}" ui:field='master'></g:SimplePanel>
 				</g:FlowPanel>
 				<g:SimplePanel styleName="{style.entityDetails}" ui:field='details'></g:SimplePanel>

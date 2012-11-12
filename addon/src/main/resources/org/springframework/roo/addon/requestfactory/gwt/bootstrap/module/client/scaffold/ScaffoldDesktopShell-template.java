@@ -3,8 +3,8 @@ package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 import __TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
 import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRenderer;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.ui.LoginWidget;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.ui.NavigationTree;
+import __TOP_LEVEL_PACKAGE__.client.managed.ApplicationMessages;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -27,6 +27,8 @@ public class ScaffoldDesktopShell extends Composite {
 
 	private static final Binder BINDER = GWT.create(Binder.class);
 
+    private final ApplicationMessages messages = GWT.create(ApplicationMessages.class);
+
 	@UiField SimplePanel details;
 	@UiField HasText nickname;
 	@UiField HasClickHandlers signout;
@@ -39,6 +41,8 @@ public class ScaffoldDesktopShell extends Composite {
 	public ScaffoldDesktopShell(ApplicationRequestFactory requestFactory, PlaceController placeController) {
         this.navigationTree = new NavigationTree(requestFactory, placeController);
 		initWidget(BINDER.createAndBindUi(this));
+		nickname.setText(messages.notSignedIn());
+		mole.setMessage(messages.loading());
 	}
 
 	/**

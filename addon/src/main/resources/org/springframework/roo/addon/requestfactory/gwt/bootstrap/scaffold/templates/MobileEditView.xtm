@@ -31,6 +31,7 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.dialog.Dialogs;
 import com.googlecode.mgwt.ui.client.widget.Button;
+import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 import com.github.gwtbootstrap.client.ui.ValueListBox;
 
@@ -66,10 +67,12 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
         return instance;
     }
 
+    private ApplicationMessages messages = GWT.create(ApplicationMessages.class);
+
     {{#mobileEditViewProps}}
     {{=prop}};{{/mobileEditViewProps}}
     @UiField Button save;
-    @UiField HasTouchHandlers cancel;
+    @UiField HeaderButton cancel;
 
     @UiField @Ignore HTML title;
 
@@ -87,6 +90,8 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
                 {{=className}}.this.delegate.cancelClicked();
             }
         });
+        this.cancel.setText(messages.cancel());
+        this.save.setText(messages.save());
     }
 
     @Override
@@ -103,7 +108,7 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
     {{=setValuePicker}}{{/setProxyValuePickers}}
 
     public void setCreating(boolean creating) {
-	    title.setHTML(creating ? "Create" : "Edit");
+	    title.setHTML(creating ? messages.create() : messages.edit());
     }
 
     public void setDelegate(Delegate delegate) {

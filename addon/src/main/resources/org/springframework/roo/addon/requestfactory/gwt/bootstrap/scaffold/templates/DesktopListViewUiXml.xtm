@@ -39,9 +39,9 @@
     <div style='height:3em;'></div>
     <b:CellTable width='100%' ui:field='table' pageSize='10'/>
     <div class='{style.controls}'>{{#hasParent}}
-      <b:Button type="LINK" icon="CIRCLE_ARROW_LEFT" ui:field="backButton">Back</b:Button>{{/hasParent}}
-      <b:Button type="LINK" icon="PLUS_SIGN" ui:field='newButton'>Create {{=name}}</b:Button>
-      <b:SimplePager display='{table}' location='RIGHT' fastForwardRows='50'/>
+      <b:Button type="LINK" icon="CIRCLE_ARROW_LEFT" ui:field="backButton"/>{{/hasParent}}
+      <b:Button type="LINK" icon="PLUS_SIGN" ui:field='newButton'/>
+      <b:SimplePager display='{table}' ui:field='pager'/>
     </div>
   </g:HTMLPanel>
 </ui:UiBinder>
