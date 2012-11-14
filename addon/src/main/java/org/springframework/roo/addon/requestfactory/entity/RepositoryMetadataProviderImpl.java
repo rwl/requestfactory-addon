@@ -147,7 +147,7 @@ public final class RepositoryMetadataProviderImpl extends AbstractMemberDiscover
         }
 
         return new RepositoryMetadata(metadataIdentificationString, aspectName,
-                governorPhysicalType, parentProperty);
+                governorPhysicalType, domainType, parentProperty);
     }
 
     /**

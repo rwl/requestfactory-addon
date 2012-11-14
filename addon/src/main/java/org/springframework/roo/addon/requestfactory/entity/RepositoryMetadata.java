@@ -3,6 +3,7 @@ package org.springframework.roo.addon.requestfactory.entity;
 import static org.springframework.roo.addon.requestfactory.entity.RepositoryJavaType.PAGE;
 import static org.springframework.roo.addon.requestfactory.entity.RepositoryJavaType.PAGEABLE;
 import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
+import static java.lang.reflect.Modifier.ABSTRACT;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +33,8 @@ import org.springframework.roo.project.LogicalPath;
  */
 public class RepositoryMetadata extends AbstractItdTypeDetailsProvidingMetadataItem {
 
+    private static final InvocableMemberBodyBuilder BODY = new InvocableMemberBodyBuilder();
+
     private static final String PROVIDES_TYPE_STRING = RepositoryMetadata.class.getName();
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils.create(PROVIDES_TYPE_STRING);
 
@@ -54,16 +57,20 @@ public class RepositoryMetadata extends AbstractItdTypeDetailsProvidingMetadataI
     public static boolean isValid(String metadataIdentificationString) {
         return PhysicalTypeIdentifierNamingUtils.isValid(PROVIDES_TYPE_STRING, metadataIdentificationString);
     }
+    
     private final FieldMetadata parentProperty;
+    private final JavaType domainType;
 
     public RepositoryMetadata(String identifier, JavaType aspectName,
             PhysicalTypeMetadata governorPhysicalTypeMetadata,
+            JavaType domainType,
             FieldMetadata parentProperty) {
         super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '"
             + identifier + "' does not appear to be a valid");
 
         this.parentProperty = parentProperty;
+        this.domainType = domainType;
 
         if (!isValid()) {
             return;
@@ -101,15 +108,15 @@ public class RepositoryMetadata extends AbstractItdTypeDetailsProvidingMetadataI
 
         final JavaType returnType = new JavaType(
                 PAGE.getFullyQualifiedTypeName(), 0, DataType.TYPE, null,
-                Arrays.asList(destination));
+                Arrays.asList(domainType));
         
         final InvocableMemberBodyBuilder builder = new InvocableMemberBodyBuilder();
         builder.appendFormalLine("return null;");
 
         MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
-                getId(), 0, methodName, returnType,
+                getId(), ABSTRACT, methodName, returnType,
                 AnnotatedJavaType.convertFromJavaTypes(parameterTypes),
-                parameterNames, builder);
+                parameterNames, BODY);
 
         return methodBuilder.build();
     }
@@ -136,13 +143,10 @@ public class RepositoryMetadata extends AbstractItdTypeDetailsProvidingMetadataI
         final List<JavaSymbolName> parameterNames = Arrays.asList(
                 new JavaSymbolName(parentParamName));
         
-        final InvocableMemberBodyBuilder builder = new InvocableMemberBodyBuilder();
-        builder.appendFormalLine("return 0L");
-
         MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
-                getId(), 0, methodName, LONG_PRIMITIVE,
+                getId(), ABSTRACT, methodName, LONG_PRIMITIVE,
                 AnnotatedJavaType.convertFromJavaTypes(parameterTypes),
-                parameterNames, builder);
+                parameterNames, BODY);
 
         return methodBuilder.build();
     }

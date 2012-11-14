@@ -149,7 +149,8 @@ public final class ServiceMetadataProviderImpl extends AbstractMemberDiscovering
 
         // Pass dependencies required by the metadata in through its constructor
         return new ServiceMetadata(metadataIdString, aspectName,
-                governorPhysicalType, pluralMetadata.getPlural(), idField, parentProperty);
+                governorPhysicalType, serviceAnnotationValues, domainType,
+                pluralMetadata.getPlural(), idField, parentProperty);
     }
 
     /**
