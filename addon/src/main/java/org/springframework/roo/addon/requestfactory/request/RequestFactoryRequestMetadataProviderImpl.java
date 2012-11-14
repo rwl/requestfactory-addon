@@ -9,7 +9,7 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.SERVICE_NAME;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_ENTITY;
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.COUNT_ALL_METHOD;
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.FIND_ALL_METHOD;
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.FIND_ENTRIES_METHOD;
@@ -41,7 +41,7 @@ import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.requestfactory.RequestFactoryFileManager;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactory;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactoryEntity;
 import org.springframework.roo.addon.requestfactory.entity.EntityDataKeys;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
@@ -304,11 +304,11 @@ public class RequestFactoryRequestMetadataProviderImpl extends
         ClassOrInterfaceTypeDetails domainTypeDetails = typeLocationService
                 .getTypeDetails(domainType);
         AnnotationMetadata annotation = domainTypeDetails
-                .getAnnotation(ROO_REQUEST_FACTORY);
+                .getAnnotation(ROO_REQUEST_FACTORY_ENTITY);
         String parentProperty = "";
         if (annotation != null) {
             AnnotationAttributeValue<String> parentPropertyValue = annotation
-                    .getAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE);
+                    .getAttribute(RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE);
             if (parentPropertyValue != null) {
                 parentProperty = parentPropertyValue.getValue();
             }

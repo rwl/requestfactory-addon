@@ -136,6 +136,21 @@
             <version>${roo.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.roo</groupId>
+            <artifactId>org.springframework.roo.addon.layers.service</artifactId>
+            <version>${roo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.roo</groupId>
+            <artifactId>org.springframework.roo.addon.layers.repository.jpa</artifactId>
+            <version>${roo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.roo</groupId>
+            <artifactId>org.springframework.roo.addon.layers.repository.mongo</artifactId>
+            <version>${roo.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.rwl</groupId>
             <artifactId>org.springframework.roo.addon.requestfactory.annotations</artifactId>
             <version>${project.version}</version>

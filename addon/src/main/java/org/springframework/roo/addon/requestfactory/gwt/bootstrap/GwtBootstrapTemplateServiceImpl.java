@@ -1,7 +1,7 @@
 package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
 
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_ENTITY;
 import hapax.TemplateDataDictionary;
 import hapax.TemplateDictionary;
 
@@ -36,7 +36,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHo
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactory;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactoryEntity;
 import org.springframework.roo.addon.requestfactory.entity.TextType;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
@@ -244,10 +244,10 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
 
 //                    for (final ClassOrInterfaceTypeDetails ety : typeLocationService
 //                            .findClassesOrInterfaceDetailsWithAnnotation(ROO_GWT_BOOTSTRAP)) {
-                        AnnotationMetadata annotation = ety.getAnnotation(ROO_REQUEST_FACTORY);
+                        AnnotationMetadata annotation = ety.getAnnotation(ROO_REQUEST_FACTORY_ENTITY);
                         if (annotation == null) continue;
                         AnnotationAttributeValue<String> annotationAttributeValue = annotation
-                                .getAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE);
+                                .getAttribute(RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE);
                         if (annotationAttributeValue == null) continue;
                         String parentPropertyName = annotationAttributeValue.getValue();
                         if (parentPropertyName.isEmpty()) continue;

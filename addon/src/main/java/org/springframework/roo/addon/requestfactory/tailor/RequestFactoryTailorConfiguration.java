@@ -23,8 +23,10 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
                 "Project with multiple RequestFactory client modules");
         config.addCommandConfig(createCommandConfigProjectSetup());
         config.addCommandConfig(createDomainFocusCommandConfig("jpa setup"));
-        config.addCommandConfig(createDomainFocusCommandConfig("entity jpa"));
+        config.addCommandConfig(createDomainFocusCommandConfig("entity"));
         config.addCommandConfig(createDomainFocusCommandConfig("enum type"));
+        config.addCommandConfig(createDomainFocusCommandConfig("repository"));
+        config.addCommandConfig(createDomainFocusCommandConfig("service"));
         config.addCommandConfig(createCommandConfigFieldSetup());
         config.addCommandConfig(createProxyRequestCommandConfig());
         config.addCommandConfig(createModuleFocusCommandConfig("web requestfactory gwt bootstrap", "ui/gwt"));

@@ -72,27 +72,28 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
     }
 
     private final JpaCrudAnnotationValues crudAnnotationValues;
-    private final EntityAnnotationValues scaffoldAnnotationValues;
     private final boolean isGaeEnabled;
     private final String entityName;
     private final String plural;
     private final FieldMetadata identifierField;
     private final FieldMetadata parentProperty;
+    private final boolean activeRecord;
 
-    public EntityMetadata(String identifier, JavaType aspectName, JpaCrudAnnotationValues crudAnnotationValues,
+    public EntityMetadata(String identifier, JavaType aspectName,
+            JpaCrudAnnotationValues crudAnnotationValues,
             PhysicalTypeMetadata governorPhysicalTypeMetadata,
-            EntityAnnotationValues scaffoldAnnotationValues, String plural, FieldMetadata idField, FieldMetadata parentProperty,
-            final String entityName, final boolean isGaeEnabled) {
+            String plural, FieldMetadata idField, FieldMetadata parentProperty,
+            String entityName, boolean isGaeEnabled, boolean activeRecord) {
         super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '" + identifier + "' does not appear to be a valid");
 
         this.crudAnnotationValues = crudAnnotationValues;
-        this.scaffoldAnnotationValues = scaffoldAnnotationValues;
         this.isGaeEnabled = isGaeEnabled;
         this.entityName = entityName;
         this.plural = plural;
         this.identifierField = idField;
         this.parentProperty = parentProperty;
+        this.activeRecord = activeRecord;
 
         if (!isValid()) {
             return;
@@ -100,9 +101,11 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
 
         builder.addMethod(getStringIdGetter());
         builder.addMethod(getStringIdSetter());
-        builder.addMethod(getFindEntriesByParentMethod());
-        builder.addMethod(getCountByParentMethod());
-        builder.addMethod(getFindByStringIdMethod());
+        if (this.activeRecord) {
+            builder.addMethod(getFindEntriesByParentMethod());
+            builder.addMethod(getCountByParentMethod());
+            builder.addMethod(getFindByStringIdMethod());
+        }
 
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();

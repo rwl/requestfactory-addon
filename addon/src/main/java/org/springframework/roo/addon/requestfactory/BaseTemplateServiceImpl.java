@@ -7,7 +7,7 @@ import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.INVISIBLE;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.PASSWORD;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_ENTITY;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.TEXT_AREA;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNEDITABLE;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNITS;
@@ -37,7 +37,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.springframework.roo.addon.plural.PluralMetadata;
-import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactory;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactoryEntity;
 import org.springframework.roo.addon.requestfactory.entity.EntityDataKeys;
 import org.springframework.roo.addon.requestfactory.entity.EntityMetadata;
 import org.springframework.roo.addon.requestfactory.entity.TextType;
@@ -160,10 +160,10 @@ public class BaseTemplateServiceImpl {
                             proxySimpleName);
 
 
-                    AnnotationMetadata annotation = entity.getAnnotation(ROO_REQUEST_FACTORY);
+                    AnnotationMetadata annotation = entity.getAnnotation(ROO_REQUEST_FACTORY_ENTITY);
                     if (annotation != null) {
                         AnnotationAttributeValue<String> attribute = annotation
-                                .getAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE);
+                                .getAttribute(RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE);
                         if (attribute == null || attribute.getValue().isEmpty()) {
                             dataDictionary.addSection("roots").setVariable("root",
                                     proxySimpleName);
@@ -268,14 +268,14 @@ public class BaseTemplateServiceImpl {
                         + "'");
 
         for (final ClassOrInterfaceTypeDetails gwtBootstrapEntity : typeLocationService
-                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY)) {
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_ENTITY)) {
             AnnotationMetadata annotation = gwtBootstrapEntity
-                    .getAnnotation(ROO_REQUEST_FACTORY);
+                    .getAnnotation(ROO_REQUEST_FACTORY_ENTITY);
             if (annotation == null) {
                 continue;
             }
             AnnotationAttributeValue<String> annotationAttributeValue = annotation
-                    .getAttribute(RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE);
+                    .getAttribute(RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE);
             if (annotationAttributeValue == null) {
                 continue;
             }
@@ -328,8 +328,8 @@ public class BaseTemplateServiceImpl {
 
 
         final String parentPropertyName = RequestFactoryUtils
-                .getStringAnnotationValue(mirroredType, ROO_REQUEST_FACTORY,
-                        RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE, "");
+                .getStringAnnotationValue(mirroredType, ROO_REQUEST_FACTORY_ENTITY,
+                        RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE, "");
 
         final JavaType nonKeyIdType = idType.equals(KEY) ? STRING : idType;
         final String getId = idType.equals(KEY) ? "getStringId" : "getId";
@@ -384,8 +384,8 @@ public class BaseTemplateServiceImpl {
             final ClassOrInterfaceTypeDetails parentDetails = typeLocationService
                     .getTypeDetails(parentType);
             final String grandParentPropertyName = RequestFactoryUtils
-                    .getStringAnnotationValue(parentDetails, ROO_REQUEST_FACTORY,
-                            RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE, "");
+                    .getStringAnnotationValue(parentDetails, ROO_REQUEST_FACTORY_ENTITY,
+                            RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE, "");
 
             final String gotoParentPlaceStmt = "requests." + StringUtils.uncapitalize(parentTypeName)
                     + "Request().find" + parentTypeName + (KEY.equals(idType) ? "ByStringId" : "")
@@ -461,20 +461,20 @@ public class BaseTemplateServiceImpl {
 
     protected boolean isPrimaryProp(final RequestFactoryProxyProperty prop,
             final ClassOrInterfaceTypeDetails entity) {
-        return isRenderProp(prop, entity, RooRequestFactory.
+        return isRenderProp(prop, entity, RooRequestFactoryEntity.
                 PRIMARY_PROPERTY_ATTRIBUTE);
     }
 
     protected boolean isSecondaryProp(final RequestFactoryProxyProperty prop,
             final ClassOrInterfaceTypeDetails entity) {
-        return isRenderProp(prop, entity, RooRequestFactory.
+        return isRenderProp(prop, entity, RooRequestFactoryEntity.
                 SECONDARY_PROPERTY_ATTRIBUTE);
     }
 
     private boolean isRenderProp(final RequestFactoryProxyProperty prop,
             final ClassOrInterfaceTypeDetails entity,
             final String propertyAttribute) {
-        AnnotationMetadata annotation = entity.getAnnotation(ROO_REQUEST_FACTORY);
+        AnnotationMetadata annotation = entity.getAnnotation(ROO_REQUEST_FACTORY_ENTITY);
         if (annotation == null) {
             return false;
         }

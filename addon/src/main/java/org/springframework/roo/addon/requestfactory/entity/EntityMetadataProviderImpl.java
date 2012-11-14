@@ -4,8 +4,9 @@ package org.springframework.roo.addon.requestfactory.entity;
 import static org.springframework.roo.addon.requestfactory.entity.EntityDataKeys.COUNT_BY_PARENT_METHOD;
 import static org.springframework.roo.addon.requestfactory.entity.EntityDataKeys.FIND_BY_STRING_ID_METHOD;
 import static org.springframework.roo.addon.requestfactory.entity.EntityDataKeys.FIND_ENTRIES_BY_PARENT_METHOD;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY;
+import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_ENTITY;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
+import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvide
      */
     protected void activate(ComponentContext context) {
         metadataDependencyRegistry.registerDependency(PhysicalTypeIdentifier.getMetadataIdentiferType(), getProvidesType());
-        addMetadataTrigger(ROO_REQUEST_FACTORY);
+        addMetadataTrigger(ROO_REQUEST_FACTORY_ENTITY);
         registerMatchers();
     }
 
@@ -69,7 +70,7 @@ public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvide
      */
     protected void deactivate(ComponentContext context) {
         metadataDependencyRegistry.deregisterDependency(PhysicalTypeIdentifier.getMetadataIdentiferType(), getProvidesType());
-        removeMetadataTrigger(ROO_REQUEST_FACTORY);
+        removeMetadataTrigger(ROO_REQUEST_FACTORY_ENTITY);
         customDataKeyDecorator.unregisterMatchers(getClass());
     }
 
@@ -116,6 +117,7 @@ public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvide
                 return null;
             }
         }
+        final boolean activeRecord = memberDetails.getAnnotation(ROO_JPA_ACTIVE_RECORD) != null;
 
         final String entityName = StringUtils.defaultIfEmpty(
                 jpaEntityAnnotationValues.getEntityName(),
@@ -136,8 +138,9 @@ public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvide
 
         // Pass dependencies required by the metadata in through its constructor
         return new EntityMetadata(metadataIdentificationString, aspectName,
-                crudAnnotationValues, governorPhysicalTypeMetadata, scaffoldAnnotationValues,
-                pluralMetadata.getPlural(), idField, parentProperty, entityName, isGaeEnabled);
+                crudAnnotationValues, governorPhysicalTypeMetadata,
+                pluralMetadata.getPlural(), idField, parentProperty,
+                entityName, isGaeEnabled, activeRecord);
     }
 
     /**
@@ -171,7 +174,7 @@ public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvide
         final MemberHoldingTypeDetailsMetadataItem<?> governor = (MemberHoldingTypeDetailsMetadataItem<?>) metadataService
                 .get(physicalTypeId);
         if (MemberFindingUtils.getAnnotationOfType(governor,
-                ROO_REQUEST_FACTORY) == null) {
+                ROO_REQUEST_FACTORY_ENTITY) == null) {
             // The type is not annotated with @RooGwtBootstrap
             return null;
         }
@@ -181,8 +184,8 @@ public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvide
     @SuppressWarnings("unchecked")
     private void registerMatchers() {
         customDataKeyDecorator.registerMatchers(getClass(),
-                new MethodMatcher(COUNT_BY_PARENT_METHOD, ROO_REQUEST_FACTORY, new JavaSymbolName("countByParentMethod"), "count", true, false, "ByParentId"),
-                new MethodMatcher(FIND_ENTRIES_BY_PARENT_METHOD, ROO_REQUEST_FACTORY, new JavaSymbolName("findEntriesByParentMethod"), "find", false, true, "EntriesByParentId"),
-                new MethodMatcher(FIND_BY_STRING_ID_METHOD, ROO_REQUEST_FACTORY, new JavaSymbolName("findByStringIdMethod"), "find", false, true, "ByStringId"));
+                new MethodMatcher(COUNT_BY_PARENT_METHOD, ROO_REQUEST_FACTORY_ENTITY, new JavaSymbolName("countByParentMethod"), "count", true, false, "ByParentId"),
+                new MethodMatcher(FIND_ENTRIES_BY_PARENT_METHOD, ROO_REQUEST_FACTORY_ENTITY, new JavaSymbolName("findEntriesByParentMethod"), "find", false, true, "EntriesByParentId"),
+                new MethodMatcher(FIND_BY_STRING_ID_METHOD, ROO_REQUEST_FACTORY_ENTITY, new JavaSymbolName("findByStringIdMethod"), "find", false, true, "ByStringId"));
     }
 }

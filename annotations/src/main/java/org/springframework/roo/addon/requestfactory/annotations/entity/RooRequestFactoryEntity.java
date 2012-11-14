@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
-public @interface RooRequestFactory {
+public @interface RooRequestFactoryEntity {
 
     String PARENT_PROPERTY_ATTRIBUTE = "parent";
     String PARENT_PROPERTY_DEFAULT = "";

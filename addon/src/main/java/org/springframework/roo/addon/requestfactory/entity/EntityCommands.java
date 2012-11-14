@@ -5,7 +5,7 @@ import java.util.Set;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
-import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactory;
+import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactoryEntity;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.shell.CliAvailabilityIndicator;
@@ -30,9 +30,9 @@ public class EntityCommands implements CommandMarker {
 
     @CliCommand(value = SCAFFOLD_COMMAND, help = "Configure entity for GWT Bootstrap")
     public void add(@CliOption(key = "type", mandatory = false, unspecifiedDefaultValue = "*", help = "The entity to configure") JavaType target,
-            @CliOption(key = RooRequestFactory.PARENT_PROPERTY_ATTRIBUTE, mandatory = false, help = "The name of the field of the parent") final JavaSymbolName parentProperty,
-            @CliOption(key = RooRequestFactory.PRIMARY_PROPERTY_ATTRIBUTE, mandatory = false, help = "Primary property to be used when rendering") final JavaSymbolName primaryProperty,
-            @CliOption(key = RooRequestFactory.SECONDARY_PROPERTY_ATTRIBUTE, mandatory = false, help = "Secondary property to be used when rendering") final JavaSymbolName secondaryProperty) {
+            @CliOption(key = RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE, mandatory = false, help = "The name of the field of the parent") final JavaSymbolName parentProperty,
+            @CliOption(key = RooRequestFactoryEntity.PRIMARY_PROPERTY_ATTRIBUTE, mandatory = false, help = "Primary property to be used when rendering") final JavaSymbolName primaryProperty,
+            @CliOption(key = RooRequestFactoryEntity.SECONDARY_PROPERTY_ATTRIBUTE, mandatory = false, help = "Secondary property to be used when rendering") final JavaSymbolName secondaryProperty) {
         operations.annotateType(target, parentProperty, primaryProperty, secondaryProperty);
     }
 
