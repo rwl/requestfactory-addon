@@ -11,6 +11,7 @@ import static org.springframework.roo.addon.requestfactory.account.AccountJavaTy
 import static org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP_SCAFFOLD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
+import static org.springframework.roo.model.RooJavaType.ROO_MONGO_ENTITY;
 import static org.springframework.roo.model.SpringJavaType.LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN;
 import static org.springframework.roo.project.Path.ROOT;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
@@ -577,7 +578,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
     private String getEntityModuleName() {
         final ClassOrInterfaceTypeDetails entity = typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
-                        ROO_JPA_ACTIVE_RECORD).iterator().next();
+                        ROO_JPA_ACTIVE_RECORD, ROO_MONGO_ENTITY).iterator().next();
         final String entityModule = PhysicalTypeIdentifier.getPath(
                 entity.getDeclaredByMetadataId()).getModule();
         return entityModule;

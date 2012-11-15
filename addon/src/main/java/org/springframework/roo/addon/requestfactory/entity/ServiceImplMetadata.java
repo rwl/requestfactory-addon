@@ -240,9 +240,9 @@ public class ServiceImplMetadata extends
                 + "Repository" + ".findOne(" + idParam + ");");
 
         bodyBuilder.appendFormalLine("return " + StringUtils.uncapitalize(
-                domainType.getSimpleTypeName()) + "Repository.countBy"
+                domainType.getSimpleTypeName()) + "Repository.findBy"
                 + parentProperty.getFieldType().getSimpleTypeName()
-                + "(parent);");
+                + "(parent).size();");
 
         MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
                 getId(), Modifier.PUBLIC, methodName, LONG_PRIMITIVE,

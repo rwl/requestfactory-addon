@@ -14,6 +14,7 @@ import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType
 import static org.springframework.roo.classpath.PhysicalTypeCategory.INTERFACE;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
+import static org.springframework.roo.model.RooJavaType.ROO_MONGO_ENTITY;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
 
 import java.util.ArrayList;
@@ -156,7 +157,7 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
     public void proxyAll(final JavaPackage proxyPackage, final Pom serverModule) {
         for (final ClassOrInterfaceTypeDetails entity : typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
-                        ROO_JPA_ACTIVE_RECORD)) {
+                        ROO_JPA_ACTIVE_RECORD, ROO_MONGO_ENTITY)) {
             createProxy(entity, proxyPackage, serverModule);
         }
         //copyDirectoryContents(RequestFactoryPath.LOCATOR);
@@ -177,7 +178,7 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
     public void requestAll(final JavaPackage proxyPackage) {
         for (final ClassOrInterfaceTypeDetails entity : typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
-                        ROO_JPA_ACTIVE_RECORD)) {
+                        ROO_JPA_ACTIVE_RECORD, ROO_MONGO_ENTITY)) {
             createRequestInterfaceIfNecessary(entity, proxyPackage);
         }
     }

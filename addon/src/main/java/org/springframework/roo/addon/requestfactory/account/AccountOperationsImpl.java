@@ -3,6 +3,7 @@ package org.springframework.roo.addon.requestfactory.account;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
+import static org.springframework.roo.model.RooJavaType.ROO_MONGO_ENTITY;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
 
 import java.io.File;
@@ -90,7 +91,8 @@ public class AccountOperationsImpl implements AccountOperations {
         if (!projectOperations.isFocusedProjectAvailable()) {
             return false;
         }
-        if (typeLocationService.findTypesWithAnnotation(ROO_JPA_ACTIVE_RECORD, ROO_JPA_ENTITY).size() == 0) {
+        if (typeLocationService.findTypesWithAnnotation(ROO_JPA_ACTIVE_RECORD,
+                ROO_JPA_ENTITY, ROO_MONGO_ENTITY).size() == 0) {
             return false;
         }
         return true;

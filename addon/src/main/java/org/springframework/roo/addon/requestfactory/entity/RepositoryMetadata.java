@@ -2,8 +2,8 @@ package org.springframework.roo.addon.requestfactory.entity;
 
 import static org.springframework.roo.addon.requestfactory.entity.RepositoryJavaType.PAGE;
 import static org.springframework.roo.addon.requestfactory.entity.RepositoryJavaType.PAGEABLE;
-import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
 import static java.lang.reflect.Modifier.ABSTRACT;
+import static org.springframework.roo.model.JdkJavaType.LIST;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,7 +77,7 @@ public class RepositoryMetadata extends AbstractItdTypeDetailsProvidingMetadataI
         }
 
         builder.addMethod(getFindEntriesByParentMethod());
-        builder.addMethod(getCountByParentMethod());
+        builder.addMethod(getFindByParentMethod());
 
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
@@ -121,12 +121,12 @@ public class RepositoryMetadata extends AbstractItdTypeDetailsProvidingMetadataI
         return methodBuilder.build();
     }
 
-    private MethodMetadata getCountByParentMethod() {
+    private MethodMetadata getFindByParentMethod() {
         if (parentProperty == null) {
             return null;
         }
 
-        final JavaSymbolName methodName = new JavaSymbolName("countBy"
+        final JavaSymbolName methodName = new JavaSymbolName("findBy"
                 + parentProperty.getFieldName()
                 .getSymbolNameCapitalisedFirstLetter());
 
@@ -136,6 +136,10 @@ public class RepositoryMetadata extends AbstractItdTypeDetailsProvidingMetadataI
             return method;
         }
 
+        final JavaType returnType = new JavaType(
+                LIST.getFullyQualifiedTypeName(), 0, DataType.TYPE, null,
+                Arrays.asList(domainType));
+
         final JavaType[] parameterTypes = { parentProperty.getFieldType() };
 
         final String parentParamName = StringUtils.uncapitalize(parentProperty
@@ -144,7 +148,7 @@ public class RepositoryMetadata extends AbstractItdTypeDetailsProvidingMetadataI
                 new JavaSymbolName(parentParamName));
         
         MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
-                getId(), ABSTRACT, methodName, LONG_PRIMITIVE,
+                getId(), ABSTRACT, methodName, returnType,
                 AnnotatedJavaType.convertFromJavaTypes(parameterTypes),
                 parameterNames, BODY);
 

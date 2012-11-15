@@ -23,6 +23,7 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
                 "Project with multiple RequestFactory client modules");
         config.addCommandConfig(createCommandConfigProjectSetup());
         config.addCommandConfig(createDomainFocusCommandConfig("jpa setup"));
+        config.addCommandConfig(createDomainFocusCommandConfig("mongo setup"));
         config.addCommandConfig(createDomainFocusCommandConfig("entity"));
         config.addCommandConfig(createDomainFocusCommandConfig("enum type"));
         config.addCommandConfig(createDomainFocusCommandConfig("repository"));

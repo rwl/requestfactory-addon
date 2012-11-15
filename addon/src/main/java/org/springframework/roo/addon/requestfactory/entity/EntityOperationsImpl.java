@@ -71,7 +71,8 @@ public class EntityOperationsImpl implements EntityOperations {
         if (!projectOperations.isFocusedProjectAvailable()) {
             return false;
         }
-        if (typeLocationService.findTypesWithAnnotation(ROO_JPA_ACTIVE_RECORD, ROO_JPA_ENTITY).size() == 0) {
+        if (typeLocationService.findTypesWithAnnotation(ROO_JPA_ACTIVE_RECORD, 
+               ROO_JPA_ENTITY, ROO_MONGO_ENTITY).size() == 0) {
             return false;
         }
         return true;
