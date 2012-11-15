@@ -65,7 +65,7 @@ public class {{=className}} extends AbstractProxyListView<{{=proxy}}> {
         table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
         init();
         newButton.setText(messages.create{{=name}}());
-        backButton.setText(messages.back());
+        {{#hasParent}}backButton.setText(messages.back());{{/hasParent}}
     }
 
     public void init() {
