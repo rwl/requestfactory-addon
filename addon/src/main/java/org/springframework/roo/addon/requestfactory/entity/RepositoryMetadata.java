@@ -76,8 +76,8 @@ public class RepositoryMetadata extends AbstractItdTypeDetailsProvidingMetadataI
             return;
         }
 
-        builder.addMethod(getFindEntriesByParentMethod());
-        builder.addMethod(getFindByParentMethod());
+//        builder.addMethod(getFindEntriesByParentMethod());
+//        builder.addMethod(getFindByParentMethod());
 
         // Create a representation of the desired output ITD
         itdTypeDetails = builder.build();
@@ -109,9 +109,6 @@ public class RepositoryMetadata extends AbstractItdTypeDetailsProvidingMetadataI
         final JavaType returnType = new JavaType(
                 PAGE.getFullyQualifiedTypeName(), 0, DataType.TYPE, null,
                 Arrays.asList(domainType));
-        
-        final InvocableMemberBodyBuilder builder = new InvocableMemberBodyBuilder();
-        builder.appendFormalLine("return null;");
 
         MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
                 getId(), ABSTRACT, methodName, returnType,
