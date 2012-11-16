@@ -1,4 +1,4 @@
-package org.mothwatch.client.managed;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import com.github.gwtbootstrap.client.ui.SimplePager.ImageButtonsConstants;
 
