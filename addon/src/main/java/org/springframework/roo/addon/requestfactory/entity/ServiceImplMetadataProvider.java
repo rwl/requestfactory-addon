@@ -81,7 +81,7 @@ public class ServiceImplMetadataProvider extends
     }
 
     public String getItdUniquenessFilenameSuffix() {
-        return "RequestFactory";
+        return "RequestFactory_Service";
     }
 
     @Override
