@@ -110,7 +110,7 @@ public class RequestFactoryLocatorMetadataProviderImpl implements
                 .getIdentifierAccessor(entity);
         final MethodMetadata versionAccessor = persistenceMemberLocator
                 .getVersionAccessor(entity);
-        if (identifierAccessor == null || versionAccessor == null) {
+        if (identifierAccessor == null) {
             return null;
         }
 
@@ -311,9 +311,13 @@ public class RequestFactoryLocatorMetadataProviderImpl implements
             final JavaType targetType, final MethodMetadata versionAccessor) {
         final InvocableMemberBodyBuilder invocableMemberBodyBuilder = InvocableMemberBodyBuilder
                 .getInstance();
-        invocableMemberBodyBuilder.append("return "
-                + StringUtils.uncapitalize(targetType.getSimpleTypeName())
-                + "." + versionAccessor.getMethodName() + "();");
+        if (versionAccessor != null) {
+            invocableMemberBodyBuilder.append("return "
+                    + StringUtils.uncapitalize(targetType.getSimpleTypeName())
+                    + "." + versionAccessor.getMethodName() + "();");
+        } else {
+            invocableMemberBodyBuilder.append("return 1L;");
+        }
         final MethodMetadataBuilder getIdMethodBuilder = new MethodMetadataBuilder(
                 declaredById, Modifier.PUBLIC,
                 new JavaSymbolName("getVersion"), JavaType.OBJECT,
