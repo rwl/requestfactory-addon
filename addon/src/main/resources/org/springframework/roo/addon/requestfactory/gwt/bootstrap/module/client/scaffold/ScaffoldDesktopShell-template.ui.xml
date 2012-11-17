@@ -37,13 +37,12 @@
 
 		.content {
 			position: relative;
-			border: 1px solid #ddf;
+			border-left: 1px solid #ddf;
+			border-bottom: 1px solid #ddf;
 			overflow-y: auto;
 			overflow-x: hidden;
-			-moz-border-radius-bottomleft: 10px;
-			-webkit-border-bottom-left-radius: 10px;
-			-moz-border-radius-bottomright: 10px;
-			-webkit-border-bottom-right-radius: 10px;
+			-moz-border-radius-bottomleft: 15px;
+			-webkit-border-bottom-left-radius: 15px;
 		}
 
 		.entities {
