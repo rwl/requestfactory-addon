@@ -56,12 +56,23 @@ public class {{=className}} extends AbstractProxyListActivity<{{=proxy}}> implem
         return false;
     }
 
-    protected Request<List<{{=proxy}}>> createRangeRequest(Range range) {
-        return requests.{{=nameUncapitalized}}Request().{{=findEntitiesMethod}};
+    protected Request<List<{{=proxy}}>> createRangeRequest(Range range) {{{#isRoot}}
+		return requests.{{=nameUncapitalized}}Request().{{=findEntitiesMethod}};{{/isRoot}}{{#hasParent}}
+		if (parentId == null) {
+		    return requests.{{=nameUncapitalized}}Request().{{=findEntitiesMethod}};
+		} else {
+		    return requests.{{=nameUncapitalized}}Request().{{=findEntitiesByParentMethod}};
+		}
+		{{/hasParent}}
     }
 
-    protected void fireCountRequest(Receiver<Long> callback) {
-        requests.{{=nameUncapitalized}}Request().{{=countEntitiesMethod}}.fire(callback);
+    protected void fireCountRequest(Receiver<Long> callback) {{{#isRoot}}
+		requests.{{=nameUncapitalized}}Request().{{=countEntitiesMethod}}.fire(callback);{{/isRoot}}{{#hasParent}}
+		if (parentId == null) {
+		    requests.{{=nameUncapitalized}}Request().{{=countEntitiesMethod}}.fire(callback);
+		} else {
+		    requests.{{=nameUncapitalized}}Request().{{=countEntitiesByParentMethod}}.fire(callback);
+		}{{/hasParent}}
     }
 
     protected ProxyListView<{{=proxy}}> initView() {

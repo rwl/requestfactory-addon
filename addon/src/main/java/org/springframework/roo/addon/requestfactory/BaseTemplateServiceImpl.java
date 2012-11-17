@@ -159,11 +159,6 @@ public class BaseTemplateServiceImpl {
                     dataDictionary.addSection("proxys").setVariable("proxy",
                             proxySimpleName);
 
-                    if (requestFactoryTypeService.getParentField(entity) == null) {
-                        dataDictionary.addSection("roots").setVariable("root",
-                                proxySimpleName);
-                    }
-
                     final String entity1 = new StringBuilder("\t\tif (")
                             .append(proxySimpleName)
                             .append(".class.equals(clazz)) {\n\t\t\tprocessor.handle")
@@ -259,7 +254,7 @@ public class BaseTemplateServiceImpl {
 
         for (final ClassOrInterfaceTypeDetails requestFactoryEntity : typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_ENTITY)) {
-            
+
             FieldMetadata parentProperty = requestFactoryTypeService.getParentField(requestFactoryEntity);
             if (parentProperty == null) {
                 continue;
@@ -311,32 +306,37 @@ public class BaseTemplateServiceImpl {
         final String getId = idType.equals(KEY) ? "getStringId" : "getId";
         dataDictionary.setVariable("getId", getId);
 
-        final String countMethodId, findMethodId, countCall, findCall;
-        final List<MethodParameter> findParameters, countParamemters;
-        if (parentProperty == null) {
-            countMethodId = CustomDataKeys.COUNT_ALL_METHOD.name();
-            findMethodId = CustomDataKeys.FIND_ENTRIES_METHOD.name();
-            countCall = "()";
-            findCall = "(range.getStart(), range.getLength())";
-            countParamemters = Arrays.asList();
-            findParameters = Arrays.asList(new MethodParameter(
-                    INT_PRIMITIVE, "firstResult"), new MethodParameter(
-                    INT_PRIMITIVE, "maxResults"));
-        } else {
+        if (parentProperty != null) {
             final String parentPropertyName = parentProperty.getFieldName().getSymbolName();
             dataDictionary.showSection("hasParent");
 
-            countMethodId = EntityDataKeys.COUNT_BY_PARENT_METHOD.name();
-            findMethodId = EntityDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.name();
             final String parentId = nonKeyIdType.getSimpleTypeName() + ".valueOf(parentId)";
-            countCall = "(" + parentId + ")";
-            findCall = "(" + parentId + ", range.getStart(), range.getLength())";
-            countParamemters = Arrays.asList(new MethodParameter(
-                    nonKeyIdType, parentPropertyName + "Id"));
-            findParameters = Arrays.asList(new MethodParameter(
-                    nonKeyIdType, parentPropertyName + "Id"), new MethodParameter(
-                    INT_PRIMITIVE, "firstResult"), new MethodParameter(
-                    INT_PRIMITIVE, "maxResults"));
+
+            final MemberTypeAdditions findMethodAdditions = layerService
+                    .getMemberTypeAdditions(metadataIdentificationString,
+                            EntityDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.name(),
+                            entity, nonKeyIdType, LAYER_POSITION,
+                            Arrays.asList(new MethodParameter(
+                                    nonKeyIdType, parentPropertyName + "Id"),
+                                    new MethodParameter(INT_PRIMITIVE, "firstResult"),
+                                    new MethodParameter(INT_PRIMITIVE, "maxResults")));
+            Validate.notNull(findMethodAdditions,
+                    "Find entries method is not available for entity '" + entityName + "'");
+            dataDictionary.setVariable("findEntitiesByParentMethod",
+                    findMethodAdditions.getMethodName() + "(" + parentId
+                    + ", range.getStart(), range.getLength())");
+
+
+            final MemberTypeAdditions countMethodAdditions = layerService
+                    .getMemberTypeAdditions(metadataIdentificationString,
+                            EntityDataKeys.COUNT_BY_PARENT_METHOD.name(), entity, nonKeyIdType, LAYER_POSITION,
+                            Arrays.asList(new MethodParameter(
+                                    nonKeyIdType, parentPropertyName + "Id")));
+            Validate.notNull(countMethodAdditions,
+                    "Count method is not available for entity '" + entityName + "'");
+            dataDictionary.setVariable("countEntitiesByParentMethod",
+                    countMethodAdditions.getMethodName() + "(" + parentId + ")");
+
 
             Validate.notNull(parentProperty, "Parent property not found");
             final JavaType parentType = parentProperty.getFieldType();
@@ -371,30 +371,37 @@ public class BaseTemplateServiceImpl {
                     + "@Override\n"
                     + "public void onSuccess(" + parentProxyName + " response) {\n"
                     + "placeController.goTo(new ProxyPlace(response.stableId(), Operation.DETAILS, "
-                    + (grandParentPropertyName.isEmpty() ? "null" : "String.valueOf(response.get" + StringUtils.capitalize(grandParentPropertyName) + "()." + getId + "())")
+                    + (grandParentPropertyName.isEmpty() ? "null" : "String.valueOf(response.get"
+                    + StringUtils.capitalize(grandParentPropertyName) + "()." + getId + "())")
                     + "));\n"
                     + "}\n"
                     + "});";
             dataDictionary.setVariable("gotoParentPlaceStmt", gotoParentPlaceStmt);
+        } else {
+            dataDictionary.showSection("isRoot");
         }
 
         final MemberTypeAdditions findMethodAdditions = layerService
                 .getMemberTypeAdditions(metadataIdentificationString,
-                        findMethodId, entity, nonKeyIdType, LAYER_POSITION,
-                        findParameters);
+                        CustomDataKeys.FIND_ENTRIES_METHOD.name(), entity, nonKeyIdType, LAYER_POSITION,
+                        Arrays.asList(new MethodParameter(
+                                INT_PRIMITIVE, "firstResult"), new MethodParameter(
+                                INT_PRIMITIVE, "maxResults")));
         Validate.notNull(findMethodAdditions,
                 "Find entries method is not available for entity '" + entityName + "'");
         dataDictionary.setVariable("findEntitiesMethod",
-                findMethodAdditions.getMethodName() + findCall);
+                findMethodAdditions.getMethodName() + "(range.getStart(), range.getLength())");
+
 
         final MemberTypeAdditions countMethodAdditions = layerService
                 .getMemberTypeAdditions(metadataIdentificationString,
-                        countMethodId, entity, nonKeyIdType, LAYER_POSITION,
-                        countParamemters);
+                        CustomDataKeys.COUNT_ALL_METHOD.name(), entity,
+                        nonKeyIdType, LAYER_POSITION,
+                        new ArrayList<MethodParameter>());
         Validate.notNull(countMethodAdditions,
                 "Count method is not available for entity '" + entityName + "'");
         dataDictionary.setVariable("countEntitiesMethod",
-                countMethodAdditions.getMethodName() + countCall);
+                countMethodAdditions.getMethodName() + "()");
 
 
         for (final RequestFactoryType reference : type.getReferences()) {

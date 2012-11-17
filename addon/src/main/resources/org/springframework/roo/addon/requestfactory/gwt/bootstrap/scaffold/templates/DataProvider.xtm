@@ -20,13 +20,24 @@ public class {{=className}} extends AbstractListDataProvider<{{=proxy}}> {
 	}
 
 	@Override
-	public Request<Long> getCountRequest() {
-		return requestFactory.{{=nameUncapitalized}}Request().{{=countEntitiesMethod}};
+	public Request<Long> getCountRequest() {{{#isRoot}}
+		return requestFactory.{{=nameUncapitalized}}Request().{{=countEntitiesMethod}};{{/isRoot}}{{#hasParent}}
+		if (parentId == null) {
+		    return requestFactory.{{=nameUncapitalized}}Request().{{=countEntitiesMethod}};
+		} else {
+		    return requestFactory.{{=nameUncapitalized}}Request().{{=countEntitiesByParentMethod}};
+		}{{/hasParent}}
 	}
 
 	@Override
-	public Request<List<{{=proxy}}>> getEntitiesRequest(Range range) {
-		return requestFactory.{{=nameUncapitalized}}Request().{{=findEntitiesMethod}};
+	public Request<List<{{=proxy}}>> getEntitiesRequest(Range range) {{{#isRoot}}
+		return requestFactory.{{=nameUncapitalized}}Request().{{=findEntitiesMethod}};{{/isRoot}}{{#hasParent}}
+		if (parentId == null) {
+		    return requestFactory.{{=nameUncapitalized}}Request().{{=findEntitiesMethod}};
+		} else {
+		    return requestFactory.{{=nameUncapitalized}}Request().{{=findEntitiesByParentMethod}};
+		}
+		{{/hasParent}}
 	}
 
 	@Override

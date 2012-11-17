@@ -29,8 +29,8 @@ public abstract class {{=className}}<T> {
 	 */
 	public static Set<Class<? extends EntityProxy>> getAll() {
 		Set<Class<? extends EntityProxy>> rtn = new HashSet<Class<? extends EntityProxy>>();
-{{#roots}}
-		rtn.add({{=root}}.class);{{/roots}}
+{{#proxys}}
+		rtn.add({{=proxy}}.class);{{/proxys}}
 
 		return Collections.unmodifiableSet(rtn);
 	}
