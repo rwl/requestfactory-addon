@@ -22,68 +22,71 @@ import com.google.inject.Inject;
  */
 public class ScaffoldDesktopShell extends Composite {
 
-	interface Binder extends UiBinder<Widget, ScaffoldDesktopShell> {
-	}
+    interface Binder extends UiBinder<Widget, ScaffoldDesktopShell> {
+    }
 
-	private static final Binder BINDER = GWT.create(Binder.class);
+    private static final Binder BINDER = GWT.create(Binder.class);
 
     private final ApplicationMessages messages = GWT.create(ApplicationMessages.class);
 
-	@UiField SimplePanel details;
-	@UiField HasText nickname;
-	@UiField HasClickHandlers signout;
-	@UiField SimplePanel master;
-	@UiField NotificationMole mole;
-	@UiField(provided = true)
-	NavigationTree navigationTree;
+    @UiField SimplePanel details;
+    @UiField HasText nickname;
+    @UiField HasClickHandlers signout;
+    @UiField SimplePanel master;
+    @UiField NotificationMole mole;
+    @UiField(provided = true)
+    NavigationTree navigationTree;
+    @UiField SplitLayoutPanel splitPanel;
 
     @Inject
-	public ScaffoldDesktopShell(ApplicationRequestFactory requestFactory, PlaceController placeController) {
+    public ScaffoldDesktopShell(ApplicationRequestFactory requestFactory, PlaceController placeController) {
         this.navigationTree = new NavigationTree(requestFactory, placeController);
-		initWidget(BINDER.createAndBindUi(this));
-		nickname.setText(messages.notSignedIn());
-		mole.setMessage(messages.loading());
-	}
+        initWidget(BINDER.createAndBindUi(this));
+        nickname.setText(messages.notSignedIn());
+        mole.setMessage(messages.loading());
+        splitPanel.setWidgetMinSize(navigationTree, 150);
+        splitPanel.setWidgetSnapClosedSize(navigationTree, 120);
+    }
 
-	/**
-	 * @return the panel to hold the details
-	 */
-	public SimplePanel getDetailsPanel() {
-		return details;
-	}
+    /**
+     * @return the panel to hold the details
+     */
+    public SimplePanel getDetailsPanel() {
+        return details;
+    }
 
-	/**
-	 * @return the panel to hold the master list
-	 */
-	public SimplePanel getMasterPanel() {
-		return master;
-	}
+    /**
+     * @return the panel to hold the master list
+     */
+    public SimplePanel getMasterPanel() {
+        return master;
+    }
 
-	/**
-	 * @return the notification mole for loading feedback
-	 */
-	public NotificationMole getMole() {
-		return mole;
-	}
+    /**
+     * @return the notification mole for loading feedback
+     */
+    public NotificationMole getMole() {
+        return mole;
+    }
 
-	/**
-	 * @return the navigator
-	 */
-	public NavigationTree getNavigationTree() {
-		return navigationTree;
-	}
+    /**
+     * @return the navigator
+     */
+    public NavigationTree getNavigationTree() {
+        return navigationTree;
+    }
 
-	/**
-	 * @return the nickname widget
-	 */
-	public HasText getNicknameWidget() {
-		return nickname;
-	}
+    /**
+     * @return the nickname widget
+     */
+    public HasText getNicknameWidget() {
+        return nickname;
+    }
 
-	/**
-	 * @return the sign out widget
-	 */
-	public HasClickHandlers getSignOutWidget() {
-		return signout;
-	}
+    /**
+     * @return the sign out widget
+     */
+    public HasClickHandlers getSignOutWidget() {
+        return signout;
+    }
 }

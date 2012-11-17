@@ -89,6 +89,19 @@
 			margin-right: auto;
 			text-align: right;
 		}
+
+		@external .gwt-SplitLayoutPanel-HDragger;
+		@external .gwt-SplitLayoutPanel-VDragger;
+
+		.splitLayoutPanel .gwt-SplitLayoutPanel-HDragger {
+		    background:#fff;
+		    cursor: col-resize;
+		}
+
+		.splitLayoutPanel .gwt-SplitLayoutPanel-VDragger {
+		    background: #fff;
+		    cursor: row-resize;
+		}
 	</ui:style>
 
 	<g:DockLayoutPanel unit='PX'>
@@ -120,13 +133,20 @@
 			<s:NavigationTree ui:field='navigationTree'/>
 		</g:west>
 		<g:center>
-			<g:FlowPanel styleName='{style.content} {style.widescreen}'>
-				<g:FlowPanel>
-					<g:NotificationMole animationDuration='0' ui:field='mole'></g:NotificationMole>
-					<g:SimplePanel styleName="{style.entityDetails}" ui:field='master'></g:SimplePanel>
-				</g:FlowPanel>
-				<g:SimplePanel styleName="{style.entityDetails}" ui:field='details'></g:SimplePanel>
-			</g:FlowPanel>
+			<g:SplitLayoutPanel ui:field='splitPanel' styleName='{style.splitLayoutPanel}'>
+			    <g:west size="220">
+					<s:NavigationTree ui:field='navigationTree'/>
+			    </g:west>
+			    <g:center>
+					<g:FlowPanel styleName='{style.content} {style.widescreen}'>
+						<g:FlowPanel>
+							<g:NotificationMole animationDuration='0' ui:field='mole'></g:NotificationMole>
+							<g:SimplePanel styleName="{style.entityDetails}" ui:field='master'></g:SimplePanel>
+						</g:FlowPanel>
+						<g:SimplePanel styleName="{style.entityDetails}" ui:field='details'></g:SimplePanel>
+					</g:FlowPanel>
+			    </g:center>
+			</g:SplitLayoutPanel>
 		</g:center>
 	</g:DockLayoutPanel>
 </ui:UiBinder>
