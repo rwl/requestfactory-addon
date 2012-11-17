@@ -1,17 +1,16 @@
 package org.springframework.roo.addon.requestfactory.entity;
 
-import static java.lang.reflect.Modifier.ABSTRACT;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_ENTITY;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_REPOSITORY;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_SERVICE;
 import static org.springframework.roo.addon.requestfactory.entity.RepositoryJavaType.PAGE;
 import static org.springframework.roo.addon.requestfactory.entity.RepositoryJavaType.PAGEABLE;
+import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 import static org.springframework.roo.model.RooJavaType.ROO_MONGO_ENTITY;
 import static org.springframework.roo.model.RooJavaType.ROO_PLURAL;
 import static org.springframework.roo.model.RooJavaType.ROO_TO_STRING;
-import static org.springframework.roo.model.JdkJavaType.LIST;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
@@ -27,7 +25,7 @@ import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.layers.repository.jpa.RepositoryJpaLocator;
 import org.springframework.roo.addon.layers.repository.mongo.RepositoryMongoLocator;
 import org.springframework.roo.addon.layers.service.ServiceInterfaceLocator;
-import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
+import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactoryEntity;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.TypeLocationService;
@@ -83,6 +81,8 @@ public class EntityOperationsImpl implements EntityOperations {
     @Reference private RepositoryMongoLocator repositoryMongoLocator;
 
     @Reference private PathResolver pathResolver;
+    
+    @Reference private RequestFactoryTypeService requestFactoryTypeService;
 
     public boolean isCommandAvailable() {
         if (!projectOperations.isFocusedProjectAvailable()) {
@@ -95,13 +95,15 @@ public class EntityOperationsImpl implements EntityOperations {
         return true;
     }
 
-    public void annotateType(JavaType javaType, final JavaSymbolName parentProperty, final JavaSymbolName primaryProperty, final JavaSymbolName secondaryProperty) {
+    public void annotateType(JavaType javaType, final JavaSymbolName primaryProperty, final JavaSymbolName secondaryProperty) {
         Validate.notNull(javaType, "Java type required");
 
         ClassOrInterfaceTypeDetails domainTypeDetails = typeLocationService.getTypeDetails(javaType);
         if (domainTypeDetails == null) {
             return;
         }
+        
+        final FieldMetadata parentField = requestFactoryTypeService.getParentField(domainTypeDetails);
 
         boolean layered = false;
         for (ClassOrInterfaceTypeDetails service : serviceInterfaceLocator.getServiceInterfaces(javaType)) {
@@ -118,11 +120,11 @@ public class EntityOperationsImpl implements EntityOperations {
         if (layered) {
             if (MemberFindingUtils.getAnnotationOfType(domainTypeDetails.getAnnotations(), ROO_MONGO_ENTITY) != null) {
                 for (ClassOrInterfaceTypeDetails repository : repositoryMongoLocator.getRepositories(javaType)) {
-                    annotateRepository(domainTypeDetails, parentProperty, repository);
+                    annotateRepository(domainTypeDetails, parentField, repository);
                 }
             } else {
                 for (ClassOrInterfaceTypeDetails repository : repositoryJpaLocator.getRepositories(javaType)) {
-                    annotateRepository(domainTypeDetails, parentProperty, repository);
+                    annotateRepository(domainTypeDetails, parentField, repository);
                 }
             }
         } else if (MemberFindingUtils.getAnnotationOfType(domainTypeDetails.getAnnotations(), ROO_JPA_ACTIVE_RECORD) == null) {
@@ -134,9 +136,6 @@ public class EntityOperationsImpl implements EntityOperations {
             ClassOrInterfaceTypeDetailsBuilder classOrInterfaceTypeDetailsBuilder = new ClassOrInterfaceTypeDetailsBuilder(domainTypeDetails);
 
             AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_ENTITY);
-            if (parentProperty != null) {
-                annotationBuilder.addStringAttribute(RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE, parentProperty.getSymbolName());
-            }
             if (primaryProperty != null) {
                 annotationBuilder.addStringAttribute(RooRequestFactoryEntity.PRIMARY_PROPERTY_ATTRIBUTE, primaryProperty.getSymbolName());
             }
@@ -151,7 +150,7 @@ public class EntityOperationsImpl implements EntityOperations {
     }
 
     private void annotateRepository(final ClassOrInterfaceTypeDetails domainTypeDetails,
-            final JavaSymbolName parentFieldName,
+            final FieldMetadata parentField,
             final ClassOrInterfaceTypeDetails repository) {
         Validate.notNull(domainTypeDetails);
         Validate.notNull(repository);
@@ -163,20 +162,10 @@ public class EntityOperationsImpl implements EntityOperations {
             typeManagementService.createOrUpdateTypeOnDisk(classOrInterfaceTypeDetailsBuilder.build());
         }
 
-        if (parentFieldName != null && !StringUtils.isEmpty(parentFieldName.getSymbolName())) {
+        if (parentField != null) {
             final JavaSymbolName finderName = new JavaSymbolName("findBy"
-                    + parentFieldName.getSymbolNameCapitalisedFirstLetter());
+                    + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter());
             if (repository.getMethod(finderName) == null) {
-                FieldMetadata parentField = null;
-                for (FieldMetadata field : domainTypeDetails.getDeclaredFields()) {
-                    if (field.getFieldName().equals(parentFieldName)) {
-                        parentField = field;
-                        break;
-                    }
-                }
-                if (parentField == null) {
-                    return;
-                }
 
                 final String interfaceIdentifier = pathResolver
                         .getFocusedCanonicalPath(Path.SRC_MAIN_JAVA, repository.getType());
@@ -190,7 +179,7 @@ public class EntityOperationsImpl implements EntityOperations {
                 final JavaType[] entriesParameterTypes = { parentField.getFieldType(),
                         PAGEABLE };
                 final List<JavaSymbolName> entriesParameterNames = Arrays.asList(
-                        parentFieldName,
+                        parentField.getFieldName(),
                         new JavaSymbolName("pageable"));
 
                 final JavaType pageReturnType = new JavaType(
@@ -207,7 +196,7 @@ public class EntityOperationsImpl implements EntityOperations {
 
                 final JavaType[] parameterTypes = { parentField.getFieldType() };
                 final List<JavaSymbolName> parameterNames = Arrays.asList(
-                        parentFieldName );
+                        parentField.getFieldName());
 
                 final JavaType listReturnType = new JavaType(
                         LIST.getFullyQualifiedTypeName(), 0, DataType.TYPE, null,

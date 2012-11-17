@@ -10,6 +10,8 @@ import static org.springframework.roo.model.JdkJavaType.DATE;
 import static org.springframework.roo.model.JdkJavaType.LIST;
 import static org.springframework.roo.model.JdkJavaType.SET;
 import static org.springframework.roo.model.JpaJavaType.EMBEDDABLE;
+import static org.springframework.roo.model.JpaJavaType.MANY_TO_ONE;
+import static org.springframework.roo.model.JpaJavaType.ONE_TO_MANY;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -28,7 +30,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.classpath.PhysicalTypeCategory;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
@@ -40,6 +41,7 @@ import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.ConstructorMetadata;
 import org.springframework.roo.classpath.details.ConstructorMetadataBuilder;
+import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.classpath.details.FieldMetadataBuilder;
 import org.springframework.roo.classpath.details.IdentifiableAnnotatedJavaStructure;
 import org.springframework.roo.classpath.details.MemberHoldingTypeDetails;
@@ -83,6 +85,30 @@ public class BaseTypeServiceImpl {
 
     private final Set<String> warnings = new LinkedHashSet<String>();
     private final Timer warningTimer = new Timer();
+
+    public FieldMetadata getParentField(ClassOrInterfaceTypeDetails childType) {
+        for (FieldMetadata field : childType.getFieldsWithAnnotation(MANY_TO_ONE)) {
+            
+            final String fieldTypeId = typeLocationService
+                    .getPhysicalTypeIdentifier(field.getFieldType());
+            if (fieldTypeId == null
+                    || metadataService.get(fieldTypeId) == null) {
+                continue;
+            }
+            final MemberHoldingTypeDetails fieldType = ((PhysicalTypeMetadata) metadataService
+                    .get(fieldTypeId)).getMemberHoldingTypeDetails();
+            
+            for (FieldMetadata opposite : fieldType.getFieldsWithAnnotation(ONE_TO_MANY)) {
+                AnnotationMetadata oneToMany = opposite.getAnnotation(ONE_TO_MANY);
+                AnnotationAttributeValue<String> mappedBy = oneToMany.getAttribute("mappedBy");
+                if (mappedBy != null
+                        && mappedBy.getValue().equals(field.getFieldName().getSymbolName())) {
+                    return field;
+                }
+            }
+        }
+        return null;
+    }
 
     public List<ClassOrInterfaceTypeDetails> buildType(final RequestFactoryType destType,
             final ClassOrInterfaceTypeDetails templateClass,

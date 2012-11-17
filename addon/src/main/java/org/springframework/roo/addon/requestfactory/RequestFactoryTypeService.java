@@ -3,6 +3,7 @@ package org.springframework.roo.addon.requestfactory;
 import java.util.List;
 
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
+import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.classpath.details.MemberHoldingTypeDetails;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.model.JavaType;
@@ -14,6 +15,10 @@ import org.springframework.roo.model.JavaType;
  * @since 1.1.2
  */
 public interface RequestFactoryTypeService {
+
+    FieldMetadata getParentField(
+            ClassOrInterfaceTypeDetails childType);
+    
 
     List<ClassOrInterfaceTypeDetails> buildType(RequestFactoryType destType,
             ClassOrInterfaceTypeDetails templateClass,

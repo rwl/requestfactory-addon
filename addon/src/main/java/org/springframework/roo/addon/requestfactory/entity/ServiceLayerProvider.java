@@ -1,6 +1,5 @@
 package org.springframework.roo.addon.requestfactory.entity;
 
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_ENTITY;
 import static org.springframework.roo.model.SpringJavaType.AUTOWIRED;
 
 import java.util.Arrays;
@@ -15,8 +14,7 @@ import org.springframework.roo.addon.layers.service.ServiceAnnotationValues;
 import org.springframework.roo.addon.layers.service.ServiceAnnotationValuesFactory;
 import org.springframework.roo.addon.layers.service.ServiceInterfaceLocator;
 import org.springframework.roo.addon.plural.PluralMetadata;
-import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactoryEntity;
+import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
@@ -47,7 +45,8 @@ public class ServiceLayerProvider extends CoreLayerProvider {
     @Reference private MetadataService metadataService;
     @Reference private ServiceAnnotationValuesFactory serviceAnnotationValuesFactory;
     @Reference private ServiceInterfaceLocator serviceInterfaceLocator;
-    @Reference TypeLocationService typeLocationService;
+    @Reference private TypeLocationService typeLocationService;
+    @Reference private RequestFactoryTypeService requestFactoryTypeService;
 
     public int getLayerPosition() {
         return LayerType.SERVICE.getPosition() + 1;
@@ -98,25 +97,8 @@ public class ServiceLayerProvider extends CoreLayerProvider {
                     continue;
                 }
 
-                FieldMetadata parentField = null;
-                final String parentPropertyName = RequestFactoryUtils
-                        .getStringAnnotationValue(domainTypeDetails,
-                                ROO_REQUEST_FACTORY_ENTITY,
-                                RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE,
-                                "");
-                if (!parentPropertyName.isEmpty()) {
-                    for (FieldMetadata field : domainTypeDetails
-                            .getDeclaredFields()) {
-                        if (field.getFieldName().getSymbolName()
-                                .equals(parentPropertyName)) {
-                            parentField = field;
-                            break;
-                        }
-                    }
-                    if (parentField == null) {
-                        return null;
-                    }
-                }
+                FieldMetadata parentField = requestFactoryTypeService
+                        .getParentField(domainTypeDetails);
 
                 if (annotationValues != null) {
                     // Check whether this method is implemented by the given service

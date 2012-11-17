@@ -1,6 +1,5 @@
 package org.springframework.roo.addon.requestfactory.entity;
 
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_ENTITY;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_REPOSITORY;
 import static org.springframework.roo.model.RooJavaType.ROO_REPOSITORY_MONGO;
 
@@ -13,8 +12,7 @@ import org.apache.felix.scr.annotations.Service;
 import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.layers.repository.jpa.RepositoryJpaAnnotationValues;
 import org.springframework.roo.addon.layers.repository.mongo.RepositoryMongoAnnotationValues;
-import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactoryEntity;
+import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.customdata.taggers.CustomDataKeyDecorator;
@@ -37,6 +35,8 @@ public final class RepositoryMetadataProviderImpl extends AbstractMemberDiscover
         implements RepositoryMetadataProvider {
 
     @Reference private CustomDataKeyDecorator customDataKeyDecorator;
+    @Reference private RequestFactoryTypeService requestFactoryTypeService;
+    
     private final Map<JavaType, String> domainTypeToRepositoryMidMap = new LinkedHashMap<JavaType, String>();
     private final Map<String, JavaType> repositoryMidToDomainTypeMap = new LinkedHashMap<String, JavaType>();
 
@@ -130,21 +130,7 @@ public final class RepositoryMetadataProviderImpl extends AbstractMemberDiscover
                 domainType);
 
         ClassOrInterfaceTypeDetails entity = typeLocationService.getTypeDetails(domainType);
-        FieldMetadata parentProperty = null;
-        final String parentPropertyName = RequestFactoryUtils.getStringAnnotationValue(
-                entity, ROO_REQUEST_FACTORY_ENTITY, RooRequestFactoryEntity
-                .PARENT_PROPERTY_ATTRIBUTE, "");
-        if (!parentPropertyName.isEmpty()) {
-            for (FieldMetadata field : entity.getDeclaredFields()) {
-                if (field.getFieldName().getSymbolName().equals(parentPropertyName)) {
-                    parentProperty = field;
-                    break;
-                }
-            }
-            if (parentProperty == null) {
-                return null;
-            }
-        }
+        final FieldMetadata parentProperty = requestFactoryTypeService.getParentField(entity);
 
         return new RepositoryMetadata(metadataIdentificationString, aspectName,
                 governorPhysicalType, domainType, parentProperty);

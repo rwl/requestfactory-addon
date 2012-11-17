@@ -9,7 +9,9 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.plural.PluralMetadata;
+import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.classpath.TypeLocationService;
+import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.classpath.details.ImportMetadataBuilder;
@@ -34,9 +36,10 @@ import org.springframework.roo.support.util.PairList;
 @Service
 public class EntityLayerProvider extends CoreLayerProvider {
 
-    @Reference private EntityMetadataProvider scaffoldMetadataProvider;
+    @Reference private EntityMetadataProvider entityMetadataProvider;
     @Reference private MetadataService metadataService;
-    @Reference TypeLocationService typeLocationService;
+    @Reference private TypeLocationService typeLocationService;
+    @Reference private RequestFactoryTypeService requestFactoryTypeService;
 
 //    @Reference protected MemberDetailsScanner memberDetailsScanner;
 
@@ -59,12 +62,13 @@ public class EntityLayerProvider extends CoreLayerProvider {
         Validate.notBlank(methodIdentifier, "Method identifier required");
         Validate.notNull(targetEntity, "Target enitity type required");
 
-        // Get the values of this entity's @RooGwtBootstrap annotation
-        final EntityAnnotationValues annotationValues = scaffoldMetadataProvider
-                .getAnnotationValues(targetEntity);
-        if (annotationValues == null) {
+        final ClassOrInterfaceTypeDetails targetEntityDetails = typeLocationService
+                .getTypeDetails(targetEntity);
+        if (targetEntityDetails == null) {
             return null;
         }
+        final FieldMetadata parentField = requestFactoryTypeService
+                .getParentField(targetEntityDetails);
 
         // Check the entity has a plural form
         final String plural = getPlural(targetEntity);
@@ -87,7 +91,7 @@ public class EntityLayerProvider extends CoreLayerProvider {
         }*/
 
         // It's an entity layer method; see if it's specified by the annotation
-        final String methodName = method.getName(annotationValues,
+        final String methodName = method.getName(parentField,
                 targetEntity, plural, parentProperty);
         if (StringUtils.isBlank(methodName)) {
             return null;
@@ -96,7 +100,7 @@ public class EntityLayerProvider extends CoreLayerProvider {
         // We have everything needed to generate a method call
         final List<MethodParameter> callerParameterList = Arrays
                 .asList(callerParameters);
-        final String methodCall = method.getCall(annotationValues,
+        final String methodCall = method.getCall(parentField,
                 targetEntity, plural, parentProperty, callerParameterList);
         final ClassOrInterfaceTypeDetailsBuilder additionsBuilder = new ClassOrInterfaceTypeDetailsBuilder(
                 callerMID);
@@ -177,7 +181,7 @@ public class EntityLayerProvider extends CoreLayerProvider {
      */
     void setJpaActiveRecordMetadataProvider(
             final EntityMetadataProviderImpl gwtBootstrapMetadataProvider) {
-        this.scaffoldMetadataProvider = gwtBootstrapMetadataProvider;
+        this.entityMetadataProvider = gwtBootstrapMetadataProvider;
     }
 
     /**

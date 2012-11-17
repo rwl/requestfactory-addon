@@ -1,6 +1,5 @@
 package org.springframework.roo.addon.requestfactory.entity;
 
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_ENTITY;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_SERVICE;
 
 import java.util.LinkedHashMap;
@@ -13,8 +12,7 @@ import org.apache.felix.scr.annotations.Service;
 import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.layers.service.ServiceAnnotationValues;
 import org.springframework.roo.addon.plural.PluralMetadata;
-import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactoryEntity;
+import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.customdata.taggers.CustomDataKeyDecorator;
@@ -36,6 +34,8 @@ public final class ServiceMetadataProviderImpl extends AbstractMemberDiscovering
         implements ServiceMetadataProvider {
 
     @Reference private CustomDataKeyDecorator customDataKeyDecorator;
+    @Reference private RequestFactoryTypeService requestFactoryTypeService;
+    
     private final Map<JavaType, String> domainTypeToServiceMidMap = new LinkedHashMap<JavaType, String>();
     private final Map<String, JavaType> serviceMidToDomainTypeMap = new LinkedHashMap<String, JavaType>();
 
@@ -115,22 +115,10 @@ public final class ServiceMetadataProviderImpl extends AbstractMemberDiscovering
         domainTypeToServiceMidMap.put(domainType, metadataIdString);
         serviceMidToDomainTypeMap.put(metadataIdString, domainType);
 
-        ClassOrInterfaceTypeDetails entity = typeLocationService.getTypeDetails(domainType);
-        FieldMetadata parentProperty = null;
-        final String parentPropertyName = RequestFactoryUtils.getStringAnnotationValue(
-                entity, ROO_REQUEST_FACTORY_ENTITY, RooRequestFactoryEntity
-                .PARENT_PROPERTY_ATTRIBUTE, "");
-        if (!parentPropertyName.isEmpty()) {
-            for (FieldMetadata field : entity.getDeclaredFields()) {
-                if (field.getFieldName().getSymbolName().equals(parentPropertyName)) {
-                    parentProperty = field;
-                    break;
-                }
-            }
-            if (parentProperty == null) {
-                return null;
-            }
-        }
+        final ClassOrInterfaceTypeDetails entity = typeLocationService
+                .getTypeDetails(domainType);
+        final FieldMetadata parentProperty = requestFactoryTypeService
+                .getParentField(entity);
 
         final String pluralId = PluralMetadata.createIdentifier(domainType,
                 typeLocationService.getTypePath(domainType));

@@ -159,20 +159,10 @@ public class BaseTemplateServiceImpl {
                     dataDictionary.addSection("proxys").setVariable("proxy",
                             proxySimpleName);
 
-
-                    AnnotationMetadata annotation = entity.getAnnotation(ROO_REQUEST_FACTORY_ENTITY);
-                    if (annotation != null) {
-                        AnnotationAttributeValue<String> attribute = annotation
-                                .getAttribute(RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE);
-                        if (attribute == null || attribute.getValue().isEmpty()) {
-                            dataDictionary.addSection("roots").setVariable("root",
-                                    proxySimpleName);
-                        }
-                    } else {
+                    if (requestFactoryTypeService.getParentField(entity) == null) {
                         dataDictionary.addSection("roots").setVariable("root",
                                 proxySimpleName);
                     }
-
 
                     final String entity1 = new StringBuilder("\t\tif (")
                             .append(proxySimpleName)
@@ -267,29 +257,17 @@ public class BaseTemplateServiceImpl {
                 "Identifier type is not available for entity '" + entityName
                         + "'");
 
-        for (final ClassOrInterfaceTypeDetails gwtBootstrapEntity : typeLocationService
+        for (final ClassOrInterfaceTypeDetails requestFactoryEntity : typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_ENTITY)) {
-            AnnotationMetadata annotation = gwtBootstrapEntity
-                    .getAnnotation(ROO_REQUEST_FACTORY_ENTITY);
-            if (annotation == null) {
+            
+            FieldMetadata parentProperty = requestFactoryTypeService.getParentField(requestFactoryEntity);
+            if (parentProperty == null) {
                 continue;
             }
-            AnnotationAttributeValue<String> annotationAttributeValue = annotation
-                    .getAttribute(RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE);
-            if (annotationAttributeValue == null) {
-                continue;
-            }
-            String parentPropertyName = annotationAttributeValue.getValue();
-            if (parentPropertyName.isEmpty()) {
-                continue;
-            }
-            FieldMetadata parentProperty = gwtBootstrapEntity
-                    .getField(new JavaSymbolName(parentPropertyName));
-            Validate.notNull(parentProperty, "Parent field not found");
 
             if (parentProperty.getFieldType().equals(entity)) {
                 ClassOrInterfaceTypeDetails proxyForEntity = requestFactoryTypeService
-                        .lookupProxyFromEntity(gwtBootstrapEntity);
+                        .lookupProxyFromEntity(requestFactoryEntity);
                 dataDictionary.addSection("children").setVariable("child",
                         proxyForEntity.getName().getSimpleTypeName());
                 addImport(dataDictionary,
@@ -326,10 +304,8 @@ public class BaseTemplateServiceImpl {
         dataDictionary.setVariable("removeMethodSignature",
                 removeMethodSignature);
 
-
-        final String parentPropertyName = RequestFactoryUtils
-                .getStringAnnotationValue(mirroredType, ROO_REQUEST_FACTORY_ENTITY,
-                        RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE, "");
+        final FieldMetadata parentProperty = requestFactoryTypeService
+                .getParentField(mirroredType);
 
         final JavaType nonKeyIdType = idType.equals(KEY) ? STRING : idType;
         final String getId = idType.equals(KEY) ? "getStringId" : "getId";
@@ -337,7 +313,7 @@ public class BaseTemplateServiceImpl {
 
         final String countMethodId, findMethodId, countCall, findCall;
         final List<MethodParameter> findParameters, countParamemters;
-        if (parentPropertyName.isEmpty()) {
+        if (parentProperty == null) {
             countMethodId = CustomDataKeys.COUNT_ALL_METHOD.name();
             findMethodId = CustomDataKeys.FIND_ENTRIES_METHOD.name();
             countCall = "()";
@@ -347,6 +323,7 @@ public class BaseTemplateServiceImpl {
                     INT_PRIMITIVE, "firstResult"), new MethodParameter(
                     INT_PRIMITIVE, "maxResults"));
         } else {
+            final String parentPropertyName = parentProperty.getFieldName().getSymbolName();
             dataDictionary.showSection("hasParent");
 
             countMethodId = EntityDataKeys.COUNT_BY_PARENT_METHOD.name();
@@ -361,8 +338,6 @@ public class BaseTemplateServiceImpl {
                     INT_PRIMITIVE, "firstResult"), new MethodParameter(
                     INT_PRIMITIVE, "maxResults"));
 
-            final FieldMetadata parentProperty = mirroredType
-                    .getField(new JavaSymbolName(parentPropertyName));
             Validate.notNull(parentProperty, "Parent property not found");
             final JavaType parentType = parentProperty.getFieldType();
             final String parentTypeName = parentType.getSimpleTypeName();
@@ -383,9 +358,10 @@ public class BaseTemplateServiceImpl {
 
             final ClassOrInterfaceTypeDetails parentDetails = typeLocationService
                     .getTypeDetails(parentType);
-            final String grandParentPropertyName = RequestFactoryUtils
-                    .getStringAnnotationValue(parentDetails, ROO_REQUEST_FACTORY_ENTITY,
-                            RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE, "");
+            final FieldMetadata grandParentProperty = requestFactoryTypeService
+                    .getParentField(parentDetails);
+            final String grandParentPropertyName = grandParentProperty == null
+                    ? "" : grandParentProperty.getFieldName().getSymbolName();
 
             final String gotoParentPlaceStmt = "requests." + StringUtils.uncapitalize(parentTypeName)
                     + "Request().find" + parentTypeName + (KEY.equals(idType) ? "ByStringId" : "")

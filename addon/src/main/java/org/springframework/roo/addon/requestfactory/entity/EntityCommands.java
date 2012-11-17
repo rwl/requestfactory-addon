@@ -30,10 +30,9 @@ public class EntityCommands implements CommandMarker {
 
     @CliCommand(value = SCAFFOLD_COMMAND, help = "Configure entity for GWT Bootstrap")
     public void add(@CliOption(key = "type", mandatory = false, unspecifiedDefaultValue = "*", help = "The entity to configure") JavaType target,
-            @CliOption(key = RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE, mandatory = false, help = "The name of the field of the parent") final JavaSymbolName parentProperty,
             @CliOption(key = RooRequestFactoryEntity.PRIMARY_PROPERTY_ATTRIBUTE, mandatory = false, help = "Primary property to be used when rendering") final JavaSymbolName primaryProperty,
             @CliOption(key = RooRequestFactoryEntity.SECONDARY_PROPERTY_ATTRIBUTE, mandatory = false, help = "Secondary property to be used when rendering") final JavaSymbolName secondaryProperty) {
-        operations.annotateType(target, parentProperty, primaryProperty, secondaryProperty);
+        operations.annotateType(target, primaryProperty, secondaryProperty);
     }
 
     @CliCommand(value = PLURAL_COMMAND, help = "Configure the plural of a particular type")

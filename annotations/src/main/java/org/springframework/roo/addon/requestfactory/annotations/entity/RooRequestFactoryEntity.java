@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface RooRequestFactoryEntity {
 
-    String PARENT_PROPERTY_ATTRIBUTE = "parent";
-    String PARENT_PROPERTY_DEFAULT = "";
+//    String PARENT_PROPERTY_ATTRIBUTE = "parent";
+//    String PARENT_PROPERTY_DEFAULT = "";
 
     String PRIMARY_PROPERTY_ATTRIBUTE = "primary";
     String PRIMARY_PROPERTY_DEFAULT = "";
@@ -21,7 +21,7 @@ public @interface RooRequestFactoryEntity {
     /**
      * @return the field name of the parent reference
      */
-    String parent() default PARENT_PROPERTY_DEFAULT;
+//    String parent() default PARENT_PROPERTY_DEFAULT;
 
     /**
      * @return primary property to be used when rendering

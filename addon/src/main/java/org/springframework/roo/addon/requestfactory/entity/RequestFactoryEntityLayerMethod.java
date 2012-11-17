@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.classpath.customdata.tagkeys.MethodMetadataCustomDataKey;
@@ -30,9 +29,9 @@ enum RequestFactoryEntityLayerMethod {
 
     COUNT_BY_PARENT(EntityDataKeys.COUNT_BY_PARENT_METHOD, true) {
         @Override
-        public String getName(final EntityAnnotationValues annotationValues,
+        public String getName(final FieldMetadata parentField,
                 final JavaType targetEntity, final String plural, final FieldMetadata parentProperty) {
-            if (StringUtils.isNotBlank(annotationValues.getParentProperty())) {
+            if (parentField != null) {
                 /*return "count" + plural
                         + "By" + parentProperty.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id";*/
                 return "count" + plural + "ByParentId";
@@ -49,7 +48,7 @@ enum RequestFactoryEntityLayerMethod {
 
     FIND_BY_STRING_ID(EntityDataKeys.FIND_BY_STRING_ID_METHOD, true) {
         @Override
-        public String getName(final EntityAnnotationValues annotationValues,
+        public String getName(final FieldMetadata parentField,
                 final JavaType targetEntity, final String plural, final FieldMetadata parentProperty) {
             return "find" + targetEntity.getSimpleTypeName() + "ByStringId";
         }
@@ -63,9 +62,9 @@ enum RequestFactoryEntityLayerMethod {
 
     FIND_ENTRIES_BY_PARENT(EntityDataKeys.FIND_ENTRIES_BY_PARENT_METHOD, true) {
         @Override
-        public String getName(final EntityAnnotationValues annotationValues,
+        public String getName(final FieldMetadata parentField,
                 final JavaType targetEntity, final String plural, final FieldMetadata parentProperty) {
-            if (StringUtils.isNotBlank(annotationValues.getParentProperty())) {
+            if (parentField != null) {
                 /*return "find" + targetEntity.getSimpleTypeName()
                         + "EntriesBy" + parentProperty.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id";*/
                 return "find" + targetEntity.getSimpleTypeName() + "EntriesByParentId";
@@ -132,7 +131,7 @@ enum RequestFactoryEntityLayerMethod {
      * @param callerParameters the caller's method's parameters (required)
      * @return a non-blank Java snippet
      */
-    public String getCall(final EntityAnnotationValues annotationValues,
+    public String getCall(final FieldMetadata parentField,
             final JavaType targetEntity, final String plural, final FieldMetadata parentProperty,
             final List<MethodParameter> callerParameters) {
         final String target;
@@ -143,7 +142,7 @@ enum RequestFactoryEntityLayerMethod {
             target = callerParameters.get(0).getValue().getSymbolName();
         }
         final List<MethodParameter> parameters = getParameters(callerParameters);
-        return getCall(target, getName(annotationValues, targetEntity, plural, parentProperty),
+        return getCall(target, getName(parentField, targetEntity, plural, parentProperty),
                 parameters.iterator());
     }
 
@@ -183,7 +182,7 @@ enum RequestFactoryEntityLayerMethod {
      * @param plural the plural form of the entity (required)
      * @return <code>null</code> if the method isn't desired for that entity
      */
-    public abstract String getName(EntityAnnotationValues annotationValues,
+    public abstract String getName(FieldMetadata parentField,
             JavaType targetEntity, String plural, final FieldMetadata parentProperty);
 
     /**

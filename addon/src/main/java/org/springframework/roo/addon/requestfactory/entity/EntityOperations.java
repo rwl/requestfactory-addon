@@ -21,7 +21,7 @@ public interface EntityOperations {
 
     boolean isCommandAvailable();
 
-    void annotateType(JavaType type, final JavaSymbolName parentProperty,
+    void annotateType(JavaType type,
             final JavaSymbolName primaryProperty,
             final JavaSymbolName secondaryProperty);
 

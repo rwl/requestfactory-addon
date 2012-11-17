@@ -1,6 +1,5 @@
 package org.springframework.roo.addon.requestfactory.entity;
 
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_ENTITY;
 import static org.springframework.roo.model.RooJavaType.ROO_MONGO_ENTITY;
 
 import java.util.HashMap;
@@ -16,8 +15,7 @@ import org.springframework.roo.addon.layers.repository.mongo.RepositoryMongoLoca
 import org.springframework.roo.addon.layers.service.ServiceAnnotationValues;
 import org.springframework.roo.addon.layers.service.ServiceClassMetadata;
 import org.springframework.roo.addon.plural.PluralMetadata;
-import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactoryEntity;
+import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
@@ -45,6 +43,7 @@ public class ServiceImplMetadataProvider extends
     
     @Reference RepositoryJpaLocator repositoryJpaLocator;
     @Reference RepositoryMongoLocator repositoryMongoLocator;
+    @Reference RequestFactoryTypeService requestFactoryTypeService;
     
     private final Map<JavaType, String> managedEntityTypes =
             new HashMap<JavaType, String>();
@@ -184,25 +183,8 @@ public class ServiceImplMetadataProvider extends
             }
             domainTypePlurals.put(domainType, pluralMetadata.getPlural());
 
-            FieldMetadata parentField = null;
-            final String parentPropertyName = RequestFactoryUtils
-                    .getStringAnnotationValue(domainTypeDetails,
-                            ROO_REQUEST_FACTORY_ENTITY,
-                            RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE,
-                            "");
-            if (!parentPropertyName.isEmpty()) {
-                for (FieldMetadata field : domainTypeDetails
-                        .getDeclaredFields()) {
-                    if (field.getFieldName().getSymbolName()
-                            .equals(parentPropertyName)) {
-                        parentField = field;
-                        break;
-                    }
-                }
-                if (parentField == null) {
-                    return null;
-                }
-            }
+            final FieldMetadata parentField = requestFactoryTypeService
+                    .getParentField(domainTypeDetails);
             domainTypeParentFields.put(domainType, parentField);
             
             if (parentField != null) {

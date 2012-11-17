@@ -9,7 +9,6 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.SERVICE_NAME;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
-import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_ENTITY;
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.COUNT_ALL_METHOD;
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.FIND_ALL_METHOD;
 import static org.springframework.roo.classpath.customdata.CustomDataKeys.FIND_ENTRIES_METHOD;
@@ -30,7 +29,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.Validate;
@@ -41,7 +39,6 @@ import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.requestfactory.RequestFactoryFileManager;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactoryEntity;
 import org.springframework.roo.addon.requestfactory.entity.EntityDataKeys;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
@@ -303,16 +300,10 @@ public class RequestFactoryRequestMetadataProviderImpl extends
 
         ClassOrInterfaceTypeDetails domainTypeDetails = typeLocationService
                 .getTypeDetails(domainType);
-        AnnotationMetadata annotation = domainTypeDetails
-                .getAnnotation(ROO_REQUEST_FACTORY_ENTITY);
-        String parentProperty = "";
-        if (annotation != null) {
-            AnnotationAttributeValue<String> parentPropertyValue = annotation
-                    .getAttribute(RooRequestFactoryEntity.PARENT_PROPERTY_ATTRIBUTE);
-            if (parentPropertyValue != null) {
-                parentProperty = parentPropertyValue.getValue();
-            }
-        }
+        
+        final FieldMetadata parentField = requestFactoryTypeService.getParentField(domainTypeDetails);
+        final String parentFieldName = parentField == null ? "" : parentField
+                .getFieldName().getSymbolName();
 
         final Map<MethodMetadataCustomDataKey, Collection<MethodParameter>> signatures = new LinkedHashMap<MethodMetadataCustomDataKey, Collection<MethodParameter>>();
         final List<MethodParameter> noArgs = Arrays.asList();
@@ -326,11 +317,11 @@ public class RequestFactoryRequestMetadataProviderImpl extends
         signatures.put(PERSIST_METHOD, proxyParameterAsList);
         signatures.put(REMOVE_METHOD, proxyParameterAsList);
 
-        if (!parentProperty.isEmpty()) {
+        if (!parentFieldName.isEmpty()) {
             signatures.put(EntityDataKeys.COUNT_BY_PARENT_METHOD, Arrays
-                    .asList(new MethodParameter(KEY.equals(idType) ? STRING : idType, parentProperty + "Id")));
+                    .asList(new MethodParameter(KEY.equals(idType) ? STRING : idType, parentFieldName + "Id")));
             signatures.put(EntityDataKeys.FIND_ENTRIES_BY_PARENT_METHOD, Arrays.asList(new MethodParameter(
-                    KEY.equals(idType) ? STRING : idType, parentProperty + "Id"), new MethodParameter(
+                    KEY.equals(idType) ? STRING : idType, parentFieldName + "Id"), new MethodParameter(
                     INT_PRIMITIVE, "firstResult"), new MethodParameter(
                     INT_PRIMITIVE, "maxResults")));
         }

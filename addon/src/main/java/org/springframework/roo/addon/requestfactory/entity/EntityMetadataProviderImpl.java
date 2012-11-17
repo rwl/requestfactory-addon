@@ -5,13 +5,12 @@ import static org.springframework.roo.addon.requestfactory.entity.EntityDataKeys
 import static org.springframework.roo.addon.requestfactory.entity.EntityDataKeys.FIND_BY_STRING_ID_METHOD;
 import static org.springframework.roo.addon.requestfactory.entity.EntityDataKeys.FIND_ENTRIES_BY_PARENT_METHOD;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.ROO_REQUEST_FACTORY_ENTITY;
-import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
+import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
@@ -19,16 +18,15 @@ import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.jpa.activerecord.JpaCrudAnnotationValues;
 import org.springframework.roo.addon.jpa.entity.JpaEntityAnnotationValues;
 import org.springframework.roo.addon.plural.PluralMetadata;
+import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.customdata.taggers.CustomDataKeyDecorator;
 import org.springframework.roo.classpath.customdata.taggers.MethodMatcher;
+import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.FieldMetadata;
-import org.springframework.roo.classpath.details.MemberFindingUtils;
 import org.springframework.roo.classpath.itd.AbstractItdMetadataProvider;
 import org.springframework.roo.classpath.itd.ItdTypeDetailsProvidingMetadataItem;
-import org.springframework.roo.classpath.itd.MemberHoldingTypeDetailsMetadataItem;
-import org.springframework.roo.classpath.scanner.MemberDetails;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.FeatureNames;
@@ -49,6 +47,7 @@ public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvide
 
     @Reference private CustomDataKeyDecorator customDataKeyDecorator;
     @Reference private ProjectOperations projectOperations;
+    @Reference private RequestFactoryTypeService requestFactoryTypeService;
 
     /**
      * The activate method for this OSGi component, this will be called by the OSGi container upon bundle activation
@@ -81,7 +80,6 @@ public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvide
 
         final JpaCrudAnnotationValues crudAnnotationValues = new JpaCrudAnnotationValues(governorPhysicalTypeMetadata);
         final JpaEntityAnnotationValues jpaEntityAnnotationValues = new JpaEntityAnnotationValues(governorPhysicalTypeMetadata, ROO_JPA_ENTITY);
-        final EntityAnnotationValues scaffoldAnnotationValues = new EntityAnnotationValues(governorPhysicalTypeMetadata);
 
         // we need the plural
         JavaType entity = EntityMetadata.getJavaType(metadataIdentificationString);
@@ -100,24 +98,9 @@ public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvide
         }
         final FieldMetadata idField = idFields.get(0);
 
-        final MemberDetails memberDetails = getMemberDetails(governorPhysicalTypeMetadata);
-        if (memberDetails == null) {
-            return null;
-        }
-        FieldMetadata parentProperty = null;
-        final String parentPropertyName = scaffoldAnnotationValues.getParentProperty();
-        if (!parentPropertyName.isEmpty()) {
-            for (FieldMetadata field : memberDetails.getFields()) {
-                if (field.getFieldName().getSymbolName().equals(parentPropertyName)) {
-                    parentProperty = field;
-                    break;
-                }
-            }
-            if (parentProperty == null) {
-                return null;
-            }
-        }
-        final boolean activeRecord = memberDetails.getAnnotation(ROO_JPA_ACTIVE_RECORD) != null;
+        final ClassOrInterfaceTypeDetails entityDetails = getGovernor(metadataIdentificationString);
+        FieldMetadata parentProperty = requestFactoryTypeService.getParentField(entityDetails);
+        final boolean activeRecord = entityDetails.getAnnotation(ROO_JPA_ACTIVE_RECORD) != null;
 
         final String entityName = StringUtils.defaultIfEmpty(
                 jpaEntityAnnotationValues.getEntityName(),
@@ -143,6 +126,18 @@ public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvide
                 entityName, isGaeEnabled, activeRecord);
     }
 
+    private ClassOrInterfaceTypeDetails getGovernor(
+            final String metadataIdentificationString) {
+        final JavaType governorTypeName = EntityMetadata
+                .getJavaType(metadataIdentificationString);
+        final LogicalPath governorTypePath = EntityMetadata
+                .getPath(metadataIdentificationString);
+
+        final String physicalTypeId = PhysicalTypeIdentifier.createIdentifier(
+                governorTypeName, governorTypePath);
+        return typeLocationService.getTypeDetails(physicalTypeId);
+    }
+
     /**
      * Define the unique ITD file name extension, here the resulting file name will be **_ROO_Gwt_Bootstrap.aj
      */
@@ -162,23 +157,6 @@ public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvide
 
     public String getProvidesType() {
         return EntityMetadata.getMetadataIdentiferType();
-    }
-
-    public EntityAnnotationValues getAnnotationValues(final JavaType javaType) {
-        Validate.notNull(javaType, "JavaType required");
-        final String physicalTypeId = typeLocationService
-                .getPhysicalTypeIdentifier(javaType);
-        if (StringUtils.isBlank(physicalTypeId)) {
-            return null;
-        }
-        final MemberHoldingTypeDetailsMetadataItem<?> governor = (MemberHoldingTypeDetailsMetadataItem<?>) metadataService
-                .get(physicalTypeId);
-        if (MemberFindingUtils.getAnnotationOfType(governor,
-                ROO_REQUEST_FACTORY_ENTITY) == null) {
-            // The type is not annotated with @RooGwtBootstrap
-            return null;
-        }
-        return new EntityAnnotationValues(governor);
     }
 
     @SuppressWarnings("unchecked")
