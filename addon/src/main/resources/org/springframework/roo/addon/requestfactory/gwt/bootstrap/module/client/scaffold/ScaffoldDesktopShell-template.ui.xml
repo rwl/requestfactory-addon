@@ -94,7 +94,7 @@
 	<g:DockLayoutPanel unit='PX'>
 		<g:north size='44'>
 			<b:Navbar height="44px">
-				<b:Brand>Data Browser</b:Brand>
+				<b:Brand>Model Browser</b:Brand>
 				<b:Nav alignment="RIGHT">
 					<b:NavText ui:field="nickname"/>
 					<b:Tooltip text="Sign Out" placement="BOTTOM" showDelay="1000">
