@@ -60,4 +60,8 @@ public abstract class MobileProxyListView<P extends EntityProxy> extends Abstrac
         this.newButton.setText(messages.create());
         this.backButton.setText(messages.back());
     }
+
+    public Widget getBackButton() {
+        return backButton;
+    }
 }

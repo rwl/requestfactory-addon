@@ -343,7 +343,7 @@ public class BaseTemplateServiceImpl {
             final String parentTypeName = parentType.getSimpleTypeName();
             final String parentProxyName = parentTypeName + "Proxy";
 
-            final String setProxyParentStmt = "if (proxy.get"
+            final String setProxyParentStmt = "if (parentId != null && proxy.get"
                     + StringUtils.capitalize(parentPropertyName) + "() == null) {\n"
                     + "factory." + StringUtils.uncapitalize(parentTypeName)
                     + "Request().find" + parentTypeName + (KEY.equals(idType) ? "ByStringId" : "")
@@ -363,7 +363,8 @@ public class BaseTemplateServiceImpl {
             final String grandParentPropertyName = grandParentProperty == null
                     ? "" : grandParentProperty.getFieldName().getSymbolName();
 
-            final String gotoParentPlaceStmt = "requests." + StringUtils.uncapitalize(parentTypeName)
+            final String gotoParentPlaceStmt = "if (parentId != null) {\nrequests."
+                    + StringUtils.uncapitalize(parentTypeName)
                     + "Request().find" + parentTypeName + (KEY.equals(idType) ? "ByStringId" : "")
                     + "(" + parentId + ")"
                     + (grandParentPropertyName.isEmpty() ? "" : ".with(\"" + grandParentPropertyName + "\")")
@@ -375,7 +376,7 @@ public class BaseTemplateServiceImpl {
                     + StringUtils.capitalize(grandParentPropertyName) + "()." + getId + "())")
                     + "));\n"
                     + "}\n"
-                    + "});";
+                    + "});\n}";
             dataDictionary.setVariable("gotoParentPlaceStmt", gotoParentPlaceStmt);
         } else {
             dataDictionary.showSection("isRoot");

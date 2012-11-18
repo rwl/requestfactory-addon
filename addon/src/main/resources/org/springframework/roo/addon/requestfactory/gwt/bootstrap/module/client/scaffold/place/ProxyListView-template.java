@@ -2,6 +2,7 @@ package __TOP_LEVEL_PACKAGE__.client.scaffold.place;
 
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasData;
 
 /**
@@ -16,26 +17,28 @@ import com.google.gwt.view.client.HasData;
  */
 public interface ProxyListView<P extends EntityProxy> extends IsWidget {
 
-	/**
-	 * Implemented by the owner of a RecordTableView.
-	 *
-	 * @param <R> the type of the records to display
-	 */
-	interface Delegate<R extends EntityProxy> {
+    /**
+     * Implemented by the owner of a RecordTableView.
+     *
+     * @param <R> the type of the records to display
+     */
+    interface Delegate<R extends EntityProxy> {
 
-		void createClicked();
+        void createClicked();
         void backClicked();
-	}
+    }
 
-	HasData<P> asHasData();
+    HasData<P> asHasData();
 
-	/**
-	 * @return the set of properties this view displays
-	 */
-	String[] getPaths();
+    /**
+     * @return the set of properties this view displays
+     */
+    String[] getPaths();
 
-	/**
-	 * Sets the delegate.
-	 */
-	void setDelegate(Delegate<P> delegate);
+    /**
+     * Sets the delegate.
+     */
+    void setDelegate(Delegate<P> delegate);
+
+    Widget getBackButton();
 }

@@ -44,7 +44,7 @@ public class {{=className}} extends AbstractProxyListView<{{=proxy}}> {
     @UiField
     Button newButton;
     
-    {{#hasParent}}@UiField{{/hasParent}}
+    @UiField
     Button backButton;
     
     @UiField(provided = true)
@@ -80,7 +80,12 @@ public class {{=className}} extends AbstractProxyListView<{{=proxy}}> {
             }
         }, "{{=propReadable}}");{{/properties}}
     }
+    
     public String[] getPaths() {
         return paths.toArray(new String[paths.size()]);
+    }
+
+    public Widget getBackButton() {
+	    return backButton;
     }
 }

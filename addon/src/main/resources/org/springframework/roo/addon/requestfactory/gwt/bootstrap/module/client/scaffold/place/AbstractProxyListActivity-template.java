@@ -9,6 +9,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.requestfactory.shared.*;
 import com.google.gwt.user.cellview.client.AbstractHasData;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.*;
 
 import java.util.Collections;
@@ -68,6 +69,10 @@ public abstract class AbstractProxyListActivity<P extends EntityProxy> implement
                 this.parentId = ((ProxyPlace) place).getParentId();
         }
         this.view = initView();
+        final Widget back = this.view.getBackButton();
+        if (back != null) {
+            back.setVisible(this.parentId != null);
+        }
         view.setDelegate(this);
 
         final HasData<P> hasData = view.asHasData();
