@@ -32,8 +32,12 @@ import com.google.web.bindery.requestfactory.shared.EntityProxyId;
  */
 public class NavigationTree extends Composite {
 
-	public interface Resources extends CellTree.Resources {
+	public interface NavigationTreeResources extends CellTree.Resources {
 
+        public static NavigationTreeResources INSTANCE = GWT.create(NavigationTreeResources.class);
+
+        @Source("NavigationTree.css")
+        public CellTree.Style cellTreeStyle();
 	}
 
 	public static class ProxyListNode {
@@ -216,7 +220,7 @@ public class NavigationTree extends Composite {
 			}
 		});
 
-		tree = new CellTree(model, null);
+		tree = new CellTree(model, null, NavigationTreeResources.INSTANCE);
 		tree.setAnimationEnabled(true);
 	}
 }

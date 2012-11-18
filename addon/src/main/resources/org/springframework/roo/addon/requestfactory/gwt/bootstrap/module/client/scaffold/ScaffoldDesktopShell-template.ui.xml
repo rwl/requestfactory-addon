@@ -37,8 +37,8 @@
 
 		.content {
 			position: relative;
-			border-left: 1px solid #ddf;
-			border-bottom: 1px solid #ddf;
+			border-left: 1px solid #ddd;
+			border-bottom: 1px solid #ddd;
 			overflow-y: auto;
 			overflow-x: hidden;
 			-moz-border-radius-bottomleft: 15px;
