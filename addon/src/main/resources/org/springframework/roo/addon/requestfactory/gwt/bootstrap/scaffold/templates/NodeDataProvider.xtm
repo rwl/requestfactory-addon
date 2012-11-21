@@ -1,0 +1,20 @@
+package {{=packageName}};
+
+import {{=scaffoldUiPackage}}.NavigationTree.ProxyNode;
+
+import {{=uiPackage}}.renderer.{{=proxyRendererType}};
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+public class {{=className}} extends {{=name}}ListDataProvider<ProxyNode> {
+
+    public {{=className}}({{=requestFactory}} requestFactory, String parentId) {
+        super(requestFactory, parentId);
+    }
+
+    @Override
+    protected ProxyNode getDataValue({{=proxy}} proxy) {
+        return new ProxyNode({{=proxyRendererType}}.instance().render(proxy), proxy.stableId(), String.valueOf(proxy.getId()), parentId);
+    }
+}

@@ -10,20 +10,20 @@ import com.google.web.bindery.requestfactory.shared.EntityProxy;
 
 public class ProxyNodeProcessor {
 
-	private final {{=requestFactory}} requestFactory;
+    private final {{=requestFactory}} requestFactory;
 
-	public ProxyNodeProcessor(ApplicationRequestFactory requestFactory) {
-		this.requestFactory = requestFactory;
-	}
+    public ProxyNodeProcessor(ApplicationRequestFactory requestFactory) {
+        this.requestFactory = requestFactory;
+    }
 
-	public AbstractDataProvider<ProxyNode> process(String parentId, Class<? extends EntityProxy> proxyType) {
-		final String id = parentId;
-		return new {{=entityTypes}}<AbstractDataProvider<ProxyNode>>() {
+    public AbstractDataProvider<ProxyNode> process(String parentId, Class<? extends EntityProxy> proxyType) {
+        final String id = parentId;
+        return new {{=entityTypes}}<AbstractDataProvider<ProxyNode>>() {
 {{#entities}}
-			@Override
-			public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
-				setResult(new {{=providerSimpleName}}(requestFactory, id));
-			}{{/entities}}
-		}.process(proxyType);
-	}
+            @Override
+            public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
+                setResult(new {{=providerSimpleName}}(requestFactory, id));
+            }{{/entities}}
+        }.process(proxyType);
+    }
 }

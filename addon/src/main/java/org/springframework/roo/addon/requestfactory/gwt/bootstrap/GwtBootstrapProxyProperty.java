@@ -67,7 +67,8 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
                 : isDate() ? "d:DateBox"
                 : isBoolean() ? "b:CheckBox"
                 : isString() ? "b:" + getTextEditor(textType) + " b:id='" + name + "' alternateSize='" + ALTERNATE_SIZE + "'"
-                : "b:ValueListBox";
+                : isEnum() ? "b:ValueListBox"
+                : "e:" + getInstanceEditor();
     }
 
     @Override
@@ -100,7 +101,8 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
                 : isDate() ? "m:MDateBox"
                 : isBoolean() ? "m:MCheckBox"
                 : isString() ? "m:" + getMobileTextEditor(textType)
-                : "b:ValueListBox";
+                : isEnum() ? "b:ValueListBox"
+                : "e:" + getInstanceEditor();
     }
 
     @Override
@@ -117,10 +119,7 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
         }
 
         if (isProxy()) {
-            initializer = String
-                    .format(" = new ValueListBox<%1$s>(%2$s.instance(), new com.google.web.bindery.requestfactory.gwt.ui.client.EntityProxyKeyProvider<%1$s>())",
-                            type.getFullyQualifiedTypeName(),
-                            getProxyRendererType());
+            initializer = " = new " + getSimpleTypeName() + "Editor()";
         }
 
         return String.format("@UiField %s %s %s", getEditor(textType), getName(),
@@ -141,10 +140,7 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
         }
 
         if (isProxy()) {
-            initializer = String
-                    .format(" = new ValueListBox<%1$s>(%2$s.instance(), new com.google.web.bindery.requestfactory.gwt.ui.client.EntityProxyKeyProvider<%1$s>())",
-                            type.getFullyQualifiedTypeName(),
-                            getProxyRendererType());
+            initializer = " = new " + getSimpleTypeName() + "Editor()";
         }
 
         return String.format("@UiField %s %s %s", getMobileEditor(textType), getName(),
@@ -213,9 +209,12 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
         if (isBoolean()) {
             return "(provided = true) CheckBox";
         }
-        return isCollection() ? getSetEditor() : isDate() ? "DateBox"
-                : isString() ? getTextEditor(textType) : "(provided = true) ValueListBox<"
-                        + type.getFullyQualifiedTypeName() + ">";
+        return isCollection() ? getSetEditor()
+                : isDate() ? "DateBox"
+                : isString() ? getTextEditor(textType)
+                : isEnum() ? "(provided = true) ValueListBox<"
+                        + type.getFullyQualifiedTypeName() + ">"
+                : getInstanceEditor();
     }
 
     private String getMobileEditor(final TextType textType) {
@@ -246,9 +245,12 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
         if (isBoolean()) {
             return "(provided = true) MCheckBox";
         }
-        return isCollection() ? getSetEditor() : isDate() ? "MDateBox"
-                : isString() ? getMobileTextEditor(textType) : "(provided = true) ValueListBox<"
-                        + type.getFullyQualifiedTypeName() + ">";
+        return isCollection() ? getSetEditor()
+                : isDate() ? "MDateBox"
+                : isString() ? getMobileTextEditor(textType)
+                : isEnum() ? "(provided = true) ValueListBox<"
+                        + type.getFullyQualifiedTypeName() + ">"
+                : getInstanceEditor();
     }
 
     private String getTextEditor(final TextType textType) {
@@ -289,9 +291,20 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
                                 + " obj) {\n          return obj == null ? \"\" : String.valueOf(obj);\n        }\n      }"
                                 : getProxyRendererType() + ".instance()";
     }
+    
+    public String getInstanceEditor() {
+        return getSimpleTypeName() + "Editor";
+    }
 
-    private String getSetEditor() {
-        String typeName = OBJECT.getFullyQualifiedTypeName();
+    public JavaType getInstanceEditorType() {
+        return new JavaType(GwtBootstrapType.INSTANCE_EDITOR.getPath().packageName(
+                topLevelPackage)
+                + "." + getInstanceEditor());
+    }
+    
+    private String getSimpleTypeName() {
+//        String typeName = OBJECT.getFullyQualifiedTypeName();
+        String typeName = type.getSimpleTypeName();
         if (type.getParameters().size() > 0) {
             typeName = type.getParameters().get(0).getSimpleTypeName();
         }
@@ -299,17 +312,24 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
             typeName = typeName.substring(0, typeName.length()
                     - RequestFactoryType.PROXY.getSuffix().length());
         }
-        return typeName
+        return typeName;
+    }
+    
+    private String getFullTypeName() {
+//        String typeName = OBJECT.getFullyQualifiedTypeName();
+        String typeName = type.getFullyQualifiedTypeName();
+        if (type.getParameters().size() > 0) {
+            typeName = type.getParameters().get(0).getFullyQualifiedTypeName();
+        }
+        return typeName;
+    }
+
+    private String getSetEditor() {
+        return getSimpleTypeName()
                 + (type.getSimpleTypeName().equals("Set") ? GwtBootstrapType.SET_EDITOR
                         .getSuffix() : GwtBootstrapType.LIST_EDITOR.getSuffix());
     }
-
-    public JavaType getSetEditorType() {
-        return new JavaType(GwtBootstrapType.SET_EDITOR.getPath().packageName(
-                topLevelPackage)
-                + "." + getSetEditor());
-    }
-
+    
     public String getSetValuePickerMethod(final boolean nullable) {
         return "\tpublic void "
                 + getSetValuePickerMethodName()
@@ -335,6 +355,32 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
 
     public String getSetValuePickerMethodName() {
         return "set" + StringUtils.capitalize(getName()) + "PickerValues";
+    }
+
+    public JavaType getSetEditorType() {
+        return new JavaType(GwtBootstrapType.SET_EDITOR.getPath().packageName(
+                topLevelPackage)
+                + "." + getSetEditor());
+    }
+
+    public String getSetProviderMethod(final boolean nullable) {
+        return "\tpublic void "
+                + getSetProviderMethodName()
+                + "(AsyncDataProvider<" + getFullTypeName()
+                + "> provider) {"
+                + getName() + ".setProvider(provider);\n"
+                + "}";
+    }
+
+    public String getSetEmptyProviderMethod() {
+        return "\tpublic void "
+                + getSetProviderMethodName()
+                + "(AsyncDataProvider<" + getFullTypeName()
+                + "> provider) { }";
+    }
+
+    public String getSetProviderMethodName() {
+        return "set" + StringUtils.capitalize(getName()) + "Provider";
     }
 
 }

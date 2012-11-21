@@ -2,7 +2,6 @@ package {{=packageName}};
 
 import android.os.Bundle;
 import roboguice.activity.RoboActivity;
-import org.mothwatch.R;
 
 public class {{=className}} extends RoboActivity {
 

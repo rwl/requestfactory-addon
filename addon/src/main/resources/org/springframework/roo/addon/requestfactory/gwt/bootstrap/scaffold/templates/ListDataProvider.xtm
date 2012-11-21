@@ -1,0 +1,44 @@
+package {{=packageName}};
+
+import java.util.List;
+
+import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.gwt.view.client.Range;
+
+import {{=uiPackage}}.renderer.{{=proxyRendererType}};
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+public abstract class {{=className}}<T> extends AbstractListDataProvider<{{=proxy}}, T> {
+
+    protected final {{=requestFactory}} requestFactory;
+    protected final String parentId;
+
+    public {{=className}}({{=requestFactory}} requestFactory, String parentId) {
+        super();
+        this.requestFactory = requestFactory;
+        this.parentId = parentId;
+    }
+
+    @Override
+    public Request<Long> getCountRequest() {{{#isRoot}}
+        return requestFactory.{{=nameUncapitalized}}Request().{{=countEntitiesMethod}};{{/isRoot}}{{#hasParent}}
+        if (parentId == null) {
+            return requestFactory.{{=nameUncapitalized}}Request().{{=countEntitiesMethod}};
+        } else {
+            return requestFactory.{{=nameUncapitalized}}Request().{{=countEntitiesByParentMethod}};
+        }{{/hasParent}}
+    }
+
+    @Override
+    public Request<List<{{=proxy}}>> getEntitiesRequest(Range range) {{{#isRoot}}
+        return requestFactory.{{=nameUncapitalized}}Request().{{=findEntitiesMethod}};{{/isRoot}}{{#hasParent}}
+        if (parentId == null) {
+            return requestFactory.{{=nameUncapitalized}}Request().{{=findEntitiesMethod}};
+        } else {
+            return requestFactory.{{=nameUncapitalized}}Request().{{=findEntitiesByParentMethod}};
+        }
+        {{/hasParent}}
+    }
+}

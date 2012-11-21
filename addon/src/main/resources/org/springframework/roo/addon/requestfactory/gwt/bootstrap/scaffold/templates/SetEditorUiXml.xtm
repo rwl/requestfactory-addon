@@ -1,32 +1,8 @@
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:b='urn:import:com.github.gwtbootstrap.client.ui'>
-    <ui:style type="{{=packageName}}.{{=className}}.Style">
-        .editorPanelVisible {
-          /*border: thin solid black;
-          margin: 2px;
-    	  -moz-border-radius: 5px;
-    	  -webkit-border-radius: 5px;*/
-    	  overflow: hidden;
-    	  padding: 5px;
-        }
-
-        .viewPanelVisible {
-        }
-
-        .editorPanelHidden, .viewPanelHidden {
-          display: none
-        }
-    </ui:style>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:b="urn:import:com.github.gwtbootstrap.client.ui" xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <g:HTMLPanel>
-        <b:Button size="SMALL" icon="EDIT" ui:field="clickToEdit">Edit</b:Button>
-        <g:HTMLPanel ui:field="viewPanel">
-            <g:Label ui:field="viewLabel"/>
-        </g:HTMLPanel>
-        <g:HTMLPanel ui:field="editorPanel">
-            <b:ValueListBox ui:field="picker"/>
-            <b:Button size="SMALL" icon="PLUS" ui:field="add">Add</b:Button> <br/>
-            <g:FlexTable ui:field="table"/>
-        </g:HTMLPanel>
+    	<b:ButtonGroup>
+    		<b:Button icon="PLUS" size="SMALL" ui:field="clickToAdd">Add</b:Button>
+    		<b:Button icon="EDIT" size="SMALL" ui:field="clickToEdit">Edit</b:Button>
+    	</b:ButtonGroup>
     </g:HTMLPanel>
 </ui:UiBinder>

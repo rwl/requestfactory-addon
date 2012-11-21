@@ -10,6 +10,7 @@ import __TOP_LEVEL_PACKAGE__.client.managed.tree.ProxyNodeProcessor;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyPlace;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.dom.client.Style.Overflow;

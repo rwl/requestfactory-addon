@@ -215,8 +215,8 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     final JavaPackage topLevelPackage = projectOperations
                             .getTopLevelPackage(moduleName);
                     final String providerSimpleName = entitySimpleName
-                            + GwtBootstrapType.DATA_PROVIDER.getSuffix();
-                    final String providerFullName = GwtBootstrapType.DATA_PROVIDER.
+                            + GwtBootstrapType.NODE_DATA_PROVIDER.getSuffix();
+                    final String providerFullName = GwtBootstrapType.NODE_DATA_PROVIDER.
                             getPath().packageName(topLevelPackage)
                             + "." + providerSimpleName;
                     final TemplateDataDictionary section = dataDictionary
@@ -593,7 +593,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     if (!isUneditable(requestFactoryProxyProperty, mirroredType)) {
                         final TemplateDataDictionary section = dataDictionary
                                 .addSection(requestFactoryProxyProperty.isEnum() ? "setEnumValuePickers"
-                                        : "setProxyValuePickers");
+                                        : "setProxyProviders");
                         final boolean nullable = !isNotNull(
                                 requestFactoryProxyProperty, mirroredType);
                         // The methods is required to satisfy the interface.
@@ -609,8 +609,22 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                                                 .getSetValuePickerMethod(nullable));
                         section.setVariable("setValuePickerName",
                                 requestFactoryProxyProperty.getSetValuePickerMethodName());
+                        
+                        section.setVariable(
+                                "setProvider",
+                                existingEditViewFields.contains(requestFactoryProxyProperty
+                                        .getName()) ? requestFactoryProxyProperty
+                                        .getSetEmptyProviderMethod()
+                                        : requestFactoryProxyProperty
+                                                .getSetProviderMethod(nullable));
+                        section.setVariable("setProviderName",
+                                requestFactoryProxyProperty.getSetProviderMethodName());
+                        section.setVariable("setValuePickerName",
+                                requestFactoryProxyProperty.getSetValuePickerMethodName());
                         section.setVariable("valueType", requestFactoryProxyProperty
                                 .getValueType().getSimpleTypeName());
+                        section.setVariable("proxyDataProviderName", requestFactoryProxyProperty
+                                .getValueType().getSimpleTypeName() + "DataProvider");
                         if (nullable) {
                             section.showSection("nullable");
                         }
@@ -638,6 +652,10 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                             requestFactoryProxyProperty.getPropertyType());
                     maybeAddImport(dataDictionary, importSet,
                             requestFactoryProxyProperty.getValueType());
+                    if (requestFactoryProxyProperty.isProxy()) {
+                        maybeAddImport(dataDictionary, importSet,
+                                requestFactoryProxyProperty.getInstanceEditorType());
+                    }
                     if (requestFactoryProxyProperty.isCollection/*OfProxy*/()) {
                         maybeAddImport(dataDictionary, importSet,
                                 requestFactoryProxyProperty.getPropertyType()
@@ -647,7 +665,6 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     }
                 }
             }
-
         }
 
         dataDictionary.setVariable("proxyFields", proxyFields);

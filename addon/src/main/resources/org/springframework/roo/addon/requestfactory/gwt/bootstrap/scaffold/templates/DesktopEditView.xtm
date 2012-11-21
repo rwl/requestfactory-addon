@@ -16,6 +16,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.view.client.AsyncDataProvider;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.CheckBox;
 import com.github.gwtbootstrap.client.ui.DoubleBox;
@@ -86,7 +87,8 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
     }
 
 {{#setEnumValuePickers}}{{=setValuePicker}}{{/setEnumValuePickers}}
-{{#setProxyValuePickers}}{{=setValuePicker}}{{/setProxyValuePickers}}
+
+{{#setProxyProviders}}{{=setProvider}}{{/setProxyProviders}}
 
     public void setCreating(boolean creating) {
         if (creating) {

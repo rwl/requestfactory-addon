@@ -128,9 +128,6 @@
 				</div>
 			</g:HTML>
 		</g:south>
-		<g:west size="220">
-			<s:NavigationTree ui:field='navigationTree'/>
-		</g:west>
 		<g:center>
 			<g:SplitLayoutPanel ui:field='splitPanel' styleName='{style.splitLayoutPanel}'>
 			    <g:west size="220">

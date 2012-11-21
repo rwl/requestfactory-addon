@@ -7,6 +7,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.requestfactory.shared.EntityProxyId;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.inject.Inject;
 
 import {{=placePackage}}.ProxyPlace;
@@ -17,6 +18,9 @@ import {{=mobileUiPackage}}.{{=name}}MobileEditView;
 
 {{#imports}}import {{=import}};
 {{/imports}}
+
+{{#setProxyProviders}}import {{=topLevelPackage}}.client.managed.provider.{{=proxyDataProviderName}};
+{{/setProxyProviders}}
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,16 +44,16 @@ public class {{=className}} implements Activity, {{=isScaffoldMobileActivity}} {
         {{#setEnumValuePickers}}
         void {{=setValuePickerName}}(Collection<{{=valueType}}> values);
         {{/setEnumValuePickers}}
-        {{#setProxyValuePickers}}
-        void {{=setValuePickerName}}(Collection<{{=valueType}}> values);
-        {{/setProxyValuePickers}}
+        {{#setProxyProviders}}
+        void {{=setProviderName}}(AsyncDataProvider<{{=valueType}}> values);
+        {{/setProxyProviders}}
     }
 
     private final EntityProxyId<{{=proxy}}> proxyId;
     private final ApplicationRequestFactory requests;
     private final View<?> view;
     private final Activity wrapped;
-    private final String parentId;
+    protected String parentId;
 
     @Inject
     public {{=className}}(ApplicationRequestFactory requests, PlaceController placeController) {
@@ -106,22 +110,10 @@ public class {{=className}} implements Activity, {{=isScaffoldMobileActivity}} {
     @Override
     public void start(AcceptsOneWidget display, EventBus eventBus)
         {{{#setEnumValuePickers}}
-        view.{{=setValuePickerName}}(Arrays.asList({{=valueType}}.values()));
-        {{/setEnumValuePickers}}
+        view.{{=setValuePickerName}}(Arrays.asList({{=valueType}}.values()));{{/setEnumValuePickers}}
 
-        {{#setProxyValuePickers}}
-        view.{{=setValuePickerName}}(Collections.<{{=valueType}}> emptyList());
-        requests.{{=requestInterface}}().{{=findMethod}}.with(
-                {{=rendererType}}.instance().getPaths()).fire(
-                        new Receiver<List<{{=valueType}}>>() {
-                                public void onSuccess(List<{{=valueType}}> response) {
-                                        List<{{=valueType}}> values = new ArrayList<{{=valueType}}>();{{#nullable}}
-                                        values.add(null);{{/nullable}}
-                                        values.addAll(response);
-                                        view.{{=setValuePickerName}}(values);
-                        }
-        });
-        {{/setProxyValuePickers}}
+        {{#setProxyProviders}}
+        view.{{=setProviderName}}(new {{=proxyDataProviderName}}(requests, parentId));{{/setProxyProviders}}
         wrapped.start(display, eventBus);
     }
 }

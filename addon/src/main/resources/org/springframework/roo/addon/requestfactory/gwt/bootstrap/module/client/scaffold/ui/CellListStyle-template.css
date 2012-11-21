@@ -1,0 +1,40 @@
+
+.cellListWidget {
+}
+
+.cellListEvenItem {
+	padding-left: 1em;
+	padding-top: 5px;
+	padding-bottom: 5px;
+
+	cursor: pointer;
+	zoom: 1;
+}
+
+.cellListOddItem {
+	padding-left: 1em;
+	padding-top: 5px;
+	padding-bottom: 5px;
+
+	cursor: pointer;
+	zoom: 1;
+}
+
+.cellListKeyboardSelectedItem {
+	padding-left: 1em;
+	padding-top: 5px;
+	padding-bottom: 5px;
+
+	background: #ffc;
+}
+
+.cellListSelectedItem {
+	padding-left: 1em;
+	padding-top: 5px;
+	padding-bottom: 5px;
+
+	background-color: #0788CC;
+	color: white;
+	height: auto;
+	overflow: visible;
+}

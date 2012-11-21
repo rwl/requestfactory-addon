@@ -1,0 +1,16 @@
+package {{=packageName}};
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+public class {{=className}} extends {{=name}}ListDataProvider<{{=proxy}}> {
+
+    public {{=className}}({{=requestFactory}} requestFactory, String parentId) {
+        super(requestFactory, parentId);
+    }
+
+    @Override
+    protected {{=proxy}} getDataValue({{=proxy}} proxy) {
+        return proxy;
+    }
+}

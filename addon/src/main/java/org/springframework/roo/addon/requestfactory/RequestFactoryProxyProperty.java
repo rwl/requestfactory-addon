@@ -204,6 +204,14 @@ public class RequestFactoryProxyProperty {
     public String getRenderer() {
         throw new UnsupportedOperationException();
     }
+    
+    public String getInstanceEditor() {
+        throw new UnsupportedOperationException();
+    }
+
+    public JavaType getInstanceEditorType() {
+        throw new UnsupportedOperationException();
+    }
 
     public JavaType getSetEditorType() {
         throw new UnsupportedOperationException();
@@ -217,8 +225,20 @@ public class RequestFactoryProxyProperty {
         throw new UnsupportedOperationException();
     }
 
+    public String getSetProviderMethod(final boolean nullable) {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getSetEmptyProviderMethod() {
+        throw new UnsupportedOperationException();
+    }
+
     public String getSetValuePickerMethodName() {
         return "set" + StringUtils.capitalize(getName()) + "PickerValues";
+    }
+
+    public String getSetProviderMethodName() {
+        return "set" + StringUtils.capitalize(getName()) + "Provider";
     }
 
     public String getType() {
