@@ -96,6 +96,9 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     section.setVariable("entitySimpleName", entitySimpleName);
                     section.setVariable("entitySimpleNameUncapitalize", StringUtils.uncapitalize(entitySimpleName));
                     section.setVariable("entityFullPath", proxySimpleName);
+                    section.setVariable("proxySimpleName", proxySimpleName);
+                    section.setVariable("proxySimpleNameUncapitalize",
+                            StringUtils.uncapitalize(proxySimpleName));
                     addImport(dataDictionary, entitySimpleName,
                             GwtBootstrapType.LIST_ACTIVITY, moduleName);
                     addImport(dataDictionary, proxy.getName()
@@ -104,6 +107,14 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                             GwtBootstrapType.DESKTOP_LIST_VIEW, moduleName);
                     addImport(dataDictionary, entitySimpleName,
                             GwtBootstrapType.MOBILE_LIST_VIEW, moduleName);
+                    addImport(
+                            dataDictionary,
+                            GwtBootstrapType.ACTIVITIES_MAPPER.getPath().packageName(
+                                    projectOperations
+                                            .getTopLevelPackage(moduleName))
+                                    + "."
+                                    + entitySimpleName
+                                    + GwtBootstrapType.ACTIVITIES_MAPPER.getSuffix());
                 }
             }
         } else if (type == GwtBootstrapType.APPLICATION_MESSAGES) {
@@ -149,51 +160,6 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     section.setVariable("entityFullPath", proxySimpleName);
                     addImport(dataDictionary, proxy.getName()
                             .getFullyQualifiedTypeName());
-                }
-            }
-        } else if (type == GwtBootstrapType.DETAILS_ACTIVITIES) {
-            for (final ClassOrInterfaceTypeDetails proxy : proxies) {
-                if (!RequestFactoryUtils.scaffoldProxy(proxy)) {
-                    continue;
-                }
-                final ClassOrInterfaceTypeDetails entity = requestFactoryTypeService
-                        .lookupEntityFromProxy(proxy);
-                if (entity != null) {
-                    final String proxySimpleName = proxy.getName()
-                            .getSimpleTypeName();
-                    final String entitySimpleName = entity.getName()
-                            .getSimpleTypeName();
-                    final TemplateDataDictionary section = dataDictionary
-                            .addSection("entities");
-                    section.setVariable("entitySimpleName", entitySimpleName);
-                    section.setVariable("entitySimpleNameUncapitalize",
-                            StringUtils.uncapitalize(entitySimpleName));
-                    section.setVariable("entityFullPath", proxySimpleName);
-                    section.setVariable("proxySimpleName", proxySimpleName);
-                    section.setVariable("proxySimpleNameUncapitalize",
-                            StringUtils.uncapitalize(proxySimpleName));
-                    /*final String entityExpression = new StringBuilder(
-                            "\t\t\tpublic void handle")
-                            .append(entitySimpleName)
-                            .append("(")
-                            .append(proxySimpleName)
-                            .append(" proxy) {\n")
-                            .append("\t\t\t\tsetResult(new ")
-                            .append(entitySimpleName)
-                            .append("ActivitiesMapper(requests, placeController).getActivity(proxyPlace, parentId));\n\t\t\t}")
-                            .toString();
-                    dataDictionary.addSection("entities").setVariable("entity",
-                            entityExpression);*/
-                    addImport(dataDictionary, proxy.getName()
-                            .getFullyQualifiedTypeName());
-                    addImport(
-                            dataDictionary,
-                            GwtBootstrapType.ACTIVITIES_MAPPER.getPath().packageName(
-                                    projectOperations
-                                            .getTopLevelPackage(moduleName))
-                                    + "."
-                                    + entitySimpleName
-                                    + GwtBootstrapType.ACTIVITIES_MAPPER.getSuffix());
                 }
             }
         } else if (type == GwtBootstrapType.MOBILE_ACTIVITIES) {

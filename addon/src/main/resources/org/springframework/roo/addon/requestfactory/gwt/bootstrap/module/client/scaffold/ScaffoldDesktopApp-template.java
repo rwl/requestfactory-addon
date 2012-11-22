@@ -5,6 +5,7 @@ import __TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.account.helper.AccountHelper;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.*;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.request.RequestEvent;
+import __TOP_LEVEL_PACKAGE__.client.scaffold.activity.ScaffoldAnimationMapper;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.ui.NavigationTree.ProxyListNode;
 import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRenderer;
 import com.google.gwt.activity.shared.*;
@@ -20,6 +21,7 @@ import com.google.gwt.user.client.ui.HasConstrainedValue;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryLogHandler;
+import com.googlecode.mgwt.mvp.client.AnimatingActivityManager;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -37,17 +39,15 @@ public class ScaffoldDesktopApp extends ScaffoldApp {
     private final PlaceController placeController;
     private final PlaceHistoryFactory placeHistoryFactory;
     private final ApplicationMasterActivities applicationMasterActivities;
-    private final ApplicationDetailsActivities applicationDetailsActivities;
 
     @Inject
-    public ScaffoldDesktopApp(ScaffoldDesktopShell shell, ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController, PlaceHistoryFactory placeHistoryFactory, ApplicationMasterActivities applicationMasterActivities, ApplicationDetailsActivities applicationDetailsActivities, AccountHelper accountHelper) {
+    public ScaffoldDesktopApp(ScaffoldDesktopShell shell, ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController, PlaceHistoryFactory placeHistoryFactory, ApplicationMasterActivities applicationMasterActivities, AccountHelper accountHelper) {
         this.shell = shell;
         this.requestFactory = requestFactory;
         this.eventBus = eventBus;
         this.placeController = placeController;
         this.placeHistoryFactory = placeHistoryFactory;
         this.applicationMasterActivities = applicationMasterActivities;
-        this.applicationDetailsActivities = applicationDetailsActivities;
     }
 
     public void run() {
@@ -86,21 +86,9 @@ public class ScaffoldDesktopApp extends ScaffoldApp {
             }
         });
 
-        CachingActivityMapper cached = new CachingActivityMapper(applicationMasterActivities);
-        ProxyPlaceToListPlace proxyPlaceToListPlace = new ProxyPlaceToListPlace();
-        ActivityMapper masterActivityMap = new FilteredActivityMapper(proxyPlaceToListPlace, cached);
-        final ActivityManager masterActivityManager = new ActivityManager(masterActivityMap, eventBus);
-
-        masterActivityManager.setDisplay(shell.getMasterPanel());
-
-        /*ProxyListPlacePicker proxyListPlacePicker = new ProxyListPlacePicker(placeController, proxyPlaceToListPlace);
-        HasConstrainedValue<ProxyListPlace> listPlacePickerView = shell.getPlacesBox();
-        listPlacePickerView.setAcceptableValues(getTopPlaces());
-        proxyListPlacePicker.register(eventBus, listPlacePickerView);*/
-
-        final ActivityManager detailsActivityManager = new ActivityManager(applicationDetailsActivities, eventBus);
-
-        detailsActivityManager.setDisplay(shell.getDetailsPanel());
+        final ScaffoldAnimationMapper appAnimationMapper = new ScaffoldAnimationMapper();
+        final AnimatingActivityManager detailsManager = new AnimatingActivityManager(applicationMasterActivities, appAnimationMapper, eventBus);
+        detailsManager.setDisplay(shell.getMasterPanel());
 
         /* Browser history integration */
         ScaffoldPlaceHistoryMapper mapper = GWT.create(ScaffoldPlaceHistoryMapper.class);

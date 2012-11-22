@@ -9,6 +9,7 @@ import com.google.inject.Provider;
 
 import {{=topLevelPackage}}.client.scaffold.activity.AsyncActivityProxyProvider;
 import {{=placePackage}}.ProxyListPlace;
+import {{=placePackage}}.ProxyPlace;
 
 {{#imports}}import {{=import}};
 {{/imports}}
@@ -19,17 +20,29 @@ import {{=placePackage}}.ProxyListPlace;
 public final class ApplicationMasterActivities implements ActivityMapper {
 {{#entities}}
     @Inject AsyncActivityProxyProvider<{{=entitySimpleName}}ListActivity> {{=entitySimpleNameUncapitalize}}ListActivityProvider;{{/entities}}
+{{#entities}}
+    @Inject {{=entitySimpleName}}ActivitiesMapper {{=entitySimpleNameUncapitalize}}ActivitiesMapper;{{/entities}}
 
     public Activity getActivity(Place place) {
-        if (!(place instanceof ProxyListPlace)) {
+        if (place instanceof ProxyListPlace) {
+            return new ApplicationEntityTypesProcessor<Activity>() {{{#entities}}
+                @Override
+                public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
+                    setResult({{=entitySimpleNameUncapitalize}}ListActivityProvider.get());
+                }
+                {{/entities}}
+            }.process(((ProxyListPlace) place).getProxyClass());
+        } else if (place instanceof ProxyPlace) {
+            final ProxyPlace proxyPlace = (ProxyPlace) place;
+            return new ApplicationEntityTypesProcessor<Activity>() {{{#entities}}
+                @Override
+                public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
+                    setResult({{=entitySimpleNameUncapitalize}}ActivitiesMapper.getActivity(proxyPlace));
+                }
+                {{/entities}}
+            }.process(proxyPlace.getProxyClass());
+        } else {
             return null;
         }
-        return new ApplicationEntityTypesProcessor<Activity>() {{{#entities}}
-            @Override
-            public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
-                setResult({{=entitySimpleNameUncapitalize}}ListActivityProvider.get());
-            }
-            {{/entities}}
-        }.process(((ProxyListPlace) place).getProxyClass());
     }
 }

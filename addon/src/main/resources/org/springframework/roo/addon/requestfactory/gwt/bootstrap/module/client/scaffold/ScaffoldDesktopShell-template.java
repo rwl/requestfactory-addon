@@ -16,6 +16,7 @@ import com.github.gwtbootstrap.client.ui.NavLink;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.inject.Inject;
+import com.googlecode.mgwt.mvp.client.AnimatableDisplay;
 
 /**
  * The outermost UI of the application.
@@ -29,10 +30,10 @@ public class ScaffoldDesktopShell extends Composite {
 
     private final ApplicationMessages messages = GWT.create(ApplicationMessages.class);
 
-    @UiField SimplePanel details;
     @UiField HasText nickname;
     @UiField HasClickHandlers signout;
-    @UiField SimplePanel master;
+    @UiField(provided = true)
+    AnimatableDisplay master = GWT.create(AnimatableDisplay.class);
     @UiField NotificationMole mole;
     @UiField(provided = true)
     NavigationTree navigationTree;
@@ -49,16 +50,9 @@ public class ScaffoldDesktopShell extends Composite {
     }
 
     /**
-     * @return the panel to hold the details
-     */
-    public SimplePanel getDetailsPanel() {
-        return details;
-    }
-
-    /**
      * @return the panel to hold the master list
      */
-    public SimplePanel getMasterPanel() {
+    public AnimatableDisplay getMasterPanel() {
         return master;
     }
 
