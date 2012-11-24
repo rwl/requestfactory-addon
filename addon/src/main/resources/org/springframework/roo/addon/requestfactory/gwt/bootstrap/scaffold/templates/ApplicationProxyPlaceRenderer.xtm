@@ -1,0 +1,45 @@
+package {{=packageName}};
+
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.requestfactory.shared.EntityProxyId;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+
+import {{=placePackage}}.ProxyPlace;
+{{#imports}}import {{=import}};
+{{/imports}}
+
+public class ApplicationProxyPlaceRenderer {
+
+    private final ApplicationRequestFactory requestFactory;
+
+    public ApplicationProxyPlaceRenderer(final ApplicationRequestFactory requestFactory) {
+        super();
+        this.requestFactory = requestFactory;
+    }
+
+    public String render(final ProxyPlace proxyPlaceArg, final HasWidgets hasWidgetsArg, final HasText hasTextArg) {
+    	final ProxyPlace proxyPlace = proxyPlaceArg;
+    	final HasWidgets hasWidgets = hasWidgetsArg;
+    	final HasText hasText = hasTextArg;
+        return new ApplicationEntityTypesProcessor<String>() {
+{{#entities}}
+            @Override
+            public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
+                @SuppressWarnings("unchecked")
+                EntityProxyId<{{=entityFullPath}}> entityProxyId = (EntityProxyId<{{=entityFullPath}}>) proxyPlace.getProxyId();
+                if (entityProxyId != null) {
+                    requestFactory.{{=entitySimpleNameUncapitalised}}Request().find(entityProxyId).fire(new Receiver<{{=entityFullPath}}>() {
+
+                        @Override
+                        public void onSuccess({{=entityFullPath}} proxy) {
+                            hasText.setText({{=entityFullPath}}Renderer.instance().render(proxy));
+                            hasWidgets.add((Widget) hasText);
+                        }
+                    });
+                }
+            }{{/entities}}
+        }.process(proxyPlaceArg.getProxyClass());
+    }
+}

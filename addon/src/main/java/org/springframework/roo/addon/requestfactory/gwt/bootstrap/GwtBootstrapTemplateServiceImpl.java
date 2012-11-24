@@ -133,7 +133,8 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     section.setVariable("entitySimpleName", entitySimpleName);
                 }
             }
-        } else if (type == GwtBootstrapType.LIST_PLACE_RENDERER) {
+        } else if (type == GwtBootstrapType.LIST_PLACE_RENDERER
+                || type == GwtBootstrapType.PROXY_PLACE_RENDERER) {
             for (final ClassOrInterfaceTypeDetails proxy : proxies) {
                 if (!RequestFactoryUtils.scaffoldProxy(proxy)) {
                     continue;
@@ -156,6 +157,8 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     final TemplateDataDictionary section = dataDictionary
                             .addSection("entities");
                     section.setVariable("entitySimpleName", entitySimpleName);
+                    section.setVariable("entitySimpleNameUncapitalised",
+                            StringUtils.uncapitalize(entitySimpleName));
                     section.setVariable("entityPluralName", plural);
                     section.setVariable("entityFullPath", proxySimpleName);
                     addImport(dataDictionary, proxy.getName()

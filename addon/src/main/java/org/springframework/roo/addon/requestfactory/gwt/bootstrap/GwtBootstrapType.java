@@ -38,6 +38,7 @@ public class GwtBootstrapType extends RequestFactoryType {
     public static final GwtBootstrapType LIST_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ListActivity", "listActivity", "ListActivity", false, true, false);
     public static final GwtBootstrapType LIST_EDITOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_EDITOR, true, "ListEditor", "listEditor", "ListEditor", true, true, false);
     public static final GwtBootstrapType LIST_PLACE_RENDERER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_RENDERER, false, "", "listPlaceRenderer", "ApplicationListPlaceRenderer", false, true, false);
+    public static final GwtBootstrapType PROXY_PLACE_RENDERER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_RENDERER, false, "", "proxyPlaceRenderer", "ApplicationProxyPlaceRenderer", false, true, false);
     public static final GwtBootstrapType DESKTOP_LIST_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopListView", "desktopListView", "DesktopListView", true, true, false);
     public static final GwtBootstrapType MASTER_ACTIVITIES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "masterActivities", "ApplicationMasterActivities", false, false, false);
     
@@ -67,7 +68,7 @@ public class GwtBootstrapType extends RequestFactoryType {
         ACTIVITIES_MAPPER, DETAIL_ACTIVITY, DETAILS_VIEW,
         DESKTOP_DETAILS_VIEW, EDIT_ACTIVITY, EDIT_ACTIVITY_WRAPPER, CREATE_ACTIVITY_WRAPPER,
         EDIT_RENDERER, EDIT_VIEW, DESKTOP_EDIT_VIEW, IS_SCAFFOLD_MOBILE_ACTIVITY,
-        LIST_ACTIVITY, LIST_EDITOR, LIST_PLACE_RENDERER, DESKTOP_LIST_VIEW,
+        LIST_ACTIVITY, LIST_EDITOR, LIST_PLACE_RENDERER, PROXY_PLACE_RENDERER, DESKTOP_LIST_VIEW,
         MASTER_ACTIVITIES, ABSTRACT_DATA_PROVIDER, PROXY_DATA_PROVIDER, NODE_DATA_PROVIDER, 
         IS_LEAF_PROCESSOR, PROXY_LIST_NODE_PROCESSOR,
         PROXY_NODE_PROCESSOR, MOBILE_ACTIVITIES, MOBILE_DETAILS_VIEW,
@@ -178,6 +179,28 @@ public class GwtBootstrapType extends RequestFactoryType {
                     .singletonList(new JavaType(topLevelPackage
                             .getFullyQualifiedPackageName()
                             + ".client.scaffold.place.ProxyListPlace")));
+        } else if (this == PROXY_PLACE_RENDERER) {
+            for (final RequestFactoryProxyProperty property : proxyFieldTypeMap.values()) {
+                if (property.isEnum() || property.isProxy()
+                        || property.isEmbeddable()
+                        || property.isCollectionOfProxy()) {
+                    final List<JavaType> params = new ArrayList<JavaType>();
+                    final JavaType param = new JavaType(
+                            COLLECTION.getFullyQualifiedTypeName(), 0,
+                            DataType.TYPE, null,
+                            Collections.singletonList(property.getValueType()));
+                    params.add(param);
+                    watchedMethods.put(
+                            new JavaSymbolName(property
+                                    .getSetProviderMethodName()), params);
+                }
+            }
+            watchedMethods.put(new JavaSymbolName("render"), Arrays
+                    .asList(new JavaType(topLevelPackage
+                            .getFullyQualifiedPackageName()
+                            + ".client.scaffold.place.ProxyPlace"),
+                            new JavaType("com.google.gwt.user.client.ui.HasWidgets"),
+                            new JavaType("com.google.gwt.user.client.ui.HasText")));
         } else if (this == ACTIVITIES_MAPPER) {
             final List<JavaType> params = new ArrayList<JavaType>();
             params.add(new JavaType(topLevelPackage
@@ -276,6 +299,8 @@ public class GwtBootstrapType extends RequestFactoryType {
                     APPLICATION_MESSAGES});
         } else if (type == LIST_PLACE_RENDERER) {
             return Arrays.asList(APP_ENTITY_TYPES_PROCESSOR);
+        } else if (type == PROXY_PLACE_RENDERER) {
+            return Arrays.asList(APP_ENTITY_TYPES_PROCESSOR, APP_REQUEST_FACTORY);
         } else if (type == MASTER_ACTIVITIES) {
             return Arrays.asList(APP_REQUEST_FACTORY,
                     APP_ENTITY_TYPES_PROCESSOR, SCAFFOLD_APP);
@@ -319,6 +344,8 @@ public class GwtBootstrapType extends RequestFactoryType {
         } else if (type == MASTER_ACTIVITIES) {
             watchedFieldNames = convertToJavaSymbolNames("requests",
                     "placeController");
+        } else if (type == PROXY_PLACE_RENDERER) {
+            watchedFieldNames = convertToJavaSymbolNames("requestFactory");
         } else {
             watchedFieldNames = new ArrayList<JavaSymbolName>();
         }

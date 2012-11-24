@@ -15,6 +15,6 @@ public class {{=className}} extends {{=name}}ListDataProvider<ProxyNode> {
 
     @Override
     protected ProxyNode getDataValue({{=proxy}} proxy) {
-        return new ProxyNode({{=proxyRendererType}}.instance().render(proxy), proxy.stableId(), String.valueOf(proxy.getId()), parentId);
+        return new ProxyNode({{=proxyRendererType}}.instance().render(proxy), {{=proxy}}.class, proxy.stableId(), String.valueOf(proxy.getId()), parentId, requestFactory);
     }
 }

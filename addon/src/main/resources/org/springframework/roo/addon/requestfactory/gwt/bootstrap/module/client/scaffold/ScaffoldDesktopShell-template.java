@@ -5,6 +5,7 @@ import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRend
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.ui.NavigationTree;
 import __TOP_LEVEL_PACKAGE__.client.managed.ApplicationMessages;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -13,6 +14,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import com.github.gwtbootstrap.client.ui.NavText;
 import com.github.gwtbootstrap.client.ui.NavLink;
+import com.github.gwtbootstrap.client.ui.Breadcrumbs;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.inject.Inject;
@@ -38,10 +40,12 @@ public class ScaffoldDesktopShell extends Composite {
     @UiField(provided = true)
     NavigationTree navigationTree;
     @UiField SplitLayoutPanel splitPanel;
+    @UiField(provided = true)
+    Breadcrumbs breadcrumbs = new Breadcrumbs();
 
     @Inject
-    public ScaffoldDesktopShell(ApplicationRequestFactory requestFactory, PlaceController placeController) {
-        this.navigationTree = new NavigationTree(requestFactory, placeController);
+    public ScaffoldDesktopShell(ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController) {
+        this.navigationTree = new NavigationTree(requestFactory, placeController, eventBus, breadcrumbs);
         initWidget(BINDER.createAndBindUi(this));
         nickname.setText(messages.notSignedIn());
         mole.setMessage(messages.loading());
