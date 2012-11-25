@@ -24,22 +24,24 @@ public final class GraphNodeMetadataProvider extends
                 .getMetadataIdentiferType(), getProvidesType());
         addMetadataTrigger(new JavaType(RooGraphNode.class.getName()));
     }
-    
+
     protected void deactivate(final ComponentContext context) {
         metadataDependencyRegistry.deregisterDependency(PhysicalTypeIdentifier
                 .getMetadataIdentiferType(), getProvidesType());
-        removeMetadataTrigger(new JavaType(RooGraphNode.class.getName()));    
+        removeMetadataTrigger(new JavaType(RooGraphNode.class.getName()));
     }
-    
+
     protected ItdTypeDetailsProvidingMetadataItem getMetadata(
             final String metadataIdentificationString,
             final JavaType aspectName,
             final PhysicalTypeMetadata governorPhysicalTypeMetadata,
             final String itdFilename) {
+        final GraphNodeAnnotationValues graphNodeAnnotationValues =
+                new GraphNodeAnnotationValues(governorPhysicalTypeMetadata);
         return new GraphNodeMetadata(metadataIdentificationString, aspectName,
-                governorPhysicalTypeMetadata);
+                governorPhysicalTypeMetadata, graphNodeAnnotationValues);
     }
-    
+
     public String getItdUniquenessFilenameSuffix() {
         return "Graph_Node";
     }
@@ -52,7 +54,7 @@ public final class GraphNodeMetadataProvider extends
                 metadataIdentificationString);
         return PhysicalTypeIdentifier.createIdentifier(javaType, path);
     }
-    
+
     protected String createLocalIdentifier(final JavaType javaType,
             final LogicalPath path) {
         return GraphNodeMetadata.createIdentifier(javaType, path);

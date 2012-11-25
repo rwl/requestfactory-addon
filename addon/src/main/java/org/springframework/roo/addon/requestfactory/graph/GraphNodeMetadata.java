@@ -1,16 +1,20 @@
 package org.springframework.roo.addon.requestfactory.graph;
 
+import static org.springframework.roo.model.JavaType.DOUBLE_OBJECT;
+import static org.springframework.roo.model.Jsr303JavaType.NOT_NULL;
+
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
+import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.classpath.details.FieldMetadataBuilder;
-import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.classpath.details.MethodMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotatedJavaType;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
@@ -59,77 +63,103 @@ public class GraphNodeMetadata extends
                 metadataIdentificationString);
     }
 
+    private final GraphNodeAnnotationValues graphNodeAnnotationValues;
+
+    private FieldMetadata xField;
+    private FieldMetadata yField;
+
     public GraphNodeMetadata(final String identifier,
             final JavaType aspectName,
-            final PhysicalTypeMetadata governorPhysicalTypeMetadata) {
+            final PhysicalTypeMetadata governorPhysicalTypeMetadata,
+            final GraphNodeAnnotationValues graphNodeAnnotationValues) {
         super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '"
                 + identifier + "' does not appear to be a valid");
+        this.graphNodeAnnotationValues = graphNodeAnnotationValues;
 
-        builder.addField(getSampleField());
-        builder.addMethod(getSampleMethod());
+        xField = getCoordField(this.graphNodeAnnotationValues.getX());
+        builder.addField(xField);
+        yField = getCoordField(this.graphNodeAnnotationValues.getY());
+        builder.addField(yField);
+
+        builder.addMethod(getDeclaredGetter(xField));
+        builder.addMethod(getDeclaredSetter(xField));
+        builder.addMethod(getDeclaredGetter(yField));
+        builder.addMethod(getDeclaredSetter(yField));
 
         itdTypeDetails = builder.build();
     }
 
-    private FieldMetadata getSampleField() {
+    private FieldMetadata getCoordField(final String fieldNameString) {
+        final JavaSymbolName fieldName = new JavaSymbolName(
+                fieldNameString);
+
+        final FieldMetadata existing = governorTypeDetails
+                .getField(fieldName);
+        if (existing != null) {
+            return existing;
+        }
+
         int modifier = 0;
 
-        // Using the FieldMetadataBuilder to create the field definition.
-        final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(getId(), // Metadata ID provided by supertype
-            modifier, // Using package protection rather than private
-            new ArrayList<AnnotationMetadataBuilder>(), // No annotations for this field
-            new JavaSymbolName("sampleField"), // Field name
-            JavaType.STRING); // Field type
+        final List<AnnotationMetadataBuilder> annotations =
+                new ArrayList<AnnotationMetadataBuilder>();
+        final AnnotationMetadataBuilder notNullAnnotation =
+                new AnnotationMetadataBuilder(NOT_NULL);
+        annotations.add(notNullAnnotation);
 
-        return fieldBuilder.build(); // Build and return a FieldMetadata instance
+
+        final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(
+                getId(), modifier, annotations, fieldName, DOUBLE_OBJECT);
+        fieldBuilder.setFieldInitializer("0.0");
+
+        return fieldBuilder.build();
     }
 
-    private MethodMetadata getSampleMethod() {
-        // Specify the desired method name
-        JavaSymbolName methodName = new JavaSymbolName("sampleMethod");
+    private MethodMetadataBuilder getDeclaredGetter(final FieldMetadata field) {
+        Validate.notNull(field, "Field required");
 
-        // Check if a method with the same signature already exists in the target type
-        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
-        if (method != null) {
-            // If it already exists, just return the method and omit its generation via the ITD
-            return method;
+        final JavaSymbolName methodName = BeanInfoUtils
+                .getAccessorMethodName(field);
+
+        if (governorHasMethod(methodName)) {
+            return null;
         }
 
-        // Define method annotations (none in this case)
-        List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        final InvocableMemberBodyBuilder bodyBuilder =
+                new InvocableMemberBodyBuilder();
+        bodyBuilder.appendFormalLine("return this."
+                + field.getFieldName().getSymbolName() + ";");
 
-        // Define method throws types (none in this case)
-        List<JavaType> throwsTypes = new ArrayList<JavaType>();
-
-        // Define method parameter types (none in this case)
-        List<AnnotatedJavaType> parameterTypes = new ArrayList<AnnotatedJavaType>();
-
-        // Define method parameter names (none in this case)
-        List<JavaSymbolName> parameterNames = new ArrayList<JavaSymbolName>();
-
-        // Create the method body
-        InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-        bodyBuilder.appendFormalLine("System.out.println(\"Hello World\");");
-
-        // Use the MethodMetadataBuilder for easy creation of MethodMetadata
-        MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(getId(), Modifier.PUBLIC, methodName, JavaType.VOID_PRIMITIVE, parameterTypes, parameterNames, bodyBuilder);
-        methodBuilder.setAnnotations(annotations);
-        methodBuilder.setThrowsTypes(throwsTypes);
-
-        return methodBuilder.build(); // Build and return a MethodMetadata instance
+        return new MethodMetadataBuilder(getId(), Modifier.PUBLIC,
+                methodName, field.getFieldType(), bodyBuilder);
     }
 
-    private MethodMetadata methodExists(JavaSymbolName methodName, List<AnnotatedJavaType> paramTypes) {
-        // We have no access to method parameter information, so we scan by name alone and treat any match as authoritative
-        // We do not scan the superclass, as the caller is expected to know we'll only scan the current class
-        for (MethodMetadata method : governorTypeDetails.getDeclaredMethods()) {
-            if (method.getMethodName().equals(methodName) && method.getParameterTypes().equals(paramTypes)) {
-                // Found a method of the expected name; we won't check method parameters though
-                return method;
-            }
+    private MethodMetadataBuilder getDeclaredSetter(final FieldMetadata field) {
+        Validate.notNull(field, "Field required");
+
+        final JavaSymbolName methodName = BeanInfoUtils
+                .getMutatorMethodName(field);
+
+        final JavaType parameterType = field.getFieldType();
+
+        if (governorHasMethod(methodName, parameterType)) {
+            return null;
         }
-        return null;
+
+        final List<JavaSymbolName> parameterNames = Arrays.asList(field
+                .getFieldName());
+
+        final InvocableMemberBodyBuilder bodyBuilder =
+                new InvocableMemberBodyBuilder();
+        bodyBuilder.appendFormalLine("this."
+                + field.getFieldName().getSymbolName() + " = "
+                + field.getFieldName().getSymbolName() + ";");
+
+        return new MethodMetadataBuilder(getId(), Modifier.PUBLIC,
+                methodName, JavaType.VOID_PRIMITIVE,
+                AnnotatedJavaType.convertFromJavaTypes(parameterType),
+                parameterNames, bodyBuilder);
     }
 
     public String toString() {
