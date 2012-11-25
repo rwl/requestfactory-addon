@@ -27,7 +27,7 @@ import org.springframework.roo.project.ProjectOperations;
 
 
 /**
- * Provides {@link ExampleMetadata}. This type is called by Roo to retrieve the metadata for this add-on.
+ * Provides {@link AccountMetadata}. This type is called by Roo to retrieve the metadata for this add-on.
  * Use this type to reference external types and services needed by the metadata type. Register metadata triggers and
  * dependencies here. Also define the unique add-on ITD identifier.
  *

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+    <batch>
+        <properties>
+            <gwt-maps.version>3.9.0</gwt-maps.version>
+        </properties>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.branflake2267</groupId>
+                <artifactId>gwt-maps-api</artifactId>
+                <version>${gwt-maps.version}</version>
+                <scope>provided</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.gwt</groupId>
+                        <artifactId>gwt-dev</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+        </dependencies>
+    </batch>
+</configuration>

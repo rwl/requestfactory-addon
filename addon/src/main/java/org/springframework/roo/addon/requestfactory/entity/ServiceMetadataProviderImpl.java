@@ -26,7 +26,7 @@ import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
 
 /**
- * Provides {@link ExampleMetadata}.
+ * Provides {@link ServiceMetadata}.
  */
 @Component(immediate = true)
 @Service
