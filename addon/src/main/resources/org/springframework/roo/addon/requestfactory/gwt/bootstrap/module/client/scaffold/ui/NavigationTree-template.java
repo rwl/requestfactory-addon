@@ -272,6 +272,8 @@ public class NavigationTree extends Composite implements PlaceChangeEvent.Handle
         this.proxyPlaceRenderer = new ApplicationProxyPlaceRenderer(requestFactory);
         this.listPlaceRenderer = new ApplicationListPlaceRenderer();
 
+        this.eventBus.addHandler(PlaceChangeEvent.TYPE, this);
+
         // Initialize the widget.
         createTree();
         initWidget(tree);

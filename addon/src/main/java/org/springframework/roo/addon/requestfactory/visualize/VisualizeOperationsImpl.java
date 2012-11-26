@@ -1,18 +1,20 @@
-package org.springframework.roo.addon.requestfactory.graph;
+package org.springframework.roo.addon.requestfactory.visualize;
 
-import static org.springframework.roo.addon.requestfactory.graph.GraphJavaType.ROO_GRAPH_NODE;
+import static org.springframework.roo.addon.requestfactory.visualize.VisualizeJavaType.ROO_MAP_MARKER;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 import static org.springframework.roo.model.RooJavaType.ROO_MONGO_ENTITY;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
-import org.springframework.roo.addon.requestfactory.annotations.graph.RooGraphNode;
+import org.springframework.roo.addon.requestfactory.annotations.visualize.RooMapMarker;
+import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapTypeService;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
@@ -23,12 +25,18 @@ import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.Dependency;
 import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.project.Property;
+import org.springframework.roo.support.logging.HandlerUtils;
 import org.springframework.roo.support.util.XmlUtils;
 import org.w3c.dom.Element;
 
 @Component
 @Service
-public class GraphOperationsImpl implements GraphOperations {
+public class VisualizeOperationsImpl implements VisualizeOperations {
+    
+    private static final String MAPS_MODULE = "com.google.gwt.maps.Maps";
+    
+    private static final Logger LOGGER = HandlerUtils
+            .getLogger(VisualizeOperationsImpl.class);
 
     /**
      * Use ProjectOperations to install new dependencies, plugins,
@@ -46,6 +54,8 @@ public class GraphOperationsImpl implements GraphOperations {
      * Use TypeManagementService to change types
      */
     @Reference private TypeManagementService typeManagementService;
+
+    @Reference protected GwtBootstrapTypeService gwtBootstrapTypeService;
 
     @Override
     public boolean isAnnotateCommandAvailable() {
@@ -65,27 +75,27 @@ public class GraphOperationsImpl implements GraphOperations {
     }
 
     @Override
-    public void annotateNodeType(final JavaType javaType, final String x,
-            final String y) {
+    public void annotateNodeType(final JavaType javaType, final String lat,
+            final String lon) {
         Validate.notNull(javaType, "Java type required");
 
         final ClassOrInterfaceTypeDetails existing = typeLocationService
                 .getTypeDetails(javaType);
 
         if (existing != null && MemberFindingUtils.getAnnotationOfType(
-                existing.getAnnotations(), ROO_GRAPH_NODE) == null) {
+                existing.getAnnotations(), ROO_MAP_MARKER) == null) {
             final ClassOrInterfaceTypeDetailsBuilder cidBuilder =
                     new ClassOrInterfaceTypeDetailsBuilder(existing);
 
             final AnnotationMetadataBuilder annotationBuilder =
-                    new AnnotationMetadataBuilder(ROO_GRAPH_NODE);
-            if (x != null) {
-                annotationBuilder.addStringAttribute(RooGraphNode
-                        .X_FIELD_ATTRIBUTE, x);
+                    new AnnotationMetadataBuilder(ROO_MAP_MARKER);
+            if (lat != null) {
+                annotationBuilder.addStringAttribute(RooMapMarker
+                        .LAT_FIELD_ATTRIBUTE, lat);
             }
-            if (y != null) {
-                annotationBuilder.addStringAttribute(RooGraphNode
-                        .Y_FIELD_ATTRIBUTE, y);
+            if (lon != null) {
+                annotationBuilder.addStringAttribute(RooMapMarker
+                        .LON_FIELD_ATTRIBUTE, lon);
             }
 
             cidBuilder.addAnnotation(
@@ -97,7 +107,7 @@ public class GraphOperationsImpl implements GraphOperations {
     }
 
     @Override
-    public void setupGraph() {
+    public void setupMapsGwt() {
         final String moduleName = projectOperations.getFocusedModuleName();
         for (Element propertyElement : XmlUtils.findElements(
                 "/configuration/batch/properties/*",
@@ -114,5 +124,12 @@ public class GraphOperationsImpl implements GraphOperations {
         }
 
         projectOperations.addDependencies(moduleName, dependencies);
+        
+        try {
+            gwtBootstrapTypeService.addInheritsModule(MAPS_MODULE, moduleName);
+        } catch (IllegalStateException e) {
+            LOGGER.warning("Problem adding " + MAPS_MODULE
+                    + " to inheritance (.gwt.xml file may not yet exist)");
+        }
     }
 }

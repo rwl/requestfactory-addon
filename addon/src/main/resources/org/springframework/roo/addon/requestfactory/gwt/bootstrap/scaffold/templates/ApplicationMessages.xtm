@@ -15,6 +15,9 @@ public interface ApplicationMessages extends Messages {
 	@DefaultMessage("Edit")
 	String edit();
 
+    @DefaultMessage("View")
+    String visualize();
+
 	@DefaultMessage("New")
 	String create();
 

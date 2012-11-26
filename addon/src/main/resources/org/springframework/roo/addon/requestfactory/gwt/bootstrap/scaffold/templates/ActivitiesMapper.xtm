@@ -20,11 +20,13 @@ import {{=topLevelPackage}}.client.scaffold.activity.AsyncActivityProxyProvider;
  */
 public class {{=className}} implements ActivityMapper {
 
-    @Inject AsyncActivityProxyProvider<{{=name}}DetailsActivity> {{=name}}DetailsActivityProvider;
+    @Inject AsyncActivityProxyProvider<{{=name}}DetailsActivity> {{=nameUncapitalized}}DetailsActivityProvider;
 
-    @Inject AsyncActivityProxyProvider<{{=name}}EditActivityWrapper> {{=name}}EditActivityProvider;
+    @Inject AsyncActivityProxyProvider<{{=name}}EditActivityWrapper> {{=nameUncapitalized}}EditActivityProvider;
 
-    @Inject AsyncActivityProxyProvider<{{=name}}CreateActivityWrapper> {{=name}}CreateActivityProvider;
+    @Inject AsyncActivityProxyProvider<{{=name}}CreateActivityWrapper> {{=nameUncapitalized}}CreateActivityProvider;
+
+    @Inject AsyncActivityProxyProvider<{{=name}}VisualizeActivity> {{=nameUncapitalized}}VisualizeActivityProvider;
 
     public Activity getActivity(Place place) {
         if (!(place instanceof ProxyPlace)) {
@@ -33,11 +35,13 @@ public class {{=className}} implements ActivityMapper {
         ProxyPlace proxyPlace = (ProxyPlace) place;
         switch(proxyPlace.getOperation()) {
             case DETAILS:
-                return {{=name}}DetailsActivityProvider.get();
+                return {{=nameUncapitalized}}DetailsActivityProvider.get();
             case EDIT:
-                return {{=name}}EditActivityProvider.get();
+                return {{=nameUncapitalized}}EditActivityProvider.get();
             case CREATE:
-                return {{=name}}CreateActivityProvider.get();
+                return {{=nameUncapitalized}}CreateActivityProvider.get();
+            case VISUALIZE:
+                return {{=nameUncapitalized}}VisualizeActivityProvider.get();
         }
         throw new IllegalArgumentException("Unknown operation " + proxyPlace.getOperation());
     }

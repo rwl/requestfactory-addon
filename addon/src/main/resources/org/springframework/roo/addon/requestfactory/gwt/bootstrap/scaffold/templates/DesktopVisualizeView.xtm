@@ -1,0 +1,113 @@
+package {{=packageName}};
+
+import java.util.ArrayList;
+
+{{#visualized}}
+import com.google.gwt.maps.client.LoadApi;
+import com.google.gwt.maps.client.LoadApi.LoadLibrary;
+import com.google.gwt.maps.client.MapOptions;
+import com.google.gwt.maps.client.MapTypeId;
+import com.google.gwt.maps.client.MapWidget;
+import com.google.gwt.maps.client.base.LatLng;
+import com.google.gwt.maps.client.overlays.Marker;
+import com.google.gwt.maps.client.overlays.MarkerOptions;{{/visualized}}
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
+
+import {{=uiPackage}}.renderer.{{=proxyRendererType}};
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+
+public class {{=className}} extends Composite implements {{=visualizeView}} {
+
+    interface Binder extends UiBinder<SimplePanel, {{=className}}> {
+    }
+
+    private static final Binder BINDER = GWT.create(Binder.class);
+
+    private static {{=className}} instance;
+
+    public static {{=className}} instance() {
+        if (instance == null) {
+            instance = new {{=className}}();
+        }
+        return instance;
+    }
+
+    @UiField
+    SimplePanel panel;
+{{#visualized}}
+    private MapWidget mapWidget;{{/visualized}}
+
+    private {{=proxy}} proxy;
+
+    private Delegate delegate;
+
+    public {{=className}}() {
+        initWidget(BINDER.createAndBindUi(this));
+{{#visualized}}
+        final boolean sensor = true;
+
+        final ArrayList<LoadLibrary> loadLibraries =
+                new ArrayList<LoadApi.LoadLibrary>();
+        loadLibraries.add(LoadLibrary.DRAWING);
+
+        final Runnable onLoad = new Runnable() {
+            @Override
+            public void run() {
+                buildUi();
+            }
+        };
+
+        LoadApi.go(onLoad, loadLibraries, sensor);{{/visualized}}
+    }
+{{#visualized}}
+    private void buildUi() {
+        final MapOptions opts = MapOptions.newInstance();
+        opts.setZoom(6);
+        opts.setMapTypeId(MapTypeId.ROADMAP);
+
+        mapWidget = new MapWidget(opts);
+        mapWidget.setSize("100%", "100%");
+
+        panel.setWidget(mapWidget);
+    }{{/visualized}}
+
+    @Override
+    public void setValue(final {{=proxy}} proxy) {
+        this.proxy = proxy;
+{{#visualized}}
+        if (mapWidget != null) {
+            final LatLng center = LatLng.newInstance(
+                this.proxy.{{=latGetter}}(), this.proxy.{{=lonGetter}}());
+            final MarkerOptions options = MarkerOptions.newInstance();
+            options.setPosition(center);
+            options.setTitle({{=proxyRendererType}}.instance().render(proxy));
+
+            final Marker marker = Marker.newInstance(options);
+            marker.setMap(mapWidget);
+            mapWidget.setCenter(center);
+        }{{/visualized}}
+    }
+
+    @Override
+    public {{=proxy}} getValue() {
+        return proxy;
+    }
+
+    @Override
+    public Widget asWidget() {
+        return this;
+    }
+
+    @Override
+    public void setDelegate(final Delegate delegate) {
+        this.delegate = delegate;
+    }
+}

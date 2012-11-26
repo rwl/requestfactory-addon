@@ -23,74 +23,81 @@ import {{=placePackage}}.ProxyDetailsView.ConfirmationCallback;
  * Details view for {{=proxy}}.
  */
 public class {{=className}} extends Composite implements {{=detailsView}} {
-	interface Binder extends UiBinder<HTMLPanel, {{=className}}> {}
+    interface Binder extends UiBinder<HTMLPanel, {{=className}}> {}
 
-	private static final Binder BINDER = GWT.create(Binder.class);
+    private static final Binder BINDER = GWT.create(Binder.class);
 
-	private static {{=className}} instance;
+    private static {{=className}} instance;
 
     private ApplicationMessages messages = GWT.create(ApplicationMessages.class);
 
-	{{=proxy}} proxy;
-	{{#properties}}
-	@UiField Label {{=prop}};{{/properties}}
+    {{=proxy}} proxy;
+    {{#properties}}
+    @UiField Label {{=prop}};{{/properties}}
 
-	@UiField SpanElement displayRenderer;
-	@UiField Button edit;
-	@UiField Button delete;
+    @UiField SpanElement displayRenderer;
+    @UiField Button edit;
+    @UiField Button delete;
+    {{#visualized}}@UiField {{/visualized}}Button view;
 
-	private Delegate delegate;
+    private Delegate delegate;
 
-	public static {{=className}} instance() {
-		if (instance == null) {
-			instance = new {{=className}}();
-		}
+    public static {{=className}} instance() {
+        if (instance == null) {
+            instance = new {{=className}}();
+        }
 
-		return instance;
-	}
+        return instance;
+    }
 
-	public {{=className}}() {
-		initWidget(BINDER.createAndBindUi(this));
+    public {{=className}}() {
+        initWidget(BINDER.createAndBindUi(this));
         this.edit.setText(messages.edit());
         this.delete.setText(messages.delete());
-	}
+        this.view.setText(messages.visualize());
+    }
 
-	public Widget asWidget() {
-		return this;
-	}
+    public Widget asWidget() {
+        return this;
+    }
 
     public void confirm(String msg, ConfirmationCallback callback) {
         if (Window.confirm(msg)) {
-        	callback.confirm();
+            callback.confirm();
         } else {
-        	callback.cancel();
+            callback.cancel();
         }
-	}
+    }
 
-	public {{=proxy}} getValue() {
-		return proxy;
-	}
+    public {{=proxy}} getValue() {
+        return proxy;
+    }
 
-	@UiHandler("delete")
-	public void onDeleteClicked(ClickEvent e) {
-		delegate.deleteClicked();
-	}
+    @UiHandler("delete")
+    public void onDeleteClicked(ClickEvent e) {
+        delegate.deleteClicked();
+    }
 
-	@UiHandler("edit")
-	public void onEditClicked(ClickEvent e) {
-		delegate.editClicked();
-	}
+    @UiHandler("edit")
+    public void onEditClicked(ClickEvent e) {
+        delegate.editClicked();
+    }
 
-	public void setDelegate(Delegate delegate) {
-		this.delegate = delegate;
-	}
+    {{#visualized}}@UiHandler("view"){{/visualized}}
+    public void onViewClicked(ClickEvent e) {
+        delegate.viewClicked();
+    }
 
-	public void setValue({{=proxy}} proxy) {
-		this.proxy = proxy;
-		{{#managedProperties}}
-		{{=prop}}.setText(proxy.{{=propGetter}}() == null ? "" : {{=propFormatter}}(proxy.{{=propGetter}}()));
-		{{/managedProperties}}
+    public void setDelegate(Delegate delegate) {
+        this.delegate = delegate;
+    }
 
-		displayRenderer.setInnerText({{=proxyRenderer}}.instance().render(proxy));
-	}
+    public void setValue({{=proxy}} proxy) {
+        this.proxy = proxy;
+        {{#managedProperties}}
+        {{=prop}}.setText(proxy.{{=propGetter}}() == null ? "" : {{=propFormatter}}(proxy.{{=propGetter}}()));
+        {{/managedProperties}}
+
+        displayRenderer.setInnerText({{=proxyRenderer}}.instance().render(proxy));
+    }
 }

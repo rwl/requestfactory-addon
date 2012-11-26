@@ -19,6 +19,8 @@ public interface ProxyDetailsView<P> extends TakesValue<P>, IsWidget {
         void editClicked();
 
         void backClicked();
+
+        void viewClicked();
     }
 
     interface ConfirmationCallback {

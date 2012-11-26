@@ -1,9 +1,9 @@
-package org.springframework.roo.addon.requestfactory.graph;
+package org.springframework.roo.addon.requestfactory.visualize;
 
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.service.component.ComponentContext;
-import org.springframework.roo.addon.requestfactory.annotations.graph.RooGraphNode;
+import org.springframework.roo.addon.requestfactory.annotations.visualize.RooMapMarker;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.itd.AbstractItdMetadataProvider;
@@ -12,23 +12,23 @@ import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
 
 /**
- * Provides {@link GraphNodeMetadata}.
+ * Provides {@link MapMarkerMetadata}.
  */
 @Component
 @Service
-public final class GraphNodeMetadataProvider extends
+public final class MapMarkerMetadataProvider extends
         AbstractItdMetadataProvider {
 
     protected void activate(final ComponentContext context) {
         metadataDependencyRegistry.registerDependency(PhysicalTypeIdentifier
                 .getMetadataIdentiferType(), getProvidesType());
-        addMetadataTrigger(new JavaType(RooGraphNode.class.getName()));
+        addMetadataTrigger(new JavaType(RooMapMarker.class.getName()));
     }
 
     protected void deactivate(final ComponentContext context) {
         metadataDependencyRegistry.deregisterDependency(PhysicalTypeIdentifier
                 .getMetadataIdentiferType(), getProvidesType());
-        removeMetadataTrigger(new JavaType(RooGraphNode.class.getName()));
+        removeMetadataTrigger(new JavaType(RooMapMarker.class.getName()));
     }
 
     protected ItdTypeDetailsProvidingMetadataItem getMetadata(
@@ -36,31 +36,31 @@ public final class GraphNodeMetadataProvider extends
             final JavaType aspectName,
             final PhysicalTypeMetadata governorPhysicalTypeMetadata,
             final String itdFilename) {
-        final GraphNodeAnnotationValues graphNodeAnnotationValues =
-                new GraphNodeAnnotationValues(governorPhysicalTypeMetadata);
-        return new GraphNodeMetadata(metadataIdentificationString, aspectName,
-                governorPhysicalTypeMetadata, graphNodeAnnotationValues);
+        final MapMarkerAnnotationValues mapMarkerAnnotationValues =
+                new MapMarkerAnnotationValues(governorPhysicalTypeMetadata);
+        return new MapMarkerMetadata(metadataIdentificationString, aspectName,
+                governorPhysicalTypeMetadata, mapMarkerAnnotationValues);
     }
 
     public String getItdUniquenessFilenameSuffix() {
-        return "Graph_Node";
+        return "Map_Marker";
     }
 
     protected String getGovernorPhysicalTypeIdentifier(
             final String metadataIdentificationString) {
-        final JavaType javaType = GraphNodeMetadata.getJavaType(
+        final JavaType javaType = MapMarkerMetadata.getJavaType(
                 metadataIdentificationString);
-        final LogicalPath path = GraphNodeMetadata.getPath(
+        final LogicalPath path = MapMarkerMetadata.getPath(
                 metadataIdentificationString);
         return PhysicalTypeIdentifier.createIdentifier(javaType, path);
     }
 
     protected String createLocalIdentifier(final JavaType javaType,
             final LogicalPath path) {
-        return GraphNodeMetadata.createIdentifier(javaType, path);
+        return MapMarkerMetadata.createIdentifier(javaType, path);
     }
 
     public String getProvidesType() {
-        return GraphNodeMetadata.getMetadataIdentiferType();
+        return MapMarkerMetadata.getMetadataIdentiferType();
     }
 }

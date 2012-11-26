@@ -11,6 +11,7 @@ import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.TEXT_AREA;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNEDITABLE;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.UNITS;
+import static org.springframework.roo.addon.requestfactory.visualize.VisualizeJavaType.ROO_MAP_MARKER;
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
 import static org.springframework.roo.model.JdkJavaType.ARRAY_LIST;
@@ -38,6 +39,7 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.springframework.roo.addon.plural.PluralMetadata;
 import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactoryEntity;
+import org.springframework.roo.addon.requestfactory.annotations.visualize.RooMapMarker;
 import org.springframework.roo.addon.requestfactory.entity.EntityDataKeys;
 import org.springframework.roo.addon.requestfactory.entity.EntityMetadata;
 import org.springframework.roo.addon.requestfactory.entity.TextType;
@@ -45,6 +47,7 @@ import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeParsingService;
 import org.springframework.roo.classpath.customdata.CustomDataKeys;
+import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.classpath.details.MemberFindingUtils;
@@ -298,6 +301,27 @@ public class BaseTemplateServiceImpl {
                 removeMethodAdditions);
         dataDictionary.setVariable("removeMethodSignature",
                 removeMethodSignature);
+        
+        final AnnotationMetadata mapMarker = mirroredType
+                .getAnnotation(ROO_MAP_MARKER);
+        if (mapMarker != null) {
+            dataDictionary.showSection("visualized");
+            
+            final String lat = RequestFactoryUtils.getStringAnnotationValue(
+                    mirroredType, ROO_MAP_MARKER, RooMapMarker
+                    .LAT_FIELD_ATTRIBUTE, RooMapMarker.LAT_FIELD_DEFAULT);
+            final String lon = RequestFactoryUtils.getStringAnnotationValue(
+                    mirroredType, ROO_MAP_MARKER, RooMapMarker
+                    .LON_FIELD_ATTRIBUTE, RooMapMarker.LON_FIELD_DEFAULT);
+
+            final JavaSymbolName latGetter = BeanInfoUtils
+                    .getAccessorMethodName(new JavaSymbolName(lat), STRING);
+            final JavaSymbolName lonGetter = BeanInfoUtils
+                    .getAccessorMethodName(new JavaSymbolName(lon), STRING);
+            dataDictionary.setVariable("latGetter", latGetter.getSymbolName());
+            dataDictionary.setVariable("lonGetter", lonGetter.getSymbolName());
+        }
+            
 
         final FieldMetadata parentProperty = requestFactoryTypeService
                 .getParentField(mirroredType);

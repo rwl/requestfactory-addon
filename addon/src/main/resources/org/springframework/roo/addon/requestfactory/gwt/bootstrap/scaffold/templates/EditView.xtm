@@ -11,12 +11,9 @@ import java.util.List;
 /**
  * Edit view for {{=proxy}}.
  */
-public interface {{=className}}<V extends ProxyEditView<{{=proxy}}, V>> extends ProxyEditView<{{=proxy}}, V>
-{
-	void setDelegate(Delegate delegate);
+public interface {{=className}}<V extends ProxyEditView<{{=proxy}}, V>> extends ProxyEditView<{{=proxy}}, V> {
+    void setDelegate(Delegate delegate);
 
-	interface Delegate extends ProxyEditView.Delegate
-	{
-
-	}
+    interface Delegate extends ProxyEditView.Delegate {
+    }
 }

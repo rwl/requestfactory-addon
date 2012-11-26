@@ -17,7 +17,7 @@ public class ProxyPlace extends Place {
      * location in the scaffold app.
      */
     public enum Operation {
-        CREATE, EDIT, DETAILS
+        CREATE, EDIT, DETAILS, VISUALIZE
     }
 
     /**

@@ -6,13 +6,10 @@ import {{=placePackage}}.ProxyDetailsView;
 /**
  * Details view for {{=proxy}}.
  */
-public interface {{=className}} extends ProxyDetailsView<{{=proxy}}> 
-{
-	void setDelegate(Delegate delegate);
+public interface {{=className}} extends ProxyDetailsView<{{=proxy}}> {
+    void setDelegate(Delegate delegate);
 
-	interface Delegate extends ProxyDetailsView.Delegate
-	{
-		
-	}
+    interface Delegate extends ProxyDetailsView.Delegate {
 
+    }
 }

@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.graph;
+package org.springframework.roo.addon.requestfactory.visualize;
 
 import static org.springframework.roo.model.JavaType.DOUBLE_OBJECT;
 import static org.springframework.roo.model.Jsr303JavaType.NOT_NULL;
@@ -26,12 +26,12 @@ import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
 
 /**
- * This type produces metadata for a new graph node ITD.
+ * This type produces metadata for a new map marker ITD.
  */
-public class GraphNodeMetadata extends
+public class MapMarkerMetadata extends
         AbstractItdTypeDetailsProvidingMetadataItem {
 
-    private static final String PROVIDES_TYPE_STRING = GraphNodeMetadata
+    private static final String PROVIDES_TYPE_STRING = MapMarkerMetadata
             .class.getName();
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils
             .create(PROVIDES_TYPE_STRING);
@@ -63,29 +63,29 @@ public class GraphNodeMetadata extends
                 metadataIdentificationString);
     }
 
-    private final GraphNodeAnnotationValues graphNodeAnnotationValues;
+    private final MapMarkerAnnotationValues mapMarkerAnnotationValues;
 
-    private FieldMetadata xField;
-    private FieldMetadata yField;
+    private FieldMetadata latField;
+    private FieldMetadata lonField;
 
-    public GraphNodeMetadata(final String identifier,
+    public MapMarkerMetadata(final String identifier,
             final JavaType aspectName,
             final PhysicalTypeMetadata governorPhysicalTypeMetadata,
-            final GraphNodeAnnotationValues graphNodeAnnotationValues) {
+            final MapMarkerAnnotationValues mapMarkerAnnotationValues) {
         super(identifier, aspectName, governorPhysicalTypeMetadata);
         Validate.isTrue(isValid(identifier), "Metadata identification string '"
                 + identifier + "' does not appear to be a valid");
-        this.graphNodeAnnotationValues = graphNodeAnnotationValues;
+        this.mapMarkerAnnotationValues = mapMarkerAnnotationValues;
 
-        xField = getCoordField(this.graphNodeAnnotationValues.getX());
-        builder.addField(xField);
-        yField = getCoordField(this.graphNodeAnnotationValues.getY());
-        builder.addField(yField);
+        latField = getCoordField(this.mapMarkerAnnotationValues.getLat());
+        builder.addField(latField);
+        lonField = getCoordField(this.mapMarkerAnnotationValues.getLon());
+        builder.addField(lonField);
 
-        builder.addMethod(getDeclaredGetter(xField));
-        builder.addMethod(getDeclaredSetter(xField));
-        builder.addMethod(getDeclaredGetter(yField));
-        builder.addMethod(getDeclaredSetter(yField));
+        builder.addMethod(getDeclaredGetter(latField));
+        builder.addMethod(getDeclaredSetter(latField));
+        builder.addMethod(getDeclaredGetter(lonField));
+        builder.addMethod(getDeclaredSetter(lonField));
 
         itdTypeDetails = builder.build();
     }

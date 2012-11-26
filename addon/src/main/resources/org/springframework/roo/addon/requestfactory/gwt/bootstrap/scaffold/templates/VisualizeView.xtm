@@ -1,0 +1,14 @@
+package {{=packageName}};
+
+import {{=placePackage}}.ProxyVisualizeView;
+{{#imports}}import {{=import}};
+{{/imports}}
+/**
+ * Visualization view for {{=proxy}}.
+ */
+public interface {{=className}} extends ProxyVisualizeView<{{=proxy}}> {
+    void setDelegate(Delegate delegate);
+
+    interface Delegate extends ProxyVisualizeView.Delegate {
+    }
+}
