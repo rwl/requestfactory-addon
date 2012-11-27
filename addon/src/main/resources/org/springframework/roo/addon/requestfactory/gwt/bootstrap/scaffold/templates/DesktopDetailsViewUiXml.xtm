@@ -44,7 +44,7 @@
 			<b:FormActions>
 				<b:Button addStyleNames="{style.button}" icon="EDIT" type="PRIMARY" ui:field="edit"/>
 				<b:Button addStyleNames="{style.button}" icon="REMOVE" ui:field="delete"/>{{#visualized}}
-				<b:Button addStyleNames="{style.button}" ui:field="view"/>{{/visualized}}
+				<b:Button addStyleNames="{style.button}" icon="MAP_MARKER" ui:field="view"/>{{/visualized}}
 			</b:FormActions>
 		</b:Fieldset>
 	</b:Form>

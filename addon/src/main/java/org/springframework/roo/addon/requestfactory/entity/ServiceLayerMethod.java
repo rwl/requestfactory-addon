@@ -117,6 +117,35 @@ enum ServiceLayerMethod {
         public JavaType getReturnType(final JavaType entityType) {
             return JavaType.listOf(entityType);
         }
+    },
+
+    FIND_BY_PARENT(EntityDataKeys.FIND_BY_PARENT_METHOD) {
+        @Override
+        public String getName(final ServiceAnnotationValues annotationValues,
+                final FieldMetadata parentField,
+                final JavaType entityType, final String plural) {
+            if (parentField != null) {
+                return "find" + plural + "ByParentId";
+            }
+            return null;
+        }
+
+        @Override
+        public List<JavaSymbolName> getParameterNames(
+                final JavaType entityType, final JavaType idType) {
+            return Arrays.asList(new JavaSymbolName("parentId"));
+        }
+
+        @Override
+        public List<JavaType> getParameterTypes(final JavaType entityType,
+                final JavaType idType) {
+            return Arrays.asList(idType);
+        }
+
+        @Override
+        public JavaType getReturnType(final JavaType entityType) {
+            return JavaType.listOf(entityType);
+        }
     };
 
     /**

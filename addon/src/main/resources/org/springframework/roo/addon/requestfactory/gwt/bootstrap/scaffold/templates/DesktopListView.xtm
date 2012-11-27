@@ -47,6 +47,9 @@ public class {{=className}} extends AbstractProxyListView<{{=proxy}}> {
     
     @UiField
     Button backButton;
+{{#visualized}}
+    @UiField{{/visualized}}
+    Button viewButton;
     
     @UiField(provided = true)
     SimplePager pager = new SimplePager(TextLocation.RIGHT, (Resources) GWT.create(Resources.class), true, 50, false, (SimplePagerConstants) GWT.create(SimplePagerConstants.class));
@@ -62,11 +65,12 @@ public class {{=className}} extends AbstractProxyListView<{{=proxy}}> {
     }
 
     public {{=className}}() {
-        init(BINDER.createAndBindUi(this), table, newButton, backButton);
+        init(BINDER.createAndBindUi(this), table, newButton, backButton, viewButton);
         table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
         init();
-        newButton.setText(messages.create{{=name}}());
-        {{#hasParent}}backButton.setText(messages.back());{{/hasParent}}
+        newButton.setText(messages.create{{=name}}());{{#hasParent}}
+        backButton.setText(messages.back());{{/hasParent}}{{#visualized}}
+        viewButton.setText(messages.visualize());{{/visualized}}
     }
 
     public void init() {

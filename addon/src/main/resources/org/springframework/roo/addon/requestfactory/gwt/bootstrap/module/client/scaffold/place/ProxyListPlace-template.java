@@ -11,6 +11,10 @@ import com.google.web.bindery.requestfactory.shared.RequestFactory;
  */
 public class ProxyListPlace extends Place {
 
+    public enum ListOperation {
+        SELECT, VISUALIZE
+    }
+
     /**
      * Tokenizer.
      */
@@ -24,16 +28,16 @@ public class ProxyListPlace extends Place {
         }
 
         public ProxyListPlace getPlace(String token) {
-            String parts[] = token.split(SEPARATOR);
-            if (parts.length > 1) {
-                return new ProxyListPlace(requests.getProxyClass(parts[0]), parts[1]);
-            } else {
-                return new ProxyListPlace(requests.getProxyClass(parts[0]), null);
-            }
+            final String parts[] = token.split(SEPARATOR);
+            final ListOperation operation = ListOperation.valueOf(parts[1]);
+            final String parentId = (parts.length == 3) ? parts[2] : null;
+            return new ProxyListPlace(requests.getProxyClass(parts[0]),
+                    operation, parentId);
         }
 
         public String getToken(ProxyListPlace place) {
             String token = requests.getHistoryToken(place.getProxyClass());
+            token += SEPARATOR + place.getOperation();
             if (place.getParentId() != null) {
                 token += SEPARATOR + place.getParentId();
             }
@@ -43,10 +47,18 @@ public class ProxyListPlace extends Place {
 
     private final Class<? extends EntityProxy> proxyType;
     private final String parentId;
+    private final ListOperation operation;
 
-    public ProxyListPlace(Class<? extends EntityProxy> proxyType, String parentId) {
+    public ProxyListPlace(final Class<? extends EntityProxy> proxyType,
+            final String parentId) {
+        this(proxyType, ListOperation.SELECT, parentId);
+    }
+
+    public ProxyListPlace(final Class<? extends EntityProxy> proxyType,
+            final ListOperation operation, final String parentId) {
         this.proxyType = proxyType;
         this.parentId = parentId;
+        this.operation = operation;
     }
 
     @Override
@@ -58,6 +70,9 @@ public class ProxyListPlace extends Place {
             return true;
         }
         ProxyListPlace other = (ProxyListPlace) obj;
+        if (operation != other.operation) {
+            return false;
+        }
         if (parentId == null) {
             if (other.parentId != null) {
                 return false;
@@ -72,10 +87,15 @@ public class ProxyListPlace extends Place {
         return proxyType;
     }
 
+    public ListOperation getOperation() {
+        return operation;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ((operation == null) ? 0 : operation.hashCode());
         result = prime * result + proxyType.hashCode();
         result = prime * result + ((parentId == null) ? 0 : parentId.hashCode());
         return result;
@@ -83,7 +103,7 @@ public class ProxyListPlace extends Place {
 
     @Override
     public String toString() {
-        return "ProxyListPlace [proxyType=" + proxyType + ", parentId=" + parentId + "]";
+        return "ProxyListPlace [operation=" + operation + ", proxyType=" + proxyType + ", parentId=" + parentId + "]";
     }
 
     public String getParentId() {

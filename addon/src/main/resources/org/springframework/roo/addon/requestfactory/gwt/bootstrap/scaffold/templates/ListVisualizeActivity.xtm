@@ -1,0 +1,71 @@
+package {{=packageName}};
+
+import java.util.List;
+import java.util.Set;
+
+import com.google.gwt.activity.shared.AbstractActivity;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.inject.Inject;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+
+import {{=placePackage}}.ProxyListPlace;
+import {{=placePackage}}.ProxyListVisualizeView;
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+/**
+ * An {@link com.google.gwt.activity.shared.Activity Activity} that requests and
+ * displays a visualization of a list of {{=proxy}} objects.
+ */
+public class {{=className}} extends AbstractActivity implements ProxyListVisualizeView.Delegate<{{=proxy}}> {
+
+    private final ApplicationRequestFactory requests;
+    private final PlaceController placeController;
+    private final String parentId;
+
+    private ProxyListVisualizeView<{{=proxy}}> view;
+    private AcceptsOneWidget display;
+
+    @Inject
+    public {{=className}}(ApplicationRequestFactory requests, PlaceController placeController) {
+        this.placeController = placeController;
+        ProxyListPlace proxyListPlace = (ProxyListPlace) placeController.getWhere();
+        this.requests = requests;
+        this.view = ScaffoldApp.isMobile() ? {{=name}}DesktopListVisualizeView.instance() : {{=name}}DesktopListVisualizeView.instance();
+        view.setDelegate(this);
+        this.parentId = proxyListPlace.getParentId();
+    }
+
+    @Override
+    public void start(AcceptsOneWidget displayIn, EventBus eventBus) {
+        this.display = displayIn;
+        final Receiver<List<{{=proxy}}>> callback = new Receiver<List<{{=proxy}}>>() {
+
+            public void onSuccess(List<{{=proxy}}> response) {
+                if (response == null) {
+                    placeController.goTo(new ProxyListPlace({{=proxy}}.class, parentId));
+                    return;
+                }
+                if (display == null) {
+                    return;
+                }
+                view.setValue(response);
+                display.setWidget(view);
+            }
+        };
+        find(callback);
+    }
+
+    protected void find(Receiver<List<{{=proxy}}>> callback) {{{#isRoot}}
+		requests.{{=nameUncapitalized}}Request().{{=findAllMethod}}.fire(callback);{{/isRoot}}{{#hasParent}}
+		if (parentId == null) {
+		    requests.{{=nameUncapitalized}}Request().{{=findAllMethod}}.fire(callback);
+		} else {
+		    requests.{{=nameUncapitalized}}Request().{{=findByParentMethod}}.fire(callback);
+		}
+		{{/hasParent}}
+    }
+}

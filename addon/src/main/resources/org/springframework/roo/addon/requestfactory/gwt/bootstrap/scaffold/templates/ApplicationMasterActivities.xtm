@@ -19,19 +19,20 @@ import {{=placePackage}}.ProxyPlace;
  */
 public final class ApplicationMasterActivities implements ActivityMapper {
 {{#entities}}
-    @Inject AsyncActivityProxyProvider<{{=entitySimpleName}}ListActivity> {{=entitySimpleNameUncapitalize}}ListActivityProvider;{{/entities}}
+    @Inject {{=entitySimpleName}}ListActivitiesMapper {{=entitySimpleNameUncapitalize}}ListActivitiesMapper;{{/entities}}
 {{#entities}}
     @Inject {{=entitySimpleName}}ActivitiesMapper {{=entitySimpleNameUncapitalize}}ActivitiesMapper;{{/entities}}
 
     public Activity getActivity(Place place) {
         if (place instanceof ProxyListPlace) {
+            final ProxyListPlace proxyListPlace = (ProxyListPlace) place;
             return new ApplicationEntityTypesProcessor<Activity>() {{{#entities}}
                 @Override
                 public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
-                    setResult({{=entitySimpleNameUncapitalize}}ListActivityProvider.get());
+                    setResult({{=entitySimpleNameUncapitalize}}ListActivitiesMapper.getActivity(proxyListPlace));
                 }
                 {{/entities}}
-            }.process(((ProxyListPlace) place).getProxyClass());
+            }.process(proxyListPlace.getProxyClass());
         } else if (place instanceof ProxyPlace) {
             final ProxyPlace proxyPlace = (ProxyPlace) place;
             return new ApplicationEntityTypesProcessor<Activity>() {{{#entities}}

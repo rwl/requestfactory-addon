@@ -46,7 +46,7 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
         config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui --topLevelPackage ${topLevelPackage} --artifactId ${projectName}-ui --parent ${topLevelPackage}:${projectName}:" + VERSION + " --packaging PARENT_POM"));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
-        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui/server --topLevelPackage ${topLevelPackage} --artifactId ${projectName}-server --parent ${topLevelPackage}:ui:" + VERSION));
+        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui/server --topLevelPackage ${topLevelPackage} --artifactId ${projectName}-server --parent ${topLevelPackage}:${projectName}-ui:" + VERSION));
         config.addAction(ActionConfigFactory.executeAction("web requestfactory setup server"));
         config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage} --artifactId ${projectName}-domain --version " + VERSION));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));

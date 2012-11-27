@@ -103,6 +103,7 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         builder.addMethod(getStringIdSetter());
         if (this.activeRecord) {
             builder.addMethod(getFindEntriesByParentMethod());
+            builder.addMethod(getFindByParentMethod());
             builder.addMethod(getCountByParentMethod());
             builder.addMethod(getFindByStringIdMethod());
         }
@@ -316,6 +317,76 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         methodBuilder.setThrowsTypes(throwsTypes);
 
         return methodBuilder.build(); // Build and return a MethodMetadata instance
+    }
+
+    private MethodMetadata getFindByParentMethod() {
+        if (parentProperty == null) {
+            return null;
+        }
+
+        JavaSymbolName methodName = new JavaSymbolName("find" + destination.getSimpleTypeName() + "ByParentId");
+
+        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
+        if (method != null) {
+            return method;
+        }
+
+        List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        if (isGaeEnabled) {
+            addTransactionalAnnotation(annotations);
+        }
+
+        List<JavaType> throwsTypes = new ArrayList<JavaType>();
+
+        final JavaType idType = identifierField.getFieldType().equals(KEY) ? STRING : identifierField.getFieldType();
+        final JavaType[] parameterTypes = { idType };
+
+        final String idParamName = StringUtils.uncapitalize(parentProperty.getFieldType().getSimpleTypeName()) + "Id";
+        final List<JavaSymbolName> parameterNames = Arrays.asList(
+                new JavaSymbolName(idParamName));
+        final JavaType returnType = new JavaType(
+                LIST.getFullyQualifiedTypeName(), 0, DataType.TYPE, null,
+                Arrays.asList(destination));
+
+        String findMethodName = crudAnnotationValues.getFindMethod() + parentProperty.getFieldType().getSimpleTypeName();
+        if (identifierField.getFieldType().equals(KEY)) {
+            findMethodName = findMethodName + "ByStringId";
+        }
+        InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+        bodyBuilder.appendFormalLine("final " + parentProperty.getFieldType().getNameIncludingTypeParameters(false, builder.getImportRegistrationResolver())
+                + " parent = "
+                + parentProperty.getFieldType().getNameIncludingTypeParameters(true, builder.getImportRegistrationResolver())
+                + "." + findMethodName + "(" + idParamName + ");");
+
+
+        final List<JavaType> parameters = new ArrayList<JavaType>();
+        parameters.add(destination);
+        final JavaType typedQueryType = new JavaType(
+                TYPED_QUERY.getFullyQualifiedTypeName(), 0, DataType.TYPE,
+                null, parameters);
+
+        bodyBuilder.appendFormalLine(typedQueryType.getNameIncludingTypeParameters(false, builder.getImportRegistrationResolver())
+                + " q = "
+                + ENTITY_MANAGER_METHOD_NAME
+                + "().createQuery(\"SELECT o FROM "
+                + entityName
+                + " AS o WHERE o."
+                + parentProperty.getFieldName().getSymbolName()
+                + " = :parent"
+                + "\", "
+                + destination.getSimpleTypeName()
+                + ".class);");
+        bodyBuilder.appendFormalLine("q.setParameter(\"parent\", parent);");
+        bodyBuilder.appendFormalLine("return q.getResultList();");
+
+        MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(getId(),
+                Modifier.PUBLIC | Modifier.STATIC, methodName, returnType,
+                AnnotatedJavaType.convertFromJavaTypes(parameterTypes),
+                parameterNames, bodyBuilder);
+        methodBuilder.setAnnotations(annotations);
+        methodBuilder.setThrowsTypes(throwsTypes);
+
+        return methodBuilder.build();
     }
 
     private MethodMetadata getCountByParentMethod() {

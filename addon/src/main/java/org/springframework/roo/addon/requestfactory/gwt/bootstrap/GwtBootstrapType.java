@@ -26,6 +26,7 @@ public class GwtBootstrapType extends RequestFactoryType {
 
     public static final GwtBootstrapType MASTER_ACTIVITIES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "masterActivities", "ApplicationMasterActivities", false, false, false);
     public static final GwtBootstrapType ACTIVITIES_MAPPER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ActivitiesMapper", "activitiesMapper", "ActivitiesMapper", false, false, false);
+    public static final GwtBootstrapType LIST_ACTIVITIES_MAPPER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ListActivitiesMapper", "listActivitiesMapper", "ListActivitiesMapper", false, false, false);
     
     public static final GwtBootstrapType DETAIL_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "DetailsActivity", "detailsActivity", "DetailsActivity", false, true, false);
     public static final GwtBootstrapType DETAILS_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI, true, "DetailsView", "detailsView", "DetailsView", false, false, false);
@@ -39,10 +40,12 @@ public class GwtBootstrapType extends RequestFactoryType {
     public static final GwtBootstrapType DESKTOP_EDIT_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopEditView", "desktopEditView", "DesktopEditView", true, true, false);
     public static final GwtBootstrapType IS_SCAFFOLD_MOBILE_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.SCAFFOLD_ACTIVITY, false, "", "isScaffoldMobileActivity", "IsScaffoldMobileActivity", false, false, false);
     public static final GwtBootstrapType LIST_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ListActivity", "listActivity", "ListActivity", false, true, false);
+    public static final GwtBootstrapType LIST_VISUALIZE_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ListVisualizeActivity", "listVisualizeActivity", "ListVisualizeActivity", false, true, false);
     public static final GwtBootstrapType LIST_EDITOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_EDITOR, true, "ListEditor", "listEditor", "ListEditor", true, true, false);
     public static final GwtBootstrapType LIST_PLACE_RENDERER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_RENDERER, false, "", "listPlaceRenderer", "ApplicationListPlaceRenderer", false, true, false);
     public static final GwtBootstrapType PROXY_PLACE_RENDERER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_RENDERER, false, "", "proxyPlaceRenderer", "ApplicationProxyPlaceRenderer", false, true, false);
     public static final GwtBootstrapType DESKTOP_LIST_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopListView", "desktopListView", "DesktopListView", true, true, false);
+    public static final GwtBootstrapType DESKTOP_LIST_VISUALIZE_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopListVisualizeView", "desktopListVisualizeView", "DesktopListVisualizeView", true, true, false);
     
     public static final GwtBootstrapType VISUALIZE_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "VisualizeActivity", "visualizeActivity", "VisualizeActivity", false, true, false);
     public static final GwtBootstrapType VISUALIZE_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI, true, "VisualizeView", "visualizeView", "VisualizeView", false, false, false);
@@ -72,11 +75,12 @@ public class GwtBootstrapType extends RequestFactoryType {
     public static final GwtBootstrapType SCAFFOLD_MOBILE_APP = new GwtBootstrapType(GwtBootstrapPaths.SCAFFOLD, false, "", "scaffoldMobileApp", "ScaffoldMobileApp", false, false, false);
 
     public static final GwtBootstrapType[] ALL_TYPES = new GwtBootstrapType[] {
-        MASTER_ACTIVITIES, ACTIVITIES_MAPPER,
+        MASTER_ACTIVITIES, ACTIVITIES_MAPPER, LIST_ACTIVITIES_MAPPER,
         DETAIL_ACTIVITY, DETAILS_VIEW, DESKTOP_DETAILS_VIEW,
         EDIT_ACTIVITY, EDIT_ACTIVITY_WRAPPER, CREATE_ACTIVITY_WRAPPER,
         EDIT_RENDERER, EDIT_VIEW, DESKTOP_EDIT_VIEW, IS_SCAFFOLD_MOBILE_ACTIVITY,
-        LIST_ACTIVITY, LIST_EDITOR, LIST_PLACE_RENDERER, PROXY_PLACE_RENDERER, DESKTOP_LIST_VIEW,
+        LIST_ACTIVITY, LIST_VISUALIZE_ACTIVITY, LIST_EDITOR, LIST_PLACE_RENDERER,
+        PROXY_PLACE_RENDERER, DESKTOP_LIST_VIEW, DESKTOP_LIST_VISUALIZE_VIEW,
         VISUALIZE_ACTIVITY, VISUALIZE_VIEW, DESKTOP_VISUALIZE_VIEW,
         ABSTRACT_DATA_PROVIDER, PROXY_DATA_PROVIDER, NODE_DATA_PROVIDER, 
         IS_LEAF_PROCESSOR, PROXY_LIST_NODE_PROCESSOR,
@@ -144,6 +148,9 @@ public class GwtBootstrapType extends RequestFactoryType {
             watchedMethods.put(new JavaSymbolName("setValue"),
                     Collections.singletonList(proxy));
         } else  if (this == MOBILE_VISUALIZE_VIEW) {
+            watchedMethods.put(new JavaSymbolName("setValue"),
+                    Collections.singletonList(proxy));
+        } else if (this == DESKTOP_LIST_VISUALIZE_VIEW) {
             watchedMethods.put(new JavaSymbolName("setValue"),
                     Collections.singletonList(proxy));
         } else if (this == DESKTOP_EDIT_VIEW) {
@@ -267,12 +274,16 @@ public class GwtBootstrapType extends RequestFactoryType {
         } else if (type == DESKTOP_LIST_VIEW) {
             watchedMethods.put(new JavaSymbolName("init"),
                     new ArrayList<JavaType>());
+        } else if (type == DESKTOP_LIST_VISUALIZE_VIEW) {
         } else if (type == MASTER_ACTIVITIES) {
             watchedMethods.put(new JavaSymbolName("getActivity"),
                     Collections.singletonList(PLACE));
         } else if (type == LIST_ACTIVITY) {
             watchedMethods.put(new JavaSymbolName("fireCountRequest"),
                     Collections.singletonList(RECEIVER));
+        } else if (type == LIST_VISUALIZE_ACTIVITY) {
+            watchedMethods.put(new JavaSymbolName("find"),
+                    Arrays.asList(RequestFactoryUtils.getReceiverType(ENTITY_PROXY)));
         }
         return watchedMethods;
     }
@@ -283,6 +294,10 @@ public class GwtBootstrapType extends RequestFactoryType {
             return Arrays.asList(APP_REQUEST_FACTORY,
                     SCAFFOLD_APP, DETAIL_ACTIVITY, VISUALIZE_ACTIVITY,
                     EDIT_ACTIVITY, EDIT_ACTIVITY_WRAPPER, REQUEST);
+        } else if (type == LIST_ACTIVITIES_MAPPER) {
+            return Arrays.asList(APP_REQUEST_FACTORY,
+                    SCAFFOLD_APP, LIST_ACTIVITY, LIST_VISUALIZE_ACTIVITY,
+                    REQUEST);
         } else if (type == DETAIL_ACTIVITY) {
             return Arrays.asList(APP_REQUEST_FACTORY,
                     IS_SCAFFOLD_MOBILE_ACTIVITY, DETAILS_VIEW,
@@ -305,10 +320,16 @@ public class GwtBootstrapType extends RequestFactoryType {
             return Arrays.asList(APP_REQUEST_FACTORY,
                     IS_SCAFFOLD_MOBILE_ACTIVITY,
                     SCAFFOLD_MOBILE_APP, SCAFFOLD_APP);
+        } else if (type == LIST_VISUALIZE_ACTIVITY) {
+            return Arrays.asList(APP_REQUEST_FACTORY,
+                    IS_SCAFFOLD_MOBILE_ACTIVITY, DESKTOP_LIST_VISUALIZE_VIEW,
+                    SCAFFOLD_MOBILE_APP, SCAFFOLD_APP);
         } else if (type == MOBILE_LIST_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {MOBILE_PROXY_LIST_VIEW,
                     SCAFFOLD_MOBILE_APP});
         } else if (type == DESKTOP_LIST_VIEW) {
+            return Arrays.asList(new RequestFactoryType[] {APPLICATION_MESSAGES});
+        } else if (type == DESKTOP_LIST_VISUALIZE_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {APPLICATION_MESSAGES});
         } else if (type == DESKTOP_EDIT_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {EDIT_ACTIVITY_WRAPPER,
@@ -371,10 +392,13 @@ public class GwtBootstrapType extends RequestFactoryType {
                     "placeController", "display", "view", "parentId");
         } else if (type == LIST_ACTIVITY) {
             watchedFieldNames = convertToJavaSymbolNames("requests");
+        } else if (type == LIST_VISUALIZE_ACTIVITY) {
+            watchedFieldNames = convertToJavaSymbolNames("requests", "parentId");
         } else if (type == MOBILE_LIST_VIEW) {
             watchedFieldNames = convertToJavaSymbolNames("paths");
         } else if (type == DESKTOP_LIST_VIEW) {
             watchedFieldNames = convertToJavaSymbolNames("table", "paths");
+        } else if (type == DESKTOP_LIST_VISUALIZE_VIEW) {
         } else if (type == MASTER_ACTIVITIES) {
             watchedFieldNames = convertToJavaSymbolNames("requests",
                     "placeController");

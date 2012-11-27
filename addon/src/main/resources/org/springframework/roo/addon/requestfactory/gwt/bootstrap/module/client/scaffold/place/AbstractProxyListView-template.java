@@ -33,7 +33,7 @@ public abstract class AbstractProxyListView<P extends EntityProxy> extends Compo
         this.delegate = delegate;
     }
 
-    protected void init(Widget root, HasData<P> display, HasClickHandlers newButton, HasClickHandlers backButton) {
+    protected void init(Widget root, HasData<P> display, HasClickHandlers newButton, HasClickHandlers backButton, HasClickHandlers viewButton) {
         super.initWidget(root);
         this.display = display;
 
@@ -47,6 +47,14 @@ public abstract class AbstractProxyListView<P extends EntityProxy> extends Compo
             backButton.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
                     delegate.backClicked();
+                }
+            });
+        }
+
+        if (viewButton != null) {
+            viewButton.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
+                    delegate.viewClicked();
                 }
             });
         }

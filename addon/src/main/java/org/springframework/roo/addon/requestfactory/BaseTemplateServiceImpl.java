@@ -327,6 +327,7 @@ public class BaseTemplateServiceImpl {
                 .getParentField(mirroredType);
 
         final JavaType nonKeyIdType = idType.equals(KEY) ? STRING : idType;
+        dataDictionary.setVariable("idType", nonKeyIdType.getSimpleTypeName());
         final String getId = idType.equals(KEY) ? "getStringId" : "getId";
         dataDictionary.setVariable("getId", getId);
 
@@ -349,6 +350,18 @@ public class BaseTemplateServiceImpl {
             dataDictionary.setVariable("findEntitiesByParentMethod",
                     findMethodAdditions.getMethodName() + "(" + parentId
                     + ", range.getStart(), range.getLength())");
+
+            
+            final MemberTypeAdditions findByParentMethodAdditions = layerService
+                    .getMemberTypeAdditions(metadataIdentificationString,
+                            EntityDataKeys.FIND_BY_PARENT_METHOD.name(),
+                            entity, nonKeyIdType, LAYER_POSITION,
+                            Arrays.asList(new MethodParameter(
+                                    nonKeyIdType, parentPropertyName + "Id")));
+            Validate.notNull(findByParentMethodAdditions,
+                    "Find by parent method is not available for entity '" + entityName + "'");
+            dataDictionary.setVariable("findByParentMethod",
+                    findByParentMethodAdditions.getMethodName() + "(" + parentId + ")");
 
 
             final MemberTypeAdditions countMethodAdditions = layerService
@@ -416,6 +429,14 @@ public class BaseTemplateServiceImpl {
                 "Find entries method is not available for entity '" + entityName + "'");
         dataDictionary.setVariable("findEntitiesMethod",
                 findMethodAdditions.getMethodName() + "(range.getStart(), range.getLength())");
+
+        final MemberTypeAdditions findAllMethodAdditions = layerService
+                .getMemberTypeAdditions(metadataIdentificationString,
+                        CustomDataKeys.FIND_ALL_METHOD.name(), entity, nonKeyIdType, LAYER_POSITION,
+                        new ArrayList<MethodParameter>());
+        Validate.notNull(findAllMethodAdditions,
+                "Find all method is not available for entity '" + entityName + "'");
+        dataDictionary.setVariable("findAllMethod", findAllMethodAdditions.getMethodName() + "()");
 
 
         final MemberTypeAdditions countMethodAdditions = layerService

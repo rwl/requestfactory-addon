@@ -1,7 +1,10 @@
 package {{=packageName}};
 
 import java.util.ArrayList;
+import java.util.List;
 
+import {{=uiPackage}}.renderer.{{=proxyRendererType}};
+import {{=placePackage}}.ProxyListVisualizeView;
 {{#visualized}}
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;
@@ -18,20 +21,40 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import {{=uiPackage}}.renderer.{{=proxyRendererType}};
-
 {{#imports}}import {{=import}};
 {{/imports}}
 
-
-public class {{=className}} extends Composite implements {{=visualizeView}} {
-
-    interface Binder extends UiBinder<SimplePanel, {{=className}}> {
-    }
+public class {{=className}} extends Composite implements ProxyListVisualizeView<{{=proxy}}> {
 
     private static final Binder BINDER = GWT.create(Binder.class);
 
     private static {{=className}} instance;
+
+    @UiField
+    SimplePanel panel;
+
+    @SuppressWarnings("unused")
+    private Delegate<{{=proxy}}> delegate;
+
+    protected List<{{=proxy}}> values;
+{{#visualized}}
+    protected MapWidget mapWidget;{{/visualized}}
+
+    public {{=className}}() {
+        initWidget(BINDER.createAndBindUi(this));
+{{#visualized}}
+        final boolean sensor = true;
+        final ArrayList<LoadLibrary> loadLibraries = new ArrayList<LoadApi.LoadLibrary>();
+        loadLibraries.add(LoadLibrary.DRAWING);
+        final Runnable onLoad = new Runnable() {
+
+            @Override
+            public void run() {
+                buildUi();
+            }
+        };
+        LoadApi.go(onLoad, loadLibraries, sensor);{{/visualized}}
+    }
 
     public static {{=className}} instance() {
         if (instance == null) {
@@ -39,58 +62,28 @@ public class {{=className}} extends Composite implements {{=visualizeView}} {
         }
         return instance;
     }
-
-    @UiField
-    SimplePanel panel;
-{{#visualized}}
-    private MapWidget mapWidget;{{/visualized}}
-
-    private {{=proxy}} proxy;
-
-    @SuppressWarnings("unused")
-    private Delegate delegate;
-
-    public {{=className}}() {
-        initWidget(BINDER.createAndBindUi(this));
-{{#visualized}}
-        final boolean sensor = true;
-
-        final ArrayList<LoadLibrary> loadLibraries =
-                new ArrayList<LoadApi.LoadLibrary>();
-        loadLibraries.add(LoadLibrary.DRAWING);
-
-        final Runnable onLoad = new Runnable() {
-            @Override
-            public void run() {
-                buildUi();
-            }
-        };
-
-        LoadApi.go(onLoad, loadLibraries, sensor);{{/visualized}}
-    }
 {{#visualized}}
     private void buildUi() {
         final MapOptions opts = MapOptions.newInstance();
         opts.setZoom(6);
         opts.setMapTypeId(MapTypeId.ROADMAP);
-
         mapWidget = new MapWidget(opts);
         mapWidget.setSize("100%", "100%");
-
         panel.setWidget(mapWidget);
     }{{/visualized}}
 
     @Override
-    public void setValue(final {{=proxy}} proxy) {
-        this.proxy = proxy;
+    public void setValue(List<{{=proxy}}> values) {
+        this.values = values;
 {{#visualized}}
-        if (mapWidget != null) {
-            final LatLng center = LatLng.newInstance(
-                this.proxy.{{=latGetter}}(), this.proxy.{{=lonGetter}}());
+        if (mapWidget == null) {
+            return;
+        }
+        for ({{=proxy}} proxy : this.values) {
+            final LatLng center = LatLng.newInstance(proxy.getLat(), proxy.getLon());
             final MarkerOptions options = MarkerOptions.newInstance();
             options.setPosition(center);
             options.setTitle({{=proxyRendererType}}.instance().render(proxy));
-
             final Marker marker = Marker.newInstance(options);
             marker.setMap(mapWidget);
             mapWidget.setCenter(center);
@@ -98,8 +91,8 @@ public class {{=className}} extends Composite implements {{=visualizeView}} {
     }
 
     @Override
-    public {{=proxy}} getValue() {
-        return proxy;
+    public List<{{=proxy}}> getValue() {
+        return values;
     }
 
     @Override
@@ -108,7 +101,10 @@ public class {{=className}} extends Composite implements {{=visualizeView}} {
     }
 
     @Override
-    public void setDelegate(final Delegate delegate) {
+    public void setDelegate(Delegate<{{=proxy}}> delegate) {
         this.delegate = delegate;
+    }
+
+    interface Binder extends UiBinder<SimplePanel, {{=className}}> {
     }
 }

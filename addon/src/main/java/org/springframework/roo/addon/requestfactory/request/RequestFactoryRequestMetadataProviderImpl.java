@@ -324,6 +324,8 @@ public class RequestFactoryRequestMetadataProviderImpl extends
                     KEY.equals(idType) ? STRING : idType, parentFieldName + "Id"), new MethodParameter(
                     INT_PRIMITIVE, "firstResult"), new MethodParameter(
                     INT_PRIMITIVE, "maxResults")));
+            signatures.put(EntityDataKeys.FIND_BY_PARENT_METHOD, Arrays.asList(new MethodParameter(
+                    KEY.equals(idType) ? STRING : idType, parentFieldName + "Id")));
         }
 
         if (idType.equals(KEY)) {
@@ -357,6 +359,9 @@ public class RequestFactoryRequestMetadataProviderImpl extends
             return LONG_PRIMITIVE;
         }
         if (EntityDataKeys.FIND_ENTRIES_BY_PARENT_METHOD.equals(methodKey)) {
+            return JavaType.listOf(entity);
+        }
+        if (EntityDataKeys.FIND_BY_PARENT_METHOD.equals(methodKey)) {
             return JavaType.listOf(entity);
         }
         if (EntityDataKeys.FIND_BY_STRING_ID_METHOD.equals(methodKey)) {

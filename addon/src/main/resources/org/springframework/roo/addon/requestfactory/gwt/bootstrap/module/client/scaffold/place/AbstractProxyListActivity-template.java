@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace.ListOperation;
+
 /**
  * Abstract activity for displaying a list of {@link EntityProxy}. These
  * activities are not re-usable. Once they are stopped, they cannot be
@@ -99,6 +101,11 @@ public abstract class AbstractProxyListActivity<P extends EntityProxy> implement
 
     public void createClicked() {
         placeController.goTo(new ProxyPlace(proxyClass, parentId));
+    }
+
+    public void viewClicked() {
+        placeController.goTo(new ProxyListPlace(proxyClass,
+                ListOperation.VISUALIZE, parentId));
     }
 
     protected abstract ProxyListView<P> initView();

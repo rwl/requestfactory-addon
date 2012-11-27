@@ -93,6 +93,7 @@ public class ServiceMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         }
 
         builder.addMethod(getFindEntriesByParentMethod());
+        builder.addMethod(getFindByParentMethod());
         builder.addMethod(getCountByParentMethod());
         builder.addMethod(getFindByStringIdMethod());
 
@@ -151,6 +152,40 @@ public class ServiceMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
                 new JavaSymbolName(idParamName),
                 new JavaSymbolName("firstResult"),
                 new JavaSymbolName("maxResults"));
+        final JavaType returnType = new JavaType(
+                LIST.getFullyQualifiedTypeName(), 0, DataType.TYPE, null,
+                Arrays.asList(domainType));
+
+        final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
+                getId(), PUBLIC_ABSTRACT, methodName, returnType,
+                AnnotatedJavaType.convertFromJavaTypes(parameterTypes),
+                parameterNames, BODY);
+
+        return methodBuilder.build();
+    }
+
+    private MethodMetadata getFindByParentMethod() {
+        if (parentProperty == null) {
+            return null;
+        }
+
+        JavaSymbolName methodName = new JavaSymbolName("find" + plural
+                + "ByParentId");
+
+        final MethodMetadata method = methodExists(methodName,
+                new ArrayList<AnnotatedJavaType>());
+        if (method != null) {
+            return method;
+        }
+
+        final JavaType idType = KEY.equals(identifierField.getFieldType())
+                ? STRING : identifierField.getFieldType();
+        final JavaType[] parameterTypes = { idType };
+
+        final String idParamName = StringUtils.uncapitalize(parentProperty
+                .getFieldType().getSimpleTypeName()) + "Id";
+        final List<JavaSymbolName> parameterNames = Arrays.asList(
+                new JavaSymbolName(idParamName));
         final JavaType returnType = new JavaType(
                 LIST.getFullyQualifiedTypeName(), 0, DataType.TYPE, null,
                 Arrays.asList(domainType));

@@ -95,10 +95,12 @@ public class ServiceImplMetadata extends
             final JavaType domainType = entry.getKey();
             final FieldMetadata identifierField = entry.getValue();
             final FieldMetadata parentField = domainTypeParentFields.get(domainType);
+            final String plural = domainTypePlurals.get(domainType);
 
             builder.addField(getParentRepositoryField(domainTypeParentRepos.get(domainType), parentField));
             builder.addMethod(getFindEntriesByParentMethod(domainType, identifierField, parentField));
-            builder.addMethod(getCountByParentMethod(domainType, domainTypePlurals.get(domainType), identifierField, parentField));
+            builder.addMethod(getFindByParentMethod(domainType, plural, identifierField, parentField));
+            builder.addMethod(getCountByParentMethod(domainType, plural, identifierField, parentField));
             builder.addMethod(getFindByStringIdMethod(domainType, identifierField));
         }
         
@@ -194,6 +196,60 @@ public class ServiceImplMetadata extends
                 + PAGE_REQUEST.getNameIncludingTypeParameters(false,
                         builder.getImportRegistrationResolver()) 
                 + "(firstResult / maxResults, maxResults)).getContent();");
+
+        final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
+                getId(), Modifier.PUBLIC, methodName, returnType,
+                AnnotatedJavaType.convertFromJavaTypes(parameterTypes),
+                parameterNames, bodyBuilder);
+
+        return methodBuilder.build();
+    }
+
+    private MethodMetadata getFindByParentMethod(final JavaType domainType,
+            final String plural,
+            final FieldMetadata identifierField,
+            final FieldMetadata parentProperty) {
+        if (parentProperty == null) {
+            return null;
+        }
+
+        JavaSymbolName methodName = new JavaSymbolName("find" + plural
+                + "ByParentId");
+
+        final MethodMetadata method = methodExists(methodName,
+                new ArrayList<AnnotatedJavaType>());
+        if (method != null) {
+            return method;
+        }
+
+        final JavaType idType = KEY.equals(identifierField.getFieldType())
+                ? STRING : identifierField.getFieldType();
+        final JavaType[] parameterTypes = { idType };
+
+        final String idParamName = StringUtils.uncapitalize(parentProperty
+                .getFieldType().getSimpleTypeName()) + "Id";
+        final List<JavaSymbolName> parameterNames = Arrays.asList(
+                new JavaSymbolName(idParamName));
+        final JavaType returnType = new JavaType(
+                LIST.getFullyQualifiedTypeName(), 0, DataType.TYPE, null,
+                Arrays.asList(domainType));
+
+        InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+        final String idParam = KEY.equals(identifierField)
+                ? (KEY_FACTORY.getNameIncludingTypeParameters(true,
+                        builder.getImportRegistrationResolver())
+                        + ".stringToKey(" + idParamName + ")") : idParamName;
+        bodyBuilder.appendFormalLine("final "
+                + parentProperty.getFieldType().getNameIncludingTypeParameters(
+                        false, builder.getImportRegistrationResolver())
+                + " parent = " + StringUtils.uncapitalize(parentProperty
+                        .getFieldType().getSimpleTypeName())
+                + "Repository" + ".findOne(" + idParam + ");");
+
+        bodyBuilder.appendFormalLine("return " + StringUtils.uncapitalize(
+                domainType.getSimpleTypeName()) + "Repository.findBy"
+                + parentProperty.getFieldType().getSimpleTypeName()
+                + "(parent);");
 
         final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
                 getId(), Modifier.PUBLIC, methodName, returnType,

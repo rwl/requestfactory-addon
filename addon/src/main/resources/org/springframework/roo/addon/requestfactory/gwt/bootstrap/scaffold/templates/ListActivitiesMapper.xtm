@@ -1,0 +1,40 @@
+package {{=packageName}};
+
+import com.google.gwt.activity.shared.Activity;
+import com.google.gwt.activity.shared.ActivityMapper;
+import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.Place;
+import com.google.inject.Inject;
+import com.google.web.bindery.requestfactory.shared.EntityProxyId;
+import com.google.web.bindery.requestfactory.shared.RequestContext;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+
+import {{=placePackage}}.ProxyListPlace;
+import {{=topLevelPackage}}.client.scaffold.activity.AsyncActivityProxyProvider;
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+/**
+ * Maps {@link ProxyListPlace} instances to the {@link Activity} to run.
+ */
+public class {{=className}} implements ActivityMapper {
+
+    @Inject AsyncActivityProxyProvider<{{=name}}ListActivity> {{=nameUncapitalized}}ListActivityProvider;
+
+    @Inject AsyncActivityProxyProvider<{{=name}}ListVisualizeActivity> {{=nameUncapitalized}}ListVisualizeActivityProvider;
+
+    public Activity getActivity(Place place) {
+        if (!(place instanceof ProxyListPlace)) {
+            return null;
+        }
+        ProxyListPlace proxyListPlace = (ProxyListPlace) place;
+        switch(proxyListPlace.getOperation()) {
+            case SELECT:
+                return {{=nameUncapitalized}}ListActivityProvider.get();
+            case VISUALIZE:
+                return {{=nameUncapitalized}}ListVisualizeActivityProvider.get();
+        }
+        throw new IllegalArgumentException("Unknown operation " + proxyListPlace.getOperation());
+    }
+}

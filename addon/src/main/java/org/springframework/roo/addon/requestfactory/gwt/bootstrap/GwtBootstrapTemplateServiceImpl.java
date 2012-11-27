@@ -103,10 +103,6 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                             GwtBootstrapType.LIST_ACTIVITY, moduleName);
                     addImport(dataDictionary, proxy.getName()
                             .getFullyQualifiedTypeName());
-                    addImport(dataDictionary, entitySimpleName,
-                            GwtBootstrapType.DESKTOP_LIST_VIEW, moduleName);
-                    addImport(dataDictionary, entitySimpleName,
-                            GwtBootstrapType.MOBILE_LIST_VIEW, moduleName);
                     addImport(
                             dataDictionary,
                             GwtBootstrapType.ACTIVITIES_MAPPER.getPath().packageName(
@@ -115,6 +111,14 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                                     + "."
                                     + entitySimpleName
                                     + GwtBootstrapType.ACTIVITIES_MAPPER.getSuffix());
+                    addImport(
+                            dataDictionary,
+                            GwtBootstrapType.LIST_ACTIVITIES_MAPPER.getPath().packageName(
+                                    projectOperations
+                                            .getTopLevelPackage(moduleName))
+                                    + "."
+                                    + entitySimpleName
+                                    + GwtBootstrapType.LIST_ACTIVITIES_MAPPER.getSuffix());
                 }
             }
         } else if (type == GwtBootstrapType.APPLICATION_MESSAGES) {

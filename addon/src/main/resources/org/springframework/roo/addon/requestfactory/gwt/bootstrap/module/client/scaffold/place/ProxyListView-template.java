@@ -26,6 +26,7 @@ public interface ProxyListView<P extends EntityProxy> extends IsWidget {
 
         void createClicked();
         void backClicked();
+        void viewClicked();
     }
 
     HasData<P> asHasData();
