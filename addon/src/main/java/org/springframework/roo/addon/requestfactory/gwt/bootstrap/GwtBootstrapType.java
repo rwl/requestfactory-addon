@@ -38,7 +38,6 @@ public class GwtBootstrapType extends RequestFactoryType {
     public static final GwtBootstrapType EDIT_RENDERER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_RENDERER, true, "ProxyRenderer", "renderer", "EditRenderer", false, false, false);
     public static final GwtBootstrapType EDIT_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI, true, "EditView", "editView", "EditView", false, false, false);
     public static final GwtBootstrapType DESKTOP_EDIT_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopEditView", "desktopEditView", "DesktopEditView", true, true, false);
-    public static final GwtBootstrapType IS_SCAFFOLD_MOBILE_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.SCAFFOLD_ACTIVITY, false, "", "isScaffoldMobileActivity", "IsScaffoldMobileActivity", false, false, false);
     public static final GwtBootstrapType LIST_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ListActivity", "listActivity", "ListActivity", false, true, false);
     public static final GwtBootstrapType LIST_VISUALIZE_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ListVisualizeActivity", "listVisualizeActivity", "ListVisualizeActivity", false, true, false);
     public static final GwtBootstrapType LIST_EDITOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_EDITOR, true, "ListEditor", "listEditor", "ListEditor", true, true, false);
@@ -78,7 +77,7 @@ public class GwtBootstrapType extends RequestFactoryType {
         MASTER_ACTIVITIES, ACTIVITIES_MAPPER, LIST_ACTIVITIES_MAPPER,
         DETAIL_ACTIVITY, DETAILS_VIEW, DESKTOP_DETAILS_VIEW,
         EDIT_ACTIVITY, EDIT_ACTIVITY_WRAPPER, CREATE_ACTIVITY_WRAPPER,
-        EDIT_RENDERER, EDIT_VIEW, DESKTOP_EDIT_VIEW, IS_SCAFFOLD_MOBILE_ACTIVITY,
+        EDIT_RENDERER, EDIT_VIEW, DESKTOP_EDIT_VIEW,
         LIST_ACTIVITY, LIST_VISUALIZE_ACTIVITY, LIST_EDITOR, LIST_PLACE_RENDERER,
         PROXY_PLACE_RENDERER, DESKTOP_LIST_VIEW, DESKTOP_LIST_VISUALIZE_VIEW,
         VISUALIZE_ACTIVITY, VISUALIZE_VIEW, DESKTOP_VISUALIZE_VIEW,
@@ -300,29 +299,25 @@ public class GwtBootstrapType extends RequestFactoryType {
                     REQUEST);
         } else if (type == DETAIL_ACTIVITY) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    IS_SCAFFOLD_MOBILE_ACTIVITY, DETAILS_VIEW,
-                    SCAFFOLD_APP);
+                    DETAILS_VIEW, SCAFFOLD_APP);
         } else if (type == VISUALIZE_ACTIVITY) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    IS_SCAFFOLD_MOBILE_ACTIVITY, VISUALIZE_VIEW,
-                    SCAFFOLD_APP);
+                    VISUALIZE_VIEW, SCAFFOLD_APP);
         } else if (type == EDIT_ACTIVITY) {
             return Arrays.asList(EDIT_VIEW,
                     APP_REQUEST_FACTORY, REQUEST);
         } else if (type == EDIT_ACTIVITY_WRAPPER) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    IS_SCAFFOLD_MOBILE_ACTIVITY, EDIT_VIEW,
-                    SCAFFOLD_APP);
+                    EDIT_VIEW, SCAFFOLD_APP);
         } else if (type == CREATE_ACTIVITY_WRAPPER) {
             return Arrays.asList(APP_REQUEST_FACTORY,
                     EDIT_ACTIVITY_WRAPPER);
         } else if (type == LIST_ACTIVITY) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    IS_SCAFFOLD_MOBILE_ACTIVITY,
                     SCAFFOLD_MOBILE_APP, SCAFFOLD_APP);
         } else if (type == LIST_VISUALIZE_ACTIVITY) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    IS_SCAFFOLD_MOBILE_ACTIVITY, DESKTOP_LIST_VISUALIZE_VIEW,
+                    DESKTOP_LIST_VISUALIZE_VIEW,
                     SCAFFOLD_MOBILE_APP, SCAFFOLD_APP);
         } else if (type == MOBILE_LIST_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {MOBILE_PROXY_LIST_VIEW,
@@ -386,7 +381,7 @@ public class GwtBootstrapType extends RequestFactoryType {
                     "requests", "parentId");
         } else if (type == DETAIL_ACTIVITY) {
             watchedFieldNames = convertToJavaSymbolNames("requests", "proxyId",
-                    "placeController", "display", "view");
+                    "placeController", "display", "view", "parentId");
         } else if (type == VISUALIZE_ACTIVITY) {
             watchedFieldNames = convertToJavaSymbolNames("requests", "proxyId",
                     "placeController", "display", "view", "parentId");

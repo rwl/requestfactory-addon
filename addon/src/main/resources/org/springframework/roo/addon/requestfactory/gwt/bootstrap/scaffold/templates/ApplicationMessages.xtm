@@ -6,39 +6,42 @@ import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
 @DefaultLocale("en_US")
 public interface ApplicationMessages extends Messages {
 
-	@DefaultMessage("Back")
-	String back();
+    @DefaultMessage("Back")
+    String back();
 
-	@DefaultMessage("Delete")
-	String delete();
+    @DefaultMessage("Delete")
+    String delete();
 
-	@DefaultMessage("Edit")
-	String edit();
+    @DefaultMessage("Edit")
+    String edit();
 
     @DefaultMessage("View")
     String visualize();
 
-	@DefaultMessage("New")
-	String create();
+    @DefaultMessage("New")
+    String create();
 
-	@DefaultMessage("Save")
-	String save();
+    @DefaultMessage("Save")
+    String save();
 
-	@DefaultMessage("Cancel")
-	String cancel();
+    @DefaultMessage("Cancel")
+    String cancel();
 
-	@DefaultMessage("Not Signed In")
-	String notSignedIn();
+    @DefaultMessage("Select Type")
+    String rootTitle();
 
-	@DefaultMessage("{0}")
-	String signedInAs(String nickName);
+    @DefaultMessage("Not Signed In")
+    String notSignedIn();
 
-	@DefaultMessage("loading...")
-	String loading();
+    @DefaultMessage("{0}")
+    String signedInAs(String nickName);
+
+    @DefaultMessage("loading...")
+    String loading();
 {{#entities}}
     @DefaultMessage("Create {{=entitySimpleName}}")
     String create{{=entitySimpleName}}();{{/entities}}
-    
+
 {{#entities}}
     @DefaultMessage("Edit {{=entitySimpleName}}")
     String edit{{=entitySimpleName}}();{{/entities}}

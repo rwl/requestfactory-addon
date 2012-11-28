@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Activity that requests and displays all {{=proxy}}.
  */
-public class {{=className}} extends AbstractProxyListActivity<{{=proxy}}> implements {{=isScaffoldMobileActivity}} {
+public class {{=className}} extends AbstractProxyListActivity<{{=proxy}}> {
 
     private final {{=requestFactory}} requests;
 
@@ -34,26 +34,6 @@ public class {{=className}} extends AbstractProxyListActivity<{{=proxy}}> implem
 
     public void backClicked() {
         {{=gotoParentPlaceStmt}}
-    }
-
-    public Place getBackButtonPlace() {
-        return ScaffoldMobileApp.ROOT_PLACE;
-    }
-
-    public String getBackButtonText() {
-        return "Entities";
-    }
-
-    public Place getEditButtonPlace() {
-        return null;
-    }
-
-    public String getTitleText() {
-        return "{{=pluralName}}";
-    }
-
-    public boolean hasEditButton() {
-        return false;
     }
 
     protected Request<List<{{=proxy}}>> createRangeRequest(Range range) {{{#isRoot}}

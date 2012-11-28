@@ -26,7 +26,7 @@ import java.util.Set;
  * An {@link com.google.gwt.activity.shared.Activity Activity} that requests and
  * displays detailed information on a given {{=proxy}}.
  */
-public class {{=className}} extends AbstractActivity implements {{=detailsView}}.Delegate, {{=isScaffoldMobileActivity}} {
+public class {{=className}} extends AbstractActivity implements {{=detailsView}}.Delegate {
 
     private final ApplicationRequestFactory requests;
     private final PlaceController placeController;
@@ -38,7 +38,7 @@ public class {{=className}} extends AbstractActivity implements {{=detailsView}}
     @Inject
     public {{=className}}(ApplicationRequestFactory requests, PlaceController placeController) {
         this.placeController = placeController;
-        ProxyPlace proxyPlace = (ProxyPlace) placeController.getWhere();
+        final ProxyPlace proxyPlace = (ProxyPlace) placeController.getWhere();
         this.proxyId = coerceId(proxyPlace);
         this.requests = requests;
         this.view = ScaffoldApp.isMobile() ? {{=name}}MobileDetailsView.instance() : {{=name}}DesktopDetailsView.instance();
@@ -63,7 +63,7 @@ public class {{=className}} extends AbstractActivity implements {{=detailsView}}
                         if (display == null) {
                             return;
                         }
-                        placeController.goTo(getBackButtonPlace());
+                        placeController.goTo(new ProxyListPlace({{=proxy}}.class, parentId));
                     }
                 });
             }
@@ -76,37 +76,17 @@ public class {{=className}} extends AbstractActivity implements {{=detailsView}}
 
     @Override
     public void editClicked() {
-        placeController.goTo(getEditButtonPlace());
+        placeController.goTo(new ProxyPlace(view.getValue().stableId(), Operation.EDIT, parentId));
     }
 
     @Override
     public void backClicked() {
-        placeController.goTo(getBackButtonPlace());
+        placeController.goTo(new ProxyListPlace({{=proxy}}.class, parentId));
     }
 
     @Override
     public void viewClicked() {
         placeController.goTo(new ProxyPlace(view.getValue().stableId(), Operation.VISUALIZE, parentId));
-    }
-
-    public Place getBackButtonPlace() {
-        return new ProxyListPlace({{=proxy}}.class, parentId);
-    }
-
-    public String getBackButtonText() {
-        return "Back";
-    }
-
-    public Place getEditButtonPlace() {
-        return new ProxyPlace(view.getValue().stableId(), Operation.EDIT, parentId);
-    }
-
-    public String getTitleText() {
-        return "View {{=name}}";
-    }
-
-    public boolean hasEditButton() {
-        return true;
     }
 
     @Override
@@ -126,7 +106,7 @@ public class {{=className}} extends AbstractActivity implements {{=detailsView}}
             public void onSuccess(EntityProxy proxy) {
                 if (proxy == null) {
                     // Deleted entity, bad bookmark, that kind of thing
-                    placeController.goTo(getBackButtonPlace());
+                    placeController.goTo(new ProxyListPlace({{=proxy}}.class, parentId));
                     return;
                 }
                 if (display == null) {

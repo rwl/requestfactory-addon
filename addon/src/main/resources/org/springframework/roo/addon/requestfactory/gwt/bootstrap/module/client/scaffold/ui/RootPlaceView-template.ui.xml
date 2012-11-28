@@ -1,0 +1,20 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:m="urn:import:com.googlecode.mgwt.ui.client.widget"
+	xmlns:c="urn:import:com.googlecode.mgwt.ui.client.widget.celllist">
+  <ui:style>
+  </ui:style>
+
+  <m:LayoutPanel>
+    <m:HeaderPanel>
+      <m:center>
+          <g:HTML ui:field="title"/>
+      </m:center>
+    </m:HeaderPanel>
+
+    <m:ScrollPanel scrollingEnabledX='false'>
+      <c:CellListWithHeader ui:field='list'/>
+    </m:ScrollPanel>
+  </m:LayoutPanel>
+</ui:UiBinder>

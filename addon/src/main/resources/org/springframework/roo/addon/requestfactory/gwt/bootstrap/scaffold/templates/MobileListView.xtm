@@ -24,8 +24,6 @@ public class {{=className}} extends MobileProxyListView<{{=proxy}}> {
 	 * The renderer used to render cells.
 	 */
 	private static class CellRenderer extends AbstractSafeHtmlRenderer<{{proxy}}> {
-		private final String dateStyle = ScaffoldMobileApp.getMobileListResources().cellListStyle().dateProp();
-		private final String secondaryStyle = ScaffoldMobileApp.getMobileListResources().cellListStyle().secondaryProp();
 		private final Renderer<{{=proxy}}> primaryRenderer = {{=proxyRenderer}}.instance();
 		{{#mobileProperties}}
 		private final Renderer<{{=propType}}> {{=propRendererName}} = {{=propRenderer}};
@@ -43,12 +41,12 @@ public class {{=className}} extends MobileProxyListView<{{=proxy}}> {
 
 			// Secondary property.
 			sb.appendHtmlConstant("<div style=\"position:relative;\">");
-			sb.appendHtmlConstant("<div class=\"" + secondaryStyle + "\">");
+			sb.appendHtmlConstant("<div>");
 			{{=secondaryPropBuilder}}
 			sb.appendHtmlConstant("</div>");
 
 			// Date property.
-			sb.appendHtmlConstant("<div class=\"" + dateStyle + "\">");
+			sb.appendHtmlConstant("<div>");
 			{{=datePropBuilder}}
 			sb.appendHtmlConstant("</div>");
 			sb.appendHtmlConstant("</div>");

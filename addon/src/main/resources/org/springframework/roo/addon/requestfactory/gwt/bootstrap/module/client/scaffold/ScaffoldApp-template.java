@@ -4,8 +4,8 @@ import __TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationEntityTypesProces
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace;
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScaffoldApp {
 
@@ -18,9 +18,9 @@ public class ScaffoldApp {
 	public void run() {
 	}
 
-	protected HashSet<ProxyListPlace> getTopPlaces() {
-		Set<Class<? extends EntityProxy>> types = ApplicationEntityTypesProcessor.getAll();
-		HashSet<ProxyListPlace> rtn = new HashSet<ProxyListPlace>(types.size());
+	public static ArrayList<ProxyListPlace> getRootPlaces() {
+		List<Class<? extends EntityProxy>> types = ApplicationEntityTypesProcessor.getAll();
+		ArrayList<ProxyListPlace> rtn = new ArrayList<ProxyListPlace>(types.size());
 
 		for (Class<? extends EntityProxy> type : types) {
 			rtn.add(new ProxyListPlace(type, null));

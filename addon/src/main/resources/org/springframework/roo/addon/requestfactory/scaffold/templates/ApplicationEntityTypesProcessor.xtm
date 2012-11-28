@@ -3,8 +3,8 @@ package {{=packageName}};
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
 
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 {{#imports}}import {{=import}};
 {{/imports}}
@@ -27,12 +27,12 @@ public abstract class {{=className}}<T> {
 	/**
 	 * Return a set of all root proxy types available to this application.
 	 */
-	public static Set<Class<? extends EntityProxy>> getAll() {
-		Set<Class<? extends EntityProxy>> rtn = new HashSet<Class<? extends EntityProxy>>();
+	public static List<Class<? extends EntityProxy>> getAll() {
+		List<Class<? extends EntityProxy>> rtn = new ArrayList<Class<? extends EntityProxy>>();
 {{#proxys}}
 		rtn.add({{=proxy}}.class);{{/proxys}}
 
-		return Collections.unmodifiableSet(rtn);
+		return Collections.unmodifiableList(rtn);
 	}
 
 	private static void process({{=className}}<?> processor, Class<?> clazz) {{{#entities1}}

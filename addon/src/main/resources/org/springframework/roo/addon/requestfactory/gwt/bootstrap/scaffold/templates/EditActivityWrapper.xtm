@@ -32,7 +32,7 @@ import java.util.List;
  * Wraps {{=proxy}} edit and create activities to manage extra portions of their
  * views, like value pickers.
  */
-public class {{=className}} implements Activity, {{=isScaffoldMobileActivity}} {
+public class {{=className}} implements Activity {
 
     /**
      * The view used by this activity.
@@ -69,27 +69,6 @@ public class {{=className}} implements Activity, {{=isScaffoldMobileActivity}} {
     @SuppressWarnings("unchecked")
     private EntityProxyId<{{=proxy}}> coerceId(ProxyPlace place) {
         return (EntityProxyId<{{=proxy}}>) place.getProxyId();
-    }
-
-    public Place getBackButtonPlace() {
-        return (proxyId == null) ? new ProxyListPlace({{=proxy}}.class, parentId) :
-            new ProxyPlace(proxyId, ProxyPlace.Operation.DETAILS, parentId);
-    }
-
-    public String getBackButtonText() {
-        return "Cancel";
-    }
-
-    public Place getEditButtonPlace() {
-        return null;
-    }
-
-    public String getTitleText() {
-        return (proxyId == null) ? "New {{=name}}" : "Edit {{=name}}";
-    }
-
-    public boolean hasEditButton() {
-        return false;
     }
 
     @Override

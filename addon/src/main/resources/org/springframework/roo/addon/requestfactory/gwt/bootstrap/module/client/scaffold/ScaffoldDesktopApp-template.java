@@ -94,14 +94,14 @@ public class ScaffoldDesktopApp extends ScaffoldApp {
         ScaffoldPlaceHistoryMapper mapper = GWT.create(ScaffoldPlaceHistoryMapper.class);
         mapper.setFactory(placeHistoryFactory);
         PlaceHistoryHandler placeHistoryHandler = new PlaceHistoryHandler(mapper);
-        if (getTopPlaces().iterator().hasNext()) {
+        if (getRootPlaces().iterator().hasNext()) {
             ApplicationListPlaceRenderer renderer = new ApplicationListPlaceRenderer();
-            for (ProxyListPlace place : getTopPlaces()) {
+            for (ProxyListPlace place : getRootPlaces()) {
                 shell.getNavigationTree().addRootNodes(new ProxyListNode(renderer.render(place),
                         place.getProxyClass(), null));
             }
 
-            ProxyListPlace defaultPlace = getTopPlaces().iterator().next();
+            ProxyListPlace defaultPlace = getRootPlaces().iterator().next();
             placeHistoryHandler.register(placeController, eventBus, defaultPlace);
             placeHistoryHandler.handleCurrentHistory();
         }

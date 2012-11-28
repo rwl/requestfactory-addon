@@ -58,18 +58,11 @@ public abstract class AbstractProxyListActivity<P extends EntityProxy> implement
 
     public AbstractProxyListActivity(PlaceController placeController) {
         this.placeController = placeController;
-        Place place = placeController.getWhere();
-        if (place instanceof ProxyListPlace) {
-                @SuppressWarnings("unchecked")
-                Class<P> proxyClass = (Class<P>) ((ProxyListPlace) place).getProxyClass();
-                this.proxyClass = proxyClass;
-                this.parentId = ((ProxyListPlace) place).getParentId();
-        } else {
-                @SuppressWarnings("unchecked")
-                Class<P> proxyClass = (Class<P>) ((ProxyPlace) place).getProxyClass();
-                this.proxyClass = proxyClass;
-                this.parentId = ((ProxyPlace) place).getParentId();
-        }
+        final ProxyListPlace proxyListPlace = (ProxyListPlace) placeController.getWhere();
+        @SuppressWarnings("unchecked")
+        final Class<P> proxyClass = (Class<P>) proxyListPlace.getProxyClass();
+        this.proxyClass = proxyClass;
+        this.parentId = proxyListPlace.getParentId();
         this.view = initView();
         final Widget back = this.view.getBackButton();
         if (back != null) {
