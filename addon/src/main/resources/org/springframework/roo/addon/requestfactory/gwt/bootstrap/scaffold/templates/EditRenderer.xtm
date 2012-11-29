@@ -20,7 +20,7 @@ public class {{=className}} extends ProxyRenderer<{{=proxy}}> {
   }
 
   protected {{=className}}() {
-    super(new String[] {"{{=primaryProp}}"});
+    super(new String[] {"{{=primaryProp}}"{{#hasSecondaryProp}}, "{{=secondaryProp}}"{{/hasSecondaryProp}}});
   }
 
   public String render({{=proxy}} object) {

@@ -1,7 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
   xmlns:g='urn:import:com.google.gwt.user.client.ui'
-  xmlns:m='urn:import:com.googlecode.mgwt.ui.client.widget'>
+  xmlns:m='urn:import:com.googlecode.mgwt.ui.client.widget'
+  xmlns:b='urn:import:com.googlecode.mgwt.ui.client.widget.buttonbar'>
  <ui:style>
     .outer {
       padding: 10px;
@@ -21,9 +22,6 @@
       <m:center>
           <g:HTML ui:field="title"/>
       </m:center>
-      <m:right>
-          <m:HeaderButton forwardButton="false" ui:field="edit"/>
-      </m:right>
     </m:HeaderPanel>
 
     <m:WidgetList debugId="boundElementHolder">{{#properties}}
@@ -32,6 +30,10 @@
       </m:FormListEntry>{{/properties}}
     </m:WidgetList>
 
-    <m:Button ui:field='delete'/>
+    <b:ButtonBar>
+      <b:TrashButton ui:field="delete"/>
+      <b:ButtonBarSpacer/>
+      <b:ComposeButton ui:field="edit"/>
+    </b:ButtonBar>
   </m:LayoutPanel>
 </ui:UiBinder>

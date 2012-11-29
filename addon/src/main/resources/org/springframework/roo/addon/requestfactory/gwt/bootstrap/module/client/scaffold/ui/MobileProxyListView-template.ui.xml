@@ -4,12 +4,11 @@
 		xmlns:g='urn:import:com.google.gwt.user.client.ui'
 		xmlns:c='urn:import:com.google.gwt.user.cellview.client'
 		xmlns:b='urn:import:com.github.gwtbootstrap.client.ui'
-		xmlns:m='urn:import:com.googlecode.mgwt.ui.client.widget'>
+		xmlns:m='urn:import:com.googlecode.mgwt.ui.client.widget'
+		xmlns:s='urn:import:__TOP_LEVEL_PACKAGE__.client.scaffold.ui'
+		xmlns:bb='urn:import:com.googlecode.mgwt.ui.client.widget.buttonbar'>
 
 	<ui:style>
-		.list {
-			border-top: 1px solid #ddd;
-		}
 	</ui:style>
 
 	<m:LayoutPanel>
@@ -20,16 +19,13 @@
             <m:center>
                 <g:HTML ui:field="title"/>
             </m:center>
-            <m:right>
-                <m:HeaderButton forwardButton="false" ui:field="newButton"/>
-            </m:right>
         </m:HeaderPanel>
-		<c:SimplePager display='{list}' location='RIGHT'/>
-		<m:ScrollPanel scrollingEnabledX='false'>
-	        <c:CellList
-					ui:field='list'
-					addStyleNames='{style.list}'
-					pageSize='8'/>
-		</m:ScrollPanel>
+
+        <s:ShowMorePagerPanel ui:field='showMorePagerPanel'/>
+        
+        <bb:ButtonBar>
+            <bb:ButtonBarSpacer/>
+            <bb:NewIconButton ui:field="newButton"/>
+        </bb:ButtonBar>
 	</m:LayoutPanel>
 </ui:UiBinder>

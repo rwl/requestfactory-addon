@@ -6,17 +6,17 @@ import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListView;
 import __TOP_LEVEL_PACKAGE__.client.managed.ApplicationMessages;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.requestfactory.gwt.ui.client.EntityProxyKeyProvider;
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.text.shared.SafeHtmlRenderer;
+import com.google.gwt.text.shared.Renderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
-import com.github.gwtbootstrap.client.ui.Button;
-import com.googlecode.mgwt.ui.client.widget.HeaderButton;
+import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
+import com.googlecode.mgwt.ui.client.widget.base.ButtonBase;
 
 /**
  * An implementation of {@link ProxyListView} used in mobile applications
@@ -32,11 +32,13 @@ public abstract class MobileProxyListView<P extends EntityProxy> extends Abstrac
 
     private ApplicationMessages messages = GWT.create(ApplicationMessages.class);
 
-    @UiField(provided = true) CellList<P> list;
+    private final CellList<P> list;
+
+    @UiField ShowMorePagerPanel showMorePagerPanel;
     @UiField HeaderPanel header;
-    @UiField HeaderButton backButton;
+    @UiField ButtonBase backButton;
     @UiField HTML title;
-    @UiField HeaderButton newButton;
+    @UiField ButtonBase newButton;
 
     /**
      * Constructor.
@@ -44,21 +46,18 @@ public abstract class MobileProxyListView<P extends EntityProxy> extends Abstrac
      * @param buttonText the text to display on the create button
      * @param renderer   the {@link SafeHtmlRenderer} used to render the proxy
      */
-    public MobileProxyListView(String buttonText, final SafeHtmlRenderer<P> renderer) {
-        // Create the CellList to display the proxies.
-        AbstractCell<P> cell = new AbstractCell<P>() {
-            @Override
-            public void render(Context context, P value, SafeHtmlBuilder sb) {
-                renderer.render(value, sb);
-            }
-        };
-        this.list = new CellList<P>(cell);
+    public MobileProxyListView(final String buttonText, final String titleText, final Renderer<P> renderer) {
+        list = new CellList<P>(new DefaultCell<P>(renderer), CellListResources.INSTANCE, new EntityProxyKeyProvider<P>());
+        list.setPageSize(8);
+        list.setKeyboardPagingPolicy(KeyboardPagingPolicy.INCREASE_RANGE);
         
         // Initialize the widget.
         init(BINDER.createAndBindUi(this), list, newButton, backButton);
-        
-        this.newButton.setText(messages.create());
-        this.backButton.setText(messages.back());
+
+        title.setText(titleText);
+        backButton.setText(messages.back());
+
+        showMorePagerPanel.setDisplay(list);
     }
 
     public Widget getBackButton() {

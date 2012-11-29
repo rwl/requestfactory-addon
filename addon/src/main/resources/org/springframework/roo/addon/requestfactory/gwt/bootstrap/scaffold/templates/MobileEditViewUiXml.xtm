@@ -6,7 +6,8 @@
   xmlns:r='urn:import:{{=scaffoldUiPackage}}'
   xmlns:a='urn:import:{{=uiPackage}}'
   xmlns:e='urn:import:{{=uiEditorPackage}}'
-  xmlns:m='urn:import:com.googlecode.mgwt.ui.client.widget'>
+  xmlns:m='urn:import:com.googlecode.mgwt.ui.client.widget'
+  xmlns:bb='urn:import:com.googlecode.mgwt.ui.client.widget.buttonbar'>
 
   <m:LayoutPanel>
     <m:HeaderPanel>
@@ -24,6 +25,8 @@
       </m:FormListEntry>{{/editableProperties}}
     </m:WidgetList>
 
-    <m:Button ui:field="save"/>
+    <bb:ButtonBar>
+      <bb:NewIconButton ui:field="save"/>
+    </bb:ButtonBar>
   </m:LayoutPanel>
 </ui:UiBinder>

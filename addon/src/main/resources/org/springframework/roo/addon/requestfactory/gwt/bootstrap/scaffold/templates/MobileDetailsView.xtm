@@ -21,6 +21,7 @@ import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 import com.googlecode.mgwt.ui.client.dialog.ConfirmDialog.ConfirmCallback;
 import com.googlecode.mgwt.ui.client.dialog.Dialogs;
+import com.googlecode.mgwt.ui.client.widget.base.ButtonBase;
 import com.googlecode.mgwt.ui.client.widget.Button;
 
 {{#imports}}import {{=import}};
@@ -50,11 +51,11 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
     {{=proxy}} proxy;
     {{#properties}}
     @UiField Label {{=prop}};{{/properties}}
-    @UiField Button delete;
+    @UiField ButtonBase delete;
 
     @UiField HTML title;
-    @UiField HeaderButton back;
-    @UiField HeaderButton edit;
+    @UiField ButtonBase back;
+    @UiField ButtonBase edit;
 
     private Delegate delegate;
 
@@ -81,8 +82,6 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
             }
         });
 
-        this.edit.setText(messages.edit());
-        this.delete.setText(messages.delete());
         this.back.setText(messages.back());
     }
 
