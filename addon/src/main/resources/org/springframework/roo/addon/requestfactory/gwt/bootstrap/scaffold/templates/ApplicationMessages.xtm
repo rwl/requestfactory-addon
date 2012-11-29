@@ -27,8 +27,8 @@ public interface ApplicationMessages extends Messages {
     @DefaultMessage("Cancel")
     String cancel();
 
-    @DefaultMessage("Select Type")
-    String rootTitle();
+    @DefaultMessage("Model Editor")
+    String applicationName();
 
     @DefaultMessage("Not Signed In")
     String notSignedIn();

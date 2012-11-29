@@ -53,7 +53,7 @@ public class RootPlaceView extends Composite {
 
 		initWidget(uiBinder.createAndBindUi(this));
 
-		title.setText(messages.rootTitle());
+		title.setText(messages.applicationName());
 	}
 
 	public void setPlaces(List<ProxyListPlace> places) {

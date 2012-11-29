@@ -122,7 +122,7 @@
 	<g:DockLayoutPanel unit='PX'>
 		<g:north size='44'>
 			<b:Navbar height="44px">
-				<b:Brand>Model Editor</b:Brand>
+				<b:Brand ui:field="brand"/>
 				<b:Nav alignment="RIGHT">
 					<b:NavText ui:field="nickname"/>
 					<b:Tooltip text="Sign Out" placement="BOTTOM" showDelay="1000">

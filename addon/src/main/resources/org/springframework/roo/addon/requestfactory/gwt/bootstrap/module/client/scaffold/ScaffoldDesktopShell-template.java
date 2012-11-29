@@ -42,11 +42,13 @@ public class ScaffoldDesktopShell extends Composite {
     @UiField SplitLayoutPanel splitPanel;
     @UiField(provided = true)
     Breadcrumbs breadcrumbs = new Breadcrumbs();
+    @UiField Brand brand;
 
     @Inject
     public ScaffoldDesktopShell(ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController) {
         this.navigationTree = new NavigationTree(requestFactory, placeController, eventBus, breadcrumbs);
         initWidget(BINDER.createAndBindUi(this));
+        brand.setText(messages.applicationName());
         nickname.setText(messages.notSignedIn());
         mole.setMessage(messages.loading());
         splitPanel.setWidgetMinSize(navigationTree, 150);
