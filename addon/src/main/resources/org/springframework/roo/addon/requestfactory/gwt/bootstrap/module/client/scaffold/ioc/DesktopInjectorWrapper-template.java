@@ -4,7 +4,7 @@ import com.google.gwt.core.client.GWT;
 
 public class DesktopInjectorWrapper implements InjectorWrapper {
 
-	public ScaffoldInjector getInjector() {
+	public Injector getInjector() {
 		return GWT.create(DesktopInjector.class);
 	}
 }

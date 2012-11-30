@@ -1,10 +1,10 @@
 package __TOP_LEVEL_PACKAGE__.ioc;
 
-import __TOP_LEVEL_PACKAGE__.app.ScaffoldMobileApp;
+import __TOP_LEVEL_PACKAGE__.application.MobileApplication;
 import com.google.gwt.inject.client.GinModules;
 
-@GinModules(value = {ScaffoldModule.class})
-public interface MobileInjector extends ScaffoldInjector {
+@GinModules(value = {Module.class})
+public interface MobileInjector extends Injector {
 
-	ScaffoldMobileApp getScaffoldApp();
+	MobileApplication getApplication();
 }

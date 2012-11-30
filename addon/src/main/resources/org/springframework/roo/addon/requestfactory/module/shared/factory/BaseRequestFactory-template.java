@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.scaffold;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import com.google.web.bindery.requestfactory.shared.LoggingRequest;
 import com.google.web.bindery.requestfactory.shared.RequestFactory;
@@ -8,7 +8,7 @@ import com.google.web.bindery.requestfactory.shared.RequestFactory;
  * new custom request types here without fear of them
  * being managed away by Roo.
  */
-public interface ScaffoldRequestFactory extends RequestFactory {
+public interface BaseRequestFactory extends RequestFactory {
 	
 	/**
 	 * Return a GWT logging request.

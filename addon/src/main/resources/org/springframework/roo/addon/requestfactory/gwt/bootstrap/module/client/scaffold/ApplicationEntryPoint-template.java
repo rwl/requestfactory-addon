@@ -17,9 +17,9 @@ import __TOP_LEVEL_PACKAGE__.ioc.MobileInjectorWrapper;
 import __TOP_LEVEL_PACKAGE__.ioc.InjectorWrapper;
 
 
-public class Scaffold implements EntryPoint {
+public class ApplicationEntryPoint implements EntryPoint {
 
-    private static final Logger LOGGER = Logger.getLogger(Scaffold.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ApplicationEntryPoint.class.getName());
 
     public void onModuleLoad() {
         GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
@@ -39,7 +39,7 @@ public class Scaffold implements EntryPoint {
                     } else {
                         injectorWrapper = GWT.create(MobileInjectorWrapper.class);
                     }
-                    injectorWrapper.getInjector().getScaffoldApp().run();
+                    injectorWrapper.getInjector().getApplication().run();
                 }
         });
     }

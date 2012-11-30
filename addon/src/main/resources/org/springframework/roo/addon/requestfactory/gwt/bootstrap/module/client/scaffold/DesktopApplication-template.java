@@ -5,7 +5,7 @@ import __SHARED_TOP_LEVEL_PACKAGE__.managed.request.ApplicationRequestFactory;
 import __TOP_LEVEL_PACKAGE__.account.helper.AccountHelper;
 import __TOP_LEVEL_PACKAGE__.place.*;
 import __TOP_LEVEL_PACKAGE__.request.RequestEvent;
-import __TOP_LEVEL_PACKAGE__.activity.ScaffoldAnimationMapper;
+import __TOP_LEVEL_PACKAGE__.activity.ApplicationAnimationMapper;
 import __TOP_LEVEL_PACKAGE__.ui.NavigationTree.ProxyListNode;
 import __TOP_LEVEL_PACKAGE__.managed.ui.renderer.ApplicationListPlaceRenderer;
 import com.google.gwt.activity.shared.*;
@@ -31,9 +31,9 @@ __ACCOUNT_IMPORT__
 /**
  * Application for browsing entities.
  */
-public class ScaffoldDesktopApp extends ScaffoldApp {
-    private static final Logger LOGGER = Logger.getLogger(Scaffold.class.getName());
-    private final ScaffoldDesktopShell shell;
+public class DesktopApplication extends Application {
+    private static final Logger LOGGER = Logger.getLogger(ApplicationEntryPoint.class.getName());
+    private final DesktopShell shell;
     private final ApplicationRequestFactory requestFactory;
     private final EventBus eventBus;
     private final PlaceController placeController;
@@ -41,7 +41,7 @@ public class ScaffoldDesktopApp extends ScaffoldApp {
     private final ApplicationMasterActivities applicationMasterActivities;
 
     @Inject
-    public ScaffoldDesktopApp(ScaffoldDesktopShell shell, ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController, PlaceHistoryFactory placeHistoryFactory, ApplicationMasterActivities applicationMasterActivities, AccountHelper accountHelper) {
+    public DesktopApplication(DesktopShell shell, ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController, PlaceHistoryFactory placeHistoryFactory, ApplicationMasterActivities applicationMasterActivities, AccountHelper accountHelper) {
         this.shell = shell;
         this.requestFactory = requestFactory;
         this.eventBus = eventBus;
@@ -86,12 +86,12 @@ public class ScaffoldDesktopApp extends ScaffoldApp {
             }
         });
 
-        final ScaffoldAnimationMapper appAnimationMapper = new ScaffoldAnimationMapper();
+        final ApplicationAnimationMapper appAnimationMapper = new ApplicationAnimationMapper();
         final AnimatingActivityManager detailsManager = new AnimatingActivityManager(applicationMasterActivities, appAnimationMapper, eventBus);
         detailsManager.setDisplay(shell.getMasterPanel());
 
         /* Browser history integration */
-        ScaffoldPlaceHistoryMapper mapper = GWT.create(ScaffoldPlaceHistoryMapper.class);
+        HistoryMapper mapper = GWT.create(HistoryMapper.class);
         mapper.setFactory(placeHistoryFactory);
         PlaceHistoryHandler placeHistoryHandler = new PlaceHistoryHandler(mapper);
         if (getRootPlaces().iterator().hasNext()) {

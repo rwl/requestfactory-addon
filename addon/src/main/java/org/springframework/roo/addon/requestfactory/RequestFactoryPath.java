@@ -16,9 +16,9 @@ public class RequestFactoryPath {
             "/managed/request",
             "module/client/request/" + RequestFactoryPath.templateSelector);
 
-    public static final RequestFactoryPath SHARED_SCAFFOLD = new RequestFactoryPath(
-            "/scaffold",
-            "module/shared/scaffold/" + RequestFactoryPath.templateSelector);
+    public static final RequestFactoryPath SHARED_FACTORY = new RequestFactoryPath(
+            "/factory",
+            "module/shared/factory/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath SERVER = new RequestFactoryPath(
             "/",
@@ -34,7 +34,7 @@ public class RequestFactoryPath {
 
 
     public static final RequestFactoryPath[] ALL_PATHS = new RequestFactoryPath[] {
-            SHARED_MANAGED_REQUEST, SHARED_SCAFFOLD, SERVER, SERVER_ACCOUNT,
+            SHARED_MANAGED_REQUEST, SHARED_FACTORY, SERVER, SERVER_ACCOUNT,
             SHARED_ACCOUNT
     };
 
@@ -43,7 +43,7 @@ public class RequestFactoryPath {
     };
 
     public static final RequestFactoryPath[] SHARED_PATHS = new RequestFactoryPath[] {
-            SHARED_MANAGED_REQUEST, SHARED_SCAFFOLD, SHARED_ACCOUNT
+            SHARED_MANAGED_REQUEST, SHARED_FACTORY, SHARED_ACCOUNT
     };
 
 

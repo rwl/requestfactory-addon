@@ -59,7 +59,7 @@ public class {{=className}} implements Activity {
     public {{=className}}(ApplicationRequestFactory requests, PlaceController placeController) {
         this.requests = requests;
         ProxyPlace proxyPlace = (ProxyPlace) placeController.getWhere();
-        this.view = ScaffoldApp.isMobile() ? {{=name}}MobileEditView.instance() : {{=name}}DesktopEditView.instance();
+        this.view = Application.isMobile() ? {{=name}}MobileEditView.instance() : {{=name}}DesktopEditView.instance();
         this.proxyId = coerceId(proxyPlace);
         this.parentId = proxyPlace.getParentId();
         this.wrapped = new {{=name}}EditActivity({{=proxy}}.class, this.proxyId, requests, this.view, placeController, parentId);

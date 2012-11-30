@@ -171,7 +171,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                             .getFullyQualifiedTypeName());
                 }
             }
-        } else if (type == GwtBootstrapType.MOBILE_ACTIVITIES) {
+        } else if (type == GwtBootstrapType.MOBILE_ACTIVITY_MAPPER) {
             // do nothing
         } else if (type == GwtBootstrapType.PROXY_NODE_PROCESSOR
                 || type == GwtBootstrapType.PROXY_LIST_NODE_PROCESSOR

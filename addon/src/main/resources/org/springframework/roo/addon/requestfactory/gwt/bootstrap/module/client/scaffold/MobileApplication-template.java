@@ -4,7 +4,7 @@ import __TOP_LEVEL_PACKAGE__.managed.activity.*;
 import __SHARED_TOP_LEVEL_PACKAGE__.managed.request.ApplicationRequestFactory;
 import __TOP_LEVEL_PACKAGE__.managed.ui.renderer.ApplicationListPlaceRenderer;
 import __TOP_LEVEL_PACKAGE__.activity.RootActivity;
-import __TOP_LEVEL_PACKAGE__.activity.ScaffoldAnimationMapper;
+import __TOP_LEVEL_PACKAGE__.activity.ApplicationAnimationMapper;
 import __TOP_LEVEL_PACKAGE__.place.*;
 import __TOP_LEVEL_PACKAGE__.account.helper.AccountHelper;
 import com.google.gwt.activity.shared.*;
@@ -39,26 +39,26 @@ __ACCOUNT_IMPORT__
 /**
  * Mobile application for browsing entities.
  */
-public class ScaffoldMobileApp extends ScaffoldApp {
+public class MobileApplication extends Application {
 
 
-    private static final Logger LOGGER = Logger.getLogger(Scaffold.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ApplicationEntryPoint.class.getName());
     public static final Place ROOT_PLACE = new Place() {};
 
     private final AnimatableDisplay display = GWT.create(AnimatableDisplay.class);
 
-    private final ScaffoldMobileActivities scaffoldMobileActivities;
+    private final MobileActivityMapper mobileActivityMapper;
     private final ApplicationRequestFactory requestFactory;
     private final EventBus eventBus;
     private final PlaceController placeController;
     private final PlaceHistoryFactory placeHistoryFactory;
 
     @Inject
-    public ScaffoldMobileApp(ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController, ScaffoldMobileActivities scaffoldMobileActivities, PlaceHistoryFactory placeHistoryFactory, AccountHelper accountHelper) {
+    public MobileApplication(ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController, MobileActivityMapper mobileActivityMapper, PlaceHistoryFactory placeHistoryFactory, AccountHelper accountHelper) {
         this.requestFactory = requestFactory;
         this.eventBus = eventBus;
         this.placeController = placeController;
-        this.scaffoldMobileActivities = scaffoldMobileActivities;
+        this.mobileActivityMapper = mobileActivityMapper;
         this.placeHistoryFactory = placeHistoryFactory;
     }
 
@@ -91,14 +91,14 @@ public class ScaffoldMobileApp extends ScaffoldApp {
 
         final Activity rootActivity = new RootActivity(placeController);
 
-        scaffoldMobileActivities.setRootActivity(rootActivity);
+        mobileActivityMapper.setRootActivity(rootActivity);
 
-        final ScaffoldAnimationMapper appAnimationMapper = new ScaffoldAnimationMapper();
-        final AnimatingActivityManager activityManager = new AnimatingActivityManager(scaffoldMobileActivities, appAnimationMapper, eventBus);
+        final ApplicationAnimationMapper appAnimationMapper = new ApplicationAnimationMapper();
+        final AnimatingActivityManager activityManager = new AnimatingActivityManager(mobileActivityMapper, appAnimationMapper, eventBus);
         activityManager.setDisplay(display);
 
         /* Browser history integration */
-        ScaffoldPlaceHistoryMapper mapper = GWT.create(ScaffoldPlaceHistoryMapper.class);
+        HistoryMapper mapper = GWT.create(HistoryMapper.class);
         mapper.setFactory(placeHistoryFactory);
         PlaceHistoryHandler placeHistoryHandler = new PlaceHistoryHandler(mapper);
         placeHistoryHandler.register(placeController, eventBus, ROOT_PLACE);

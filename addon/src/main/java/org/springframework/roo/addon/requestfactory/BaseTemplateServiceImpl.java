@@ -479,7 +479,7 @@ public class BaseTemplateServiceImpl {
         dataDictionary.setVariable("requestPackage",
                 RequestFactoryPath.SHARED_MANAGED_REQUEST.packageName(topLevelPackage));
         dataDictionary.setVariable("sharedScaffoldPackage",
-                RequestFactoryPath.SHARED_SCAFFOLD.packageName(topLevelPackage));
+                RequestFactoryPath.SHARED_FACTORY.packageName(topLevelPackage));
 
         dataDictionary.setVariable("name", simpleTypeName);
         dataDictionary.setVariable("pluralName", plural);
@@ -538,7 +538,7 @@ public class BaseTemplateServiceImpl {
         dataDictionary.setVariable("topLevelPackage", projectOperations
                 .getTopLevelPackage(moduleName).getFullyQualifiedPackageName());
         dataDictionary.setVariable("sharedScaffoldPackage",
-                RequestFactoryPath.SHARED_SCAFFOLD.packageName(projectOperations
+                RequestFactoryPath.SHARED_FACTORY.packageName(projectOperations
                         .getTopLevelPackage(moduleName)));
         dataDictionary.setVariable("sharedAccountPackage", RequestFactoryPath.SHARED_ACCOUNT
                 .packageName(projectOperations.getTopLevelPackage(moduleName)));

@@ -7,7 +7,7 @@ import com.google.web.bindery.requestfactory.shared.EntityProxy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScaffoldApp {
+public class Application {
 
 	static boolean isMobile = false;
 

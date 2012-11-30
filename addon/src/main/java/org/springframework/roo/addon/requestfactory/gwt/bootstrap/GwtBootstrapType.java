@@ -59,7 +59,7 @@ public class GwtBootstrapType extends RequestFactoryType {
     public static final GwtBootstrapType PROXY_LIST_NODE_PROCESSOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_TREE, false, "", "proxyListNodeProcessor", "ProxyListNodeProcessor", false, false, false);
     public static final GwtBootstrapType PROXY_NODE_PROCESSOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_TREE, false, "", "proxyNodeProcessor", "ProxyNodeProcessor", false, false, false);
 
-    public static final GwtBootstrapType MOBILE_ACTIVITIES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "mobileActivities", "ScaffoldMobileActivities", false, false, false);
+    public static final GwtBootstrapType MOBILE_ACTIVITY_MAPPER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "mobileActivityMapper", "MobileActivityMapper", false, false, false);
     public static final GwtBootstrapType MOBILE_DETAILS_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_MOBILE, true, "MobileDetailsView", "mobileDetailsView", "MobileDetailsView", true, true, false);
     public static final GwtBootstrapType MOBILE_EDIT_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_MOBILE, true, "MobileEditView", "mobileEditView", "MobileEditView", true, true, false);
     public static final GwtBootstrapType MOBILE_LIST_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_MOBILE, true, "MobileListView", "mobileListView", "MobileListView", false, true, false);
@@ -69,9 +69,9 @@ public class GwtBootstrapType extends RequestFactoryType {
     public static final GwtBootstrapType SET_EDITOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_EDITOR, true, "SetEditor", "setEditor", "SetEditor", true, true, false);
     public static final GwtBootstrapType INSTANCE_EDITOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_EDITOR, true, "Editor", "editor", "Editor", true, true, false);
 
-    public static final GwtBootstrapType SCAFFOLD_APP = new GwtBootstrapType(GwtBootstrapPaths.SCAFFOLD, false, "", "scaffoldApp", "ScaffoldApp", false, false, false);
-    public static final GwtBootstrapType SCAFFOLD_DESKTOP_APP = new GwtBootstrapType(GwtBootstrapPaths.SCAFFOLD, false, "", "scaffoldDesktopApp", "ScaffoldDesktopApp", false, false, false);
-    public static final GwtBootstrapType SCAFFOLD_MOBILE_APP = new GwtBootstrapType(GwtBootstrapPaths.SCAFFOLD, false, "", "scaffoldMobileApp", "ScaffoldMobileApp", false, false, false);
+    public static final GwtBootstrapType APPLICATION = new GwtBootstrapType(GwtBootstrapPaths.SCAFFOLD, false, "", "application", "Application", false, false, false);
+    public static final GwtBootstrapType DESKTOP_APPLICATION = new GwtBootstrapType(GwtBootstrapPaths.SCAFFOLD, false, "", "desktopApplication", "DesktopApplication", false, false, false);
+    public static final GwtBootstrapType MOBILE_APPLICATION = new GwtBootstrapType(GwtBootstrapPaths.SCAFFOLD, false, "", "mobileApplication", "MobileApplication", false, false, false);
 
     public static final GwtBootstrapType[] ALL_TYPES = new GwtBootstrapType[] {
         MASTER_ACTIVITIES, ACTIVITIES_MAPPER, LIST_ACTIVITIES_MAPPER,
@@ -83,9 +83,9 @@ public class GwtBootstrapType extends RequestFactoryType {
         VISUALIZE_ACTIVITY, VISUALIZE_VIEW, DESKTOP_VISUALIZE_VIEW,
         ABSTRACT_DATA_PROVIDER, PROXY_DATA_PROVIDER, NODE_DATA_PROVIDER, 
         IS_LEAF_PROCESSOR, PROXY_LIST_NODE_PROCESSOR,
-        PROXY_NODE_PROCESSOR, MOBILE_ACTIVITIES, MOBILE_DETAILS_VIEW,
+        PROXY_NODE_PROCESSOR, MOBILE_ACTIVITY_MAPPER, MOBILE_DETAILS_VIEW,
         MOBILE_EDIT_VIEW, MOBILE_LIST_VIEW, MOBILE_PROXY_LIST_VIEW, MOBILE_VISUALIZE_VIEW,
-        SET_EDITOR, INSTANCE_EDITOR, SCAFFOLD_APP, SCAFFOLD_DESKTOP_APP, SCAFFOLD_MOBILE_APP, APPLICATION_MESSAGES
+        SET_EDITOR, INSTANCE_EDITOR, APPLICATION, DESKTOP_APPLICATION, MOBILE_APPLICATION, APPLICATION_MESSAGES
     };
 
     public static List<GwtBootstrapType> getGwtBootstrapMirrorTypes() {
@@ -291,37 +291,37 @@ public class GwtBootstrapType extends RequestFactoryType {
     protected List<RequestFactoryType> resolveReferences(final RequestFactoryType type) {
         if (type == ACTIVITIES_MAPPER) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    SCAFFOLD_APP, DETAIL_ACTIVITY, VISUALIZE_ACTIVITY,
+                    APPLICATION, DETAIL_ACTIVITY, VISUALIZE_ACTIVITY,
                     EDIT_ACTIVITY, EDIT_ACTIVITY_WRAPPER, REQUEST);
         } else if (type == LIST_ACTIVITIES_MAPPER) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    SCAFFOLD_APP, LIST_ACTIVITY, LIST_VISUALIZE_ACTIVITY,
+                    APPLICATION, LIST_ACTIVITY, LIST_VISUALIZE_ACTIVITY,
                     REQUEST);
         } else if (type == DETAIL_ACTIVITY) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    DETAILS_VIEW, SCAFFOLD_APP);
+                    DETAILS_VIEW, APPLICATION);
         } else if (type == VISUALIZE_ACTIVITY) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    VISUALIZE_VIEW, SCAFFOLD_APP);
+                    VISUALIZE_VIEW, APPLICATION);
         } else if (type == EDIT_ACTIVITY) {
             return Arrays.asList(EDIT_VIEW,
                     APP_REQUEST_FACTORY, REQUEST);
         } else if (type == EDIT_ACTIVITY_WRAPPER) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    EDIT_VIEW, SCAFFOLD_APP);
+                    EDIT_VIEW, APPLICATION);
         } else if (type == CREATE_ACTIVITY_WRAPPER) {
             return Arrays.asList(APP_REQUEST_FACTORY,
                     EDIT_ACTIVITY_WRAPPER);
         } else if (type == LIST_ACTIVITY) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    SCAFFOLD_MOBILE_APP, SCAFFOLD_APP);
+                    MOBILE_APPLICATION, APPLICATION);
         } else if (type == LIST_VISUALIZE_ACTIVITY) {
             return Arrays.asList(APP_REQUEST_FACTORY,
                     DESKTOP_LIST_VISUALIZE_VIEW,
-                    SCAFFOLD_MOBILE_APP, SCAFFOLD_APP);
+                    MOBILE_APPLICATION, APPLICATION);
         } else if (type == MOBILE_LIST_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {MOBILE_PROXY_LIST_VIEW,
-                    SCAFFOLD_MOBILE_APP});
+                    MOBILE_APPLICATION});
         } else if (type == DESKTOP_LIST_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {APPLICATION_MESSAGES});
         } else if (type == DESKTOP_LIST_VISUALIZE_VIEW) {
@@ -350,7 +350,7 @@ public class GwtBootstrapType extends RequestFactoryType {
             return Arrays.asList(APP_ENTITY_TYPES_PROCESSOR, APP_REQUEST_FACTORY);
         } else if (type == MASTER_ACTIVITIES) {
             return Arrays.asList(APP_REQUEST_FACTORY,
-                    APP_ENTITY_TYPES_PROCESSOR, SCAFFOLD_APP);
+                    APP_ENTITY_TYPES_PROCESSOR, APPLICATION);
         } else if (type == ABSTRACT_DATA_PROVIDER) {
             return Arrays.asList(APP_REQUEST_FACTORY);
         } else if (type == PROXY_DATA_PROVIDER) {

@@ -41,7 +41,7 @@ public class {{=className}} extends AbstractActivity implements {{=visualizeView
         ProxyPlace proxyPlace = (ProxyPlace) placeController.getWhere();
         this.proxyId = coerceId(proxyPlace);
         this.requests = requests;
-        this.view = ScaffoldApp.isMobile() ? {{=name}}MobileVisualizeView.instance() : {{=name}}DesktopVisualizeView.instance();
+        this.view = Application.isMobile() ? {{=name}}MobileVisualizeView.instance() : {{=name}}DesktopVisualizeView.instance();
         view.setDelegate(this);
         this.parentId = proxyPlace.getParentId();
     }

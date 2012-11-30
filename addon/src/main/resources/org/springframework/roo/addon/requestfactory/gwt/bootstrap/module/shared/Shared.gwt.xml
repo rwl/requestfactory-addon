@@ -4,5 +4,5 @@
   <source path="managed"></source>
   <source path="proxy"></source>
   <source path="request"></source>
-  <source path="scaffold"></source>
+  <source path="factory"></source>
 </module>

@@ -24,9 +24,9 @@ import com.googlecode.mgwt.mvp.client.AnimatableDisplay;
 /**
  * The outermost UI of the application.
  */
-public class ScaffoldDesktopShell extends Composite {
+public class DesktopShell extends Composite {
 
-    interface Binder extends UiBinder<Widget, ScaffoldDesktopShell> {
+    interface Binder extends UiBinder<Widget, DesktopShell> {
     }
 
     private static final Binder BINDER = GWT.create(Binder.class);
@@ -46,7 +46,7 @@ public class ScaffoldDesktopShell extends Composite {
     @UiField Brand brand;
 
     @Inject
-    public ScaffoldDesktopShell(ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController) {
+    public DesktopShell(ApplicationRequestFactory requestFactory, EventBus eventBus, PlaceController placeController) {
         this.navigationTree = new NavigationTree(requestFactory, placeController, eventBus, breadcrumbs);
         initWidget(BINDER.createAndBindUi(this));
         brand.setText(messages.applicationName());

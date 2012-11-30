@@ -12,7 +12,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 __ACCOUNT_IMPORT__
 
-public class ScaffoldModule extends AbstractGinModule {
+public class Module extends AbstractGinModule {
 
 	@Override
 	protected void configure() {

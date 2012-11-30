@@ -9,7 +9,7 @@ import com.googlecode.mgwt.mvp.client.Animation;
 import com.googlecode.mgwt.mvp.client.AnimationMapper;
 
 
-public class ScaffoldAnimationMapper implements AnimationMapper {
+public class ApplicationAnimationMapper implements AnimationMapper {
 
 	private static final Animation DEFAULT_ANIMATION = Animation.POP;
 

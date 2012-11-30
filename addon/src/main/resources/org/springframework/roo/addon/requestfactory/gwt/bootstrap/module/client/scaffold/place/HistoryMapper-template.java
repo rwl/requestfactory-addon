@@ -27,5 +27,5 @@ import com.google.gwt.place.shared.PlaceHistoryMapperWithFactory;
  * an individual entity).
  */
 // @WithTokenizers({MyNewPlace.Tokenizer, MyOtherNewPlace.Tokenizer})
-public interface ScaffoldPlaceHistoryMapper extends PlaceHistoryMapperWithFactory<PlaceHistoryFactory> {
+public interface HistoryMapper extends PlaceHistoryMapperWithFactory<PlaceHistoryFactory> {
 }

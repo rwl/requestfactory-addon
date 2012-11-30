@@ -5,7 +5,7 @@ import com.google.gwt.core.client.GWT;
 public class MobileInjectorWrapper implements InjectorWrapper {
 
 	@Override
-	public ScaffoldInjector getInjector() {
+	public Injector getInjector() {
 		return GWT.create(MobileInjector.class);
 	}
 }

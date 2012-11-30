@@ -1,6 +1,6 @@
 package __TOP_LEVEL_PACKAGE__.activity;
 
-import __TOP_LEVEL_PACKAGE__.app.ScaffoldApp;
+import __TOP_LEVEL_PACKAGE__.application.Application;
 import __TOP_LEVEL_PACKAGE__.ui.RootPlaceView;
 
 import com.google.gwt.activity.shared.AbstractActivity;
@@ -28,7 +28,7 @@ public class RootActivity extends AbstractActivity {
     public RootActivity(PlaceController placeController) {
         this.placeController = placeController;
         rootPlaceView = RootPlaceView.instance();
-        rootPlaceView.setPlaces(ScaffoldApp.getRootPlaces());
+        rootPlaceView.setPlaces(Application.getRootPlaces());
     }
 
     @Override
@@ -43,7 +43,7 @@ public class RootActivity extends AbstractActivity {
             public void onCellSelected(CellSelectedEvent event) {
                 int index = event.getIndex();
 
-                Place place = ScaffoldApp.getRootPlaces().get(index);
+                Place place = Application.getRootPlaces().get(index);
                 placeController.goTo(place);
             }
         });

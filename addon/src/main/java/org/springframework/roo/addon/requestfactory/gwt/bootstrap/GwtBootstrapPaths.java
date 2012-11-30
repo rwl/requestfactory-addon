@@ -15,7 +15,7 @@ public class GwtBootstrapPaths {
     public static final RequestFactoryPath MANAGED_UI_MOBILE = new RequestFactoryPath("/managed/ui/mobile", "module/client/managed/ui/mobile/" + RequestFactoryPath.templateSelector); // GWT_SCAFFOLD_UI
     public static final RequestFactoryPath MANAGED_UI_RENDERER = new RequestFactoryPath("/managed/ui/renderer", "module/client/managed/ui/renderer/" + RequestFactoryPath.templateSelector); // GWT_SCAFFOLD_UI
     public static final RequestFactoryPath MANAGED_UI_EDITOR = new RequestFactoryPath("/managed/ui/editor", "module/client/managed/ui/editor/" + RequestFactoryPath.templateSelector); // GWT_SCAFFOLD_UI
-    public static final RequestFactoryPath SCAFFOLD = new RequestFactoryPath("/app", "module/client/scaffold/" + RequestFactoryPath.templateSelector);
+    public static final RequestFactoryPath SCAFFOLD = new RequestFactoryPath("/application", "module/client/scaffold/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath SCAFFOLD_ACTIVITY = new RequestFactoryPath("/activity", "module/client/scaffold/activity/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath SCAFFOLD_IOC = new RequestFactoryPath("/ioc", "module/client/scaffold/ioc/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath SCAFFOLD_PLACE = new RequestFactoryPath("/place", "module/client/scaffold/place/" + RequestFactoryPath.templateSelector);

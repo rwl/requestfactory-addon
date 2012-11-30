@@ -1,6 +1,6 @@
 package __TOP_LEVEL_PACKAGE__.ui;
 
-import __TOP_LEVEL_PACKAGE__.app.ScaffoldMobileApp;
+import __TOP_LEVEL_PACKAGE__.application.MobileApplication;
 import __TOP_LEVEL_PACKAGE__.place.AbstractProxyListView;
 import __TOP_LEVEL_PACKAGE__.place.ProxyListView;
 import __TOP_LEVEL_PACKAGE__.managed.ApplicationMessages;

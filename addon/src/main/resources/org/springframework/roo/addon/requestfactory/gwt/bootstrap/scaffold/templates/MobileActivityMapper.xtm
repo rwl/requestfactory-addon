@@ -8,12 +8,12 @@ import com.google.inject.Inject;
 /**
  * Instantiates activities for the mobile app.
  */
-public final class ScaffoldMobileActivities implements ActivityMapper {
+public final class MobileActivityMapper implements ActivityMapper {
     private final ApplicationMasterActivities activityBuilder;
     private Activity rootActivity;
 
     @Inject
-    public ScaffoldMobileActivities(ApplicationMasterActivities activitiesBuilder) {
+    public MobileActivityMapper(ApplicationMasterActivities activitiesBuilder) {
         this.activityBuilder = activitiesBuilder;
     }
 
