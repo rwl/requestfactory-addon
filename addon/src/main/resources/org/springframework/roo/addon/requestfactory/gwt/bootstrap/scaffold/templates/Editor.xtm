@@ -3,7 +3,7 @@ package {{=packageName}};
 import java.util.Collection;
 import java.util.Set;
 
-import {{=topLevelPackage}}.client.managed.ui.renderer.{{=proxy}}Renderer;
+import {{=topLevelPackage}}.managed.ui.renderer.{{=proxy}}Renderer;
 import {{=scaffoldUiPackage}}.ProxyPicker;
 import {{=scaffoldUiPackage}}.CollectionCallback;
 

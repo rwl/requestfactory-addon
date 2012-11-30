@@ -17,8 +17,14 @@
 
     <inherits name="com.googlecode.mgwt.MGWT"/>
 
-    <source path='client'/>
-    <source path='shared'/>
+    <source path="account"/>
+    <source path="activity"/>
+    <source path="app"/>
+    <source path="ioc"/>
+    <source path="managed"/>
+    <source path="place"/>
+    <source path="request"/>
+    <source path="ui"/>
 
     <public path="public"/>
 
@@ -55,6 +61,6 @@
         <set-configuration-property name="compiler.emulatedStack.recordLineNumbers" value="true" />
         <set-configuration-property name="compiler.emulatedStack.recordFileNames" value="true" />
 
-    <entry-point class="__TOP_LEVEL_PACKAGE__.client.scaffold.Scaffold"/>
+    <entry-point class="__TOP_LEVEL_PACKAGE__.app.Scaffold"/>
 
 </module>

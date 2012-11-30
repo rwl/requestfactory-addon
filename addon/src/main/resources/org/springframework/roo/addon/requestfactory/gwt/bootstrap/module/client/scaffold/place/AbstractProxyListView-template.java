@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.place;
+package __TOP_LEVEL_PACKAGE__.place;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

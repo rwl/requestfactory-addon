@@ -10,7 +10,7 @@ import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 
 import {{=placePackage}}.ProxyListPlace;
-import {{=topLevelPackage}}.client.scaffold.activity.AsyncActivityProxyProvider;
+import {{=topLevelPackage}}.activity.AsyncActivityProxyProvider;
 
 {{#imports}}import {{=import}};
 {{/imports}}

@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.place;
+package __TOP_LEVEL_PACKAGE__.place;
 
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.event.shared.EventBus;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace.ListOperation;
+import __TOP_LEVEL_PACKAGE__.place.ProxyListPlace.ListOperation;
 
 /**
  * Abstract activity for displaying a list of {@link EntityProxy}. These

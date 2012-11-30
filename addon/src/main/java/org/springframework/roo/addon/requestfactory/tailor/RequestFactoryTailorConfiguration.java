@@ -46,19 +46,19 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
         config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui --topLevelPackage ${topLevelPackage}.ui --artifactId ${projectName}-ui --parent ${topLevelPackage}:${projectName}:" + VERSION + " --packaging PARENT_POM"));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
-        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui/server --topLevelPackage ${topLevelPackage}.ui.server --artifactId ${projectName}-server --parent ${topLevelPackage}:${projectName}-ui:" + VERSION));
+        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui/server --topLevelPackage ${topLevelPackage}.ui.server --artifactId ${projectName}-server --parent ${topLevelPackage}.ui:${projectName}-ui:" + VERSION));
         config.addAction(ActionConfigFactory.executeAction("web requestfactory setup server"));
         config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage} --artifactId ${projectName}-domain --version " + VERSION));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
-        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui/shared --topLevelPackage ${topLevelPackage}.ui.shared --artifactId ${projectName}-shared --parent ${topLevelPackage}:${projectName}-ui:" + VERSION));
+        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui/shared --topLevelPackage ${topLevelPackage}.ui.shared --artifactId ${projectName}-shared --parent ${topLevelPackage}.ui:${projectName}-ui:" + VERSION));
         config.addAction(ActionConfigFactory.executeAction("web requestfactory setup client"));
         config.addAction(ActionConfigFactory.executeAction("web requestfactory setup server"));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
-        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui/gwt --topLevelPackage ${topLevelPackage}.ui.gwt --artifactId ${projectName}-gwt --parent ${topLevelPackage}:${projectName}-ui:" + VERSION));
+        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui/gwt --topLevelPackage ${topLevelPackage}.ui.gwt --artifactId ${projectName}-gwt --parent ${topLevelPackage}.ui:${projectName}-ui:" + VERSION));
         config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage} --artifactId ${projectName}-domain --version " + VERSION));
-        config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage} --artifactId ${projectName}-shared --version " + VERSION));
+        config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage}.ui.shared --artifactId ${projectName}-shared --version " + VERSION));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
-        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui/android --topLevelPackage ${topLevelPackage}.ui.android --artifactId ${projectName}-android --parent ${topLevelPackage}:${projectName}-ui:" + VERSION + " --packaging APK"));
+        config.addAction(ActionConfigFactory.executeAction("module create --moduleName ui/android --topLevelPackage ${topLevelPackage}.ui.android --artifactId ${projectName}-android --parent ${topLevelPackage}.ui:${projectName}-ui:" + VERSION + " --packaging APK"));
         return config;
     }
 

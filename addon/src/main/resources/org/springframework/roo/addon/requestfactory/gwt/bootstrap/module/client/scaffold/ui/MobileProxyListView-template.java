@@ -1,9 +1,9 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.ui;
+package __TOP_LEVEL_PACKAGE__.ui;
 
-import __TOP_LEVEL_PACKAGE__.client.scaffold.ScaffoldMobileApp;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.place.AbstractProxyListView;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListView;
-import __TOP_LEVEL_PACKAGE__.client.managed.ApplicationMessages;
+import __TOP_LEVEL_PACKAGE__.app.ScaffoldMobileApp;
+import __TOP_LEVEL_PACKAGE__.place.AbstractProxyListView;
+import __TOP_LEVEL_PACKAGE__.place.ProxyListView;
+import __TOP_LEVEL_PACKAGE__.managed.ApplicationMessages;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.requestfactory.gwt.ui.client.EntityProxyKeyProvider;

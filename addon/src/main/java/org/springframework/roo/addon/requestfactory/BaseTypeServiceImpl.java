@@ -483,7 +483,7 @@ public class BaseTypeServiceImpl {
 
     public JavaType getServiceLocator(final String moduleName) {
         return new JavaType(projectOperations.getTopLevelPackage(moduleName)
-                + ".server.locator.RequestFactoryServiceLocator");
+                + ".locator.RequestFactoryServiceLocator");
     }
 
     protected boolean isAllowableReturnType(final JavaType type) {

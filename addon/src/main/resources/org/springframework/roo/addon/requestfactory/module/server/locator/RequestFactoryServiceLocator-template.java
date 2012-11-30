@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.server.locator;
+package __TOP_LEVEL_PACKAGE__.locator;
 
 import javax.servlet.http.HttpServletRequest;
 

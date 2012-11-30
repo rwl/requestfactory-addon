@@ -1,18 +1,18 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.ui;
+package __TOP_LEVEL_PACKAGE__.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import __SHARED_TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
-import __TOP_LEVEL_PACKAGE__.client.managed.tree.IsLeafProcessor;
-import __TOP_LEVEL_PACKAGE__.client.managed.tree.ProxyListNodeProcessor;
-import __TOP_LEVEL_PACKAGE__.client.managed.tree.ProxyNodeProcessor;
-import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRenderer;
-import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationProxyPlaceRenderer;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyPlace;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyPlace.Operation;
+import __SHARED_TOP_LEVEL_PACKAGE__.managed.request.ApplicationRequestFactory;
+import __TOP_LEVEL_PACKAGE__.managed.tree.IsLeafProcessor;
+import __TOP_LEVEL_PACKAGE__.managed.tree.ProxyListNodeProcessor;
+import __TOP_LEVEL_PACKAGE__.managed.tree.ProxyNodeProcessor;
+import __TOP_LEVEL_PACKAGE__.managed.ui.renderer.ApplicationListPlaceRenderer;
+import __TOP_LEVEL_PACKAGE__.managed.ui.renderer.ApplicationProxyPlaceRenderer;
+import __TOP_LEVEL_PACKAGE__.place.ProxyListPlace;
+import __TOP_LEVEL_PACKAGE__.place.ProxyPlace;
+import __TOP_LEVEL_PACKAGE__.place.ProxyPlace.Operation;
 
 import com.github.gwtbootstrap.client.ui.Breadcrumbs;
 import com.github.gwtbootstrap.client.ui.NavLink;

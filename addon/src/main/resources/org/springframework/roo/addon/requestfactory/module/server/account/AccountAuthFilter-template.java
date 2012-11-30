@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import __TOP_LEVEL_PACKAGE__.client.scaffold.account.AccountAuthRequestTransport;
+import __TOP_LEVEL_PACKAGE__.account.AccountAuthRequestTransport;
 
 import java.io.IOException;
 import java.net.URL;

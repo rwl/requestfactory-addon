@@ -203,7 +203,7 @@ public class GwtBootstrapType extends RequestFactoryType {
             watchedMethods.put(new JavaSymbolName("render"), Collections
                     .singletonList(new JavaType(topLevelPackage
                             .getFullyQualifiedPackageName()
-                            + ".client.scaffold.place.ProxyListPlace")));
+                            + ".place.ProxyListPlace")));
         } else if (this == PROXY_PLACE_RENDERER) {
             for (final RequestFactoryProxyProperty property : proxyFieldTypeMap.values()) {
                 if (property.isEnum() || property.isProxy()
@@ -223,14 +223,14 @@ public class GwtBootstrapType extends RequestFactoryType {
             watchedMethods.put(new JavaSymbolName("render"), Arrays
                     .asList(new JavaType(topLevelPackage
                             .getFullyQualifiedPackageName()
-                            + ".client.scaffold.place.ProxyPlace"),
+                            + ".place.ProxyPlace"),
                             new JavaType("com.google.gwt.user.client.ui.HasWidgets"),
                             new JavaType("com.google.gwt.user.client.ui.HasText")));
         } else if (this == ACTIVITIES_MAPPER) {
             final List<JavaType> params = new ArrayList<JavaType>();
             params.add(new JavaType(topLevelPackage
                     .getFullyQualifiedPackageName()
-                    + ".client.scaffold.place.ProxyPlace"));
+                    + ".place.ProxyPlace"));
             watchedMethods.put(new JavaSymbolName("makeEditActivity"), params);
             watchedMethods.put(new JavaSymbolName("coerceId"), params);
             watchedMethods.put(new JavaSymbolName("makeCreateActivity"),

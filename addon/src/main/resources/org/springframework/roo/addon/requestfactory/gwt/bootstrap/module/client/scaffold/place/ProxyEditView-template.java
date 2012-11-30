@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.place;
+package __TOP_LEVEL_PACKAGE__.place;
 
 import com.google.gwt.editor.client.HasEditorErrors;
 import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryEditorDriver;

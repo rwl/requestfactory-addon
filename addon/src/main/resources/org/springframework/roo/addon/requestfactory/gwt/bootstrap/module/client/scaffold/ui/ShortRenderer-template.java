@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.ui;
+package __TOP_LEVEL_PACKAGE__.ui;
 
 import com.google.gwt.text.shared.AbstractRenderer;
 import com.google.gwt.text.shared.Renderer;

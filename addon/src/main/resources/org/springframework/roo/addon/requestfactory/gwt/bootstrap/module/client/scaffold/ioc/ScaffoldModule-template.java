@@ -1,7 +1,7 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.ioc;
+package __TOP_LEVEL_PACKAGE__.ioc;
 
-import __SHARED_TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.request.EventSourceRequestTransport;
+import __SHARED_TOP_LEVEL_PACKAGE__.managed.request.ApplicationRequestFactory;
+import __TOP_LEVEL_PACKAGE__.request.EventSourceRequestTransport;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;

@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.request;
+package __TOP_LEVEL_PACKAGE__.request;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.gwt.client.DefaultRequestTransport;

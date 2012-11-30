@@ -9,27 +9,27 @@ import org.springframework.roo.model.JavaPackage;
 public class RequestFactoryPath {
 
     public static final RequestFactoryPath SERVER_LOCATOR = new RequestFactoryPath(
-            "/server/locator",
+            "/locator",
             "module/server/locator/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath SHARED_MANAGED_REQUEST = new RequestFactoryPath(
-            "/shared/managed/request",
+            "/managed/request",
             "module/client/request/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath SHARED_SCAFFOLD = new RequestFactoryPath(
-            "/shared/scaffold",
+            "/scaffold",
             "module/shared/scaffold/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath SERVER = new RequestFactoryPath(
-            "/server",
+            "/",
             "module/server/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath SERVER_ACCOUNT = new RequestFactoryPath(
-            "/server/account",
+            "/account/server",
             "module/server/account/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath SHARED_ACCOUNT = new RequestFactoryPath(
-            "/shared/account",
+            "/account/shared",
             "module/shared/account/" + RequestFactoryPath.templateSelector);
 
 

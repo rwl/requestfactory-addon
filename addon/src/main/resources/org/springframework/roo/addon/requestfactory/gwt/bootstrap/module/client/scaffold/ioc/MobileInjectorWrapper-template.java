@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.ioc;
+package __TOP_LEVEL_PACKAGE__.ioc;
 
 import com.google.gwt.core.client.GWT;
 

@@ -1,8 +1,8 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.activity;
+package __TOP_LEVEL_PACKAGE__.activity;
 
-import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyPlace;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyPlace.Operation;
+import __TOP_LEVEL_PACKAGE__.place.ProxyListPlace;
+import __TOP_LEVEL_PACKAGE__.place.ProxyPlace;
+import __TOP_LEVEL_PACKAGE__.place.ProxyPlace.Operation;
 
 import com.google.gwt.place.shared.Place;
 import com.googlecode.mgwt.mvp.client.Animation;

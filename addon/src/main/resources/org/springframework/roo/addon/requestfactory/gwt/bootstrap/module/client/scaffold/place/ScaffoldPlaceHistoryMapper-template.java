@@ -18,12 +18,12 @@ import com.google.gwt.place.shared.PlaceHistoryMapperWithFactory;
  * <p/>
  * This code generated object looks to both the {@literal @}WithTokenizers
  * annotation and the factory to infer the types of
- * {@link __TOP_LEVEL_PACKAGE__.client.scaffold.place.Place Place}s your app can navigate to. In
+ * {@link __TOP_LEVEL_PACKAGE__.place.Place Place}s your app can navigate to. In
  * this case it will find the {@link PlaceHistoryFactory#getProxyListPlaceTokenizer()} and
  * {@link PlaceHistoryFactory#getProxyPlaceTokenizer()} methods, and so be able to handle
- * {@link __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace ProxyListPlace}s (which show
+ * {@link __TOP_LEVEL_PACKAGE__.place.ProxyListPlace ProxyListPlace}s (which show
  * all entities of a particular type) and
- * {@link __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyPlace ProxyPlace}s (which give access to
+ * {@link __TOP_LEVEL_PACKAGE__.place.ProxyPlace ProxyPlace}s (which give access to
  * an individual entity).
  */
 // @WithTokenizers({MyNewPlace.Tokenizer, MyOtherNewPlace.Tokenizer})

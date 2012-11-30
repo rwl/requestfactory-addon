@@ -19,7 +19,7 @@ import {{=mobileUiPackage}}.{{=name}}MobileEditView;
 {{#imports}}import {{=import}};
 {{/imports}}
 
-{{#setProxyProviders}}import {{=topLevelPackage}}.client.managed.provider.{{=proxyDataProviderName}};
+{{#setProxyProviders}}import {{=topLevelPackage}}.managed.provider.{{=proxyDataProviderName}};
 {{/setProxyProviders}}
 
 import java.util.Arrays;

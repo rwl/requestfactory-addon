@@ -12,9 +12,9 @@ import com.google.gwt.user.client.Window;
 
 import com.googlecode.mgwt.ui.client.MGWT;
 
-import __TOP_LEVEL_PACKAGE__.client.scaffold.ioc.DesktopInjectorWrapper;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.ioc.MobileInjectorWrapper;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.ioc.InjectorWrapper;
+import __TOP_LEVEL_PACKAGE__.ioc.DesktopInjectorWrapper;
+import __TOP_LEVEL_PACKAGE__.ioc.MobileInjectorWrapper;
+import __TOP_LEVEL_PACKAGE__.ioc.InjectorWrapper;
 
 
 public class Scaffold implements EntryPoint {

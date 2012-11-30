@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.ui;
+package __TOP_LEVEL_PACKAGE__.ui;
 
 import java.util.HashSet;
 import java.util.Set;

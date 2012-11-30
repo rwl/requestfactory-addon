@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.shared.scaffold;
+package __TOP_LEVEL_PACKAGE__.scaffold;
 
 import com.google.web.bindery.requestfactory.shared.LoggingRequest;
 import com.google.web.bindery.requestfactory.shared.RequestFactory;

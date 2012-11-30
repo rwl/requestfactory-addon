@@ -62,7 +62,7 @@ public class GwtBootstrapTypeServiceImpl extends BaseTypeServiceImpl implements 
                     .singletonList(new JavaType(projectOperations
                             .getTopLevelPackage(moduleName)
                             .getFullyQualifiedPackageName()
-                            + ".client.scaffold.place.ProxyListPlace")));
+                            + ".place.ProxyListPlace")));
             type.setWatchedMethods(watchedMethods);
         }
         else {

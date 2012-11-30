@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
-	xmlns:s="urn:import:__TOP_LEVEL_PACKAGE__.client.scaffold.ui">
+	xmlns:s="urn:import:__TOP_LEVEL_PACKAGE__.ui">
 	<ui:style>
     .scrollable {
       height: 350px;

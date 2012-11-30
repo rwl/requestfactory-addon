@@ -727,6 +727,9 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                         new Property(propertyElement));
             }
         }
+        projectOperations.addProperty(projectOperations.getFocusedModuleName(),
+                new Property("shared.package",
+                getSharedTopLevelPackageName().toString()));
     }
 
     private void updateDependencies(final Element configuration,
@@ -841,9 +844,8 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
 
         WebXmlUtils.addServlet(
                 "requestFactory",
-                projectOperations.getTopLevelPackage(projectOperations
-                        .getFocusedModuleName())
-                        + ".server.CustomRequestFactoryServlet", "/gwtRequest",
+                getSharedTopLevelPackageName()
+                        + ".CustomRequestFactoryServlet", "/gwtRequest",
                 null, webXml, null);
         if (typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() != 0) {
             WebXmlUtils

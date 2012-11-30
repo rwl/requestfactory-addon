@@ -143,7 +143,7 @@
                                 <classpath />
                                 <argument>com.google.web.bindery.requestfactory.apt.ValidationTool</argument>
                                 <argument>${project.build.outputDirectory}</argument>
-                                <argument>${project.groupId}.shared.managed.request.ApplicationRequestFactory</argument>
+                                <argument>${shared.package}.managed.request.ApplicationRequestFactory</argument>
                             </arguments>
                         </configuration>
                         <goals>
@@ -239,7 +239,7 @@
                                 <classpath />
                                 <argument>com.google.web.bindery.requestfactory.apt.ValidationTool</argument>
                                 <argument>${project.build.outputDirectory}</argument>
-                                <argument>${project.groupId}.shared.managed.request.ApplicationRequestFactory</argument>
+                                <argument>${shared.package}.managed.request.ApplicationRequestFactory</argument>
                             </arguments>
                         </configuration>
                         <goals>

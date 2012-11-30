@@ -18,7 +18,7 @@ import com.github.gwtbootstrap.client.ui.SimplePager;
 import com.github.gwtbootstrap.client.ui.SimplePager.TextLocation;
 import com.github.gwtbootstrap.client.ui.SimplePager.Resources;
 
-import {{=topLevelPackage}}.client.managed.SimplePagerConstants;
+import {{=topLevelPackage}}.managed.SimplePagerConstants;
 import {{=placePackage}}.AbstractProxyListView;
 {{#imports}}import {{=import}};
 {{/imports}}

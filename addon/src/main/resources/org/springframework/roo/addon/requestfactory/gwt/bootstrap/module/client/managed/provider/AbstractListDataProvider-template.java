@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.client.managed.provider;
+package __TOP_LEVEL_PACKAGE__.managed.provider;
 
 import java.util.ArrayList;
 import java.util.List;

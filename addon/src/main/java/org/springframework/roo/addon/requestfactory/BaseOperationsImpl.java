@@ -121,7 +121,7 @@ public class BaseOperationsImpl {
                 projectOperations.getFocusedModuleName())
                 .getFullyQualifiedPackageName();
         input = input.replace("__TOP_LEVEL_PACKAGE__", topLevelPackage);
-        input = input.replace("__SHARED_TOP_LEVEL_PACKAGE__", getProxyTopLevelPackageName());
+        input = input.replace("__SHARED_TOP_LEVEL_PACKAGE__", getSharedTopLevelPackageName());
         input = input.replace("__SEGMENT_PACKAGE__", segmentPackage);
         input = input.replace("__PROJECT_NAME__", projectOperations
                 .getProjectName(projectOperations.getFocusedModuleName()));
@@ -145,7 +145,7 @@ public class BaseOperationsImpl {
         return input;
     }
 
-    protected CharSequence getProxyTopLevelPackageName() {
+    protected CharSequence getSharedTopLevelPackageName() {
         final ClassOrInterfaceTypeDetails proxy = typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)
                 .iterator().next();

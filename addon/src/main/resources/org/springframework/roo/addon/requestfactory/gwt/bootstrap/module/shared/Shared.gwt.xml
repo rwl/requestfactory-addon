@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <module rename-to="shared">
   <inherits name='com.google.gwt.user.User'/>
-  <source path="client"></source>
-  <source path="shared"></source>
+  <source path="managed"></source>
+  <source path="proxy"></source>
+  <source path="request"></source>
+  <source path="scaffold"></source>
 </module>

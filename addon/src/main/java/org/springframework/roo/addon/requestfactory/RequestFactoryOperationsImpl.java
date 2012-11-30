@@ -284,7 +284,7 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
 
         final String locator = projectOperations
                 .getTopLevelPackage(focusedModule)
-                + ".server.locator."
+                + ".locator."
                 + entity.getName().getSimpleTypeName() + "Locator";
         final StringAttributeValue locatorAttributeValue = new StringAttributeValue(
                 new JavaSymbolName("locator"), locator);

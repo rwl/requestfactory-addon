@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.place;
+package __TOP_LEVEL_PACKAGE__.place;
 
 import com.google.gwt.text.shared.AbstractRenderer;
 import com.google.gwt.text.shared.Renderer;

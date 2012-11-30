@@ -95,7 +95,7 @@ public class RequestFactoryCommands implements CommandMarker {
 
     @CliCommand(value = WEB_REQUEST_FACTORY_PROXY_ALL_COMMAND, help = "Locates all entities in the project and creates GWT proxies")
     public void proxyAll(
-            @CliOption(key = PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.proxy", help = "The package in which created proxies will be placed") final JavaPackage javaPackage,
+            @CliOption(key = PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.proxy", help = "The package in which created proxies will be placed") final JavaPackage javaPackage,
             @CliOption(key = RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom serverModule) {
 
         requestFactoryOperations.proxyAll(javaPackage, serverModule);
@@ -103,7 +103,7 @@ public class RequestFactoryCommands implements CommandMarker {
 
     @CliCommand(value = WEB_REQUEST_FACTORY_PROXY_TYPE_COMMAND, help = "Creates a GWT proxy based on the specified type")
     public void proxyType(
-            @CliOption(key = PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.proxy", help = "The package in which created proxies will be placed") final JavaPackage javaPackage,
+            @CliOption(key = PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.proxy", help = "The package in which created proxies will be placed") final JavaPackage javaPackage,
             @CliOption(key = TYPE_KEY, mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created request on") final JavaType type,
             @CliOption(key = RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate locators") final Pom serverModule) {
 
@@ -112,14 +112,14 @@ public class RequestFactoryCommands implements CommandMarker {
 
     @CliCommand(value = WEB_REQUEST_FACTORY_REQUEST_ALL_COMMAND, help = "Locates all entities in the project and creates GWT requests")
     public void requestAll(
-            @CliOption(key = PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.request", help = "The package in which created requests will be placed") final JavaPackage javaPackage) {
+            @CliOption(key = PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.request", help = "The package in which created requests will be placed") final JavaPackage javaPackage) {
 
         requestFactoryOperations.requestAll(javaPackage);
     }
 
     @CliCommand(value = WEB_REQUEST_FACTORY_REQUEST_TYPE_COMMAND, help = "Creates a GWT request based on the specified type")
     public void requestType(
-            @CliOption(key = PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.request", help = "The package in which created requests will be placed") final JavaPackage javaPackage,
+            @CliOption(key = PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.request", help = "The package in which created requests will be placed") final JavaPackage javaPackage,
             @CliOption(key = TYPE_KEY, mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created request on") final JavaType type) {
 
         requestFactoryOperations.requestType(javaPackage, type);
@@ -127,8 +127,8 @@ public class RequestFactoryCommands implements CommandMarker {
 
     @CliCommand(value = WEB_REQUEST_FACTORY_PROXY_REQUEST_ALL_COMMAND, help = "Locates all entities in the project and creates GWT requests and proxies")
     public void proxyAndRequestAll(
-            @CliOption(key = PROXY_PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.proxy", help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
-            @CliOption(key = REQUEST_PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.request", help = "The package in which created requests will be placed") final JavaPackage requestPackage,
+            @CliOption(key = PROXY_PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.proxy", help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
+            @CliOption(key = REQUEST_PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.request", help = "The package in which created requests will be placed") final JavaPackage requestPackage,
             @CliOption(key = RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate server-side artifacts") final Pom serverModule) {
 
         requestFactoryOperations.proxyAll(proxyPackage, serverModule);
@@ -137,8 +137,8 @@ public class RequestFactoryCommands implements CommandMarker {
 
     @CliCommand(value = WEB_REQUEST_FACTORY_PROXY_REQUEST_TYPE_COMMAND, help = "Creates a proxy and request based on the specified type")
     public void proxyAndRequestType(
-            @CliOption(key = PROXY_PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.proxy", help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
-            @CliOption(key = REQUEST_PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.client.request", help = "The package in which created requests will be placed") final JavaPackage requestPackage,
+            @CliOption(key = PROXY_PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.proxy", help = "The package in which created proxies will be placed") final JavaPackage proxyPackage,
+            @CliOption(key = REQUEST_PACKAGE_KEY, mandatory = false, optionContext = JavaTypeConverter.PROJECT, unspecifiedDefaultValue = "~.request", help = "The package in which created requests will be placed") final JavaPackage requestPackage,
             @CliOption(key = TYPE_KEY, mandatory = true, optionContext = JavaTypeConverter.PROJECT, help = "The type to base the created proxy and request on") final JavaType type,
             @CliOption(key = RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, mandatory = false, help = "The module in which to generate server-side artifacts") final Pom serverModule) {
 

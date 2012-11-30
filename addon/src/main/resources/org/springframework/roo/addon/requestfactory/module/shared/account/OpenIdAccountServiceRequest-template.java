@@ -1,8 +1,8 @@
 package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
-import __TOP_LEVEL_PACKAGE__.client.proxy.AccountProxy;
-import __TOP_LEVEL_PACKAGE__.server.account.AccountServiceLocator;
-import __TOP_LEVEL_PACKAGE__.server.account.AccountServiceWrapper;
+import __TOP_LEVEL_PACKAGE__.proxy.AccountProxy;
+import __TOP_LEVEL_PACKAGE__.account.AccountServiceLocator;
+import __TOP_LEVEL_PACKAGE__.account.AccountServiceWrapper;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.Service;

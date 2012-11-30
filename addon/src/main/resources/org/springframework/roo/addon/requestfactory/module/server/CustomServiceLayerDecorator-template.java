@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.server;
+package __TOP_LEVEL_PACKAGE__;
 
 import com.google.web.bindery.requestfactory.server.ServiceLayerDecorator;
 import com.google.web.bindery.requestfactory.shared.Locator;

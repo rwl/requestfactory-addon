@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.activity;
+package __TOP_LEVEL_PACKAGE__.activity;
 
 import com.google.gwt.activity.shared.Activity;
 import com.google.inject.Inject;

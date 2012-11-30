@@ -1,10 +1,10 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.ui;
+package __TOP_LEVEL_PACKAGE__.ui;
 
 import java.util.List;
 
-import __TOP_LEVEL_PACKAGE__.client.managed.ApplicationMessages;
-import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRenderer;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace;
+import __TOP_LEVEL_PACKAGE__.managed.ApplicationMessages;
+import __TOP_LEVEL_PACKAGE__.managed.ui.renderer.ApplicationListPlaceRenderer;
+import __TOP_LEVEL_PACKAGE__.place.ProxyListPlace;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.text.shared.Renderer;

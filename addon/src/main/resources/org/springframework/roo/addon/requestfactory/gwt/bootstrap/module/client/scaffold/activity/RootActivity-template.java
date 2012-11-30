@@ -1,7 +1,7 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.activity;
+package __TOP_LEVEL_PACKAGE__.activity;
 
-import __TOP_LEVEL_PACKAGE__.client.scaffold.ScaffoldApp;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.ui.RootPlaceView;
+import __TOP_LEVEL_PACKAGE__.app.ScaffoldApp;
+import __TOP_LEVEL_PACKAGE__.ui.RootPlaceView;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;

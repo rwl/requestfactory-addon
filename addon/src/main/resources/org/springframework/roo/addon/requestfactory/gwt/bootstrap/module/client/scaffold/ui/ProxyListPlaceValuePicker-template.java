@@ -1,10 +1,10 @@
-package __TOP_LEVEL_PACKAGE__.client.scaffold.ui;
+package __TOP_LEVEL_PACKAGE__.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRenderer;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace;
+import __TOP_LEVEL_PACKAGE__.managed.ui.renderer.ApplicationListPlaceRenderer;
+import __TOP_LEVEL_PACKAGE__.place.ProxyListPlace;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -55,9 +55,9 @@ public class ProxyListPlaceValuePicker extends Composite implements HasConstrain
 		}
 	}
 
-	private static __TOP_LEVEL_PACKAGE__.client.scaffold.ui.ProxyListPlaceValuePicker instance;
+	private static __TOP_LEVEL_PACKAGE__.ui.ProxyListPlaceValuePicker instance;
 
-	public static __TOP_LEVEL_PACKAGE__.client.scaffold.ui.ProxyListPlaceValuePicker instance() {
+	public static __TOP_LEVEL_PACKAGE__.ui.ProxyListPlaceValuePicker instance() {
 		if (instance == null) {
 			instance = new ProxyListPlaceValuePicker();
 		}

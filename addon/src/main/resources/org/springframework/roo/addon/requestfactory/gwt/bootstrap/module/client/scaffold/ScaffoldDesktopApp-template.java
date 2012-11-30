@@ -1,13 +1,13 @@
 package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
-import __TOP_LEVEL_PACKAGE__.client.managed.activity.*;
-import __SHARED_TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.account.helper.AccountHelper;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.place.*;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.request.RequestEvent;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.activity.ScaffoldAnimationMapper;
-import __TOP_LEVEL_PACKAGE__.client.scaffold.ui.NavigationTree.ProxyListNode;
-import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRenderer;
+import __TOP_LEVEL_PACKAGE__.managed.activity.*;
+import __SHARED_TOP_LEVEL_PACKAGE__.managed.request.ApplicationRequestFactory;
+import __TOP_LEVEL_PACKAGE__.account.helper.AccountHelper;
+import __TOP_LEVEL_PACKAGE__.place.*;
+import __TOP_LEVEL_PACKAGE__.request.RequestEvent;
+import __TOP_LEVEL_PACKAGE__.activity.ScaffoldAnimationMapper;
+import __TOP_LEVEL_PACKAGE__.ui.NavigationTree.ProxyListNode;
+import __TOP_LEVEL_PACKAGE__.managed.ui.renderer.ApplicationListPlaceRenderer;
 import com.google.gwt.activity.shared.*;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
