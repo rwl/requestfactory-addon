@@ -1,6 +1,6 @@
 package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
-import __TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
+import __SHARED_TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
 import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRenderer;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.ui.NavigationTree;
@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.*;
 import com.github.gwtbootstrap.client.ui.NavText;
 import com.github.gwtbootstrap.client.ui.NavLink;
 import com.github.gwtbootstrap.client.ui.Breadcrumbs;
+import com.github.gwtbootstrap.client.ui.Brand;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.inject.Inject;

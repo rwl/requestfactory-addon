@@ -144,8 +144,10 @@ public class BaseTemplateServiceImpl {
             final String moduleName) {
         final Set<ClassOrInterfaceTypeDetails> proxies = typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY);
+        final String proxyModuleName = PhysicalTypeIdentifier.getPath(
+                proxies.iterator().next().getDeclaredByMetadataId()).getModule();
         final TemplateDataDictionary dataDictionary = buildStandardDataDictionary(
-                type, moduleName);
+                type, moduleName, proxyModuleName);
         if (type == RequestFactoryType.APP_ENTITY_TYPES_PROCESSOR) {
             for (final ClassOrInterfaceTypeDetails proxy : proxies) {
                 if (!RequestFactoryUtils.scaffoldProxy(proxy)) {
@@ -517,13 +519,18 @@ public class BaseTemplateServiceImpl {
     }
 
     protected TemplateDataDictionary buildStandardDataDictionary(
-            final RequestFactoryType type, final String moduleName) {
+            final RequestFactoryType type, final String moduleName,
+            final String proxyModuleName) {
         final JavaType javaType = new JavaType(getFullyQualifiedTypeName(type,
                 moduleName));
         final TemplateDataDictionary dataDictionary = TemplateDictionary
                 .create();
         for (final RequestFactoryType reference : type.getReferences()) {
-            addReference(dataDictionary, reference, moduleName);
+            if (reference.getClass() == RequestFactoryType.class) {
+                addReference(dataDictionary, reference, proxyModuleName);
+            } else {
+                addReference(dataDictionary, reference, moduleName);
+            }
         }
         dataDictionary.setVariable("className", javaType.getSimpleTypeName());
         dataDictionary.setVariable("packageName", javaType.getPackage()
@@ -574,8 +581,11 @@ public class BaseTemplateServiceImpl {
                 .lookupUnmanagedRequestFromEntity(mirroredType);
         final JavaPackage topLevelPackage = projectOperations
                 .getTopLevelPackage(moduleName);
+        final JavaPackage proxyTopLevelPackage = projectOperations
+                .getTopLevelPackage(PhysicalTypeIdentifier.getPath(
+                proxy.getDeclaredByMetadataId()).getModule());
         final Map<RequestFactoryType, JavaType> mirrorTypeMap = RequestFactoryUtils.getMirrorTypeMap(
-                mirroredType.getName(), topLevelPackage);
+                mirroredType.getName(), proxyTopLevelPackage);
         mirrorTypeMap.put(RequestFactoryType.PROXY, proxy.getName());
         mirrorTypeMap.put(RequestFactoryType.REQUEST, request.getName());
 

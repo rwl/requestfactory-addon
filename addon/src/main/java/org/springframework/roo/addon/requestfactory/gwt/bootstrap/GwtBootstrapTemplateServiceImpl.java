@@ -76,8 +76,10 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
             final String moduleName) {
         final Set<ClassOrInterfaceTypeDetails> proxies = typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY);
+        final String proxyModuleName = PhysicalTypeIdentifier.getPath(
+                proxies.iterator().next().getDeclaredByMetadataId()).getModule();
         final TemplateDataDictionary dataDictionary = buildStandardDataDictionary(
-                type, moduleName);
+                type, moduleName, proxyModuleName);
         if (type == GwtBootstrapType.MASTER_ACTIVITIES) {
             for (final ClassOrInterfaceTypeDetails proxy : proxies) {
                 if (!RequestFactoryUtils.scaffoldProxy(proxy)) {
@@ -696,9 +698,10 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
 
     @Override
     protected TemplateDataDictionary buildStandardDataDictionary(
-            final RequestFactoryType type, final String moduleName) {
+            final RequestFactoryType type, final String moduleName,
+            final String proxyModuleName) {
         final TemplateDataDictionary dataDictionary = super
-                .buildStandardDataDictionary(type, moduleName);
+                .buildStandardDataDictionary(type, moduleName, proxyModuleName);
         dataDictionary.setVariable("placePackage", GwtBootstrapPaths.SCAFFOLD_PLACE
                 .packageName(projectOperations.getTopLevelPackage(moduleName)));
         return dataDictionary;
@@ -855,8 +858,11 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 .lookupUnmanagedRequestFromEntity(mirroredType);
         final JavaPackage topLevelPackage = projectOperations
                 .getTopLevelPackage(moduleName);
+        final JavaPackage proxyTopLevelPackage = projectOperations
+                .getTopLevelPackage(PhysicalTypeIdentifier.getPath(
+                proxy.getDeclaredByMetadataId()).getModule());
         final Map<RequestFactoryType, JavaType> mirrorTypeMap = RequestFactoryUtils
-                .getMirrorTypeMap(mirroredType.getName(), topLevelPackage);
+                .getMirrorTypeMap(mirroredType.getName(), proxyTopLevelPackage);
         mirrorTypeMap.putAll(GwtBootstrapUtils.getMirrorTypeMap(
                 mirroredType.getName(), topLevelPackage));
         mirrorTypeMap.put(RequestFactoryType.PROXY, proxy.getName());

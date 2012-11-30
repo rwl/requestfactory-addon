@@ -9,7 +9,7 @@ import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryEditorDriv
 import com.google.web.bindery.requestfactory.shared.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import __TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
+import __SHARED_TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.AbstractProxyEditActivity;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyEditView;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.place.ProxyListPlace;

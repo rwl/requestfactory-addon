@@ -1,7 +1,7 @@
 package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import __TOP_LEVEL_PACKAGE__.client.managed.activity.*;
-import __TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
+import __SHARED_TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
 import __TOP_LEVEL_PACKAGE__.client.managed.ui.renderer.ApplicationListPlaceRenderer;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.activity.RootActivity;
 import __TOP_LEVEL_PACKAGE__.client.scaffold.activity.ScaffoldAnimationMapper;

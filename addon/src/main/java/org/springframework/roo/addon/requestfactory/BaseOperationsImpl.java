@@ -1,5 +1,6 @@
 package org.springframework.roo.addon.requestfactory;
 
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
 
 import java.io.File;
@@ -14,11 +15,13 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.requestfactory.annotations.account.RooAccount;
+import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
 import org.springframework.roo.metadata.MetadataService;
+import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.process.manager.FileManager;
 import org.springframework.roo.project.ProjectOperations;
@@ -118,6 +121,7 @@ public class BaseOperationsImpl {
                 projectOperations.getFocusedModuleName())
                 .getFullyQualifiedPackageName();
         input = input.replace("__TOP_LEVEL_PACKAGE__", topLevelPackage);
+        input = input.replace("__SHARED_TOP_LEVEL_PACKAGE__", getProxyTopLevelPackageName());
         input = input.replace("__SEGMENT_PACKAGE__", segmentPackage);
         input = input.replace("__PROJECT_NAME__", projectOperations
                 .getProjectName(projectOperations.getFocusedModuleName()));
@@ -141,21 +145,31 @@ public class BaseOperationsImpl {
         return input;
     }
 
+    protected CharSequence getProxyTopLevelPackageName() {
+        final ClassOrInterfaceTypeDetails proxy = typeLocationService
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)
+                .iterator().next();
+        final JavaPackage proxyTopLevelPackage = projectOperations
+                .getTopLevelPackage(PhysicalTypeIdentifier.getPath(
+                proxy.getDeclaredByMetadataId()).getModule());
+        return proxyTopLevelPackage.getFullyQualifiedPackageName();
+    }
+
     protected CharSequence getImportAccountHookup() {
-        JavaType account = typeLocationService
+        final JavaType account = typeLocationService
                 .findTypesWithAnnotation(ROO_ACCOUNT)
                 .iterator().next();
         return "import " + account.getFullyQualifiedTypeName() + ";";
     }
 
     protected CharSequence getImportRoleHookup() {
-        ClassOrInterfaceTypeDetails account = typeLocationService
+        final ClassOrInterfaceTypeDetails account = typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_ACCOUNT)
                 .iterator().next();
-        AnnotationAttributeValue<String> sharedPackage = account
+        final AnnotationAttributeValue<String> sharedPackage = account
                 .getAnnotation(ROO_ACCOUNT)
                 .getAttribute(RooAccount.SHARED_PACKAGE_ATTRIBUTE);
-        String rolePackageName;
+        final String rolePackageName;
         if (sharedPackage == null || sharedPackage.getValue().isEmpty()) {
             rolePackageName = account.getType().getPackage()
                     .getFullyQualifiedPackageName();

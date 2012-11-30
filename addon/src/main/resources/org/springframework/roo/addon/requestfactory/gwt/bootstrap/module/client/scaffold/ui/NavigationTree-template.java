@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import __TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
+import __SHARED_TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
 import __TOP_LEVEL_PACKAGE__.client.managed.tree.IsLeafProcessor;
 import __TOP_LEVEL_PACKAGE__.client.managed.tree.ProxyListNodeProcessor;
 import __TOP_LEVEL_PACKAGE__.client.managed.tree.ProxyNodeProcessor;

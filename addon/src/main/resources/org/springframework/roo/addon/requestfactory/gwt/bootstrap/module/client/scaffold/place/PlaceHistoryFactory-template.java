@@ -1,6 +1,6 @@
 package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
-import __TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
+import __SHARED_TOP_LEVEL_PACKAGE__.shared.managed.request.ApplicationRequestFactory;
 import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.inject.Inject;
 

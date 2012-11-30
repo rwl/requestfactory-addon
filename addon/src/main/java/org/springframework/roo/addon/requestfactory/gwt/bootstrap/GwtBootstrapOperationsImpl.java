@@ -633,7 +633,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
             targetDirectory = projectOperations.getPathResolver()
                     .getIdentifier(path, requestFactoryPath
                             .getPackagePath(projectOperations
-                                .getFocusedTopLevelPackage()));
+                                    .getTopLevelPackage(moduleName)));
         }
         updateFile(sourceAntPath, targetDirectory, requestFactoryPath.segmentPackage(),
                 false);
