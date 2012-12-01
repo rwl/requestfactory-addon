@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.Label;
 import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.ControlLabel;
 
 import {{=placePackage}}.ProxyListView;
 import {{=placePackage}}.ProxyDetailsView.ConfirmationCallback;
@@ -29,11 +30,15 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
 
     private static {{=className}} instance;
 
-    private ApplicationMessages messages = GWT.create(ApplicationMessages.class);
+    private ApplicationMessages applicationMessages = GWT.create(ApplicationMessages.class);
+    
+    private {{=proxyMessages}} messages = GWT.create({{=proxyMessages}}.class);
 
     {{=proxy}} proxy;
     {{#properties}}
     @UiField Label {{=prop}};{{/properties}}
+    {{#properties}}
+    @UiField(provided = true) ControlLabel {{=prop}}Label;{{/properties}}
 
     @UiField SpanElement displayRenderer;
     @UiField Button edit;
@@ -51,10 +56,15 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
     }
 
     public {{=className}}() {
+        initLabels();
         initWidget(BINDER.createAndBindUi(this));
-        this.edit.setText(messages.edit());
-        this.delete.setText(messages.delete());
-        this.view.setText(messages.visualize());
+        this.edit.setText(applicationMessages.edit());
+        this.delete.setText(applicationMessages.delete());
+        this.view.setText(applicationMessages.visualize());
+    }
+    
+    private void initLabels() {{{#properties}}
+        this.{{=prop}}Label = new ControlLabel(messages.{{=prop}}() +  ":");{{/properties}}
     }
 
     public Widget asWidget() {

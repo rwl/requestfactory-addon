@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.HasText;
 import com.googlecode.mgwt.dom.client.event.touch.HasTouchHandlers;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
@@ -46,13 +47,17 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
         return instance;
     }
 
-    private ApplicationMessages messages = GWT.create(ApplicationMessages.class);
+    private ApplicationMessages applicationMessages = GWT.create(ApplicationMessages.class);
+    
+    private {{=proxyMessages}} messages = GWT.create({{=proxyMessages}}.class);
 
     {{=proxy}} proxy;
     {{#properties}}
     @UiField Label {{=prop}};{{/properties}}
+    {{#properties}}
+    @UiField HasText {{=prop}}Label;{{/properties}}
+    
     @UiField ButtonBase delete;
-
     @UiField HTML title;
     @UiField ButtonBase back;
     @UiField ButtonBase edit;
@@ -82,7 +87,12 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
             }
         });
 
-        this.back.setText(messages.back());
+        initLabels();
+        this.back.setText(applicationMessages.back());
+    }
+    
+    private void initLabels() {{{#properties}}
+        this.{{=prop}}Label.setText(messages.{{=prop}}() +  ":");{{/properties}}
     }
 
     public Widget asWidget() {

@@ -36,7 +36,7 @@
 	<b:Form addStyleNames="{style.fields}" type="HORIZONTAL" debugId="boundElementHolder">
 		<b:Fieldset>{{#properties}}
 			<b:ControlGroup>
-				<b:ControlLabel styleName="{style.label}" for="{{=prop}}">{{=propReadable}}:</b:ControlLabel>
+				<b:ControlLabel styleName="{style.label}" for="{{=prop}}" ui:field="{{=prop}}Label"/>
 				<b:Controls>
 					<g:Label ui:field="{{=prop}}"/>
 				</b:Controls>

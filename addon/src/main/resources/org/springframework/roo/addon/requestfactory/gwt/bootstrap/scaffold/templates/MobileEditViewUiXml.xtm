@@ -20,7 +20,7 @@
     </m:HeaderPanel>
 
     <m:WidgetList debugId="boundElementHolder">{{#editableProperties}}
-      <m:FormListEntry debugId='{{=prop}}' text='{{=propReadable}}'>
+      <m:FormListEntry debugId='{{=prop}}' ui:field='{{=prop}}Label'>
         <{{=mobilePropBinder}} ui:field="{{=prop}}"/>
       </m:FormListEntry>{{/editableProperties}}
     </m:WidgetList>
