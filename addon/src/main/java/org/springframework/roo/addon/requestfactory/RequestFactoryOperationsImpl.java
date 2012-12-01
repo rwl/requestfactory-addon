@@ -365,7 +365,7 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
         final JavaType requestType = new JavaType(
                 destinationPackage.getFullyQualifiedPackageName() + "."
                         + entity.getType().getSimpleTypeName()
-                        + "Request_Roo_Gwt");
+                        + "Request_Roo");
         final LogicalPath focusedSrcMainJava = LogicalPath.getInstance(
                 SRC_MAIN_JAVA, projectOperations.getFocusedModuleName());
         final ClassOrInterfaceTypeDetailsBuilder requestBuilder = new ClassOrInterfaceTypeDetailsBuilder(

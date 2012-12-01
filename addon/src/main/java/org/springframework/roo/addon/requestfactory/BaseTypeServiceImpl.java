@@ -186,7 +186,7 @@ public class BaseTypeServiceImpl {
                                     innerTypeBuilder.build());
                             builder.setName(new JavaType(
                                     innerTypeBuilder.getName()
-                                            .getSimpleTypeName() + "_Roo_Gwt",
+                                            .getSimpleTypeName() + "_Roo",
                                     0, DataType.TYPE, null, innerTypeBuilder
                                             .getName().getParameters()));
 
@@ -284,7 +284,7 @@ public class BaseTypeServiceImpl {
             final List<MemberHoldingTypeDetails> extendsTypesDetails,
             final String moduleName) {
         final JavaType concreteType = concreteClass.getName();
-        String abstractName = concreteType.getSimpleTypeName() + "_Roo_Gwt";
+        String abstractName = concreteType.getSimpleTypeName() + "_Roo";
         abstractName = concreteType.getPackage().getFullyQualifiedPackageName()
                 + '.' + abstractName;
         final JavaType abstractType = new JavaType(abstractName);

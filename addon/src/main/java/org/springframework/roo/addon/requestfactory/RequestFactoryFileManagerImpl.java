@@ -32,7 +32,7 @@ public class RequestFactoryFileManagerImpl implements RequestFactoryFileManager 
                 .getPhysicalTypeCanonicalPath(typeDetails
                         .getDeclaredByMetadataId());
         includeWarning &= !destFile.endsWith(".xml");
-        includeWarning |= destFile.endsWith("_Roo_Gwt.java");
+        includeWarning |= destFile.endsWith("_Roo.java");
         String fileContents = typeParsingService
                 .getCompilationUnitContents(typeDetails);
         if (includeWarning) {
