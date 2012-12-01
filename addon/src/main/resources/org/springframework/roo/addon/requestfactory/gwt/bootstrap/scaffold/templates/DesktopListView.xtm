@@ -19,6 +19,7 @@ import com.github.gwtbootstrap.client.ui.SimplePager.TextLocation;
 import com.github.gwtbootstrap.client.ui.SimplePager.Resources;
 
 import {{=topLevelPackage}}.managed.SimplePagerConstants;
+import {{=topLevelPackage}}.messages.ApplicationMessages;
 import {{=placePackage}}.AbstractProxyListView;
 {{#imports}}import {{=import}};
 {{/imports}}
@@ -35,7 +36,9 @@ public class {{=className}} extends AbstractProxyListView<{{=proxy}}> {
 
     private static final Binder BINDER = GWT.create(Binder.class);
 
-    private ApplicationMessages messages = GWT.create(ApplicationMessages.class);
+    private ApplicationMessages applicationMessages = GWT.create(ApplicationMessages.class);
+    
+    private {{=proxyMessages}} messages = GWT.create({{=proxyMessages}}.class);
 
     private static {{=className}} instance;
 
@@ -69,8 +72,8 @@ public class {{=className}} extends AbstractProxyListView<{{=proxy}}> {
         table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
         init();
         newButton.setText(messages.create{{=name}}());{{#hasParent}}
-        backButton.setText(messages.back());{{/hasParent}}{{#visualized}}
-        viewButton.setText(messages.visualize());{{/visualized}}
+        backButton.setText(applicationMessages.back());{{/hasParent}}{{#visualized}}
+        viewButton.setText(applicationMessages.visualize());{{/visualized}}
     }
 
     public void init() {

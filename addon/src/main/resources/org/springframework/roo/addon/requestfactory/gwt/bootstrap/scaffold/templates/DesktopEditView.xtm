@@ -32,6 +32,7 @@ import com.github.gwtbootstrap.datepicker.client.ui.DateBox;
 import com.github.gwtbootstrap.client.ui.SubmitButton;
 import com.github.gwtbootstrap.client.ui.ControlLabel;
 
+import {{=topLevelPackage}}.messages.ApplicationMessages;
 {{#imports}}import {{=import}};
 {{/imports}}
 
@@ -102,9 +103,9 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
 
     public void setCreating(boolean creating) {
         if (creating) {
-            title.setInnerText(applicationMessages.create{{=name}}());
+            title.setInnerText(messages.create{{=name}}());
         } else {
-            title.setInnerText(applicationMessages.edit{{=name}}());
+            title.setInnerText(messages.edit{{=name}}());
         }
     }
 

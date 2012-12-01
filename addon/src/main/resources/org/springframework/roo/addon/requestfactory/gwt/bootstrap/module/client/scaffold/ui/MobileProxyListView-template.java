@@ -3,7 +3,7 @@ package __TOP_LEVEL_PACKAGE__.ui;
 import __TOP_LEVEL_PACKAGE__.application.MobileApplication;
 import __TOP_LEVEL_PACKAGE__.place.AbstractProxyListView;
 import __TOP_LEVEL_PACKAGE__.place.ProxyListView;
-import __TOP_LEVEL_PACKAGE__.managed.ApplicationMessages;
+import __TOP_LEVEL_PACKAGE__.messages.ApplicationMessages;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.requestfactory.gwt.ui.client.EntityProxyKeyProvider;

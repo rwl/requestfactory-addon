@@ -6,6 +6,7 @@ public class GwtBootstrapPaths {
 
     public static final RequestFactoryPath GWT_ROOT = new RequestFactoryPath("/", "module/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath IMAGES = new RequestFactoryPath("/style/images", "module/client/style/images/" + RequestFactoryPath.wildCardSelector);
+    public static final RequestFactoryPath MESSAGES = new RequestFactoryPath("/messages", "module/client/messages/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath MANAGED = new RequestFactoryPath("/managed", "module/client/managed/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath MANAGED_MESSAGES = new RequestFactoryPath("/managed/messages", "module/client/managed/messages/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath MANAGED_ACTIVITY = new RequestFactoryPath("/managed/activity", "module/client/managed/activity/" + RequestFactoryPath.templateSelector); // GWT_SCAFFOLD
@@ -32,7 +33,7 @@ public class GwtBootstrapPaths {
     public static final RequestFactoryPath ACCOUNT_WEB = new RequestFactoryPath(".", "account/webapp/" + RequestFactoryPath.wildCardSelector);
 
     public static final RequestFactoryPath[] ALL_PATHS = new RequestFactoryPath[] {
-        GWT_ROOT, IMAGES, MANAGED, MANAGED_MESSAGES, MANAGED_ACTIVITY,
+        GWT_ROOT, IMAGES, MESSAGES, MANAGED, MANAGED_MESSAGES, MANAGED_ACTIVITY,
         MANAGED_UI, MANAGED_TREE, MANAGED_PROVIDER, MANAGED_UI_DESKTOP,
         MANAGED_UI_MOBILE, MANAGED_UI_RENDERER, MANAGED_UI_EDITOR,
         SCAFFOLD, SCAFFOLD_ACTIVITY, SCAFFOLD_IOC, SCAFFOLD_PLACE,

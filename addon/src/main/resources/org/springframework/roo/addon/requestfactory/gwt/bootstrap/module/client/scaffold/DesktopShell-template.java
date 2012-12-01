@@ -4,7 +4,7 @@ import __SHARED_TOP_LEVEL_PACKAGE__.managed.request.ApplicationRequestFactory;
 import __TOP_LEVEL_PACKAGE__.managed.ui.renderer.ApplicationListPlaceRenderer;
 import __TOP_LEVEL_PACKAGE__.place.ProxyListPlace;
 import __TOP_LEVEL_PACKAGE__.ui.NavigationTree;
-import __TOP_LEVEL_PACKAGE__.managed.ApplicationMessages;
+import __TOP_LEVEL_PACKAGE__.messages.ApplicationMessages;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.core.client.GWT;

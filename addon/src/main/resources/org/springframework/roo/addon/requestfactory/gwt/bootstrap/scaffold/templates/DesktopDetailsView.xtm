@@ -18,6 +18,7 @@ import com.github.gwtbootstrap.client.ui.ControlLabel;
 
 import {{=placePackage}}.ProxyListView;
 import {{=placePackage}}.ProxyDetailsView.ConfirmationCallback;
+import {{=topLevelPackage}}.messages.ApplicationMessages;
 {{#imports}}import {{=import}};
 {{/imports}}
 /**

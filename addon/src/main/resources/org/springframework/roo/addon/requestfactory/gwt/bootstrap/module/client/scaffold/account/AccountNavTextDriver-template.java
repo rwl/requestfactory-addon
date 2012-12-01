@@ -3,7 +3,7 @@ package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 import __TOP_LEVEL_PACKAGE__.proxy.AccountProxy;
 import __TOP_LEVEL_PACKAGE__.account.MakesAccountRequests;
 import __TOP_LEVEL_PACKAGE__.account.OpenIdAccountServiceRequest;
-import __TOP_LEVEL_PACKAGE__.managed.ApplicationMessages;
+import __TOP_LEVEL_PACKAGE__.messages.ApplicationMessages;
 
 import com.google.gwt.user.client.ui.HasText;
 import com.google.web.bindery.requestfactory.shared.Receiver;

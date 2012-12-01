@@ -2,7 +2,7 @@ package __TOP_LEVEL_PACKAGE__.ui;
 
 import java.util.List;
 
-import __TOP_LEVEL_PACKAGE__.managed.ApplicationMessages;
+import __TOP_LEVEL_PACKAGE__.messages.ApplicationMessages;
 import __TOP_LEVEL_PACKAGE__.managed.ui.renderer.ApplicationListPlaceRenderer;
 import __TOP_LEVEL_PACKAGE__.place.ProxyListPlace;
 

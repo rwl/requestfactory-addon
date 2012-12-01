@@ -5,6 +5,7 @@ import java.util.List;
 
 import {{=uiPackage}}.renderer.{{=proxyRendererType}};
 import {{=placePackage}}.ProxyListVisualizeView;
+import {{=topLevelPackage}}.messages.ApplicationMessages;
 {{#visualized}}
 import com.google.gwt.maps.client.LoadApi;
 import com.google.gwt.maps.client.LoadApi.LoadLibrary;

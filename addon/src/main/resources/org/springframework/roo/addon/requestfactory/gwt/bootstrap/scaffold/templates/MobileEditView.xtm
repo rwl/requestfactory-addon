@@ -39,8 +39,8 @@ import com.github.gwtbootstrap.client.ui.ValueListBox;
 import com.googlecode.mgwt.ui.client.widget.base.ButtonBase;
 
 import {{=scaffoldUiPackage}}.ui.*;
-
 import {{=placePackage}}.ProxyEditView;
+import {{=topLevelPackage}}.messages.ApplicationMessages;
 {{#imports}}import {{=import}};
 {{/imports}}
 
@@ -120,7 +120,7 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
     {{=setProvider}}{{/setProxyProviders}}
 
     public void setCreating(boolean creating) {
-        title.setHTML(creating ? messages.create() : messages.edit());
+        title.setHTML(creating ? messages.create{{=name}}() : messages.edit{{=name}}());
     }
 
     public void setDelegate(Delegate delegate) {

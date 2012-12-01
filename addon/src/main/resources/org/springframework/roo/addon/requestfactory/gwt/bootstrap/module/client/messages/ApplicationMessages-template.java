@@ -1,4 +1,4 @@
-package {{=packageName}};
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import com.google.gwt.i18n.client.Messages;
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
@@ -38,11 +38,4 @@ public interface ApplicationMessages extends Messages {
 
     @DefaultMessage("loading...")
     String loading();
-{{#entities}}
-    @DefaultMessage("Create {{=entitySimpleName}}")
-    String create{{=entitySimpleName}}();{{/entities}}
-
-{{#entities}}
-    @DefaultMessage("Edit {{=entitySimpleName}}")
-    String edit{{=entitySimpleName}}();{{/entities}}
 }

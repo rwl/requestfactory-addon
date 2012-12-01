@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import {{=uiPackage}}.renderer.{{=proxyRendererType}};
+import {{=topLevelPackage}}.messages.ApplicationMessages;
 
 {{#imports}}import {{=import}};
 {{/imports}}

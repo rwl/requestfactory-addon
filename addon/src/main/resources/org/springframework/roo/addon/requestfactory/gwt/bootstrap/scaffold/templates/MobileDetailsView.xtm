@@ -28,6 +28,7 @@ import com.googlecode.mgwt.ui.client.widget.Button;
 {{#imports}}import {{=import}};
 {{/imports}}
 
+import {{=topLevelPackage}}.messages.ApplicationMessages;
 import {{=uiPackage}}.renderer.{{=proxyRendererType}};
 
 /**

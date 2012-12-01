@@ -50,7 +50,6 @@ public class GwtBootstrapType extends RequestFactoryType {
     public static final GwtBootstrapType VISUALIZE_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI, true, "VisualizeView", "visualizeView", "VisualizeView", false, false, false);
     public static final GwtBootstrapType DESKTOP_VISUALIZE_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopVisualizeView", "desktopVisualizeView", "DesktopVisualizeView", true, true, false);
     
-    public static final GwtBootstrapType APPLICATION_MESSAGES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED, false, "", "applicationMessages", "ApplicationMessages", false, false, false);
     public static final GwtBootstrapType PROXY_MESSAGES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_MESSAGES, true, "Messages", "proxyMessages", "Messages", false, false, false);
 
     public static final GwtBootstrapType ABSTRACT_DATA_PROVIDER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_PROVIDER, true, "ListDataProvider", "listDataProvider", "ListDataProvider", false, false, false);
@@ -87,7 +86,7 @@ public class GwtBootstrapType extends RequestFactoryType {
         PROXY_NODE_PROCESSOR, MOBILE_ACTIVITY_MAPPER, MOBILE_DETAILS_VIEW,
         MOBILE_EDIT_VIEW, MOBILE_LIST_VIEW, MOBILE_PROXY_LIST_VIEW, MOBILE_VISUALIZE_VIEW,
         SET_EDITOR, INSTANCE_EDITOR, APPLICATION, DESKTOP_APPLICATION, MOBILE_APPLICATION,
-        APPLICATION_MESSAGES, PROXY_MESSAGES
+        PROXY_MESSAGES
     };
 
     public static List<GwtBootstrapType> getGwtBootstrapMirrorTypes() {
@@ -348,34 +347,30 @@ public class GwtBootstrapType extends RequestFactoryType {
                     MOBILE_PROXY_LIST_VIEW, MOBILE_APPLICATION});
         } else if (type == DESKTOP_LIST_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {
-                    APPLICATION_MESSAGES, PROXY_MESSAGES});
+                    PROXY_MESSAGES});
         } else if (type == DESKTOP_LIST_VISUALIZE_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {
-                    APPLICATION_MESSAGES, PROXY_MESSAGES});
+                    PROXY_MESSAGES});
         } else if (type == DESKTOP_EDIT_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {
                     EDIT_ACTIVITY_WRAPPER, EDIT_VIEW,
-                    APPLICATION_MESSAGES, PROXY_MESSAGES});
+                    PROXY_MESSAGES});
         } else if (type == MOBILE_EDIT_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {
                     EDIT_ACTIVITY_WRAPPER, EDIT_VIEW,
-                    APPLICATION_MESSAGES, PROXY_MESSAGES});
+                    PROXY_MESSAGES});
         } else if (type == DESKTOP_DETAILS_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {
-                    DETAILS_VIEW, APPLICATION_MESSAGES,
-                    PROXY_MESSAGES});
+                    DETAILS_VIEW, PROXY_MESSAGES});
         } else if (type == MOBILE_DETAILS_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {
-                    DETAILS_VIEW, APPLICATION_MESSAGES,
-                    PROXY_MESSAGES});
+                    DETAILS_VIEW, PROXY_MESSAGES});
         } else if (type == DESKTOP_VISUALIZE_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {
-                    VISUALIZE_VIEW, APPLICATION_MESSAGES,
-                    PROXY_MESSAGES});
+                    VISUALIZE_VIEW, PROXY_MESSAGES});
         } else if (type == MOBILE_VISUALIZE_VIEW) {
             return Arrays.asList(new RequestFactoryType[] {
-                    VISUALIZE_VIEW, APPLICATION_MESSAGES,
-                    PROXY_MESSAGES});
+                    VISUALIZE_VIEW, PROXY_MESSAGES});
         } else if (type == LIST_PLACE_RENDERER) {
             return Arrays.asList(APP_ENTITY_TYPES_PROCESSOR);
         } else if (type == PROXY_PLACE_RENDERER) {
