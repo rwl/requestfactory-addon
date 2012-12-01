@@ -30,7 +30,6 @@ import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.AlertBlock;
 import com.github.gwtbootstrap.datepicker.client.ui.DateBox;
 import com.github.gwtbootstrap.client.ui.SubmitButton;
-import com.github.gwtbootstrap.client.ui.ControlLabel;
 
 import {{=topLevelPackage}}.messages.ApplicationMessages;
 {{#imports}}import {{=import}};
@@ -62,7 +61,7 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
     {{#editViewProps}}
     {{=prop}};{{/editViewProps}}
     {{#editableProperties}}
-    @UiField(provided = true) ControlLabel {{=prop}}Label;{{/editableProperties}}
+    @UiField HTMLPanel {{=prop}}Label;{{/editableProperties}}
 
     @UiField Button cancel;
     @UiField SubmitButton save;
@@ -80,14 +79,14 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
     }
 
     public {{=className}}() {
-        initLabels();
         initWidget(BINDER.createAndBindUi(this));
+        initLabels();
         this.cancel.setText(applicationMessages.cancel());
         this.save.setText(applicationMessages.save());
     }
     
     private void initLabels() {{{#editableProperties}}
-        this.{{=prop}}Label = new ControlLabel(messages.{{=prop}}() +  ":");{{/editableProperties}}
+        {{=prop}}Label.add(new HTMLPanel(messages.{{=prop}}() +  ":"));{{/editableProperties}}
     }
 
     @Override
