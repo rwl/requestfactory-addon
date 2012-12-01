@@ -64,4 +64,5 @@
 
     <entry-point class="__TOP_LEVEL_PACKAGE__.application.ApplicationEntryPoint"/>
 
+    <extend-property name="locale" values="de"/>
 </module>
