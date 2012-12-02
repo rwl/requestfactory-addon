@@ -64,5 +64,15 @@
 
     <entry-point class="__TOP_LEVEL_PACKAGE__.application.ApplicationEntryPoint"/>
 
+    <!-- Internationalization support. -->
+    <extend-property name="locale" values="en"/>
+    
     <extend-property name="locale" values="de"/>
+    <extend-property name="locale" values="es"/>
+    <extend-property name="locale" values="fr"/>
+    <extend-property name="locale" values="it"/>
+
+    <set-property-fallback name="locale" value="en"/>
+    <set-configuration-property name="locale.cookie" value="MODEL_BROWSER_LOCALE"/>
+    <set-configuration-property name="locale.useragent" value="Y"/>
 </module>

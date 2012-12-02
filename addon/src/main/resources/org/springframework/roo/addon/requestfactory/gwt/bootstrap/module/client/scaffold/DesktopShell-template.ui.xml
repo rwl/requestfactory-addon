@@ -121,15 +121,18 @@
 
 	<g:DockLayoutPanel unit='PX'>
 		<g:north size='44'>
-			<b:Navbar height="44px">
-				<b:Brand ui:field="brand"/>
-				<b:Nav alignment="RIGHT">
-					<b:NavText ui:field="nickname"/>
-					<b:Tooltip text="Sign Out" placement="BOTTOM" showDelay="1000">
-						<b:NavLink icon="SIGNOUT" ui:field="signout"/>
-					</b:Tooltip>
-				</b:Nav>
-			</b:Navbar>
+			<g:SimplePanel ui:field="north">
+				<b:Navbar height="44px">
+					<b:Brand ui:field="brand"/>
+					<b:Nav alignment="RIGHT">
+						<b:NavText ui:field="nickname"/>
+						<b:Dropdown icon="FLAG" ui:field="localeSelect"/>
+						<b:Tooltip text="Sign Out" placement="BOTTOM" showDelay="1000">
+							<b:NavLink icon="SIGNOUT" ui:field="signout"/>
+						</b:Tooltip>
+					</b:Nav>
+				</b:Navbar>
+			</g:SimplePanel>
 		</g:north>
 		<g:south size='20'>
 			<g:HTML>
