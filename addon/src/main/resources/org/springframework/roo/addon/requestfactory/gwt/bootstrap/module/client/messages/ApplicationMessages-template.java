@@ -38,4 +38,13 @@ public interface ApplicationMessages extends Messages {
 
     @DefaultMessage("loading...")
     String loading();
+
+    @DefaultMessage("Comfortable")
+    String comfortable();
+
+    @DefaultMessage("Condensed")
+    String condensed();
+
+    @DefaultMessage("Options")
+    String options();
 }

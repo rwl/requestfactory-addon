@@ -42,6 +42,7 @@
       <b:Button type="LINK" icon="CIRCLE_ARROW_LEFT" ui:field="backButton"/>
       <b:Button type="LINK" icon="PLUS_SIGN" ui:field='newButton'/>{{#visualized}}
       <b:Button type="LINK" icon="GLOBE" ui:field='viewButton'/>{{/visualized}}
+      <b:DropdownButton icon="COG" type="LINK" ui:field='tableOptions'/>
       <b:SimplePager display='{table}' ui:field='pager'/>
     </div>
   </g:HTMLPanel>

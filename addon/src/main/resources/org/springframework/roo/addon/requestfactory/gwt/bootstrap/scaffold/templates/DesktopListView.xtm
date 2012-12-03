@@ -20,7 +20,7 @@ import com.github.gwtbootstrap.client.ui.SimplePager.Resources;
 
 import {{=topLevelPackage}}.managed.SimplePagerConstants;
 import {{=topLevelPackage}}.messages.ApplicationMessages;
-import {{=placePackage}}.AbstractProxyListView;
+import {{=placePackage}}.AbstractDesktopListView;
 {{#imports}}import {{=import}};
 {{/imports}}
 
@@ -30,32 +30,24 @@ import java.util.Set;
 /**
  * {@link AbstractProxyListView} specialized to {@link {{=name}}Key}} values.
  */
-public class {{=className}} extends AbstractProxyListView<{{=proxy}}> {
+public class {{=className}} extends AbstractDesktopListView<{{=proxy}}> {
     interface Binder extends UiBinder<HTMLPanel, {{=className}}> {
     }
 
     private static final Binder BINDER = GWT.create(Binder.class);
 
-    private ApplicationMessages applicationMessages = GWT.create(ApplicationMessages.class);
-    
     private {{=proxyMessages}} messages = GWT.create({{=proxyMessages}}.class);
 
     private static {{=className}} instance;
 
-    @UiField(provided = true)
-    CellTable<{{=proxy}}> table = new CellTable<{{=proxy}}>(10, GWT.<CellTable.SelectableResources>create(CellTable.SelectableResources.class));
-    
     @UiField
     Button newButton;
-    
+
     @UiField
     Button backButton;
 {{#visualized}}
     @UiField{{/visualized}}
     Button viewButton;
-    
-    @UiField(provided = true)
-    SimplePager pager = new SimplePager(TextLocation.RIGHT, (Resources) GWT.create(Resources.class), true, 50, false, (SimplePagerConstants) GWT.create(SimplePagerConstants.class));
 
     private Set<String> paths = new HashSet<String>();
 
@@ -77,6 +69,7 @@ public class {{=className}} extends AbstractProxyListView<{{=proxy}}> {
     }
 
     public void init() {
+        super.init();
         {{#properties}}
         paths.add("{{=prop}}");
         table.addColumn(new TextColumn<{{=proxy}}>() {
@@ -88,12 +81,12 @@ public class {{=className}} extends AbstractProxyListView<{{=proxy}}> {
             }
         }, "{{=propReadable}}");{{/properties}}
     }
-    
+
     public String[] getPaths() {
         return paths.toArray(new String[paths.size()]);
     }
 
     public Widget getBackButton() {
-	    return backButton;
+        return backButton;
     }
 }
