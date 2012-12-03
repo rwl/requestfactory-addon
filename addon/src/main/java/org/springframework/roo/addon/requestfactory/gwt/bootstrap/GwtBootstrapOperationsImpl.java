@@ -664,24 +664,16 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
     private void updateBuildPlugins(final Element configuration,
             final boolean isGaeEnabled) {
         // Update the POM
+        final List<Plugin> plugins = new ArrayList<Plugin>();
         final String xPathExpression = "/configuration/"
                 + (isGaeEnabled ? "gae" : "gwt") + "/plugins/plugin";
         final List<Element> pluginElements = XmlUtils.findElements(
                 xPathExpression, configuration);
         for (final Element pluginElement : pluginElements) {
-            final Plugin defaultPlugin = new Plugin(pluginElement);
-            for (final Plugin plugin : projectOperations.getFocusedModule()
-                    .getBuildPlugins()) {
-                if ("gwt-maven-plugin".equals(plugin.getArtifactId())) {
-                    projectOperations.removeBuildPluginImmediately(
-                            projectOperations.getFocusedModuleName(),
-                            defaultPlugin);
-                    break;
-                }
-            }
-            projectOperations.addBuildPlugin(
-                    projectOperations.getFocusedModuleName(), defaultPlugin);
+            plugins.add(new Plugin(pluginElement));
         }
+        projectOperations.addBuildPlugins(
+                projectOperations.getFocusedModuleName(), plugins);
     }
 
     /**
@@ -760,8 +752,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
     private void updateEclipsePlugin() {
         // Load the POM
         final String pom = getPomPath();
-        final Document document = XmlUtils.readXml(fileManager
-                .getInputStream(pom));
+        final Document document = XmlUtils.readXml(fileManager.getInputStream(pom));
         final Element root = document.getDocumentElement();
 
         // Add the GWT "buildCommand"
@@ -775,7 +766,8 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                 additionalBuildCommandsElement);
         if (gwtBuildCommandElement == null) {
             gwtBuildCommandElement = DomUtils.createChildElement(
-                    "buildCommand", additionalBuildCommandsElement, document);
+                    "buildCommand", additionalBuildCommandsElement,
+                    document);
             final Element nameElement = DomUtils.createChildElement("name",
                     gwtBuildCommandElement, document);
             nameElement.setTextContent(GWT_BUILD_COMMAND);
@@ -787,18 +779,24 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                         + "/configuration/additionalProjectnatures", root);
         Validate.notNull(additionalProjectNaturesElement,
                 "additionalProjectnatures element of the maven-eclipse-plugin required");
-        Element gwtProjectNatureElement = XmlUtils.findFirstElement(
-                "projectnature[name = '" + GWT_PROJECT_NATURE + "']",
-                additionalProjectNaturesElement);
+        Element gwtProjectNatureElement = null;
+        List<Element> gwtProjectNatureElements = XmlUtils.findElements(
+                "projectnature", additionalProjectNaturesElement);
+        for (Element element : gwtProjectNatureElements) {
+            if (GWT_PROJECT_NATURE.equals(element.getTextContent())) {
+                gwtProjectNatureElement = element;
+                break;
+            }
+        }
         if (gwtProjectNatureElement == null) {
             gwtProjectNatureElement = new XmlElementBuilder("projectnature",
                     document).setText(GWT_PROJECT_NATURE).build();
-            additionalProjectNaturesElement
-                    .appendChild(gwtProjectNatureElement);
+            additionalProjectNaturesElement.appendChild(
+                    gwtProjectNatureElement);
         }
 
-        fileManager.createOrUpdateTextFileIfRequired(pom,
-                XmlUtils.nodeToString(document), false);
+        fileManager.createOrUpdateTextFileIfRequired(pom, XmlUtils
+                .nodeToString(document), false);
     }
 
     private void updateRepositories(final Element configuration,
