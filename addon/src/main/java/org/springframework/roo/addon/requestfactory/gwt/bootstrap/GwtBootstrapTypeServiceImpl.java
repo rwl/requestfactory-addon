@@ -20,9 +20,10 @@ import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
-import org.springframework.roo.addon.requestfactory.BaseTypeServiceImpl;
+import org.springframework.roo.addon.requestfactory.RequestFactoryFileManager;
 import org.springframework.roo.addon.requestfactory.RequestFactoryOperations;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
+import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadata;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MemberHoldingTypeDetails;
@@ -34,6 +35,7 @@ import org.springframework.roo.model.JavaType;
 import org.springframework.roo.process.manager.FileManager;
 import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.Path;
+import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.support.util.FileUtils;
 import org.springframework.roo.support.util.XmlUtils;
 import org.w3c.dom.Document;
@@ -44,13 +46,16 @@ import org.xml.sax.SAXException;
 
 @Component
 @Service
-public class GwtBootstrapTypeServiceImpl extends BaseTypeServiceImpl implements GwtBootstrapTypeService {
+public class GwtBootstrapTypeServiceImpl implements GwtBootstrapTypeService {
 
     private static final String PATH = "path";
     private static final String INHERITS = "inherits";
     private static final String NAME = "name";
 
-    @Reference private FileManager fileManager;
+    @Reference FileManager fileManager;
+    @Reference ProjectOperations projectOperations;
+    @Reference RequestFactoryFileManager requestFactoryFileManager;
+    @Reference RequestFactoryTypeService requestFactoryTypeService;
 
     @Override
     public void buildType(final RequestFactoryType type,
@@ -72,8 +77,8 @@ public class GwtBootstrapTypeServiceImpl extends BaseTypeServiceImpl implements 
         type.resolveWatchedFieldNames(type);
         final List<ClassOrInterfaceTypeDetails> typesToBeWritten = new ArrayList<ClassOrInterfaceTypeDetails>();
         for (final ClassOrInterfaceTypeDetails templateTypeDetail : templateTypeDetails) {
-            typesToBeWritten.addAll(buildType(type, templateTypeDetail,
-                    getExtendsTypes(templateTypeDetail), moduleName));
+            typesToBeWritten.addAll(requestFactoryTypeService.buildType(type, templateTypeDetail,
+                    requestFactoryTypeService.getExtendsTypes(templateTypeDetail), moduleName));
         }
         requestFactoryFileManager.write(typesToBeWritten, type.isOverwriteConcrete());
     }
@@ -215,10 +220,10 @@ public class GwtBootstrapTypeServiceImpl extends BaseTypeServiceImpl implements 
         final boolean inSourcePath = isTypeInAnySourcePackage(returnType,
                 sourcePackages);
         if (!inSourcePath
-                && !isCommonType(returnType)
+                && !requestFactoryTypeService.isCommonType(returnType)
                 && !JavaType.VOID_PRIMITIVE.getFullyQualifiedTypeName().equals(
                         returnType.getFullyQualifiedTypeName())) {
-            displayWarning("The path to type "
+            requestFactoryTypeService.displayWarning("The path to type "
                     + returnType.getFullyQualifiedTypeName()
                     + " which is used in type "
                     + memberHoldingTypeDetail.getName()
@@ -236,7 +241,7 @@ public class GwtBootstrapTypeServiceImpl extends BaseTypeServiceImpl implements 
             if (type.getPackage().isWithin(sourcePackage)) {
                 return true; // It's a project type
             }
-            if (isCollectionType(type)
+            if (requestFactoryTypeService.isCollectionType(type)
                     && type.getParameters().size() == 1
                     && type.getParameters().get(0).getPackage()
                             .isWithin(sourcePackage)) {

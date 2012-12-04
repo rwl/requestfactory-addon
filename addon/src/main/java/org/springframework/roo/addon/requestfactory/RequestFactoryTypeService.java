@@ -3,6 +3,7 @@ package org.springframework.roo.addon.requestfactory;
 import java.util.List;
 
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
+import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.classpath.details.MemberHoldingTypeDetails;
 import org.springframework.roo.classpath.details.MethodMetadata;
@@ -80,4 +81,51 @@ public interface RequestFactoryTypeService {
 
     ClassOrInterfaceTypeDetails lookupUnmanagedRequestFromEntity(
             ClassOrInterfaceTypeDetails entity);
+
+    void checkPrimitive(JavaType type);
+
+    ClassOrInterfaceTypeDetailsBuilder createAbstractBuilder(
+            ClassOrInterfaceTypeDetailsBuilder concreteClass,
+            List<MemberHoldingTypeDetails> extendsTypesDetails,
+            String moduleName);
+
+    void displayWarning(String warning);
+
+    boolean isAllowableReturnType(JavaType type);
+
+    boolean isAllowableReturnType(MethodMetadata method);
+
+    boolean isCollectionType(JavaType returnType);
+
+    boolean isCommonType(JavaType type);
+
+    boolean isDomainObject(JavaType returnType,
+            ClassOrInterfaceTypeDetails ptmd);
+
+    boolean isEmbeddable(ClassOrInterfaceTypeDetails ptmd);
+
+    boolean isEntity(JavaType type);
+
+    boolean isEnum(ClassOrInterfaceTypeDetails ptmd);
+
+    boolean isEnum(JavaType type);
+
+    boolean isPrimitive(JavaType type);
+
+    boolean isPublicAccessor(MethodMetadata method);
+
+    boolean isRequestFactoryCompatible(JavaType type);
+
+    boolean isTypeCommon(JavaType type);
+
+    boolean isValidMethodReturnType(MethodMetadata method,
+            MemberHoldingTypeDetails memberHoldingTypeDetail);
+
+    ClassOrInterfaceTypeDetails lookupTargetFromX(
+            ClassOrInterfaceTypeDetails annotatedType,
+            JavaType... annotations);
+
+    ClassOrInterfaceTypeDetails lookupXFromEntity(
+            ClassOrInterfaceTypeDetails entity,
+            JavaType... annotations);
 }

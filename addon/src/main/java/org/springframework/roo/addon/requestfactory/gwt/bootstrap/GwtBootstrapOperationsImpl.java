@@ -35,6 +35,7 @@ import org.springframework.roo.addon.jpa.GaeOperations;
 import org.springframework.roo.addon.requestfactory.BaseOperationsImpl;
 import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
+import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.annotations.gwt.bootstrap.RooGwtBootstrapScaffold;
 import org.springframework.roo.addon.web.mvc.controller.WebMvcOperations;
@@ -86,6 +87,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
             RooGwtBootstrapScaffold.MODULE_ATTRIBUTE);
 
     @Reference protected RequestFactoryTemplateService requestFactoryTemplateService;
+    @Reference private RequestFactoryTypeService requestFactoryTypeService;
     @Reference protected GwtBootstrapTypeService gwtBootstrapTypeService;
     @Reference protected WebMvcOperations webMvcOperations;
     @Reference protected PathResolver pathResolver;
@@ -204,7 +206,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         updateScaffoldBoilerPlate(module);
         for (final ClassOrInterfaceTypeDetails proxy : typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)) {
-            final ClassOrInterfaceTypeDetails request = gwtBootstrapTypeService
+            final ClassOrInterfaceTypeDetails request = requestFactoryTypeService
                     .lookupRequestFromProxy(proxy);
             if (request == null) {
                 throw new IllegalStateException(
@@ -222,9 +224,9 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         final ClassOrInterfaceTypeDetails entity = typeLocationService
                 .getTypeDetails(type);
         if (entity != null && !entity.isAbstract()) {
-            final ClassOrInterfaceTypeDetails proxy = gwtBootstrapTypeService
+            final ClassOrInterfaceTypeDetails proxy = requestFactoryTypeService
                     .lookupProxyFromEntity(entity);
-            final ClassOrInterfaceTypeDetails request = gwtBootstrapTypeService
+            final ClassOrInterfaceTypeDetails request = requestFactoryTypeService
                     .lookupRequestFromEntity(entity);
             if (proxy == null || request == null) {
                 throw new IllegalStateException(

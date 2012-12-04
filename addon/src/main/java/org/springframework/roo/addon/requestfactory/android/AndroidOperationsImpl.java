@@ -36,9 +36,8 @@ public class AndroidOperationsImpl extends BaseOperationsImpl
     private static final JavaSymbolName MODULE_SYMBOL_NAME = new JavaSymbolName(
             RooAndroidScaffold.MODULE_ATTRIBUTE);
 
-    @Reference private RequestFactoryTypeService requestFactoryTypeService;
-    @Reference private AndroidTypeService androidTypeService;
-    @Reference private ProjectOperations projectOperations;
+    @Reference RequestFactoryTypeService requestFactoryTypeService;
+    @Reference AndroidTypeService androidTypeService;
 
     @Override
     public boolean isScaffoldAvailable() {

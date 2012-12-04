@@ -10,6 +10,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.file.monitor.event.FileDetails;
 import org.springframework.roo.process.manager.FileManager;
 import org.springframework.roo.project.LogicalPath;
@@ -20,14 +21,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 @Component
+@Service
 public class AndroidTypeServiceImpl implements AndroidTypeService {
 
     private static final String NAME = "activity:name";
     private static final String MAIN_ACTION = "android.intent.action.MAIN";
     private static final String LAUNCHER_CATEGORY = "android.intent.category.LAUNCHER";
 
-    @Reference private FileManager fileManager;
-    @Reference private ProjectOperations projectOperations;
+    @Reference FileManager fileManager;
+    @Reference ProjectOperations projectOperations;
 
     @Override
     public void addActvity(final String moduleName, final String activityName,

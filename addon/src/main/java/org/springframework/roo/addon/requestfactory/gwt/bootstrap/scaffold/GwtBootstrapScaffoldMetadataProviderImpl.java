@@ -16,6 +16,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHolder;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
+import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.annotations.gwt.bootstrap.RooGwtBootstrapScaffold;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapPaths;
@@ -64,8 +65,7 @@ import org.springframework.roo.project.PathResolver;
  * @since 1.1
  */
 @Component(immediate = true)
-@Service//({GwtBootstrapScaffoldMetadataProvider.class,
-//    MetadataProvider.class, MetadataNotificationListener.class})
+@Service
 public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaffoldMetadataProviderImpl
         implements GwtBootstrapScaffoldMetadataProvider {
 
@@ -183,10 +183,10 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
             gwtBootstrapType.dynamicallyResolveMethodsToWatch(proxy.getName(),
                     clientSideTypeMap, topLevelPackage);
 
-            final List<MemberHoldingTypeDetails> extendsTypes = gwtBootstrapTypeService
+            final List<MemberHoldingTypeDetails> extendsTypes = requestFactoryTypeService
                     .getExtendsTypes(templateDataHolder
                             .getTemplateTypeDetailsMap().get(gwtBootstrapType));
-            typesToBeWritten.put(gwtBootstrapType, gwtBootstrapTypeService
+            typesToBeWritten.put(gwtBootstrapType, requestFactoryTypeService
                     .buildType(gwtBootstrapType, templateDataHolder
                             .getTemplateTypeDetailsMap().get(gwtBootstrapType),
                             extendsTypes, moduleName));
