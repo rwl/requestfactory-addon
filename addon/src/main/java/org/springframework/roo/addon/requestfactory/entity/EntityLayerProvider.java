@@ -36,6 +36,7 @@ import org.springframework.roo.support.util.PairList;
 @Service
 public class EntityLayerProvider extends CoreLayerProvider {
 
+    @SuppressWarnings("unused")
     @Reference private EntityMetadataProvider entityMetadataProvider;
     @Reference private MetadataService metadataService;
     @Reference private TypeLocationService typeLocationService;

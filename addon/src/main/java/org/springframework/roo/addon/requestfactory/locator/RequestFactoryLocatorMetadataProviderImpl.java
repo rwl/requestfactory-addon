@@ -46,7 +46,6 @@ import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.DataType;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
-import org.springframework.roo.model.RooJavaType;
 import org.springframework.roo.model.SpringJavaType;
 import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.Path;

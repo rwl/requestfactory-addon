@@ -16,7 +16,6 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHolder;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
-import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.annotations.gwt.bootstrap.RooGwtBootstrapScaffold;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapPaths;
