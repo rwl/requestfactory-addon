@@ -22,20 +22,23 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
-import org.springframework.roo.addon.requestfactory.BaseTemplateServiceImpl;
 import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHolder;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
+import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MethodMetadata;
+import org.springframework.roo.classpath.persistence.PersistenceMemberLocator;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
+import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.support.util.FileUtils;
 import org.springframework.roo.support.util.XmlUtils;
 import org.w3c.dom.Document;
@@ -57,21 +60,26 @@ import org.xml.sax.SAXException;
  */
 @Component
 @Service
-public class AndroidTemplateServiceImpl extends BaseTemplateServiceImpl
-        implements AndroidTemplateService {
+public class AndroidTemplateServiceImpl implements AndroidTemplateService {
 
     private static final String TEMPLATE_DIR = "org/springframework/roo/addon/requestfactory/android/scaffold/templates/";
+    
+    @Reference RequestFactoryTemplateService requestFactoryTemplateService;
+    @Reference PersistenceMemberLocator persistenceMemberLocator;
+    @Reference RequestFactoryTypeService requestFactoryTypeService;
+    @Reference ProjectOperations projectOperations;
 
     @Override
-    protected TemplateDataDictionary buildMirrorDataDictionary(
+    public TemplateDataDictionary buildMirrorDataDictionary(
             final RequestFactoryType type, final ClassOrInterfaceTypeDetails mirroredType,
             final ClassOrInterfaceTypeDetails proxy,
             final Map<RequestFactoryType, JavaType> mirrorTypeMap,
             final Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap,
             final String moduleName) {
 
-        final TemplateDataDictionary dataDictionary = super.buildMirrorDataDictionary(
-                type, mirroredType, proxy, mirrorTypeMap, clientSideTypeMap, moduleName);
+        final TemplateDataDictionary dataDictionary = requestFactoryTemplateService
+                .buildMirrorDataDictionary(type, mirroredType, proxy,
+                        mirrorTypeMap, clientSideTypeMap, moduleName);
 
         final JavaType javaType = mirrorTypeMap.get(type);
         Validate.notNull(javaType);
@@ -91,6 +99,7 @@ public class AndroidTemplateServiceImpl extends BaseTemplateServiceImpl
         return dataDictionary;
     }
 
+    @Override
     public String buildViewXml(final String templateContents,
             final String destFile, final List<MethodMetadata> proxyMethods) {
         FileReader fileReader = null;
@@ -240,6 +249,7 @@ public class AndroidTemplateServiceImpl extends BaseTemplateServiceImpl
         return result.getWriter().toString();
     }
 
+    @Override
     public RequestFactoryTemplateDataHolder getMirrorTemplateTypeDetails(
             final ClassOrInterfaceTypeDetails mirroredType,
             final Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap,
@@ -269,18 +279,17 @@ public class AndroidTemplateServiceImpl extends BaseTemplateServiceImpl
             androidType.dynamicallyResolveFieldsToWatch(clientSideTypeMap);
             androidType.dynamicallyResolveMethodsToWatch(mirroredType.getName(),
                     clientSideTypeMap, topLevelPackage);
-            templateTypeDetailsMap.put(
-                    androidType,
-                    getTemplateDetails(dataDictionary, androidType.getTemplate(),
+            templateTypeDetailsMap.put(androidType, requestFactoryTemplateService
+                    .getTemplateDetails(dataDictionary, androidType.getTemplate(),
                             mirrorTypeMap.get(androidType), moduleName, TEMPLATE_DIR));
 
             if (androidType.isCreateViewXml()) {
                 dataDictionary = buildMirrorDataDictionary(androidType,
                         mirroredType, proxy, mirrorTypeMap, clientSideTypeMap,
                         moduleName);
-                final String contents = getTemplateContents(
-                        androidType.getTemplate() + "ViewXml", dataDictionary,
-                        TEMPLATE_DIR);
+                final String contents = requestFactoryTemplateService
+                        .getTemplateContents(androidType.getTemplate()
+                                + "ViewXml", dataDictionary, TEMPLATE_DIR);
                 xmlTemplates.put(androidType, contents);
             }
         }
@@ -292,14 +301,16 @@ public class AndroidTemplateServiceImpl extends BaseTemplateServiceImpl
                 typeDetails, xmlMap);
     }
 
+    @Override
     public List<ClassOrInterfaceTypeDetails> getStaticTemplateTypeDetails(
             final RequestFactoryType type, final String moduleName) {
         final List<ClassOrInterfaceTypeDetails> templateTypeDetails = new ArrayList<ClassOrInterfaceTypeDetails>();
-        final TemplateDataDictionary dataDictionary = buildDictionary(type,
-                moduleName);
-        templateTypeDetails.add(getTemplateDetails(dataDictionary,
-                type.getTemplate(), getDestinationJavaType(type, moduleName),
-                moduleName, TEMPLATE_DIR));
+        final TemplateDataDictionary dataDictionary = requestFactoryTemplateService
+                .buildDictionary(type, moduleName);
+        templateTypeDetails.add(requestFactoryTemplateService
+                .getTemplateDetails(dataDictionary, type.getTemplate(),
+                        requestFactoryTemplateService.getDestinationJavaType(
+                                type, moduleName), moduleName, TEMPLATE_DIR));
         return templateTypeDetails;
     }
 }

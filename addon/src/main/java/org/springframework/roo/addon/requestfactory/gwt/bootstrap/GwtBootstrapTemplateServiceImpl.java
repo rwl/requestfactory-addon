@@ -27,25 +27,30 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.plural.PluralMetadata;
-import org.springframework.roo.addon.requestfactory.BaseTemplateServiceImpl;
 import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHolder;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
+import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.entity.TextType;
 import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
+import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.FieldMetadata;
 import org.springframework.roo.classpath.details.MethodMetadata;
+import org.springframework.roo.classpath.persistence.PersistenceMemberLocator;
+import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.Path;
+import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.support.util.FileUtils;
 import org.springframework.roo.support.util.XmlUtils;
 import org.w3c.dom.Document;
@@ -67,12 +72,19 @@ import org.xml.sax.SAXException;
  */
 @Component
 @Service
-public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
-        implements GwtBootstrapTemplateService {
+public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateService {
 
     private static final String TEMPLATE_DIR = "org/springframework/roo/addon/requestfactory/gwt/bootstrap/scaffold/templates/";
 
-    protected TemplateDataDictionary buildDictionary(final RequestFactoryType type,
+    @Reference RequestFactoryTypeService requestFactoryTypeService;
+    @Reference RequestFactoryTemplateService templateService;
+    @Reference ProjectOperations projectOperations;
+    @Reference TypeLocationService typeLocationService;
+    @Reference MetadataService metadataService;
+    @Reference PersistenceMemberLocator persistenceMemberLocator;
+    
+    @Override
+    public TemplateDataDictionary buildDictionary(final RequestFactoryType type,
             final String moduleName) {
         final Set<ClassOrInterfaceTypeDetails> proxies = typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY);
@@ -101,11 +113,11 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     section.setVariable("proxySimpleName", proxySimpleName);
                     section.setVariable("proxySimpleNameUncapitalize",
                             StringUtils.uncapitalize(proxySimpleName));
-                    addImport(dataDictionary, entitySimpleName,
+                    templateService.addImport(dataDictionary, entitySimpleName,
                             GwtBootstrapType.LIST_ACTIVITY, moduleName);
-                    addImport(dataDictionary, proxy.getName()
+                    templateService.addImport(dataDictionary, proxy.getName()
                             .getFullyQualifiedTypeName());
-                    addImport(
+                    templateService.addImport(
                             dataDictionary,
                             GwtBootstrapType.ACTIVITIES_MAPPER.getPath().packageName(
                                     projectOperations
@@ -113,7 +125,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                                     + "."
                                     + entitySimpleName
                                     + GwtBootstrapType.ACTIVITIES_MAPPER.getSuffix());
-                    addImport(
+                    templateService.addImport(
                             dataDictionary,
                             GwtBootstrapType.LIST_ACTIVITIES_MAPPER.getPath().packageName(
                                     projectOperations
@@ -151,7 +163,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                             StringUtils.uncapitalize(entitySimpleName));
                     section.setVariable("entityPluralName", plural);
                     section.setVariable("entityFullPath", proxySimpleName);
-                    addImport(dataDictionary, proxy.getName()
+                    templateService.addImport(dataDictionary, proxy.getName()
                             .getFullyQualifiedTypeName());
                 }
             }
@@ -182,10 +194,10 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                             .addSection("entities");
                     section.setVariable("entitySimpleName", entitySimpleName);
                     section.setVariable("entityFullPath", proxySimpleName);
-                    addImport(dataDictionary, proxy.getName()
+                    templateService.addImport(dataDictionary, proxy.getName()
                             .getFullyQualifiedTypeName());
                     section.setVariable("providerSimpleName", providerSimpleName);
-                    addImport(dataDictionary, providerFullName);
+                    templateService.addImport(dataDictionary, providerFullName);
 
                     Boolean isLeaf = true;
 
@@ -210,7 +222,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                                     .lookupProxyFromEntity(ety);
                             section.addSection("children").setVariable("child",
                                     proxyForEntity.getName().getSimpleTypeName());
-                            addImport(dataDictionary, proxyForEntity.getName()
+                            templateService.addImport(dataDictionary, proxyForEntity.getName()
                                     .getFullyQualifiedTypeName());
                         }
                         }
@@ -227,7 +239,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
     }
 
     @Override
-    protected TemplateDataDictionary buildMirrorDataDictionary(
+    public TemplateDataDictionary buildMirrorDataDictionary(
             final RequestFactoryType type, final ClassOrInterfaceTypeDetails mirroredType,
             final ClassOrInterfaceTypeDetails proxy,
             final Map<RequestFactoryType, JavaType> mirrorTypeMap,
@@ -235,7 +247,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
             final String moduleName) {
         final JavaType proxyType = proxy.getName();
 
-        final TemplateDataDictionary dataDictionary = super.buildMirrorDataDictionary(
+        final TemplateDataDictionary dataDictionary = templateService.buildMirrorDataDictionary(
                 type, mirroredType, proxy, mirrorTypeMap, clientSideTypeMap, moduleName);
 
         // Get my locator and
@@ -411,7 +423,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
             }
             else if (requestFactoryProxyProperty.isString()
                     && !primaryProperty.isString()
-                    && !isPrimaryProp(primaryProperty, mirroredType)) {
+                    && !templateService.isPrimaryProp(primaryProperty, mirroredType)) {
                 // Favor String properties over other types.
                 //secondaryProperty = primaryProperty;
                 primaryProperty = requestFactoryProxyProperty;
@@ -425,10 +437,10 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 // Favor String properties over other types.
                 secondaryProperty = gwtProxyProperty;
             }*/
-            if (isPrimaryProp(requestFactoryProxyProperty, mirroredType)) {
+            if (templateService.isPrimaryProp(requestFactoryProxyProperty, mirroredType)) {
                 primaryProperty = requestFactoryProxyProperty;
             }
-            if (isSecondaryProp(requestFactoryProxyProperty, mirroredType)) {
+            if (templateService.isSecondaryProp(requestFactoryProxyProperty, mirroredType)) {
                 secondaryProperty = requestFactoryProxyProperty;
             }
 
@@ -437,11 +449,11 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 dateProperty = requestFactoryProxyProperty;
             }
 
-            final String helpText = getHelpText(requestFactoryProxyProperty
+            final String helpText = templateService.getHelpText(requestFactoryProxyProperty
                     .getSymbolName(), mirroredType);
-            final TextType textType = getTextType(requestFactoryProxyProperty
+            final TextType textType = templateService.getTextType(requestFactoryProxyProperty
                     .getSymbolName(), mirroredType);
-            final String units = getUnits(requestFactoryProxyProperty
+            final String units = templateService.getUnits(requestFactoryProxyProperty
                     .getSymbolName(), mirroredType);
 
             if (requestFactoryProxyProperty.isProxy()
@@ -457,7 +469,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
 
             // if the property is in the existingFields list, do not add it
             if (!existingDetailsViewFields.contains(requestFactoryProxyProperty.getName())
-                    && !isInvisible(requestFactoryProxyProperty, mirroredType)) {
+                    && !templateService.isInvisible(requestFactoryProxyProperty, mirroredType)) {
                 dataDictionary.addSection("fields").setVariable("field",
                         requestFactoryProxyProperty.getName());
 
@@ -481,7 +493,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                         requestFactoryProxyProperty.getReadableName());
             }
 
-            if (!isInvisible(requestFactoryProxyProperty, mirroredType)) {
+            if (!templateService.isInvisible(requestFactoryProxyProperty, mirroredType)) {
                 final TemplateDataDictionary propertiesSection = dataDictionary
                         .addSection("properties");
                 propertiesSection.setVariable("prop", requestFactoryProxyProperty.getName());
@@ -503,8 +515,8 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 propertiesSection.setVariable("units", units);
             }
 
-            if (!isReadOnly(requestFactoryProxyProperty.getName(), mirroredType)
-                    && !isUneditable(requestFactoryProxyProperty, mirroredType)) {
+            if (!templateService.isReadOnly(requestFactoryProxyProperty.getName(), mirroredType)
+                    && !templateService.isUneditable(requestFactoryProxyProperty, mirroredType)) {
                 // if the property is in the existingFields list, do not add it
                 if (!existingEditViewFields
                         .contains(requestFactoryProxyProperty.getName())) {
@@ -549,11 +561,11 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     .getName())) {
                 if (requestFactoryProxyProperty.isProxy() || requestFactoryProxyProperty.isEnum()
                         || requestFactoryProxyProperty.isCollectionOfProxy()) {
-                    if (!isUneditable(requestFactoryProxyProperty, mirroredType)) {
+                    if (!templateService.isUneditable(requestFactoryProxyProperty, mirroredType)) {
                         final TemplateDataDictionary section = dataDictionary
                                 .addSection(requestFactoryProxyProperty.isEnum() ? "setEnumValuePickers"
                                         : "setProxyProviders");
-                        final boolean nullable = !isNotNull(
+                        final boolean nullable = !templateService.isNotNull(
                                 requestFactoryProxyProperty, mirroredType);
                         // The methods is required to satisfy the interface.
                         // However, if the field is in the existingFields lists, the
@@ -607,19 +619,19 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                                             + "Entries(0, 50)");
                         }
                     }
-                    maybeAddImport(dataDictionary, importSet,
+                    templateService.maybeAddImport(dataDictionary, importSet,
                             requestFactoryProxyProperty.getPropertyType());
-                    maybeAddImport(dataDictionary, importSet,
+                    templateService.maybeAddImport(dataDictionary, importSet,
                             requestFactoryProxyProperty.getValueType());
                     if (requestFactoryProxyProperty.isProxy()) {
-                        maybeAddImport(dataDictionary, importSet,
+                        templateService.maybeAddImport(dataDictionary, importSet,
                                 requestFactoryProxyProperty.getInstanceEditorType());
                     }
                     if (requestFactoryProxyProperty.isCollection/*OfProxy*/()) {
-                        maybeAddImport(dataDictionary, importSet,
+                        templateService.maybeAddImport(dataDictionary, importSet,
                                 requestFactoryProxyProperty.getPropertyType()
                                         .getParameters().get(0));
-                        maybeAddImport(dataDictionary, importSet,
+                        templateService.maybeAddImport(dataDictionary, importSet,
                                 requestFactoryProxyProperty.getSetEditorType());
                     }
                 }
@@ -681,16 +693,17 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
     }
 
     @Override
-    protected TemplateDataDictionary buildStandardDataDictionary(
+    public TemplateDataDictionary buildStandardDataDictionary(
             final RequestFactoryType type, final String moduleName,
             final String proxyModuleName) {
-        final TemplateDataDictionary dataDictionary = super
+        final TemplateDataDictionary dataDictionary = templateService
                 .buildStandardDataDictionary(type, moduleName, proxyModuleName);
         dataDictionary.setVariable("placePackage", GwtBootstrapPaths.SCAFFOLD_PLACE
                 .packageName(projectOperations.getTopLevelPackage(moduleName)));
         return dataDictionary;
     }
 
+    @Override
     public String buildUiXml(final String templateContents,
             final String destFile, final List<MethodMetadata> proxyMethods) {
         FileReader fileReader = null;
@@ -865,7 +878,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
             gwtBootstrapType.dynamicallyResolveMethodsToWatch(mirroredType.getName(),
                     clientSideTypeMap, topLevelPackage);
             templateTypeDetailsMap.put(
-                    gwtBootstrapType,
+                    gwtBootstrapType, templateService.
                     getTemplateDetails(dataDictionary, gwtBootstrapType.getTemplate(),
                             mirrorTypeMap.get(gwtBootstrapType), moduleName, TEMPLATE_DIR));
 
@@ -873,7 +886,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 dataDictionary = buildMirrorDataDictionary(gwtBootstrapType,
                         mirroredType, proxy, mirrorTypeMap, clientSideTypeMap,
                         moduleName);
-                final String contents = getTemplateContents(
+                final String contents = templateService.getTemplateContents(
                         gwtBootstrapType.getTemplate() + "UiXml", dataDictionary,
                         TEMPLATE_DIR);
                 xmlTemplates.put(gwtBootstrapType, contents);
@@ -893,10 +906,11 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     GwtBootstrapPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage));
             dataDictionary.setVariable("scaffoldUiPackage",
                     GwtBootstrapPaths.SCAFFOLD_UI.packageName(topLevelPackage));
-            final JavaType collectionTypeImpl = getCollectionImplementation(proxyProperty
+            final JavaType collectionTypeImpl = templateService
+                    .getCollectionImplementation(proxyProperty
                     .getPropertyType());
-            addImport(dataDictionary, collectionTypeImpl);
-            addImport(dataDictionary, proxyProperty.getPropertyType());
+            templateService.addImport(dataDictionary, collectionTypeImpl);
+            templateService.addImport(dataDictionary, proxyProperty.getPropertyType());
 
             final String collectionType = proxyProperty.getPropertyType()
                     .getSimpleTypeName();
@@ -912,7 +926,7 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
             final JavaType collectionEditorType = new JavaType(
                     GwtBootstrapPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage) + "."
                             + boundCollectionType + collectionType + "Editor");
-            typeDetails.add(getTemplateDetails(dataDictionary,
+            typeDetails.add(templateService.getTemplateDetails(dataDictionary,
                     "CollectionEditor", collectionEditorType, moduleName,
                     TEMPLATE_DIR));
 
@@ -926,9 +940,9 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                     collectionTypeImpl.getSimpleTypeName());
             dataDictionary.setVariable("boundCollectionType",
                     boundCollectionType);
-            addImport(dataDictionary, proxyProperty.getPropertyType());
+            templateService.addImport(dataDictionary, proxyProperty.getPropertyType());
 
-            final String contents = getTemplateContents("CollectionEditor"
+            final String contents = templateService.getTemplateContents("CollectionEditor"
                     + "UiXml", dataDictionary, TEMPLATE_DIR);
             final String packagePath = projectOperations.getPathResolver()
                     .getFocusedIdentifier(Path.SRC_MAIN_JAVA,
@@ -941,7 +955,8 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
                 typeDetails, xmlMap);
     }
 
-    private String transformXml(final Document document)
+    @Override
+    public String transformXml(final Document document)
             throws TransformerException {
         final Transformer transformer = XmlUtils.createIndentingTransformer();
         final DOMSource source = new DOMSource(document);
@@ -956,8 +971,8 @@ public class GwtBootstrapTemplateServiceImpl extends BaseTemplateServiceImpl
         final List<ClassOrInterfaceTypeDetails> templateTypeDetails = new ArrayList<ClassOrInterfaceTypeDetails>();
         final TemplateDataDictionary dataDictionary = buildDictionary(type,
                 moduleName);
-        templateTypeDetails.add(getTemplateDetails(dataDictionary,
-                type.getTemplate(), getDestinationJavaType(type, moduleName),
+        templateTypeDetails.add(templateService.getTemplateDetails(dataDictionary,
+                type.getTemplate(), templateService.getDestinationJavaType(type, moduleName),
                 moduleName, TEMPLATE_DIR));
         return templateTypeDetails;
     }

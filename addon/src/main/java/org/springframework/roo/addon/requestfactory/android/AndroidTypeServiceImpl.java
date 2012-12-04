@@ -49,9 +49,9 @@ public class AndroidTypeServiceImpl implements AndroidTypeService {
             activityElement.setAttribute(NAME, activityName);
 
             if (mainActivity) {
-                for (Element element : activityElements) {
+                /*for (Element element : activityElements) {
                     
-                }
+                }*/
                 final Element intentFilter = manifestXmlDoc.createElement(
                         "intent-filter");
                 final Element action = manifestXmlDoc.createElement("action");

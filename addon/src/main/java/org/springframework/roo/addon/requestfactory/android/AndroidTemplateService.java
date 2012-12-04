@@ -1,5 +1,7 @@
 package org.springframework.roo.addon.requestfactory.android;
 
+import hapax.TemplateDataDictionary;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,22 +11,27 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.model.JavaSymbolName;
+import org.springframework.roo.model.JavaType;
 
 /**
  * Interface for {@link AndroidTemplateServiceImpl}.
  */
 public interface AndroidTemplateService {
 
-    RequestFactoryTemplateDataHolder getMirrorTemplateTypeDetails(
-            ClassOrInterfaceTypeDetails governorTypeDetails,
-            Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap,
+    String buildViewXml(String templateContents, String destFile,
+            List<MethodMetadata> proxyMethods);
+
+    TemplateDataDictionary buildMirrorDataDictionary(RequestFactoryType type,
+            ClassOrInterfaceTypeDetails mirroredType,
+            ClassOrInterfaceTypeDetails proxy, Map<RequestFactoryType,
+            JavaType> mirrorTypeMap, Map<JavaSymbolName,
+            RequestFactoryProxyProperty> clientSideTypeMap,
             String moduleName);
+
+    RequestFactoryTemplateDataHolder getMirrorTemplateTypeDetails(
+            ClassOrInterfaceTypeDetails mirroredType, Map<JavaSymbolName,
+            RequestFactoryProxyProperty> clientSideTypeMap, String moduleName);
 
     List<ClassOrInterfaceTypeDetails> getStaticTemplateTypeDetails(
             RequestFactoryType type, String moduleName);
-
-
-
-    String buildViewXml(String templateContents, String destFile,
-            List<MethodMetadata> proxyMethods);
 }
