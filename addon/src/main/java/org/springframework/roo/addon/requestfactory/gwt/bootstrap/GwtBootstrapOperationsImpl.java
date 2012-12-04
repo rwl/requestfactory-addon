@@ -31,8 +31,9 @@ import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.jpa.GaeOperations;
-import org.springframework.roo.addon.requestfactory.BaseOperationsImpl;
+import org.springframework.roo.addon.requestfactory.RequestFactoryOperations;
 import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
@@ -40,6 +41,8 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.annotations.gwt.bootstrap.RooGwtBootstrapScaffold;
 import org.springframework.roo.addon.web.mvc.controller.WebMvcOperations;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
+import org.springframework.roo.classpath.TypeLocationService;
+import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.MemberFindingUtils;
@@ -47,8 +50,10 @@ import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.StringAttributeValue;
 import org.springframework.roo.file.monitor.event.FileDetails;
+import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
+import org.springframework.roo.process.manager.FileManager;
 import org.springframework.roo.project.Dependency;
 import org.springframework.roo.project.FeatureNames;
 import org.springframework.roo.project.LogicalPath;
@@ -56,6 +61,7 @@ import org.springframework.roo.project.Path;
 import org.springframework.roo.project.PathResolver;
 import org.springframework.roo.project.Plugin;
 import org.springframework.roo.project.ProjectMetadata;
+import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.project.Property;
 import org.springframework.roo.project.Repository;
 import org.springframework.roo.project.maven.Pom;
@@ -74,8 +80,7 @@ import org.w3c.dom.Element;
  */
 @Component
 @Service
-public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
-        implements GwtBootstrapOperations {
+public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
 
     private static final String FEATURE_NAME = "gwtbootstrap";
     private static final String GWT_BUILD_COMMAND = "com.google.gwt.eclipse.core.gwtProjectValidator";
@@ -86,13 +91,25 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
     private static final JavaSymbolName MODULE_SYMBOL_NAME = new JavaSymbolName(
             RooGwtBootstrapScaffold.MODULE_ATTRIBUTE);
 
-    @Reference protected RequestFactoryTemplateService requestFactoryTemplateService;
-    @Reference private RequestFactoryTypeService requestFactoryTypeService;
-    @Reference protected GwtBootstrapTypeService gwtBootstrapTypeService;
-    @Reference protected WebMvcOperations webMvcOperations;
-    @Reference protected PathResolver pathResolver;
+    @Reference RequestFactoryTemplateService requestFactoryTemplateService;
+    @Reference RequestFactoryTypeService requestFactoryTypeService;
+    @Reference RequestFactoryOperations requestFactoryOperations;
+    @Reference GwtBootstrapTypeService gwtBootstrapTypeService;
+    @Reference WebMvcOperations webMvcOperations;
+    @Reference PathResolver pathResolver;
+    @Reference ProjectOperations projectOperations;
+    @Reference FileManager fileManager;
+    @Reference MetadataService metadataService;
+    @Reference TypeManagementService typeManagementService;
+    @Reference TypeLocationService typeLocationService;
 
     private Boolean wasGaeEnabled;
+
+    private ComponentContext context;
+
+    protected void activate(final ComponentContext context) {
+        this.context = context;
+    }
 
     public boolean isGwtInstallationPossible() {
         return projectOperations.isFocusedProjectAvailable()
@@ -128,10 +145,12 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
             final String targetDirectory = projectOperations.getPathResolver()
                     .getFocusedIdentifier(SRC_MAIN_JAVA,
                             topPackageName.replace('.', File.separatorChar));
-            updateFile(sourceAntPath, targetDirectory, "", false);
+            requestFactoryOperations.updateFile(sourceAntPath, targetDirectory,
+                    "", false, getClass());
 
             sourceAntPath = "setup/client/*";
-            updateFile(sourceAntPath, targetDirectory + "/client", "", false);
+            requestFactoryOperations.updateFile(sourceAntPath, targetDirectory
+                    + "/client", "", false, getClass());
         }
 
         for (final ClassOrInterfaceTypeDetails proxyOrRequest : typeLocationService
@@ -531,7 +550,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
             }
             try {
                 String input = IOUtils.toString(url);
-                input = processTemplate(input, null);
+                input = requestFactoryOperations.processTemplate(input, null);
                 final String existing = org.apache.commons.io.FileUtils
                         .readFileToString(new File(targetFilename));
                 if (existing.equals(input)) {
@@ -637,8 +656,8 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
                             .getPackagePath(projectOperations
                                     .getTopLevelPackage(moduleName)));
         }
-        updateFile(sourceAntPath, targetDirectory, requestFactoryPath.segmentPackage(),
-                false);
+        requestFactoryOperations.updateFile(sourceAntPath, targetDirectory,
+                requestFactoryPath.segmentPackage(), false, getClass());
     }
 
     /*private void addPackageToGwtXml(final JavaPackage sourcePackage) {
@@ -723,7 +742,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
         }
         projectOperations.addProperty(projectOperations.getFocusedModuleName(),
                 new Property("shared.package",
-                getSharedTopLevelPackageName().toString()));
+                requestFactoryOperations.getSharedTopLevelPackageName().toString()));
     }
 
     private void updateDependencies(final Element configuration,
@@ -844,7 +863,7 @@ public class GwtBootstrapOperationsImpl extends BaseOperationsImpl
 
         WebXmlUtils.addServlet(
                 "requestFactory",
-                getSharedTopLevelPackageName()
+                requestFactoryOperations.getSharedTopLevelPackageName()
                         + ".CustomRequestFactoryServlet", "/gwtRequest",
                 null, webXml, null);
         if (typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() != 0) {

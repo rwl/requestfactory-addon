@@ -1,5 +1,7 @@
 package org.springframework.roo.addon.requestfactory;
 
+import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
+import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.Feature;
@@ -47,4 +49,48 @@ public interface RequestFactoryOperations extends Feature {
     void scaffoldAll();
 
     void scaffoldType(JavaType type);
+
+    void setupRequestFactory(String section);
+
+    boolean isRequestFactoryInstalled(String moduleName, boolean server);
+
+    void createProxy(ClassOrInterfaceTypeDetails entity,
+            JavaPackage destinationPackage, Pom serverModule);
+
+    void createRequestInterface(ClassOrInterfaceTypeDetails entity,
+            JavaPackage destinationPackage);
+
+    void createUnmanagedRequestInterface(ClassOrInterfaceTypeDetails entity,
+            JavaPackage destinationPackage);
+
+    void createRequestInterfaceIfNecessary(ClassOrInterfaceTypeDetails entity,
+            JavaPackage destinationPackage);
+
+    AnnotationMetadata getRooGwtRequestAnnotation(
+            ClassOrInterfaceTypeDetails entity);
+
+    AnnotationMetadata getRooGwtUnmanagedRequestAnnotation(
+            ClassOrInterfaceTypeDetails entity);
+
+    void copyServerDirectoryContents(String module);
+
+    void copySharedDirectoryContents(String module);
+
+    void copyDirectoryContents(RequestFactoryPath requestFactoryPath, 
+            String module, Class<?> loadingClass);
+
+    void createScaffold(ClassOrInterfaceTypeDetails proxy);
+
+    void updateFile(String sourceAntPath, String targetDirectory,
+            String segmentPackage, boolean overwrite, Class<?> loadingClass);
+
+    String processTemplate(String input, String segmentPackage);
+
+    CharSequence getSharedTopLevelPackageName();
+
+    CharSequence getImportAccountHookup();
+
+    CharSequence getImportRoleHookup();
+
+    CharSequence getAccountHookup();
 }

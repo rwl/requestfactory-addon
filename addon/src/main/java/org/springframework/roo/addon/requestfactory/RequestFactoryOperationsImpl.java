@@ -17,18 +17,29 @@ import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 import static org.springframework.roo.model.RooJavaType.ROO_MONGO_ENTITY;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.requestfactory.annotations.RooRequestFactoryProxy;
+import org.springframework.roo.addon.requestfactory.annotations.account.RooAccount;
 import org.springframework.roo.addon.requestfactory.request.RequestFactoryRequestMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
+import org.springframework.roo.classpath.TypeLocationService;
+import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuilder;
@@ -40,15 +51,20 @@ import org.springframework.roo.classpath.details.annotations.AnnotationMetadataB
 import org.springframework.roo.classpath.details.annotations.ArrayAttributeValue;
 import org.springframework.roo.classpath.details.annotations.StringAttributeValue;
 import org.springframework.roo.classpath.persistence.PersistenceMemberLocator;
+import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
+import org.springframework.roo.process.manager.FileManager;
 import org.springframework.roo.project.Dependency;
 import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.ProjectMetadata;
+import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.project.Property;
 import org.springframework.roo.project.maven.Pom;
+import org.springframework.roo.support.osgi.OSGiUtils;
 import org.springframework.roo.support.util.CollectionUtils;
+import org.springframework.roo.support.util.FileUtils;
 import org.springframework.roo.support.util.XmlUtils;
 import org.w3c.dom.Element;
 
@@ -65,8 +81,7 @@ import org.w3c.dom.Element;
  */
 @Component
 @Service
-public class RequestFactoryOperationsImpl extends BaseOperationsImpl
-        implements RequestFactoryOperations {
+public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
 
     private static final String FEATURE_NAME = "requestfactory";
     private static final String REQUEST_FACTORY_GROUP_ID = "com.google.web.bindery";
@@ -75,8 +90,33 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
     private static final JavaSymbolName SERVER_MODULE = new JavaSymbolName(
             RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE);
 
-    @Reference private RequestFactoryTypeService requestFactoryTypeService;
-    @Reference private PersistenceMemberLocator persistenceMemberLocator;
+    /**
+     * Use TypeManagementService to change types
+     */
+    @Reference TypeManagementService typeManagementService;
+
+    /**
+     * Use TypeLocationService to find types which are annotated with a given
+     * annotation in the project
+     */
+    @Reference TypeLocationService typeLocationService;
+
+    /**
+     * Use ProjectOperations to install new dependencies, plugins, properties,
+     * etc into the project configuration
+     */
+    @Reference ProjectOperations projectOperations;
+
+    @Reference FileManager fileManager;
+    @Reference MetadataService metadataService;
+    @Reference RequestFactoryTypeService requestFactoryTypeService;
+    @Reference PersistenceMemberLocator persistenceMemberLocator;
+
+    private ComponentContext context;
+
+    protected void activate(final ComponentContext context) {
+        this.context = context;
+    }
 
     @Override
     public boolean isRequestFactoryAddonInstallationPossible() {
@@ -125,7 +165,8 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
         setupRequestFactory("client");
     }
 
-    private void setupRequestFactory(final String section) {
+    @Override
+    public void setupRequestFactory(final String section) {
         final Element configuration = XmlUtils.getConfiguration(getClass());
         final String focusedModuleName = projectOperations
                 .getFocusedModuleName();
@@ -190,6 +231,7 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
                 typeLocationService.getTypeDetails(type), requestPackage);
     }
 
+    @Override
     public void scaffoldAll() {
         final Set<ClassOrInterfaceTypeDetails> proxys = typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY);
@@ -214,6 +256,7 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
         }
     }
 
+    @Override
     public void scaffoldType(final JavaType type) {
         final ClassOrInterfaceTypeDetails entity = typeLocationService
                 .getTypeDetails(type);
@@ -240,6 +283,7 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
         return isRequestFactoryInstalled(moduleName, false);
     }
 
+    @Override
     public boolean isRequestFactoryInstalled(final String moduleName, boolean server) {
         final Pom pom = projectOperations.getPomFromModuleName(moduleName);
         if (pom == null) {
@@ -256,7 +300,8 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
         return false;
     }
 
-    private void createProxy(final ClassOrInterfaceTypeDetails entity,
+    @Override
+    public void createProxy(final ClassOrInterfaceTypeDetails entity,
             final JavaPackage destinationPackage, final Pom serverModule) {
         final ClassOrInterfaceTypeDetails existingProxy = requestFactoryTypeService
                 .lookupProxyFromEntity(entity);
@@ -359,7 +404,8 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
      * @param destinationPackage the package in which to create the request
      *            interface (required)
      */
-    private void createRequestInterface(
+    @Override
+    public void createRequestInterface(
             final ClassOrInterfaceTypeDetails entity,
             final JavaPackage destinationPackage) {
         final JavaType requestType = new JavaType(
@@ -393,7 +439,8 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
      * @param destinationPackage the package in which to create the request
      *            interface (required)
      */
-    private void createUnmanagedRequestInterface(
+    @Override
+    public void createUnmanagedRequestInterface(
             final ClassOrInterfaceTypeDetails entity,
             JavaPackage destinationPackage) {
         final ClassOrInterfaceTypeDetails managedRequest = requestFactoryTypeService
@@ -424,7 +471,8 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
 
     }
 
-    private void createRequestInterfaceIfNecessary(
+    @Override
+    public void createRequestInterfaceIfNecessary(
             final ClassOrInterfaceTypeDetails entity,
             final JavaPackage destinationPackage) {
         if (entity != null && !entity.isAbstract()
@@ -435,68 +483,76 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
         }
     }
 
-    private AnnotationMetadata getRooGwtRequestAnnotation(
+    @Override
+    public AnnotationMetadata getRooGwtRequestAnnotation(
             final ClassOrInterfaceTypeDetails entity) {
         // The GwtRequestMetadataProvider doesn't need to know excluded methods
         // any more because it actively adds the required CRUD methods itself.
         final StringAttributeValue entityAttributeValue = new StringAttributeValue(
                 VALUE, entity.getType().getFullyQualifiedTypeName());
-        final List<AnnotationAttributeValue<?>> gwtRequestAttributeValues = new ArrayList<AnnotationAttributeValue<?>>();
+        final List<AnnotationAttributeValue<?>> gwtRequestAttributeValues = 
+                new ArrayList<AnnotationAttributeValue<?>>();
         gwtRequestAttributeValues.add(entityAttributeValue);
         return new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_REQUEST,
                 gwtRequestAttributeValues).build();
     }
 
-    private AnnotationMetadata getRooGwtUnmanagedRequestAnnotation(
+    @Override
+    public AnnotationMetadata getRooGwtUnmanagedRequestAnnotation(
             final ClassOrInterfaceTypeDetails entity) {
         final StringAttributeValue entityAttributeValue = new StringAttributeValue(
                 VALUE, entity.getType().getFullyQualifiedTypeName());
-        final List<AnnotationAttributeValue<?>> gwtRequestAttributeValues = new ArrayList<AnnotationAttributeValue<?>>();
+        final List<AnnotationAttributeValue<?>> gwtRequestAttributeValues = 
+                new ArrayList<AnnotationAttributeValue<?>>();
         gwtRequestAttributeValues.add(entityAttributeValue);
         return new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_UNMANAGED_REQUEST,
                 gwtRequestAttributeValues).build();
     }
 
-    private void copyServerDirectoryContents(String module) {
+    @Override
+    public void copyServerDirectoryContents(String module) {
         for (final RequestFactoryPath path : RequestFactoryPath.SERVER_PATHS) {
-            copyDirectoryContents(path, module);
+            copyDirectoryContents(path, module, getClass());
         }
     }
 
-    private void copySharedDirectoryContents(String module) {
+    @Override
+    public void copySharedDirectoryContents(String module) {
         for (final RequestFactoryPath path : RequestFactoryPath.SHARED_PATHS) {
-            copyDirectoryContents(path, module);
+            copyDirectoryContents(path, module, getClass());
         }
     }
 
-    private void copyDirectoryContents(final RequestFactoryPath requestFactoryPath,
-            String module) {
+    @Override
+    public void copyDirectoryContents(final RequestFactoryPath requestFactoryPath,
+            final String moduleName, Class<?> loadingClass) {
         final String sourceAntPath = requestFactoryPath.getSourceAntPath();
-        if (sourceAntPath.contains("account")
-                && typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() == 0) {
+        if (sourceAntPath.contains("account") && typeLocationService
+                .findTypesWithAnnotation(ROO_ACCOUNT).size() == 0) {
             return;
         }
-        LogicalPath path = LogicalPath.getInstance(SRC_MAIN_JAVA, module);
+        LogicalPath path = LogicalPath.getInstance(SRC_MAIN_JAVA, moduleName);
         String relativePath = requestFactoryPath.getPackagePath(projectOperations
-                .getFocusedTopLevelPackage());
+                .getTopLevelPackage(moduleName));
         final String targetDirectory = projectOperations.getPathResolver()
                 .getIdentifier(path, relativePath);
         updateFile(sourceAntPath, targetDirectory, requestFactoryPath.segmentPackage(),
-                false);
+                false, loadingClass);
     }
 
-    private void createScaffold(final ClassOrInterfaceTypeDetails proxy) {
+    @Override
+    public void createScaffold(final ClassOrInterfaceTypeDetails proxy) {
         final AnnotationMetadata annotationMetadata = RequestFactoryUtils
                 .getFirstAnnotation(proxy, ROO_REQUEST_FACTORY_PROXY);
         if (annotationMetadata != null) {
-            final AnnotationAttributeValue<Boolean> booleanAttributeValue = annotationMetadata
-                    .getAttribute("scaffold");
+            final AnnotationAttributeValue<Boolean> booleanAttributeValue =
+                    annotationMetadata.getAttribute("scaffold");
             if (booleanAttributeValue == null
                     || !booleanAttributeValue.getValue()) {
-                final ClassOrInterfaceTypeDetailsBuilder cidBuilder = new ClassOrInterfaceTypeDetailsBuilder(
-                        proxy);
-                final AnnotationMetadataBuilder annotationMetadataBuilder = new AnnotationMetadataBuilder(
-                        annotationMetadata);
+                final ClassOrInterfaceTypeDetailsBuilder cidBuilder = 
+                        new ClassOrInterfaceTypeDetailsBuilder(proxy);
+                final AnnotationMetadataBuilder annotationMetadataBuilder =
+                        new AnnotationMetadataBuilder(annotationMetadata);
                 annotationMetadataBuilder.addBooleanAttribute("scaffold", true);
                 for (final AnnotationMetadataBuilder existingAnnotation : cidBuilder
                         .getAnnotations()) {
@@ -512,5 +568,140 @@ public class RequestFactoryOperationsImpl extends BaseOperationsImpl
                         .build());
             }
         }
+    }
+
+    @Override
+    public void updateFile(final String sourceAntPath, String targetDirectory,
+            final String segmentPackage, final boolean overwrite,
+            Class<?> loadingClass) {
+        if (!targetDirectory.endsWith(File.separator)) {
+            targetDirectory += File.separator;
+        }
+        if (!fileManager.exists(targetDirectory)) {
+            fileManager.createDirectory(targetDirectory);
+        }
+
+        final String path = FileUtils.getPath(loadingClass, sourceAntPath);
+        final Iterable<URL> urls = OSGiUtils.findEntriesByPattern(
+                context.getBundleContext(), path);
+        Validate.notNull(urls,
+                "Could not search bundles for resources for Ant Path '" + path
+                        + "'");
+
+        for (final URL url : urls) {
+            String fileName = url.getPath().substring(
+                    url.getPath().lastIndexOf('/') + 1);
+            fileName = fileName.replace("-template", "");
+            final String targetFilename = targetDirectory + fileName;
+
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+            try {
+                if (fileManager.exists(targetFilename) && !overwrite) {
+                    continue;
+                }
+                if (targetFilename.endsWith("png")) {
+                    inputStream = url.openStream();
+                    outputStream = fileManager.createFile(targetFilename)
+                            .getOutputStream();
+                    IOUtils.copy(inputStream, outputStream);
+                }
+                else {
+                    // Read template and insert the user's package
+                    String input = IOUtils.toString(url);
+                    input = processTemplate(input, segmentPackage);
+
+                    // Output the file for the user
+                    fileManager.createOrUpdateTextFileIfRequired(
+                            targetFilename, input, true);
+                }
+            }
+            catch (final IOException e) {
+                throw new IllegalStateException("Unable to create '"
+                        + targetFilename + "'", e);
+            }
+            finally {
+                IOUtils.closeQuietly(inputStream);
+                IOUtils.closeQuietly(outputStream);
+            }
+        }
+    }
+
+    @Override
+    public String processTemplate(String input, String segmentPackage) {
+        if (segmentPackage == null) {
+            segmentPackage = "";
+        }
+        final String topLevelPackage = projectOperations.getTopLevelPackage(
+                projectOperations.getFocusedModuleName())
+                .getFullyQualifiedPackageName();
+        input = input.replace("__TOP_LEVEL_PACKAGE__", topLevelPackage);
+        input = input.replace("__SHARED_TOP_LEVEL_PACKAGE__", getSharedTopLevelPackageName());
+        input = input.replace("__SEGMENT_PACKAGE__", segmentPackage);
+        input = input.replace("__PROJECT_NAME__", projectOperations
+                .getProjectName(projectOperations.getFocusedModuleName()));
+
+        if (typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() != 0) {
+            input = input.replace("__ACCOUNT_IMPORT__", "import " + topLevelPackage
+                    + ".client.scaffold.account.*;\n");
+            input = input.replace("__ACCOUNT_HOOKUP__", getAccountHookup());
+            input = input.replace("__ACCOUNT_REQUEST_TRANSPORT__",
+                    ", new AccountAuthRequestTransport(eventBus)");
+            input = input.replace("__IMPORT_ACCOUNT__", getImportAccountHookup());
+            input = input.replace("__IMPORT_ROLE__", getImportRoleHookup());
+        }
+        else {
+            input = input.replace("__ACCOUNT_IMPORT__", "");
+            input = input.replace("__ACCOUNT_HOOKUP__", "");
+            input = input.replace("__ACCOUNT_REQUEST_TRANSPORT__", "");
+            input = input.replace("__IMPORT_ACCOUNT__", "");
+            input = input.replace("__IMPORT_ROLE__", "");
+        }
+        return input;
+    }
+
+    @Override
+    public CharSequence getSharedTopLevelPackageName() {
+        final ClassOrInterfaceTypeDetails proxy = typeLocationService
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY)
+                .iterator().next();
+        final JavaPackage proxyTopLevelPackage = projectOperations
+                .getTopLevelPackage(PhysicalTypeIdentifier.getPath(
+                proxy.getDeclaredByMetadataId()).getModule());
+        return proxyTopLevelPackage.getFullyQualifiedPackageName();
+    }
+
+    @Override
+    public CharSequence getImportAccountHookup() {
+        final JavaType account = typeLocationService
+                .findTypesWithAnnotation(ROO_ACCOUNT)
+                .iterator().next();
+        return "import " + account.getFullyQualifiedTypeName() + ";";
+    }
+
+    @Override
+    public CharSequence getImportRoleHookup() {
+        final ClassOrInterfaceTypeDetails account = typeLocationService
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_ACCOUNT)
+                .iterator().next();
+        final AnnotationAttributeValue<String> sharedPackage = account
+                .getAnnotation(ROO_ACCOUNT)
+                .getAttribute(RooAccount.SHARED_PACKAGE_ATTRIBUTE);
+        final String rolePackageName;
+        if (sharedPackage == null || sharedPackage.getValue().isEmpty()) {
+            rolePackageName = account.getType().getPackage()
+                    .getFullyQualifiedPackageName();
+        } else {
+            rolePackageName = sharedPackage.getValue();
+        }
+        return "import " + rolePackageName + ".Role;";
+    }
+
+    @Override
+    public CharSequence getAccountHookup() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("new AccountNavTextDriver(requestFactory).setWidget(shell.getNicknameWidget());\n");
+        builder.append("\t\tnew LoginOnAuthenticationFailure().register(eventBus);");
+        return builder.toString();
     }
 }
