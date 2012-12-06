@@ -6,6 +6,7 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.OLD_REQUEST_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.REQUEST;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.REQUEST_CONTEXT;
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.SERVICE_NAME;
 import static org.springframework.roo.addon.requestfactory.entity.EntityJavaType.KEY;
@@ -19,9 +20,6 @@ import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
 import static org.springframework.roo.model.JavaType.VOID_PRIMITIVE;
-import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
-import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
-import static org.springframework.roo.model.RooJavaType.ROO_MONGO_ENTITY;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +40,7 @@ import org.osgi.service.component.ComponentContext;
 import org.springframework.roo.addon.requestfactory.RequestFactoryFileManager;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
+import org.springframework.roo.addon.requestfactory.annotations.RooRequestFactoryProxy;
 import org.springframework.roo.addon.requestfactory.entity.EntityDataKeys;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
@@ -393,13 +392,13 @@ public class RequestFactoryRequestMetadataProviderImpl extends
                     new JavaSymbolName("value"),
                     invokedType.getFullyQualifiedTypeName());
             serviceAttributeValues.add(stringAttributeValue);
-
-            final ClassOrInterfaceTypeDetails entity = typeLocationService
-                    .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
-                            ROO_JPA_ACTIVE_RECORD, ROO_MONGO_ENTITY)
-                    .iterator().next();
-            final String serverModuleName = PhysicalTypeIdentifier.getPath(
-                    entity.getDeclaredByMetadataId()).getModule();
+            
+            final ClassOrInterfaceTypeDetails proxy = requestFactoryTypeService
+                    .lookupProxyFromRequest(request);
+            final String serverModuleName = RequestFactoryUtils
+                    .getStringAnnotationValue(proxy, ROO_REQUEST_FACTORY_PROXY,
+                            RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE,
+                            projectOperations.getFocusedModuleName());
             final JavaType serviceLocator = requestFactoryTypeService
                     .getServiceLocator(serverModuleName);
                     
