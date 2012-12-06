@@ -9,14 +9,14 @@ public class GwtBootstrapPaths {
     public static final RequestFactoryPath MESSAGES = new RequestFactoryPath("/messages", "module/client/messages/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath MANAGED = new RequestFactoryPath("/managed", "module/client/managed/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath MANAGED_MESSAGES = new RequestFactoryPath("/managed/messages", "module/client/managed/messages/" + RequestFactoryPath.templateSelector);
-    public static final RequestFactoryPath MANAGED_ACTIVITY = new RequestFactoryPath("/managed/activity", "module/client/managed/activity/" + RequestFactoryPath.templateSelector); // GWT_SCAFFOLD
+    public static final RequestFactoryPath MANAGED_ACTIVITY = new RequestFactoryPath("/managed/activity", "module/client/managed/activity/" + RequestFactoryPath.templateSelector); 
     public static final RequestFactoryPath MANAGED_UI = new RequestFactoryPath("/managed/ui", "module/client/managed/ui/" + RequestFactoryPath.templateSelector);
-    public static final RequestFactoryPath MANAGED_TREE = new RequestFactoryPath("/managed/tree", "module/client/managed/tree/" + RequestFactoryPath.templateSelector); // GWT_SCAFFOLD_UI
-    public static final RequestFactoryPath MANAGED_PROVIDER = new RequestFactoryPath("/managed/provider", "module/client/managed/provider/" + RequestFactoryPath.templateSelector); // GWT_SCAFFOLD_UI
-    public static final RequestFactoryPath MANAGED_UI_DESKTOP = new RequestFactoryPath("/managed/ui/desktop", "module/client/managed/ui/desktop/" + RequestFactoryPath.templateSelector); // GWT_SCAFFOLD_UI
-    public static final RequestFactoryPath MANAGED_UI_MOBILE = new RequestFactoryPath("/managed/ui/mobile", "module/client/managed/ui/mobile/" + RequestFactoryPath.templateSelector); // GWT_SCAFFOLD_UI
-    public static final RequestFactoryPath MANAGED_UI_RENDERER = new RequestFactoryPath("/managed/ui/renderer", "module/client/managed/ui/renderer/" + RequestFactoryPath.templateSelector); // GWT_SCAFFOLD_UI
-    public static final RequestFactoryPath MANAGED_UI_EDITOR = new RequestFactoryPath("/managed/ui/editor", "module/client/managed/ui/editor/" + RequestFactoryPath.templateSelector); // GWT_SCAFFOLD_UI
+    public static final RequestFactoryPath MANAGED_TREE = new RequestFactoryPath("/managed/tree", "module/client/managed/tree/" + RequestFactoryPath.templateSelector); 
+    public static final RequestFactoryPath MANAGED_PROVIDER = new RequestFactoryPath("/managed/provider", "module/client/managed/provider/" + RequestFactoryPath.templateSelector); 
+    public static final RequestFactoryPath MANAGED_UI_DESKTOP = new RequestFactoryPath("/managed/ui/desktop", "module/client/managed/ui/desktop/" + RequestFactoryPath.templateSelector); 
+    public static final RequestFactoryPath MANAGED_UI_MOBILE = new RequestFactoryPath("/managed/ui/mobile", "module/client/managed/ui/mobile/" + RequestFactoryPath.templateSelector); 
+    public static final RequestFactoryPath MANAGED_UI_RENDERER = new RequestFactoryPath("/managed/ui/renderer", "module/client/managed/ui/renderer/" + RequestFactoryPath.templateSelector); 
+    public static final RequestFactoryPath MANAGED_UI_EDITOR = new RequestFactoryPath("/managed/ui/editor", "module/client/managed/ui/editor/" + RequestFactoryPath.templateSelector); 
     public static final RequestFactoryPath SCAFFOLD = new RequestFactoryPath("/application", "module/client/scaffold/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath SCAFFOLD_ACTIVITY = new RequestFactoryPath("/activity", "module/client/scaffold/activity/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath SCAFFOLD_IOC = new RequestFactoryPath("/ioc", "module/client/scaffold/ioc/" + RequestFactoryPath.templateSelector);
@@ -43,10 +43,8 @@ public class GwtBootstrapPaths {
     };
 
     public static final String SHARED_MODULE_NAME = "Shared";
-    public static final String DOMAIN_MODULE_NAME = "Domain";
 
     public static final RequestFactoryPath SHARED_MODULE = new RequestFactoryPath("/", "module/shared/" + SHARED_MODULE_NAME + ".gwt.xml");
-    public static final RequestFactoryPath DOMAIN_MODULE = new RequestFactoryPath("/", "module/shared/" + DOMAIN_MODULE_NAME + ".gwt.xml");
 
     private GwtBootstrapPaths() {
     }

@@ -27,7 +27,7 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
         config.addCommandConfig(createServerFocusCommandConfig("entity"));
         config.addCommandConfig(createServerFocusCommandConfig("repository"));
         config.addCommandConfig(createServerFocusCommandConfig("service"));
-        config.addCommandConfig(createModuleFocusCommandConfig("enum type", "shared"));;
+        config.addCommandConfig(createModuleFocusCommandConfig("enum type", "shared"));
         config.addCommandConfig(createCommandConfigFieldSetup());
         config.addCommandConfig(createProxyRequestCommandConfig());
         config.addCommandConfig(createModuleFocusCommandConfig("web requestfactory gwt bootstrap", "client/gwt"));
@@ -55,7 +55,7 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
         config.addAction(ActionConfigFactory.executeAction("module create --moduleName client/gwt --topLevelPackage ${topLevelPackage}.client.gwt --artifactId ${projectName}-gwt --parent ${topLevelPackage}.client:${projectName}-client:" + VERSION + " --packaging JAR_SIMPLE"));
         config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage}.shared --artifactId ${projectName}-shared --version " + VERSION));
-        config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage}.server --artifactId ${projectName}-server --version " + VERSION + " --scope PROVIDED"));
+        config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage}.server --artifactId ${projectName}-server --version " + VERSION));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
         config.addAction(ActionConfigFactory.executeAction("module create --moduleName client/android --topLevelPackage ${topLevelPackage}.client.android --artifactId ${projectName}-android --parent ${topLevelPackage}.client:${projectName}-client:" + VERSION + " --packaging APK"));
         config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage}.shared --artifactId ${projectName}-shared --version " + VERSION));

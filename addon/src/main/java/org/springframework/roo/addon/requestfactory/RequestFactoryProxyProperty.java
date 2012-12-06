@@ -242,7 +242,11 @@ public class RequestFactoryProxyProperty {
     }
 
     public String getType() {
-        return type.getFullyQualifiedTypeName();
+        String rtn = type.getFullyQualifiedTypeName();
+        if (isCollection()) {
+            rtn = rtn + "<" + type.getParameters().get(0) + ">";
+        }
+        return rtn;
     }
 
     public JavaType getValueType() {

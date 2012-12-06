@@ -82,9 +82,11 @@ public interface RequestFactoryOperations extends Feature {
     void createScaffold(ClassOrInterfaceTypeDetails proxy);
 
     void updateFile(String sourceAntPath, String targetDirectory,
-            String segmentPackage, boolean overwrite, Class<?> loadingClass);
+            String segmentPackage, boolean overwrite, Class<?> loadingClass,
+            String topLevelPackage);
 
-    String processTemplate(String input, String segmentPackage);
+    String processTemplate(String input, String segmentPackage,
+            String topLevelPackage);
 
     CharSequence getSharedTopLevelPackageName();
 
@@ -93,4 +95,6 @@ public interface RequestFactoryOperations extends Feature {
     CharSequence getImportRoleHookup();
 
     CharSequence getAccountHookup();
+
+    JavaPackage getServerTopLevelPackage();
 }

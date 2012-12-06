@@ -236,13 +236,12 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
         final Set<ClassOrInterfaceTypeDetails> proxys = typeLocationService
                 .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY);
 
-        final String serverModule = RequestFactoryUtils.getStringAnnotationValue(proxys
-                .iterator().next(),
-                ROO_REQUEST_FACTORY_PROXY, RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE,
-                "");
         final String focusedModule = projectOperations.getFocusedModuleName();
+        final String serverModule = RequestFactoryUtils.getStringAnnotationValue(proxys
+                .iterator().next(), ROO_REQUEST_FACTORY_PROXY,
+                RooRequestFactoryProxy.SERVER_MODULE_ATTRIBUTE, focusedModule);
 
-        copyServerDirectoryContents(serverModule.isEmpty() ? focusedModule : serverModule);
+        copyServerDirectoryContents(serverModule);
         copySharedDirectoryContents(focusedModule);
 
         for (final ClassOrInterfaceTypeDetails proxy : proxys) {
@@ -267,7 +266,7 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
                     .lookupRequestFromEntity(entity);
             if (proxy == null || request == null) {
                 throw new IllegalStateException(
-                        "In order to scaffold, an entity must have an associated proxy and request");
+                        "Entity must have an associated proxy and request");
             }
             createScaffold(proxy);
         }
@@ -328,8 +327,7 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
         attributeValues.add(stringAttributeValue);
 
         final String locator = projectOperations
-                .getTopLevelPackage(focusedModule)
-                + ".locator."
+                .getTopLevelPackage(serverModule.getModuleName()) + ".locator."
                 + entity.getName().getSimpleTypeName() + "Locator";
         final StringAttributeValue locatorAttributeValue = new StringAttributeValue(
                 new JavaSymbolName("locator"), locator);
@@ -531,13 +529,16 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
                 .findTypesWithAnnotation(ROO_ACCOUNT).size() == 0) {
             return;
         }
-        LogicalPath path = LogicalPath.getInstance(SRC_MAIN_JAVA, moduleName);
-        String relativePath = requestFactoryPath.getPackagePath(projectOperations
-                .getTopLevelPackage(moduleName));
+        final LogicalPath path = LogicalPath.getInstance(SRC_MAIN_JAVA, moduleName);
+        final JavaPackage topLevelPackage = projectOperations
+                .getTopLevelPackage(moduleName);
+        final String relativePath = requestFactoryPath
+                .getPackagePath(topLevelPackage);
         final String targetDirectory = projectOperations.getPathResolver()
                 .getIdentifier(path, relativePath);
-        updateFile(sourceAntPath, targetDirectory, requestFactoryPath.segmentPackage(),
-                false, loadingClass);
+        updateFile(sourceAntPath, targetDirectory, requestFactoryPath
+                .segmentPackage(), false, loadingClass, topLevelPackage
+                .getFullyQualifiedPackageName());
     }
 
     @Override
@@ -573,7 +574,7 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
     @Override
     public void updateFile(final String sourceAntPath, String targetDirectory,
             final String segmentPackage, final boolean overwrite,
-            Class<?> loadingClass) {
+            Class<?> loadingClass, final String topLevelPackage) {
         if (!targetDirectory.endsWith(File.separator)) {
             targetDirectory += File.separator;
         }
@@ -609,7 +610,8 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
                 else {
                     // Read template and insert the user's package
                     String input = IOUtils.toString(url);
-                    input = processTemplate(input, segmentPackage);
+                    input = processTemplate(input, segmentPackage,
+                            topLevelPackage);
 
                     // Output the file for the user
                     fileManager.createOrUpdateTextFileIfRequired(
@@ -628,13 +630,14 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
     }
 
     @Override
-    public String processTemplate(String input, String segmentPackage) {
+    public String processTemplate(String input, String segmentPackage,
+            final String topLevelPackage) {
         if (segmentPackage == null) {
             segmentPackage = "";
         }
-        final String topLevelPackage = projectOperations.getTopLevelPackage(
-                projectOperations.getFocusedModuleName())
-                .getFullyQualifiedPackageName();
+//        final String topLevelPackage = projectOperations.getTopLevelPackage(
+//                projectOperations.getFocusedModuleName())
+//                .getFullyQualifiedPackageName();
         input = input.replace("__TOP_LEVEL_PACKAGE__", topLevelPackage);
         input = input.replace("__SHARED_TOP_LEVEL_PACKAGE__", getSharedTopLevelPackageName());
         input = input.replace("__SEGMENT_PACKAGE__", segmentPackage);
@@ -658,6 +661,18 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
             input = input.replace("__IMPORT_ROLE__", "");
         }
         return input;
+    }
+
+    @Override
+    public JavaPackage getServerTopLevelPackage() {
+        final ClassOrInterfaceTypeDetails entity = typeLocationService
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
+                        ROO_JPA_ACTIVE_RECORD, ROO_MONGO_ENTITY)
+                .iterator().next();
+        final JavaPackage entityTopLevelPackage = projectOperations
+                .getTopLevelPackage(PhysicalTypeIdentifier.getPath(
+                entity.getDeclaredByMetadataId()).getModule());
+        return entityTopLevelPackage;
     }
 
     @Override

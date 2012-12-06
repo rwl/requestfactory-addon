@@ -20,9 +20,9 @@ public class RequestFactoryPath {
             "/factory",
             "module/shared/factory/" + RequestFactoryPath.templateSelector);
 
-    public static final RequestFactoryPath SERVER = new RequestFactoryPath(
-            "/",
-            "module/server/" + RequestFactoryPath.templateSelector);
+    public static final RequestFactoryPath SERVER_CLIENT = new RequestFactoryPath(
+            "/client",
+            "module/server/client/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath SERVER_ACCOUNT = new RequestFactoryPath(
             "/account/server",
@@ -34,12 +34,12 @@ public class RequestFactoryPath {
 
 
     public static final RequestFactoryPath[] ALL_PATHS = new RequestFactoryPath[] {
-            SHARED_MANAGED_REQUEST, SHARED_FACTORY, SERVER, SERVER_ACCOUNT,
+            SHARED_MANAGED_REQUEST, SHARED_FACTORY, SERVER_CLIENT, SERVER_ACCOUNT,
             SHARED_ACCOUNT
     };
 
     public static final RequestFactoryPath[] SERVER_PATHS = new RequestFactoryPath[] {
-            SERVER, SERVER_LOCATOR, SERVER_ACCOUNT
+            SERVER_CLIENT, SERVER_LOCATOR, SERVER_ACCOUNT
     };
 
     public static final RequestFactoryPath[] SHARED_PATHS = new RequestFactoryPath[] {

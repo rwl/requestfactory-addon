@@ -19,6 +19,9 @@ import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.STRING;
 import static org.springframework.roo.model.JavaType.VOID_PRIMITIVE;
+import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
+import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
+import static org.springframework.roo.model.RooJavaType.ROO_MONGO_ENTITY;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -391,14 +394,18 @@ public class RequestFactoryRequestMetadataProviderImpl extends
                     invokedType.getFullyQualifiedTypeName());
             serviceAttributeValues.add(stringAttributeValue);
 
-            // Specify the locator that GWT will use to find it
-            final LogicalPath requestLogicalPath = PhysicalTypeIdentifier
-                    .getPath(request.getDeclaredByMetadataId());
+            final ClassOrInterfaceTypeDetails entity = typeLocationService
+                    .findClassesOrInterfaceDetailsWithAnnotation(ROO_JPA_ENTITY,
+                            ROO_JPA_ACTIVE_RECORD, ROO_MONGO_ENTITY)
+                    .iterator().next();
+            final String serverModuleName = PhysicalTypeIdentifier.getPath(
+                    entity.getDeclaredByMetadataId()).getModule();
             final JavaType serviceLocator = requestFactoryTypeService
-                    .getServiceLocator(requestLogicalPath.getModule());
+                    .getServiceLocator(serverModuleName);
+                    
             final StringAttributeValue locatorAttributeValue = new StringAttributeValue(
-                    new JavaSymbolName("locator"),
-                    serviceLocator.getFullyQualifiedTypeName());
+                    new JavaSymbolName("locator"), serviceLocator
+                    .getFullyQualifiedTypeName());
             serviceAttributeValues.add(locatorAttributeValue);
         }
         return new AnnotationMetadataBuilder(SERVICE_NAME,

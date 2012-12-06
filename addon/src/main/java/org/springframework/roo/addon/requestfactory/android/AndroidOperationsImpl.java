@@ -21,6 +21,7 @@ import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuil
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.StringAttributeValue;
+import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
@@ -136,6 +137,8 @@ public class AndroidOperationsImpl implements AndroidOperations {
                 .findTypesWithAnnotation(ROO_ACCOUNT).size() == 0) {
             return;
         }
+        final JavaPackage topLevelPackage = projectOperations
+                .getTopLevelPackage(moduleName);
         final String targetDirectory;
         final LogicalPath path;
         if (requestFactoryPath == AndroidPaths.LAYOUT) {
@@ -146,10 +149,10 @@ public class AndroidOperationsImpl implements AndroidOperations {
             path = LogicalPath.getInstance(SRC_MAIN_JAVA, moduleName);
             targetDirectory = projectOperations.getPathResolver()
                     .getIdentifier(path, requestFactoryPath
-                            .getPackagePath(projectOperations
-                                    .getTopLevelPackage(moduleName)));
+                            .getPackagePath(topLevelPackage));
         }
         requestFactoryOperations.updateFile(sourceAntPath, targetDirectory,
-                requestFactoryPath.segmentPackage(), false, getClass());
+                requestFactoryPath.segmentPackage(), false, getClass(),
+                topLevelPackage.getFullyQualifiedPackageName());
     }
 }

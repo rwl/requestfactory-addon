@@ -51,6 +51,7 @@ import org.springframework.roo.classpath.details.annotations.AnnotationMetadataB
 import org.springframework.roo.classpath.details.annotations.StringAttributeValue;
 import org.springframework.roo.file.monitor.event.FileDetails;
 import org.springframework.roo.metadata.MetadataService;
+import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.process.manager.FileManager;
@@ -146,11 +147,11 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
                     .getFocusedIdentifier(SRC_MAIN_JAVA,
                             topPackageName.replace('.', File.separatorChar));
             requestFactoryOperations.updateFile(sourceAntPath, targetDirectory,
-                    "", false, getClass());
+                    "", false, getClass(), topPackageName);
 
             sourceAntPath = "setup/client/*";
             requestFactoryOperations.updateFile(sourceAntPath, targetDirectory
-                    + "/client", "", false, getClass());
+                    + "/client", "", false, getClass(), topPackageName);
         }
 
         for (final ClassOrInterfaceTypeDetails proxyOrRequest : typeLocationService
@@ -541,6 +542,8 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
         Validate.notNull(uris,
                 "Could not search bundles for resources for Ant Path '" + path
                         + "'");
+        final String topLevelPackage = projectOperations
+                .getFocusedTopLevelPackage().getFullyQualifiedPackageName();
 
         for (final URL url : uris) {
             String fileName = url.getPath().substring(
@@ -552,7 +555,8 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
             }
             try {
                 String input = IOUtils.toString(url);
-                input = requestFactoryOperations.processTemplate(input, null);
+                input = requestFactoryOperations.processTemplate(input,
+                        null, topLevelPackage);
                 final String existing = org.apache.commons.io.FileUtils
                         .readFileToString(new File(targetFilename));
                 if (existing.equals(input)) {
@@ -575,17 +579,6 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
             gwtBootstrapTypeService.addInheritsModule(inherits, scaffoldModule);
 
             updatePropertiesAndPlugins(proxyModule);
-        }
-
-        final String entityModule = getEntityModuleName();
-        if (!entityModule.equals(scaffoldModule)) {
-            copyDirectoryContents(GwtBootstrapPaths.DOMAIN_MODULE, entityModule);
-
-            String inherits = projectOperations.getTopLevelPackage(entityModule)
-                    + "." + GwtBootstrapPaths.DOMAIN_MODULE_NAME;
-            gwtBootstrapTypeService.addInheritsModule(inherits, scaffoldModule);
-
-            updatePropertiesAndPlugins(entityModule);
         }
     }
 
@@ -644,6 +637,8 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
                 && typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() == 0) {
             return;
         }
+        final String topLevelPackage = projectOperations.getTopLevelPackage(
+                moduleName).getFullyQualifiedPackageName();
         final String targetDirectory;
         final LogicalPath path;
         if (requestFactoryPath == GwtBootstrapPaths.WEB
@@ -659,7 +654,8 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
                                     .getTopLevelPackage(moduleName)));
         }
         requestFactoryOperations.updateFile(sourceAntPath, targetDirectory,
-                requestFactoryPath.segmentPackage(), false, getClass());
+                requestFactoryPath.segmentPackage(), false, getClass(),
+                topLevelPackage);
     }
 
     /*private void addPackageToGwtXml(final JavaPackage sourcePackage) {
@@ -862,23 +858,19 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
         final Document webXml = XmlUtils.readXml(fileManager
                 .getInputStream(webXmlpath));
         final Element root = webXml.getDocumentElement();
+        
+        final JavaPackage serverTopLevelPackage = requestFactoryOperations
+                .getServerTopLevelPackage();
 
-        WebXmlUtils.addServlet(
-                "requestFactory",
-                requestFactoryOperations.getSharedTopLevelPackageName()
-                        + ".CustomRequestFactoryServlet", "/gwtRequest",
-                null, webXml, null);
+        WebXmlUtils.addServlet("requestFactory", RequestFactoryPath
+                .SERVER_CLIENT.packageName(serverTopLevelPackage)
+                + ".CustomRequestFactoryServlet", "/gwtRequest", null,
+                webXml, null);
         if (typeLocationService.findTypesWithAnnotation(ROO_ACCOUNT).size() != 0) {
-            WebXmlUtils
-                    .addFilter(
-                            "AccountAuthFilter",
-                            RequestFactoryPath.SERVER_ACCOUNT.packageName(projectOperations
-                                    .getTopLevelPackage(projectOperations
-                                            .getFocusedModuleName()))
-                                    + ".AccountAuthFilter",
-                            "/gwtRequest/*",
-                            webXml,
-                            "This filter makes account authentication services visible to a RequestFactory client.");
+            WebXmlUtils.addFilter("AccountAuthFilter", RequestFactoryPath
+                    .SERVER_ACCOUNT.packageName(serverTopLevelPackage)
+                    + ".AccountAuthFilter", "/gwtRequest/*", webXml,
+                    "Makes account authentication services visible to a RequestFactory client.");
             /*final String displayName = "Redirect to the login page if needed before showing any html pages";
             final WebXmlUtils.WebResourceCollection webResourceCollection = new WebXmlUtils.WebResourceCollection(
                     "Login required", null,

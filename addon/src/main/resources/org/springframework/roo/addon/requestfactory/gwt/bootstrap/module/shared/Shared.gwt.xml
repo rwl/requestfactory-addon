@@ -2,4 +2,8 @@
 <module rename-to="shared">
   <inherits name='com.google.gwt.user.User'/>
   <source path="domain"></source>
+  <source path="managed"></source>
+  <source path="request"></source>
+  <source path="proxy"></source>
+  <source path="factory"></source>
 </module>

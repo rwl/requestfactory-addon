@@ -59,8 +59,8 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
         initWidget(BINDER.createAndBindUi(this));
         initLabels();
         this.edit.setText(applicationMessages.edit());
-        this.delete.setText(applicationMessages.delete());
-        this.view.setText(applicationMessages.visualize());
+        this.delete.setText(applicationMessages.delete());{{#visualized}}
+        this.view.setText(applicationMessages.visualize());{{/visualized}}
     }
     
     private void initLabels() {{{#properties}}
