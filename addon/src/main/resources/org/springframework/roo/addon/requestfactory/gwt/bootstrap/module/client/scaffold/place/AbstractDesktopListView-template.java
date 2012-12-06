@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.place;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import java.util.HashMap;
 import java.util.HashSet;

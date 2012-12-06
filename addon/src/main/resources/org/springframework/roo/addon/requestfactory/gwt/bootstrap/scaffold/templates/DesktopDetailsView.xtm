@@ -31,7 +31,7 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
     private static {{=className}} instance;
 
     private ApplicationMessages applicationMessages = GWT.create(ApplicationMessages.class);
-    
+
     private {{=proxyMessages}} messages = GWT.create({{=proxyMessages}}.class);
 
     {{=proxy}} proxy;
@@ -62,7 +62,7 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
         this.delete.setText(applicationMessages.delete());{{#visualized}}
         this.view.setText(applicationMessages.visualize());{{/visualized}}
     }
-    
+
     private void initLabels() {{{#properties}}
         {{=prop}}Label.add(new HTMLPanel(messages.{{=prop}}() +  ":"));{{/properties}}
     }

@@ -12,45 +12,45 @@ import com.google.web.bindery.requestfactory.shared.ServiceLocator;
  */
 public class AccountServiceLocator implements ServiceLocator {
 
-	public AccountServiceWrapper getInstance(Class<?> clazz) {
+    public AccountServiceWrapper getInstance(Class<?> clazz) {
 
-		return new AccountServiceWrapper() {
+        return new AccountServiceWrapper() {
 
-			@Override
-			public Account getAccount() {
-				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-				return (Account) auth.getPrincipal();
-			}
+            @Override
+            public Account getAccount() {
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                return (Account) auth.getPrincipal();
+            }
 
-			@Override
-			public Boolean isAdminAccount() {
-				Account account = getAccount();
-				return (account != null) ? account.getUserRoles().contains(Role.ROLE_ADMIN) : false;
-			}
+            @Override
+            public Boolean isAdminAccount() {
+                Account account = getAccount();
+                return (account != null) ? account.getUserRoles().contains(Role.ROLE_ADMIN) : false;
+            }
 
-			@Override
-			public String getIdentityUrl() {
-				Account account = getAccount();
-				return (account != null) ? account.getUsername() : "";
-			}
+            @Override
+            public String getIdentityUrl() {
+                Account account = getAccount();
+                return (account != null) ? account.getUsername() : "";
+            }
 
-			@Override
-			public String getName() {
-				Account account = getAccount();
-				return (account != null) ? account.getName() : "";
-			}
+            @Override
+            public String getName() {
+                Account account = getAccount();
+                return (account != null) ? account.getName() : "";
+            }
 
-			@Override
-			public String getEmail() {
-				Account account = getAccount();
-				return (account != null) ? account.getEmail() : "";
-			}
+            @Override
+            public String getEmail() {
+                Account account = getAccount();
+                return (account != null) ? account.getEmail() : "";
+            }
 
-			@Override
-			public String getAccountId() {
-				Account account = getAccount();
-				return (account != null) ? com.google.appengine.api.datastore.KeyFactory.keyToString(account.getId()) : "";
-			}
-		};
-	}
+            @Override
+            public String getAccountId() {
+                Account account = getAccount();
+                return (account != null) ? com.google.appengine.api.datastore.KeyFactory.keyToString(account.getId()) : "";
+            }
+        };
+    }
 }

@@ -9,7 +9,7 @@ import com.google.web.bindery.requestfactory.shared.ValueProxy;
 @ProxyForName("__FULL_ACCOUNT_NAME__")
 public interface OpenIdAccount extends ValueProxy {
 
-	String getEmail();
+    String getEmail();
 
-	String getName();
+    String getName();
 }

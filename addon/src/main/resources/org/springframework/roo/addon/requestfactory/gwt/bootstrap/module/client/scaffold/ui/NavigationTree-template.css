@@ -18,15 +18,15 @@
 }
 
 .cellTreeEmptyMessage {
-	padding-left: 16px;
-	font-style: italic;
+    padding-left: 16px;
+    font-style: italic;
 }
 
 .cellTreeItem {
-	padding-top: 4px;
-	padding-bottom: 4px;
-	cursor: hand;
-	cursor: pointer;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    cursor: hand;
+    cursor: pointer;
 }
 
 .cellTreeItemImage {
@@ -38,8 +38,8 @@
 }
 
 .cellTreeItemValue {
-	padding-left: 3px;
-	padding-right: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
 }
 
 
@@ -54,10 +54,10 @@ div:focus { outline: none; }
 }
 
 .cellTreeTopItem {
-	font-weight: bold;
-	color: #4b4a4a;
-	margin-top: 20px;
-	padding: 3px 2px 3px 10px !important;
+    font-weight: bold;
+    color: #4b4a4a;
+    margin-top: 20px;
+    padding: 3px 2px 3px 10px !important;
 }
 
 .cellTreeTopItemImage {
@@ -65,18 +65,18 @@ div:focus { outline: none; }
 }
 
 .cellTreeTopItemImageValue {
-	border-bottom: 1px solid #6f7277;
-	padding-bottom: 1px;
+    border-bottom: 1px solid #6f7277;
+    padding-bottom: 1px;
 }
 
 .cellTreeSelectedItem {
-	background-color: #0E90D2;
-	color: white;
-	height: auto;
-	overflow: auto;
+    background-color: #0E90D2;
+    color: white;
+    height: auto;
+    overflow: auto;
 }
 
 .cellTreeShowMoreButton {
-	padding-left: 16px;
-	outline: none;
+    padding-left: 16px;
+    outline: none;
 }

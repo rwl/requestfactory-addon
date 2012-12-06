@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.5.0rc1//EN"
+  "http://google-web-toolkit.googlecode.com/svn/tags/2.5.0/distro-source/core/src/gwt-module.dtd">
 <module rename-to="shared">
   <inherits name='com.google.gwt.user.User'/>
   <source path="domain"></source>
   <source path="managed"></source>
-  <source path="request"></source>
-  <source path="proxy"></source>
   <source path="factory"></source>
 </module>

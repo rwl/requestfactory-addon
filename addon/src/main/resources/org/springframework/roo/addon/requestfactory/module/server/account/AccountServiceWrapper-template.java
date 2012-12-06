@@ -7,15 +7,15 @@ __IMPORT_ACCOUNT__
  */
 public interface AccountServiceWrapper {
 
-	Boolean isAdminAccount();
+    Boolean isAdminAccount();
 
-	String getIdentityUrl();
+    String getIdentityUrl();
 
-	String getName();
+    String getName();
 
-	String getEmail();
+    String getEmail();
 
-	Account getAccount();
+    Account getAccount();
 
-	String getAccountId();
+    String getAccountId();
 }

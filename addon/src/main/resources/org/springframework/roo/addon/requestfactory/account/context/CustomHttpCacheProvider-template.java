@@ -10,8 +10,8 @@ import com.google.inject.Provider;
  */
 public class CustomHttpCacheProvider implements Provider<HttpFetcher> {
 
-	@Override
-	public HttpFetcher get() {
-		return new Openid4javaFetcher(URLFetchServiceFactory.getURLFetchService());
-	}
+    @Override
+    public HttpFetcher get() {
+        return new Openid4javaFetcher(URLFetchServiceFactory.getURLFetchService());
+    }
 }

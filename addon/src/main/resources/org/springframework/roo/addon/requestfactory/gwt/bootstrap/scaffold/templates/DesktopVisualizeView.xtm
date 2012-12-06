@@ -24,7 +24,6 @@ import {{=topLevelPackage}}.messages.ApplicationMessages;
 {{#imports}}import {{=import}};
 {{/imports}}
 
-
 public class {{=className}} extends Composite implements {{=visualizeView}} {
 
     interface Binder extends UiBinder<SimplePanel, {{=className}}> {

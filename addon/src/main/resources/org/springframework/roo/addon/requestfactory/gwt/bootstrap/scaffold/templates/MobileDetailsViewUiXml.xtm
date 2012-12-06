@@ -3,7 +3,7 @@
   xmlns:g='urn:import:com.google.gwt.user.client.ui'
   xmlns:m='urn:import:com.googlecode.mgwt.ui.client.widget'
   xmlns:b='urn:import:com.googlecode.mgwt.ui.client.widget.buttonbar'>
- <ui:style>
+  <ui:style>
     .outer {
       padding: 10px;
     }

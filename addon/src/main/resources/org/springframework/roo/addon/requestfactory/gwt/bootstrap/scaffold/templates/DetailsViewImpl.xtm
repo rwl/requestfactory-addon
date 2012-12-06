@@ -21,64 +21,64 @@ import {{=placePackage}}.ProxyListView;
  * Details view for {{=proxy}}.
  */
 public class {{=className}} extends Composite implements {{=detailsView}} {
-	interface Binder extends UiBinder<HTMLPanel, {{=className}}> {}
+    interface Binder extends UiBinder<HTMLPanel, {{=className}}> {}
 
-	private static final Binder BINDER = GWT.create(Binder.class);
+    private static final Binder BINDER = GWT.create(Binder.class);
 
-	private static {{=className}} instance;
+    private static {{=className}} instance;
 
-	{{=proxy}} proxy;
-	{{#properties}}
-	@UiField SpanElement {{=prop}};{{/properties}}
+    {{=proxy}} proxy;
+    {{#properties}}
+    @UiField SpanElement {{=prop}};{{/properties}}
 
-	@UiField SpanElement displayRenderer;
-	@UiField HasClickHandlers edit;
-	@UiField HasClickHandlers delete;
+    @UiField SpanElement displayRenderer;
+    @UiField HasClickHandlers edit;
+    @UiField HasClickHandlers delete;
 
-	private Delegate delegate;
+    private Delegate delegate;
 
-	public static {{=className}} instance() {
-		if (instance == null) {
-			instance = new {{=className}}();
-		}
+    public static {{=className}} instance() {
+        if (instance == null) {
+            instance = new {{=className}}();
+        }
 
-		return instance;
-	}
+        return instance;
+    }
 
-	public {{=className}}() {
-		initWidget(BINDER.createAndBindUi(this));
-	}
+    public {{=className}}() {
+        initWidget(BINDER.createAndBindUi(this));
+    }
 
-	public Widget asWidget() {
-		return this;
-	}
+    public Widget asWidget() {
+        return this;
+    }
 
-	public boolean confirm(String msg) {
-		return Window.confirm(msg);
-	}
+    public boolean confirm(String msg) {
+        return Window.confirm(msg);
+    }
 
-	public {{=proxy}} getValue() {
-		return proxy;
-	}
+    public {{=proxy}} getValue() {
+        return proxy;
+    }
 
-	@UiHandler("delete")
-	public void onDeleteClicked(ClickEvent e) {
-		delegate.deleteClicked();
-	}
+    @UiHandler("delete")
+    public void onDeleteClicked(ClickEvent e) {
+        delegate.deleteClicked();
+    }
 
-	@UiHandler("edit")
-	public void onEditClicked(ClickEvent e) {
-		delegate.editClicked();
-	}
+    @UiHandler("edit")
+    public void onEditClicked(ClickEvent e) {
+        delegate.editClicked();
+    }
 
-	public void setDelegate(Delegate delegate) {
-		this.delegate = delegate;
-	}
+    public void setDelegate(Delegate delegate) {
+        this.delegate = delegate;
+    }
 
-	public void setValue({{=proxy}} proxy) {
-		this.proxy = proxy;{{#managedProperties}}
-		{{=prop}}.setInnerText(proxy.{{=propGetter}}() == null ? "" : {{=propFormatter}}(proxy.{{=propGetter}}()));{{/managedProperties}}
+    public void setValue({{=proxy}} proxy) {
+        this.proxy = proxy;{{#managedProperties}}
+        {{=prop}}.setInnerText(proxy.{{=propGetter}}() == null ? "" : {{=propFormatter}}(proxy.{{=propGetter}}()));{{/managedProperties}}
 
-		displayRenderer.setInnerText({{=proxyRenderer}}.instance().render(proxy));
-	}
+        displayRenderer.setInnerText({{=proxyRenderer}}.instance().render(proxy));
+    }
 }

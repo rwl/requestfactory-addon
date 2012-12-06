@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.ui;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import __TOP_LEVEL_PACKAGE__.application.MobileApplication;
 import __TOP_LEVEL_PACKAGE__.place.AbstractProxyListView;
@@ -50,7 +50,7 @@ public abstract class MobileProxyListView<P extends EntityProxy> extends Abstrac
         list = new CellList<P>(new DefaultCell<P>(renderer), CellListResources.INSTANCE, new EntityProxyKeyProvider<P>());
         list.setPageSize(8);
         list.setKeyboardPagingPolicy(KeyboardPagingPolicy.INCREASE_RANGE);
-        
+
         // Initialize the widget.
         init(BINDER.createAndBindUi(this), list, newButton, backButton);
 

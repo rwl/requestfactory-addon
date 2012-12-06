@@ -8,9 +8,9 @@ import com.google.inject.Inject;
 
 public class {{=className}} extends {{=name}}EditActivityWrapper {
 
-	@Inject
-	public {{=className}}(ApplicationRequestFactory requests, PlaceController placeController) {
-		super(requests, placeController);
-		this.view.setCreating(true);
-	}
+    @Inject
+    public {{=className}}(ApplicationRequestFactory requests, PlaceController placeController) {
+        super(requests, placeController);
+        this.view.setCreating(true);
+    }
 }

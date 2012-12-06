@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.place;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import javax.validation.ConstraintViolation;
 

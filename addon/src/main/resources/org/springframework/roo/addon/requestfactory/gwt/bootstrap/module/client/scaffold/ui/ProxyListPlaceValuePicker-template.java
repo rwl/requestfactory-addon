@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.ui;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,99 +18,99 @@ import com.google.gwt.user.client.ui.ValuePicker;
 
 public class ProxyListPlaceValuePicker extends Composite implements HasConstrainedValue<ProxyListPlace> {
 
-	public static interface CellListResources extends CellList.Resources {
+    public static interface CellListResources extends CellList.Resources {
 
-		public static CellListResources INSTANCE = GWT.create(CellListResources.class);
+        public static CellListResources INSTANCE = GWT.create(CellListResources.class);
 
-		/**
-		 * The styles used in this widget.
-		 */
-		@Source(CellListStyle.DEFAULT_CSS)
-		CellList.Style cellListStyle();
-	}
+        /**
+         * The styles used in this widget.
+         */
+        @Source(CellListStyle.DEFAULT_CSS)
+        CellList.Style cellListStyle();
+    }
 
-	public static interface CellListStyle extends CellList.Style {
+    public static interface CellListStyle extends CellList.Style {
 
-		/**
-		 * The path to the default CSS styles used by this resource.
-		 */
-		String DEFAULT_CSS = "ProxyListPlaceValuePicker.css";
+        /**
+         * The path to the default CSS styles used by this resource.
+         */
+        String DEFAULT_CSS = "ProxyListPlaceValuePicker.css";
 
-		/**
-		 * Applied to selected items.
-		 */
-		String cellListSelectedItem();
-	}
+        /**
+         * Applied to selected items.
+         */
+        String cellListSelectedItem();
+    }
 
-	private static class DefaultCell<T> extends AbstractCell<T> {
-		private final Renderer<T> renderer;
+    private static class DefaultCell<T> extends AbstractCell<T> {
+        private final Renderer<T> renderer;
 
-		DefaultCell(Renderer<T> renderer) {
-			this.renderer = renderer;
-		}
+        DefaultCell(Renderer<T> renderer) {
+            this.renderer = renderer;
+        }
 
-		@Override
-		public void render(Context context, T value, SafeHtmlBuilder sb) {
-			sb.appendEscaped(renderer.render(value));
-		}
-	}
+        @Override
+        public void render(Context context, T value, SafeHtmlBuilder sb) {
+            sb.appendEscaped(renderer.render(value));
+        }
+    }
 
-	private static __TOP_LEVEL_PACKAGE__.ui.ProxyListPlaceValuePicker instance;
+    private static __TOP_LEVEL_PACKAGE__.ui.ProxyListPlaceValuePicker instance;
 
-	public static __TOP_LEVEL_PACKAGE__.ui.ProxyListPlaceValuePicker instance() {
-		if (instance == null) {
-			instance = new ProxyListPlaceValuePicker();
-		}
-		return instance;
-	}
+    public static __TOP_LEVEL_PACKAGE__.ui.ProxyListPlaceValuePicker instance() {
+        if (instance == null) {
+            instance = new ProxyListPlaceValuePicker();
+        }
+        return instance;
+    }
 
-	private final CellList<ProxyListPlace> cellList;
+    private final CellList<ProxyListPlace> cellList;
 
-	private final ValuePicker<ProxyListPlace> valueBox;
+    private final ValuePicker<ProxyListPlace> valueBox;
 
-	public ProxyListPlaceValuePicker() {
-		this(new ApplicationListPlaceRenderer());
-	}
+    public ProxyListPlaceValuePicker() {
+        this(new ApplicationListPlaceRenderer());
+    }
 
-	public ProxyListPlaceValuePicker(Renderer<ProxyListPlace> renderer) {
+    public ProxyListPlaceValuePicker(Renderer<ProxyListPlace> renderer) {
 
-		cellList = new CellList<ProxyListPlace>(new DefaultCell<ProxyListPlace>(renderer), CellListResources.INSTANCE);
+        cellList = new CellList<ProxyListPlace>(new DefaultCell<ProxyListPlace>(renderer), CellListResources.INSTANCE);
 
-		valueBox = new ValuePicker<ProxyListPlace>(cellList);
+        valueBox = new ValuePicker<ProxyListPlace>(cellList);
 
-		initWidget(valueBox);
-	}
+        initWidget(valueBox);
+    }
 
-	public int size() {
-		return cellList.getRowCount();
-	}
+    public int size() {
+        return cellList.getRowCount();
+    }
 
-	public void setAcceptableValues(Collection<ProxyListPlace> places) {
-		valueBox.setAcceptableValues(places);
-		cellList.setRowCount(new ArrayList<ProxyListPlace>(places).size());
-	}
+    public void setAcceptableValues(Collection<ProxyListPlace> places) {
+        valueBox.setAcceptableValues(places);
+        cellList.setRowCount(new ArrayList<ProxyListPlace>(places).size());
+    }
 
-	public void setPageSize(int pageSize) {
-		valueBox.setPageSize(pageSize);
-	}
+    public void setPageSize(int pageSize) {
+        valueBox.setPageSize(pageSize);
+    }
 
-	@Override
-	public ProxyListPlace getValue() {
-		return valueBox.getValue();
-	}
+    @Override
+    public ProxyListPlace getValue() {
+        return valueBox.getValue();
+    }
 
-	@Override
-	public void setValue(ProxyListPlace value) {
-		valueBox.setValue(value);
-	}
+    @Override
+    public void setValue(ProxyListPlace value) {
+        valueBox.setValue(value);
+    }
 
-	@Override
-	public void setValue(ProxyListPlace value, boolean fireEvents) {
-		valueBox.setValue(value, fireEvents);
-	}
+    @Override
+    public void setValue(ProxyListPlace value, boolean fireEvents) {
+        valueBox.setValue(value, fireEvents);
+    }
 
-	@Override
-	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<ProxyListPlace> handler) {
-		return valueBox.addValueChangeHandler(handler);
-	}
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<ProxyListPlace> handler) {
+        return valueBox.addValueChangeHandler(handler);
+    }
 }

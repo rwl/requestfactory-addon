@@ -13,15 +13,15 @@ import com.google.web.bindery.requestfactory.shared.Service;
 @Service(value = AccountServiceWrapper.class, locator = AccountServiceLocator.class)
 public interface OpenIdAccountServiceRequest extends RequestContext {
 
-	Request<String> getIdentityUrl();
+    Request<String> getIdentityUrl();
 
-	Request<String> getName();
+    Request<String> getName();
 
-	Request<String> getEmail();
+    Request<String> getEmail();
 
-	Request<Boolean> isAdminAccount();
+    Request<Boolean> isAdminAccount();
 
-	Request<AccountProxy> getAccount();
+    Request<AccountProxy> getAccount();
 
-	Request<String> getAccountId();
+    Request<String> getAccountId();
 }

@@ -1,17 +1,17 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder
-		xmlns:ui='urn:ui:com.google.gwt.uibinder'
-		xmlns:g='urn:import:com.google.gwt.user.client.ui'
-		xmlns:c='urn:import:com.google.gwt.user.cellview.client'
-		xmlns:b='urn:import:com.github.gwtbootstrap.client.ui'
-		xmlns:m='urn:import:com.googlecode.mgwt.ui.client.widget'
-		xmlns:s='urn:import:__TOP_LEVEL_PACKAGE__.ui'
-		xmlns:bb='urn:import:com.googlecode.mgwt.ui.client.widget.buttonbar'>
+        xmlns:ui='urn:ui:com.google.gwt.uibinder'
+        xmlns:g='urn:import:com.google.gwt.user.client.ui'
+        xmlns:c='urn:import:com.google.gwt.user.cellview.client'
+        xmlns:b='urn:import:com.github.gwtbootstrap.client.ui'
+        xmlns:m='urn:import:com.googlecode.mgwt.ui.client.widget'
+        xmlns:s='urn:import:__TOP_LEVEL_PACKAGE__.ui'
+        xmlns:bb='urn:import:com.googlecode.mgwt.ui.client.widget.buttonbar'>
 
-	<ui:style>
-	</ui:style>
+    <ui:style>
+    </ui:style>
 
-	<m:LayoutPanel>
+    <m:LayoutPanel>
         <m:HeaderPanel ui:field="header">
             <m:left>
                 <m:HeaderButton backButton='true' ui:field="backButton"/>
@@ -22,10 +22,10 @@
         </m:HeaderPanel>
 
         <s:ShowMorePagerPanel ui:field='showMorePagerPanel'/>
-        
+
         <bb:ButtonBar>
             <bb:ButtonBarSpacer/>
             <bb:NewIconButton ui:field="newButton"/>
         </bb:ButtonBar>
-	</m:LayoutPanel>
+    </m:LayoutPanel>
 </ui:UiBinder>

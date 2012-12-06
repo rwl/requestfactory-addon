@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.managed.provider;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import java.util.ArrayList;
 import java.util.List;

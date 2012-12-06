@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.activity;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import com.google.gwt.activity.shared.Activity;
 import com.google.inject.Inject;

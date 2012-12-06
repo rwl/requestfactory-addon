@@ -55,7 +55,7 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
     private static {{=className}} instance;
 
     private ApplicationMessages applicationMessages = GWT.create(ApplicationMessages.class);
-    
+
     private {{=proxyMessages}} messages = GWT.create({{=proxyMessages}}.class);
 
     {{#editViewProps}}
@@ -84,7 +84,7 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
         this.cancel.setText(applicationMessages.cancel());
         this.save.setText(applicationMessages.save());
     }
-    
+
     private void initLabels() {{{#editableProperties}}
         {{=prop}}Label.add(new HTMLPanel(messages.{{=prop}}() +  ":"));{{/editableProperties}}
     }

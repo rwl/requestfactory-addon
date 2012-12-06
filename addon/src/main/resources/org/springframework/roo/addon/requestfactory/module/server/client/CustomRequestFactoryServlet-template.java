@@ -7,11 +7,11 @@ import com.google.web.bindery.requestfactory.server.ServiceLayerDecorator;
 
 public class CustomRequestFactoryServlet extends RequestFactoryServlet {
 
-	public CustomRequestFactoryServlet() {
-		this(new DefaultExceptionHandler(), new CustomServiceLayerDecorator());
-	}
+    public CustomRequestFactoryServlet() {
+        this(new DefaultExceptionHandler(), new CustomServiceLayerDecorator());
+    }
 
-	public CustomRequestFactoryServlet(ExceptionHandler exceptionHandler, ServiceLayerDecorator... serviceDecorators) {
-		super(exceptionHandler, serviceDecorators);
-	}
+    public CustomRequestFactoryServlet(ExceptionHandler exceptionHandler, ServiceLayerDecorator... serviceDecorators) {
+        super(exceptionHandler, serviceDecorators);
+    }
 }

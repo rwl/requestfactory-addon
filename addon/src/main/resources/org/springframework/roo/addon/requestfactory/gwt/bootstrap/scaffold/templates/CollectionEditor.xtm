@@ -33,197 +33,197 @@ import {{=scaffoldUiPackage}}.CollectionRenderer;
 
 public class {{=boundCollectionType}}{{=collectionType}}Editor extends Composite implements ValueAwareEditor<{{=collectionType}}<{{=boundCollectionType}}>>, LeafValueEditor<{{=collectionType}}<{{=boundCollectionType}}>> {
 
-	@UiField
-	FlowPanel container;
+    @UiField
+    FlowPanel container;
 
-	private Renderer<{{=boundCollectionType}}> renderer = new Renderer<{{=boundCollectionType}}>() {
-		@Override
-		public String render({{=boundCollectionType}} o) {
-			return o == null ? "" : String.valueOf(o);
-		}
+    private Renderer<{{=boundCollectionType}}> renderer = new Renderer<{{=boundCollectionType}}>() {
+        @Override
+        public String render({{=boundCollectionType}} o) {
+            return o == null ? "" : String.valueOf(o);
+        }
 
-		@Override
-		public void render({{=boundCollectionType}} o, Appendable appendable) throws IOException {
-			appendable.append(render(o));
-		}
-	};
+        @Override
+        public void render({{=boundCollectionType}} o, Appendable appendable) throws IOException {
+            appendable.append(render(o));
+        }
+    };
 
-	@UiField(provided = true)
-	@Ignore
-	ValueListBox<{{=boundCollectionType}}> picker = new ValueListBox<{{=boundCollectionType}}>(renderer);
+    @UiField(provided = true)
+    @Ignore
+    ValueListBox<{{=boundCollectionType}}> picker = new ValueListBox<{{=boundCollectionType}}>(renderer);
 
-	@UiField
-	Button add;
+    @UiField
+    Button add;
 
-	@UiField
-	HTMLPanel editorPanel;
+    @UiField
+    HTMLPanel editorPanel;
 
-	@UiField
-	Button clickToEdit;
+    @UiField
+    Button clickToEdit;
 
-	@UiField
-	HTMLPanel viewPanel;
+    @UiField
+    HTMLPanel viewPanel;
 
-	@UiField
-	Label viewLabel;
+    @UiField
+    Label viewLabel;
 
-	@UiField
-	Style style;
+    @UiField
+    Style style;
 
-	boolean editing = false;
+    boolean editing = false;
 
-	private {{=collectionType}}<{{=boundCollectionType}}> values;
+    private {{=collectionType}}<{{=boundCollectionType}}> values;
 
-	private List<{{=boundCollectionType}}> displayedList;
+    private List<{{=boundCollectionType}}> displayedList;
 
-	public CollectionEditor() {
-		initWidget(GWT.<Binder>create(Binder.class).createAndBindUi(this));
-		Driver driver = GWT.create(Driver.class);
-		ListEditor<{{=boundCollectionType}}, NameLabel> editor = ListEditor.of(new NameLabelSource());
-		driver.initialize(editor);
-		driver.display(new ArrayList<{{=boundCollectionType}}>());
-		displayedList = editor.getList();
-		editing = false;
-	}
+    public CollectionEditor() {
+        initWidget(GWT.<Binder>create(Binder.class).createAndBindUi(this));
+        Driver driver = GWT.create(Driver.class);
+        ListEditor<{{=boundCollectionType}}, NameLabel> editor = ListEditor.of(new NameLabelSource());
+        driver.initialize(editor);
+        driver.display(new ArrayList<{{=boundCollectionType}}>());
+        displayedList = editor.getList();
+        editing = false;
+    }
 
-	@UiHandler("add")
-	public void addClicked(ClickEvent e) {
-		if (picker.getValue() == null || displayedList.contains(picker.getValue())) {
-		    return;
-	    }
-		displayedList.add(picker.getValue());
-		viewLabel.setText(makeFlatList(displayedList));
-	}
+    @UiHandler("add")
+    public void addClicked(ClickEvent e) {
+        if (picker.getValue() == null || displayedList.contains(picker.getValue())) {
+            return;
+        }
+        displayedList.add(picker.getValue());
+        viewLabel.setText(makeFlatList(displayedList));
+    }
 
-	@UiHandler("clickToEdit")
-	public void clickToEditClicked(ClickEvent e) {
-		toggleEditorMode();
-	}
+    @UiHandler("clickToEdit")
+    public void clickToEditClicked(ClickEvent e) {
+        toggleEditorMode();
+    }
 
 
-	interface Binder extends UiBinder<Widget, {{=boundCollectionType}}{{=collectionType}}Editor> {
-	}
+    interface Binder extends UiBinder<Widget, {{=boundCollectionType}}{{=collectionType}}Editor> {
+    }
 
-	interface Driver extends RequestFactoryEditorDriver<List<{{=boundCollectionType}}>, ListEditor<{{=boundCollectionType}}, NameLabel>> {
-	}
+    interface Driver extends RequestFactoryEditorDriver<List<{{=boundCollectionType}}>, ListEditor<{{=boundCollectionType}}, NameLabel>> {
+    }
 
-	public void onLoad() {
-		makeEditable(false);
-	}
+    public void onLoad() {
+        makeEditable(false);
+    }
 
-	public void setAcceptableValues(Collection<{{=boundCollectionType}}> values) {
-		picker.setAcceptableValues(values);
-	}
+    public void setAcceptableValues(Collection<{{=boundCollectionType}}> values) {
+        picker.setAcceptableValues(values);
+    }
 
-	@Override
-	public void setDelegate(EditorDelegate<{{=collectionType}}<{{=boundCollectionType}}>> editorDelegate) {
-	}
+    @Override
+    public void setDelegate(EditorDelegate<{{=collectionType}}<{{=boundCollectionType}}>> editorDelegate) {
+    }
 
-	@Override
-	public void onPropertyChange(java.lang.String... strings) {
-	}
+    @Override
+    public void onPropertyChange(java.lang.String... strings) {
+    }
 
-	@Override
-	public void flush() {
-	}
+    @Override
+    public void flush() {
+    }
 
-	@Override
-	public void setValue({{=collectionType}}<{{=boundCollectionType}}> values) {
+    @Override
+    public void setValue({{=collectionType}}<{{=boundCollectionType}}> values) {
 
-		this.values = values;
-		makeEditable(editing = false);
-		if (displayedList != null) {
-			displayedList.clear();
-			if (values != null) {
-				for ({{=boundCollectionType}} e : values) {
-					displayedList.add(e);
-				}
-			}
-		}
-		viewLabel.setText(makeFlatList(values));
-	}
+        this.values = values;
+        makeEditable(editing = false);
+        if (displayedList != null) {
+            displayedList.clear();
+            if (values != null) {
+                for ({{=boundCollectionType}} e : values) {
+                    displayedList.add(e);
+                }
+            }
+        }
+        viewLabel.setText(makeFlatList(values));
+    }
 
-	private void makeEditable(boolean editable) {
-		if (editable) {
-			editorPanel.setStylePrimaryName(style.editorPanelVisible());
-			viewPanel.setStylePrimaryName(style.viewPanelHidden());
-			clickToEdit.setText("Done");
-		} else {
-			editorPanel.setStylePrimaryName(style.editorPanelHidden());
-			viewPanel.setStylePrimaryName(style.viewPanelVisible());
-			clickToEdit.setText("Edit");
-		}
-	}
+    private void makeEditable(boolean editable) {
+        if (editable) {
+            editorPanel.setStylePrimaryName(style.editorPanelVisible());
+            viewPanel.setStylePrimaryName(style.viewPanelHidden());
+            clickToEdit.setText("Done");
+        } else {
+            editorPanel.setStylePrimaryName(style.editorPanelHidden());
+            viewPanel.setStylePrimaryName(style.viewPanelVisible());
+            clickToEdit.setText("Edit");
+        }
+    }
 
-	private java.lang.String makeFlatList(Collection values) {
-		return CollectionRenderer.of(renderer).render(values);
-	}
+    private java.lang.String makeFlatList(Collection values) {
+        return CollectionRenderer.of(renderer).render(values);
+    }
 
-	private void toggleEditorMode() {
-		editing = !editing;
-		makeEditable(editing);
-	}
+    private void toggleEditorMode() {
+        editing = !editing;
+        makeEditable(editing);
+    }
 
-	@Override
-	public {{=collectionType}}<{{=boundCollectionType}}> getValue() {
-		if (values == null && displayedList.size() == 0) {
-			return null;
-		}
-		return new {{=collectionTypeImpl}}<{{=boundCollectionType}}>(displayedList);
-	}
+    @Override
+    public {{=collectionType}}<{{=boundCollectionType}}> getValue() {
+        if (values == null && displayedList.size() == 0) {
+            return null;
+        }
+        return new {{=collectionTypeImpl}}<{{=boundCollectionType}}>(displayedList);
+    }
 
-	interface Style extends CssResource {
+    interface Style extends CssResource {
 
-		java.lang.String editorPanelHidden();
+        java.lang.String editorPanelHidden();
 
-		java.lang.String editorPanelVisible();
+        java.lang.String editorPanelVisible();
 
-		java.lang.String viewPanelHidden();
+        java.lang.String viewPanelHidden();
 
-		java.lang.String viewPanelVisible();
-	}
+        java.lang.String viewPanelVisible();
+    }
 
-	class NameLabel extends Composite implements LeafValueEditor<{{=boundCollectionType}}> {
+    class NameLabel extends Composite implements LeafValueEditor<{{=boundCollectionType}}> {
 
-		@Ignore
-		final Label displayNameEditor = new Label();
+        @Ignore
+        final Label displayNameEditor = new Label();
 
-		public NameLabel() {
-			this(null);
-		}
+        public NameLabel() {
+            this(null);
+        }
 
-		public NameLabel(EventBus eventBus) {
-			initWidget(displayNameEditor);
-		}
+        public NameLabel(EventBus eventBus) {
+            initWidget(displayNameEditor);
+        }
 
-		@Override
-		public void setValue({{=boundCollectionType}} o) {
-			displayNameEditor.setText(String.valueOf(o));
-		}
+        @Override
+        public void setValue({{=boundCollectionType}} o) {
+            displayNameEditor.setText(String.valueOf(o));
+        }
 
-		@Override
-		public {{=boundCollectionType}} getValue() {
-			return {{=boundCollectionType}}.valueOf(displayNameEditor.getText());
-		}
-	}
+        @Override
+        public {{=boundCollectionType}} getValue() {
+            return {{=boundCollectionType}}.valueOf(displayNameEditor.getText());
+        }
+    }
 
-	private class NameLabelSource extends EditorSource<NameLabel> {
+    private class NameLabelSource extends EditorSource<NameLabel> {
 
-		@Override
-		public NameLabel create(int index) {
-			NameLabel label = new NameLabel();
-			container.insert(label, index);
-			return label;
-		}
+        @Override
+        public NameLabel create(int index) {
+            NameLabel label = new NameLabel();
+            container.insert(label, index);
+            return label;
+        }
 
-		@Override
-		public void dispose(NameLabel subEditor) {
-			subEditor.removeFromParent();
-		}
+        @Override
+        public void dispose(NameLabel subEditor) {
+            subEditor.removeFromParent();
+        }
 
-		@Override
-		public void setIndex(NameLabel editor, int index) {
-			container.insert(editor, index);
-		}
-	}
+        @Override
+        public void setIndex(NameLabel editor, int index) {
+            container.insert(editor, index);
+        }
+    }
 }

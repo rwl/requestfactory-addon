@@ -34,15 +34,15 @@ public class MainActivity extends RoboListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
     }
-    
+
     private static List<String> getListValues() {
-		List<Class<? extends EntityProxy>> types = ApplicationEntityTypesProcessor.getAll();
-		List<String> values = new ArrayList<String>(types.size());
+        List<Class<? extends EntityProxy>> types = ApplicationEntityTypesProcessor.getAll();
+        List<String> values = new ArrayList<String>(types.size());
 
-		for (Class<? extends EntityProxy> type : types) {
-			//values.add(ProxyListRenderer.instance().render(type));
-		}
+        for (Class<? extends EntityProxy> type : types) {
+            //values.add(ProxyListRenderer.instance().render(type));
+        }
 
-		return values;
+        return values;
     }
 }

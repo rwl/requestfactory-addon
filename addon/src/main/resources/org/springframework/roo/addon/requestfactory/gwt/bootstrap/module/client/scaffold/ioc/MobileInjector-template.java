@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.ioc;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import __TOP_LEVEL_PACKAGE__.application.MobileApplication;
 import com.google.gwt.inject.client.GinModules;

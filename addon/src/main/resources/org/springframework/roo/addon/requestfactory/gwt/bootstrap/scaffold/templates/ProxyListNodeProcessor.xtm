@@ -12,21 +12,21 @@ import com.google.web.bindery.requestfactory.shared.EntityProxy;
 
 public class ProxyListNodeProcessor {
 
-	private static final {{=listPlaceRenderer}} renderer = new {{=listPlaceRenderer}}();
+    private static final {{=listPlaceRenderer}} renderer = new {{=listPlaceRenderer}}();
 
-	public void process(List<ProxyListNode> listNodes, String serverId, Class<? extends EntityProxy> proxyType) {
-		final List<ProxyListNode> nodes = listNodes;
-		final String id = serverId;
-		new {{=entityTypes}}<String>() {
+    public void process(List<ProxyListNode> listNodes, String serverId, Class<? extends EntityProxy> proxyType) {
+        final List<ProxyListNode> nodes = listNodes;
+        final String id = serverId;
+        new {{=entityTypes}}<String>() {
 {{#entities}}
-			@Override
-			public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
-				String nodeName;
-				{{#children}}
-				nodeName = renderer.render(new ProxyListPlace({{=child}}.class, null));
-				nodes.add(new ProxyListNode(nodeName, {{=child}}.class, id));
-				{{/children}}
-      		}{{/entities}}
-		}.process(proxyType);
-	}
+            @Override
+            public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
+                String nodeName;
+                {{#children}}
+                nodeName = renderer.render(new ProxyListPlace({{=child}}.class, null));
+                nodes.add(new ProxyListNode(nodeName, {{=child}}.class, id));
+                {{/children}}
+            }{{/entities}}
+        }.process(proxyType);
+    }
 }

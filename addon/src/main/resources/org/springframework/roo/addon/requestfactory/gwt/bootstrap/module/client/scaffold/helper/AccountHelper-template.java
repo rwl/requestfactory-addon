@@ -8,8 +8,8 @@ import __TOP_LEVEL_PACKAGE__.application.DesktopShell;
 
 public class AccountHelper {
 
-	@Inject
-	public AccountHelper(DesktopShell shell, ApplicationRequestFactory requestFactory, EventBus eventBus) {
-		__ACCOUNT_HOOKUP__
-	}
+    @Inject
+    public AccountHelper(DesktopShell shell, ApplicationRequestFactory requestFactory, EventBus eventBus) {
+        __ACCOUNT_HOOKUP__
+    }
 }

@@ -6,9 +6,9 @@ package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
  */
 public interface MakesAccountRequests {
 
-	/**
-	 * Return a request selector.
-	 */
-	OpenIdAccountServiceRequest accountServiceRequest();
+    /**
+     * Return a request selector.
+     */
+    OpenIdAccountServiceRequest accountServiceRequest();
 
 }

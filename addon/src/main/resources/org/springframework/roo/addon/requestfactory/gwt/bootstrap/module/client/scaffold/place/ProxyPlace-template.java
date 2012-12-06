@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.place;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceTokenizer;

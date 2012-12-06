@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.activity;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import __TOP_LEVEL_PACKAGE__.application.Application;
 import __TOP_LEVEL_PACKAGE__.ui.RootPlaceView;

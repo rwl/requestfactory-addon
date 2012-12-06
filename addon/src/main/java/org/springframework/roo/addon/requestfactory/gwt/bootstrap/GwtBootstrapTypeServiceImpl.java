@@ -24,6 +24,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryFileManager;
 import org.springframework.roo.addon.requestfactory.RequestFactoryOperations;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
+import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
 import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadata;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MemberHoldingTypeDetails;
@@ -92,10 +93,11 @@ public class GwtBootstrapTypeServiceImpl implements GwtBootstrapTypeService {
         final List<Element> inheritsElements = XmlUtils.findElements(
                 "/module/" + INHERITS, gwtXmlRoot);
         if (!existingInherits(inherits, inheritsElements)) {
-            final Element firstInheritsElement = inheritsElements.get(0);
+            final Element lastInheritsElement = inheritsElements
+                    .get(inheritsElements.size() - 1);
             final Element newInheritsElement = gwtXmlDoc.createElement(INHERITS);
             newInheritsElement.setAttribute(NAME, inherits);
-            gwtXmlRoot.insertBefore(newInheritsElement, firstInheritsElement);
+            gwtXmlRoot.insertBefore(newInheritsElement, lastInheritsElement);
             fileManager.createOrUpdateTextFileIfRequired(gwtXmlPath,
                     XmlUtils.nodeToString(gwtXmlDoc),
                     "Added inherited module to gwt.xml file", true);
@@ -176,7 +178,7 @@ public class GwtBootstrapTypeServiceImpl implements GwtBootstrapTypeService {
                     final String systemId) throws SAXException, IOException {
                 if (systemId.endsWith("gwt-module.dtd")) {
                     return new InputSource(FileUtils.getInputStream(
-                            RequestFactoryScaffoldMetadata.class,
+                            GwtBootstrapScaffoldMetadata.class,
                             "templates/gwt-module.dtd"));
                 }
                 // Use the default behaviour

@@ -9,11 +9,11 @@ import com.google.gwt.user.client.Window.Location;
  */
 public class LoginOnAuthenticationFailure implements AccountAuthenticationFailureEvent.Handler {
 
-	public HandlerRegistration register(EventBus eventBus) {
-		return AccountAuthenticationFailureEvent.register(eventBus, this);
-	}
+    public HandlerRegistration register(EventBus eventBus) {
+        return AccountAuthenticationFailureEvent.register(eventBus, this);
+    }
 
-	public void onAuthFailure(AccountAuthenticationFailureEvent requestEvent) {
-		Location.replace(requestEvent.getLoginUrl());
-	}
+    public void onAuthFailure(AccountAuthenticationFailureEvent requestEvent) {
+        Location.replace(requestEvent.getLoginUrl());
+    }
 }

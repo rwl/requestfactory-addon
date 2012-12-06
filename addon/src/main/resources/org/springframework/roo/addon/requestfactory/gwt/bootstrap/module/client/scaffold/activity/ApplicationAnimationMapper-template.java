@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.activity;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import __TOP_LEVEL_PACKAGE__.place.ProxyListPlace;
 import __TOP_LEVEL_PACKAGE__.place.ProxyPlace;
@@ -11,42 +11,42 @@ import com.googlecode.mgwt.mvp.client.AnimationMapper;
 
 public class ApplicationAnimationMapper implements AnimationMapper {
 
-	private static final Animation DEFAULT_ANIMATION = Animation.POP;
+    private static final Animation DEFAULT_ANIMATION = Animation.POP;
 
-	@Override
-	public Animation getAnimation(Place oldPlace, Place newPlace) {
-		final Animation animation;
+    @Override
+    public Animation getAnimation(Place oldPlace, Place newPlace) {
+        final Animation animation;
 
-		if (oldPlace instanceof ProxyListPlace && newPlace instanceof ProxyListPlace) {
-			animation = Animation.POP;
-		} else if (oldPlace instanceof ProxyListPlace && newPlace instanceof ProxyPlace) {
+        if (oldPlace instanceof ProxyListPlace && newPlace instanceof ProxyListPlace) {
+            animation = Animation.POP;
+        } else if (oldPlace instanceof ProxyListPlace && newPlace instanceof ProxyPlace) {
 
-			if (((ProxyListPlace) oldPlace).getProxyClass().equals(((ProxyPlace) newPlace).getProxyClass())) {
-				animation = Animation.SLIDE;
-			} else {
-				animation = DEFAULT_ANIMATION;
-			}
-		} else if (oldPlace instanceof ProxyPlace && newPlace instanceof ProxyListPlace) {
+            if (((ProxyListPlace) oldPlace).getProxyClass().equals(((ProxyPlace) newPlace).getProxyClass())) {
+                animation = Animation.SLIDE;
+            } else {
+                animation = DEFAULT_ANIMATION;
+            }
+        } else if (oldPlace instanceof ProxyPlace && newPlace instanceof ProxyListPlace) {
 
-			if (((ProxyPlace) oldPlace).getProxyClass().equals(((ProxyListPlace) newPlace).getProxyClass())) {
-				animation = Animation.SLIDE_REVERSE;
-			} else {
-				animation = DEFAULT_ANIMATION;
-			}
-		} else if (oldPlace instanceof ProxyPlace && newPlace instanceof ProxyPlace) {
+            if (((ProxyPlace) oldPlace).getProxyClass().equals(((ProxyListPlace) newPlace).getProxyClass())) {
+                animation = Animation.SLIDE_REVERSE;
+            } else {
+                animation = DEFAULT_ANIMATION;
+            }
+        } else if (oldPlace instanceof ProxyPlace && newPlace instanceof ProxyPlace) {
 
-			if (((ProxyPlace) oldPlace).getOperation().equals(Operation.DETAILS) && ((ProxyPlace) newPlace).getOperation().equals(Operation.EDIT)) {
-				animation = Animation.FLIP;
-			} else if (((ProxyPlace) oldPlace).getOperation().equals(Operation.EDIT) && ((ProxyPlace) newPlace).getOperation().equals(Operation.DETAILS)) {
-				animation = Animation.FLIP_REVERSE;
-			} else if (((ProxyPlace) oldPlace).getOperation().equals(Operation.CREATE) && ((ProxyPlace) newPlace).getOperation().equals(Operation.DETAILS)) {
-				animation = Animation.FLIP_REVERSE;
-			} else {
-				animation = Animation.POP;
-			}
-		} else {
-			animation = DEFAULT_ANIMATION;
-		}
-		return animation;
-	}
+            if (((ProxyPlace) oldPlace).getOperation().equals(Operation.DETAILS) && ((ProxyPlace) newPlace).getOperation().equals(Operation.EDIT)) {
+                animation = Animation.FLIP;
+            } else if (((ProxyPlace) oldPlace).getOperation().equals(Operation.EDIT) && ((ProxyPlace) newPlace).getOperation().equals(Operation.DETAILS)) {
+                animation = Animation.FLIP_REVERSE;
+            } else if (((ProxyPlace) oldPlace).getOperation().equals(Operation.CREATE) && ((ProxyPlace) newPlace).getOperation().equals(Operation.DETAILS)) {
+                animation = Animation.FLIP_REVERSE;
+            } else {
+                animation = Animation.POP;
+            }
+        } else {
+            animation = DEFAULT_ANIMATION;
+        }
+        return animation;
+    }
 }

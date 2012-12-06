@@ -1,12 +1,12 @@
-package __TOP_LEVEL_PACKAGE__.ui;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.CellList;
 
 public interface CellListResources extends CellList.Resources {
 
-	public static CellListResources INSTANCE = GWT.create(CellListResources.class);
+    public static CellListResources INSTANCE = GWT.create(CellListResources.class);
 
-	@Source("CellListStyle.css")
-	CellList.Style cellListStyle();
+    @Source("CellListStyle.css")
+    CellList.Style cellListStyle();
 }

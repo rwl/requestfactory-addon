@@ -9,9 +9,9 @@ import com.google.web.bindery.requestfactory.shared.RequestFactory;
  * being managed away by Roo.
  */
 public interface BaseRequestFactory extends RequestFactory {
-	
-	/**
-	 * Return a GWT logging request.
-	 */
-	LoggingRequest loggingRequest();
+
+    /**
+     * Return a GWT logging request.
+     */
+    LoggingRequest loggingRequest();
 }

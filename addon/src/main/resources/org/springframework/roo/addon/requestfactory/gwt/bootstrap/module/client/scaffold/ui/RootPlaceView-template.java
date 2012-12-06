@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.ui;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import java.util.List;
 
@@ -19,48 +19,48 @@ import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
 public class RootPlaceView extends Composite {
 
-	private static RootPlaceViewUiBinder uiBinder = GWT.create(RootPlaceViewUiBinder.class);
+    private static RootPlaceViewUiBinder uiBinder = GWT.create(RootPlaceViewUiBinder.class);
 
-	interface RootPlaceViewUiBinder extends UiBinder<Widget, RootPlaceView> {
-	}
+    interface RootPlaceViewUiBinder extends UiBinder<Widget, RootPlaceView> {
+    }
 
-	private static final ApplicationMessages messages = GWT.create(ApplicationMessages.class);
+    private static final ApplicationMessages messages = GWT.create(ApplicationMessages.class);
 
-	private static RootPlaceView instance;
+    private static RootPlaceView instance;
 
-	public static RootPlaceView instance() {
-		if (instance == null) {
-			instance = new RootPlaceView();
-		}
-		return instance;
-	}
-	private final Renderer<ProxyListPlace> listPlaceRenderer = new ApplicationListPlaceRenderer();
+    public static RootPlaceView instance() {
+        if (instance == null) {
+            instance = new RootPlaceView();
+        }
+        return instance;
+    }
+    private final Renderer<ProxyListPlace> listPlaceRenderer = new ApplicationListPlaceRenderer();
 
-	@UiField(provided = true)
-	CellListWithHeader<ProxyListPlace> list;
+    @UiField(provided = true)
+    CellListWithHeader<ProxyListPlace> list;
 
-	@UiField
-	HTML title;
+    @UiField
+    HTML title;
 
-	public RootPlaceView() {
-		list = new CellListWithHeader<ProxyListPlace>(new BasicCell<ProxyListPlace>() {
+    public RootPlaceView() {
+        list = new CellListWithHeader<ProxyListPlace>(new BasicCell<ProxyListPlace>() {
 
-			@Override
-			public String getDisplayString(ProxyListPlace model) {
-				return listPlaceRenderer.render(model);
-			}
-		});
+            @Override
+            public String getDisplayString(ProxyListPlace model) {
+                return listPlaceRenderer.render(model);
+            }
+        });
 
-		initWidget(uiBinder.createAndBindUi(this));
+        initWidget(uiBinder.createAndBindUi(this));
 
-		title.setText(messages.applicationName());
-	}
+        title.setText(messages.applicationName());
+    }
 
-	public void setPlaces(List<ProxyListPlace> places) {
-		list.getCellList().render(places);
-	}
+    public void setPlaces(List<ProxyListPlace> places) {
+        list.getCellList().render(places);
+    }
 
-	public HasCellSelectedHandler getCellSelectedHandler() {
-		return list.getCellList();
-	}
+    public HasCellSelectedHandler getCellSelectedHandler() {
+        return list.getCellList();
+    }
 }

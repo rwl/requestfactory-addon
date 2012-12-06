@@ -23,35 +23,35 @@ import java.net.URL;
 @Component
 public class AccountAuthFilter implements Filter {
 
-	@Autowired
-	LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint;
+    @Autowired
+    LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint;
 
-	private AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
+    private AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
 
-	public void destroy() {
-	}
+    public void destroy() {
+    }
 
-	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		HttpServletRequest request = (HttpServletRequest) servletRequest;
-		HttpServletResponse response = (HttpServletResponse) servletResponse;
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-		if (authenticationTrustResolver.isAnonymous(auth)) {
-			URL requestUrl;
-			if (request.getHeader(AccountAuthRequestTransport.REQUEST_URL) != null) {
-				requestUrl = new URL(request.getHeader(AccountAuthRequestTransport.REQUEST_URL));
-			} else {
-				requestUrl = new URL(request.getRequestURI());
-			}
-			URL loginUrl = new URL(requestUrl.getProtocol(), requestUrl.getHost(), requestUrl.getPort(), "/login"/*loginUrlAuthenticationEntryPoint.getLoginFormUrl()*/);
-			response.setHeader("login", loginUrl.toString());
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-			return;
-		}
+        if (authenticationTrustResolver.isAnonymous(auth)) {
+            URL requestUrl;
+            if (request.getHeader(AccountAuthRequestTransport.REQUEST_URL) != null) {
+                requestUrl = new URL(request.getHeader(AccountAuthRequestTransport.REQUEST_URL));
+            } else {
+                requestUrl = new URL(request.getRequestURI());
+            }
+            URL loginUrl = new URL(requestUrl.getProtocol(), requestUrl.getHost(), requestUrl.getPort(), "/login"/*loginUrlAuthenticationEntryPoint.getLoginFormUrl()*/);
+            response.setHeader("login", loginUrl.toString());
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
 
-		filterChain.doFilter(request, response);
-	}
+        filterChain.doFilter(request, response);
+    }
 
-	public void init(FilterConfig config) {
-	}
+    public void init(FilterConfig config) {
+    }
 }

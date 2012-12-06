@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.ui;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import com.google.gwt.dom.client.Document;
 import com.github.gwtbootstrap.client.ui.ValueBox;
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  */
 public class BigDecimalBox extends ValueBox<BigDecimal> {
 
-	public BigDecimalBox() {
-		super(Document.get().createTextInputElement(), BigDecimalRenderer.instance(), BigDecimalParser.instance());
-	}
+    public BigDecimalBox() {
+        super(Document.get().createTextInputElement(), BigDecimalRenderer.instance(), BigDecimalParser.instance());
+    }
 }

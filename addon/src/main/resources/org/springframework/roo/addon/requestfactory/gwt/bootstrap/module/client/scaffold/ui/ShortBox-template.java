@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.ui;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import com.google.gwt.dom.client.Document;
 import com.github.gwtbootstrap.client.ui.ValueBox;
@@ -8,7 +8,7 @@ import com.github.gwtbootstrap.client.ui.ValueBox;
  */
 public class ShortBox extends ValueBox<Short> {
 
-	public ShortBox() {
-		super(Document.get().createTextInputElement(), ShortRenderer.instance(), ShortParser.instance());
-	}
+    public ShortBox() {
+        super(Document.get().createTextInputElement(), ShortRenderer.instance(), ShortParser.instance());
+    }
 }

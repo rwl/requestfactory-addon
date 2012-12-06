@@ -33,21 +33,21 @@
 
     <b:AlertBlock type="ERROR" close="false" animation="true" visible="false" heading="Error" ui:field="errors"/>
 
-	<b:Form addStyleNames="{style.fields}" type="HORIZONTAL" debugId="boundElementHolder">
-		<b:Fieldset>{{#editableProperties}}
-			<b:ControlGroup>
-				<b:ControlLabel for="{{=prop}}" ui:field="{{=prop}}Label"/>
-				<b:Controls>
-					<{{=propBinder}} ui:field="{{=prop}}"/>
+    <b:Form addStyleNames="{style.fields}" type="HORIZONTAL" debugId="boundElementHolder">
+        <b:Fieldset>{{#editableProperties}}
+            <b:ControlGroup>
+                <b:ControlLabel for="{{=prop}}" ui:field="{{=prop}}Label"/>
+                <b:Controls>
+                    <{{=propBinder}} ui:field="{{=prop}}"/>
                     {{=units}}
                     {{=helpText}}
-				</b:Controls>
-			</b:ControlGroup>{{/editableProperties}}
-			<b:FormActions>
-				<b:SubmitButton addStyleNames="{style.button}" type="PRIMARY" ui:field="save"/>
-				<b:Button addStyleNames="{style.button}" icon="REMOVE_SIGN" ui:field="cancel"/>
-			</b:FormActions>
-		</b:Fieldset>
-	</b:Form>
+                </b:Controls>
+            </b:ControlGroup>{{/editableProperties}}
+            <b:FormActions>
+                <b:SubmitButton addStyleNames="{style.button}" type="PRIMARY" ui:field="save"/>
+                <b:Button addStyleNames="{style.button}" icon="REMOVE_SIGN" ui:field="cancel"/>
+            </b:FormActions>
+        </b:Fieldset>
+    </b:Form>
   </g:HTMLPanel>
 </ui:UiBinder>

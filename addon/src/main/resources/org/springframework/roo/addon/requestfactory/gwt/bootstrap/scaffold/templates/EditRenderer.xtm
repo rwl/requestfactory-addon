@@ -9,24 +9,24 @@ import com.google.web.bindery.requestfactory.gwt.ui.client.ProxyRenderer;
  * {{=displayFields}} properties to have been fetched.
  */
 public class {{=className}} extends ProxyRenderer<{{=proxy}}> {
-  private static {{=className}} INSTANCE;
+    private static {{=className}} INSTANCE;
 
-  public static {{=className}} instance() {
-    if (INSTANCE == null) {
-      INSTANCE = new {{=className}}();
+    public static {{=className}} instance() {
+        if (INSTANCE == null) {
+            INSTANCE = new {{=className}}();
+        }
+
+        return INSTANCE;
     }
 
-    return INSTANCE;
-  }
-
-  protected {{=className}}() {
-    super(new String[] {"{{=primaryProp}}"{{#hasSecondaryProp}}, "{{=secondaryProp}}"{{/hasSecondaryProp}}});
-  }
-
-  public String render({{=proxy}} object) {
-    if (object == null) {
-      return "";
+    protected {{=className}}() {
+        super(new String[] {"{{=primaryProp}}"{{#hasSecondaryProp}}, "{{=secondaryProp}}"{{/hasSecondaryProp}}});
     }
-    return object.{{=primaryPropGetter}}().toString(){{#hasSecondaryProp}} + " (" + object.{{=secondaryPropGetter}}().toString() + ")"{{/hasSecondaryProp}};
-  }
+
+    public String render({{=proxy}} object) {
+        if (object == null) {
+            return "";
+        }
+        return object.{{=primaryPropGetter}}().toString(){{#hasSecondaryProp}} + " (" + object.{{=secondaryPropGetter}}().toString() + ")"{{/hasSecondaryProp}};
+    }
 }

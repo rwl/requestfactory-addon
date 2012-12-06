@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.ui;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import com.google.gwt.core.client.GWT;
 import com.googlecode.mgwt.ui.client.widget.celllist.Cell;

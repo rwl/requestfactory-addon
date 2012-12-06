@@ -20,29 +20,29 @@ import java.util.Set;
  */
 public class {{=className}} extends MobileProxyListView<{{=proxy}}> {
 
-	private static {{=className}} instance;
+    private static {{=className}} instance;
 
-	private final Set<String> paths = new HashSet<String>();
+    private final Set<String> paths = new HashSet<String>();
 
-	public static {{=className}} instance() {
-		if (instance == null) {
-			instance = new {{=className}}();
-		}
+    public static {{=className}} instance() {
+        if (instance == null) {
+            instance = new {{=className}}();
+        }
 
-		return instance;
-	}
-
-	public {{=className}}() {
-		super("New {{=name}}", "{{=pluralName}}", {{=proxyRenderer}}.instance());
-		init();
-	}
-
-	public void init() {
-	    {{#mobileProperties}}
-		paths.add("{{=prop}}");{{/mobileProperties}}
+        return instance;
     }
 
-	public String[] getPaths() {
-		return paths.toArray(new String[paths.size()]);
-	}
+    public {{=className}}() {
+        super("New {{=name}}", "{{=pluralName}}", {{=proxyRenderer}}.instance());
+        init();
+    }
+
+    public void init() {
+        {{#mobileProperties}}
+        paths.add("{{=prop}}");{{/mobileProperties}}
+    }
+
+    public String[] getPaths() {
+        return paths.toArray(new String[paths.size()]);
+    }
 }

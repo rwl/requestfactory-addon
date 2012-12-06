@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.place;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import com.google.gwt.user.client.TakesValue;
 import com.google.gwt.user.client.ui.IsWidget;

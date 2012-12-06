@@ -71,17 +71,17 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
     }
 
     private ApplicationMessages applicationMessages = GWT.create(ApplicationMessages.class);
-    
+
     private {{=proxyMessages}} messages = GWT.create({{=proxyMessages}}.class);
 
     {{#mobileEditViewProps}}
     {{=prop}};{{/mobileEditViewProps}}
     {{#editableProperties}}
     @UiField HasText {{=prop}}Label;{{/editableProperties}}
-    
+
     @UiField ButtonBase save;
     @UiField ButtonBase cancel;
-    
+
     @UiField @Ignore HTML title;
 
     private Delegate delegate;
@@ -101,7 +101,7 @@ public class {{=className}} extends Composite implements {{=editActivityWrapper}
         initLabels();
         this.cancel.setText(applicationMessages.cancel());
     }
-    
+
     private void initLabels() {{{#editableProperties}}
         this.{{=prop}}Label.setText(messages.{{=prop}}() +  ":");{{/editableProperties}}
     }

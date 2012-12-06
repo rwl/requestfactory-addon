@@ -49,7 +49,7 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
     }
 
     private ApplicationMessages applicationMessages = GWT.create(ApplicationMessages.class);
-    
+
     private {{=proxyMessages}} messages = GWT.create({{=proxyMessages}}.class);
 
     {{=proxy}} proxy;
@@ -57,7 +57,7 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
     @UiField Label {{=prop}};{{/properties}}
     {{#properties}}
     @UiField HasText {{=prop}}Label;{{/properties}}
-    
+
     @UiField ButtonBase delete;
     @UiField HTML title;
     @UiField ButtonBase back;
@@ -91,7 +91,7 @@ public class {{=className}} extends Composite implements {{=detailsView}} {
         initLabels();
         this.back.setText(applicationMessages.back());
     }
-    
+
     private void initLabels() {{{#properties}}
         this.{{=prop}}Label.setText(messages.{{=prop}}() +  ":");{{/properties}}
     }

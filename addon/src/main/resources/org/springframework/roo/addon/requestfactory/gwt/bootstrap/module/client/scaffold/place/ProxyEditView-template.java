@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.place;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import com.google.gwt.editor.client.HasEditorErrors;
 import com.google.web.bindery.requestfactory.gwt.client.RequestFactoryEditorDriver;

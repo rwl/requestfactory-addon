@@ -20,9 +20,9 @@ public class ApplicationProxyPlaceRenderer {
     }
 
     public String render(final ProxyPlace proxyPlaceArg, final HasWidgets hasWidgetsArg, final HasText hasTextArg) {
-    	final ProxyPlace proxyPlace = proxyPlaceArg;
-    	final HasWidgets hasWidgets = hasWidgetsArg;
-    	final HasText hasText = hasTextArg;
+        final ProxyPlace proxyPlace = proxyPlaceArg;
+        final HasWidgets hasWidgets = hasWidgetsArg;
+        final HasText hasText = hasTextArg;
         return new ApplicationEntityTypesProcessor<String>() {
 {{#entities}}
             @Override

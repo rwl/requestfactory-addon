@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__.locator;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,11 +9,11 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class RequestFactoryServiceLocator implements ServiceLocator {
 
-	HttpServletRequest request = RequestFactoryServlet.getThreadLocalRequest();
-	ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext());
+    HttpServletRequest request = RequestFactoryServlet.getThreadLocalRequest();
+    ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext());
 
-	@Override
-	public Object getInstance(Class<?> clazz) {
-		return context.getBean(clazz);
-	}
+    @Override
+    public Object getInstance(Class<?> clazz) {
+        return context.getBean(clazz);
+    }
 }

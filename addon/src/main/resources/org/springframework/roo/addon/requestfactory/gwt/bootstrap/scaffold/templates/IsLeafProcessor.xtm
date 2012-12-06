@@ -5,13 +5,13 @@ package {{=packageName}};
 
 public class IsLeafProcessor extends {{=entityTypes}}<Boolean> {
 
-	public IsLeafProcessor() {
-		super(false);
-	}
+    public IsLeafProcessor() {
+        super(false);
+    }
 
 {{#entities}}
-	@Override
-	public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
-		setResult({{=isLeaf}});
-	}{{/entities}}
+    @Override
+    public void handle{{=entitySimpleName}}({{=entityFullPath}} isNull) {
+        setResult({{=isLeaf}});
+    }{{/entities}}
 }
