@@ -8,13 +8,13 @@ public class AndroidPaths {
 
     private static final String SEP = File.separator;
 
-    public static final String RES_LAYOUT = SEP + "res" + SEP + "layout";
+    public static final String LAYOUT_PATH = SEP + "res" + SEP + "layout";
 
     public static final RequestFactoryPath ACTIVITY = new RequestFactoryPath("/activity", "module/client/activity/" + RequestFactoryPath.templateSelector);
-//    public static final RequestFactoryPath RES_LAYOUT = new RequestFactoryPath("/res/layout", "module/layout/" + RequestFactoryPath.templateSelector);
+    public static final RequestFactoryPath LAYOUT = new RequestFactoryPath(LAYOUT_PATH, "module/client/layout/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath[] ALL_PATHS = new RequestFactoryPath[] {
-        ACTIVITY
+        ACTIVITY, LAYOUT
     };
 
     private AndroidPaths() {

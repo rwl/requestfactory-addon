@@ -280,7 +280,7 @@ public class RequestFactoryOperationsImpl implements RequestFactoryOperations {
 
     @Override
     public boolean isInstalledInModule(final String moduleName) {
-        return isRequestFactoryInstalled(moduleName, false);
+        return isRequestFactoryInstalled(moduleName, true);
     }
 
     @Override

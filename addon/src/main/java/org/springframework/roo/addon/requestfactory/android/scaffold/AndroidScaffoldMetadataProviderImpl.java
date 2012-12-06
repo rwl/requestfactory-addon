@@ -122,7 +122,7 @@ public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldM
                         .getPathResolver();
                 final String layoutPath = pathResolver.getIdentifier(
                         LogicalPath.getInstance(Path.ROOT,
-                                moduleName), AndroidPaths.RES_LAYOUT);
+                                moduleName), AndroidPaths.LAYOUT_PATH);
                 final String packagePath = pathResolver
                         .getIdentifier(LogicalPath.getInstance(
                                 Path.SRC_MAIN_JAVA, moduleName), path

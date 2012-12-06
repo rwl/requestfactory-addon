@@ -1,7 +1,9 @@
 package org.springframework.roo.addon.requestfactory.android;
 
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
+import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ANDROID_SCAFFOLD;
+import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
@@ -21,6 +23,8 @@ import org.springframework.roo.classpath.details.annotations.AnnotationMetadataB
 import org.springframework.roo.classpath.details.annotations.StringAttributeValue;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
+import org.springframework.roo.project.LogicalPath;
+import org.springframework.roo.project.Path;
 import org.springframework.roo.project.ProjectOperations;
 import org.springframework.roo.project.maven.Pom;
 
@@ -97,8 +101,9 @@ public class AndroidOperationsImpl implements AndroidOperations {
                     new ClassOrInterfaceTypeDetailsBuilder(proxy);
             final AnnotationMetadataBuilder annotationMetadataBuilder =
                     new AnnotationMetadataBuilder(ROO_ANDROID_SCAFFOLD);
-            final StringAttributeValue moduleAttributeValue = new StringAttributeValue(
-                    MODULE_SYMBOL_NAME, module.getModuleName());
+            final StringAttributeValue moduleAttributeValue = 
+                    new StringAttributeValue(MODULE_SYMBOL_NAME,
+                            module.getModuleName());
             annotationMetadataBuilder.addAttribute(moduleAttributeValue);
             cidBuilder.getAnnotations().add(annotationMetadataBuilder);
             typeManagementService.createOrUpdateTypeOnDisk(cidBuilder
@@ -115,12 +120,36 @@ public class AndroidOperationsImpl implements AndroidOperations {
 
     private void copyDirectoryContents(final String moduleName) {
         for (final RequestFactoryPath path : AndroidPaths.ALL_PATHS) {
-            requestFactoryOperations.copyDirectoryContents(path, moduleName,
-                    getClass());
+            copyDirectoryContents(path, moduleName);
         }
     }
     
     private void updateAndroidManifest(final String moduleName) {
         androidTypeService.addActvity(moduleName, ".MainActivity", true);
+    }
+
+    private void copyDirectoryContents(
+            final RequestFactoryPath requestFactoryPath,
+            final String moduleName) {
+        final String sourceAntPath = requestFactoryPath.getSourceAntPath();
+        if (sourceAntPath.contains("account") && typeLocationService
+                .findTypesWithAnnotation(ROO_ACCOUNT).size() == 0) {
+            return;
+        }
+        final String targetDirectory;
+        final LogicalPath path;
+        if (requestFactoryPath == AndroidPaths.LAYOUT) {
+            path = LogicalPath.getInstance(Path.ROOT, moduleName);
+            targetDirectory = projectOperations.getPathResolver()
+                    .getIdentifier(path, AndroidPaths.LAYOUT_PATH);
+        } else {
+            path = LogicalPath.getInstance(SRC_MAIN_JAVA, moduleName);
+            targetDirectory = projectOperations.getPathResolver()
+                    .getIdentifier(path, requestFactoryPath
+                            .getPackagePath(projectOperations
+                                    .getTopLevelPackage(moduleName)));
+        }
+        requestFactoryOperations.updateFile(sourceAntPath, targetDirectory,
+                requestFactoryPath.segmentPackage(), false, getClass());
     }
 }

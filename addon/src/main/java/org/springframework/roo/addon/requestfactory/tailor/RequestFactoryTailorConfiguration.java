@@ -43,13 +43,13 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
         config.addAction(ActionConfigFactory.executeAction("web requestfactory setup addon"));
         config.addAction(ActionConfigFactory.executeAction("module create --moduleName server --topLevelPackage ${topLevelPackage}.server --artifactId ${projectName}-server --parent ${topLevelPackage}:${projectName}:" + VERSION));
         config.addAction(ActionConfigFactory.executeAction("web requestfactory setup server"));
+        config.addAction(ActionConfigFactory.executeAction("dependency add --artifactId spring-tx --groupId org.springframework --version ${spring.version}"));
+        config.addAction(ActionConfigFactory.executeAction("dependency add --artifactId spring-web --groupId org.springframework --version ${spring.version}"));
         config.addAction(ActionConfigFactory.executeAction("dependency add --groupId ${topLevelPackage}.shared --artifactId ${projectName}-shared --version " + VERSION));
         config.addAction(ActionConfigFactory.executeAction("logging setup --level INFO"));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
         config.addAction(ActionConfigFactory.executeAction("module create --moduleName shared --topLevelPackage ${topLevelPackage}.shared --artifactId ${projectName}-shared --parent ${topLevelPackage}:${projectName}:" + VERSION + " --packaging JAR_SIMPLE"));
-        config.addAction(ActionConfigFactory.executeAction("web requestfactory setup client"));
         config.addAction(ActionConfigFactory.executeAction("web requestfactory setup server"));
-//        config.addAction(ActionConfigFactory.executeAction("dependency add --artifactId spring-tx --groupId org.springframework --version ${spring.version}"));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
         config.addAction(ActionConfigFactory.executeAction("module create --moduleName client --topLevelPackage ${topLevelPackage}.client --artifactId ${projectName}-client --parent ${topLevelPackage}:${projectName}:" + VERSION + " --packaging POM_SIMPLE"));
         config.addAction(ActionConfigFactory.focusModuleAction("~"));
