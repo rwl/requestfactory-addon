@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>TO_BE_CHANGED_BY_LISTENER</groupId>
+        <artifactId>TO_BE_CHANGED_BY_LISTENER</artifactId>
+        <version>TO_BE_CHANGED_BY_LISTENER</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>TO_BE_CHANGED_BY_LISTENER</groupId>
+    <artifactId>TO_BE_CHANGED_BY_LISTENER</artifactId>
+    <packaging>TO_BE_CHANGED_BY_LISTENER</packaging>
+    <version>0.1.0.BUILD-SNAPSHOT</version>
+    <name>TO_BE_CHANGED_BY_LISTENER</name>
+    <properties>
+        <java.version>JAVA_VERSION</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <repositories/>
+    <dependencies/>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>false</downloadJavadocs>
+                    <additionalBuildcommands/>
+                    <additionalProjectnatures/>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

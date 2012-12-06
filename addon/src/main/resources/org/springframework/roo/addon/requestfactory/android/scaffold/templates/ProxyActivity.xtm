@@ -4,6 +4,7 @@ import {{=topLevelPackage}}.R;
 
 import android.os.Bundle;
 import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 
 public class {{=className}} extends RoboActivity {
 

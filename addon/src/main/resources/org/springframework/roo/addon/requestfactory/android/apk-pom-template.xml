@@ -51,7 +51,7 @@
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
-                <version>3.3.2</version>
+                <version>3.4.1</version>
                 <configuration>
                     <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
                     <assetsDirectory>${project.basedir}/assets</assetsDirectory>
@@ -137,10 +137,14 @@
                     <additionalBuildcommands>
                         <buildCommand>
                             <name>org.eclipse.ajdt.core.ajbuilder</name>
+                            <name>com.android.ide.eclipse.adt.ResourceManagerBuilder</name>
+                            <name>com.android.ide.eclipse.adt.PreCompilerBuilder</name>
+                            <name>com.android.ide.eclipse.adt.ApkBuilder</name>
                         </buildCommand>
                     </additionalBuildcommands>
                     <additionalProjectnatures>
                         <projectnature>org.eclipse.ajdt.ui.ajnature</projectnature>
+                        <projectnature>com.android.ide.eclipse.adt.AndroidNature</projectnature>
                     </additionalProjectnatures>
                 </configuration>
             </plugin>

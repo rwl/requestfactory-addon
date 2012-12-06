@@ -190,12 +190,6 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
             }
         }
 
-        // Add GWT natures and builder names to maven eclipse plugin
-        updateEclipsePlugin();
-
-        // Add outputDirectory to build element of pom
-        updateBuildOutputDirectory();
-
         final Element configuration = XmlUtils.getConfiguration(getClass());
 
         boolean isGaeEnabled = projectOperations.isFeatureInstalledInModule(
@@ -215,6 +209,14 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
 
         // Update gwt-maven-plugin and others
         updateBuildPlugins(configuration, isGaeEnabled);
+        
+
+
+        // Add GWT natures and builder names to maven eclipse plugin
+        updateEclipsePlugin();
+
+        // Add outputDirectory to build element of pom
+        updateBuildOutputDirectory();
     }
 
     @Override

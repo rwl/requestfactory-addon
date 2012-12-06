@@ -24,7 +24,7 @@ import org.w3c.dom.Element;
 @Service
 public class AndroidTypeServiceImpl implements AndroidTypeService {
 
-    private static final String NAME = "activity:name";
+    private static final String NAME = "android:name";
     private static final String MAIN_ACTION = "android.intent.action.MAIN";
     private static final String LAUNCHER_CATEGORY = "android.intent.category.LAUNCHER";
 
@@ -35,12 +35,13 @@ public class AndroidTypeServiceImpl implements AndroidTypeService {
     public void addActvity(final String moduleName, final String activityName,
             final boolean mainActivity) {
         final String manifestXml = getAndroidManifestXml(moduleName);
-        Validate.notBlank(manifestXml, "AndroidManifest.xml not found for module '"
+        Validate.notBlank(manifestXml,
+                "AndroidManifest.xml not found for module '"
                 + moduleName + "'");
         final Document manifestXmlDoc = getAndroidManifestXmlDocument(manifestXml);
         final Element manifestXmlRoot = manifestXmlDoc.getDocumentElement();
-        final Element applicationElement = XmlUtils.findFirstElement("/manifest/application",
-                manifestXmlRoot);
+        final Element applicationElement = XmlUtils.findFirstElement(
+                "/manifest/application", manifestXmlRoot);
         final List<Element> activityElements = XmlUtils.findElements(
                 "/manifest/application/activity", manifestXmlRoot);
         if (!existingActivity(activityName, activityElements)) {
@@ -65,8 +66,9 @@ public class AndroidTypeServiceImpl implements AndroidTypeService {
 
             applicationElement.appendChild(activityElement);
 
+            final String xmlString = XmlUtils.nodeToString(manifestXmlDoc);
             fileManager.createOrUpdateTextFileIfRequired(manifestXml,
-                    XmlUtils.nodeToString(manifestXmlDoc),
+                    xmlString,
                     "Added '" + activityName + "' to Android manifest",
                     true);
         }

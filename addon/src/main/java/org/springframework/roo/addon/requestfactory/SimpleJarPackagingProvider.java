@@ -17,13 +17,13 @@ import org.w3c.dom.Document;
  */
 @Component
 @Service
-public class ParentPomPackagingProvider extends AbstractPackagingProvider {
+public class SimpleJarPackagingProvider extends AbstractPackagingProvider {
 
     /**
      * Constructor invoked by the OSGi container
      */
-    public ParentPomPackagingProvider() {
-        super("parent_pom", "pom", "parent-pom-template.xml");
+    public SimpleJarPackagingProvider() {
+        super("jar_simple", "jar", "simple-jar-template.xml");
     }
 
     @Override

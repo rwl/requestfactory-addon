@@ -121,6 +121,6 @@ public class AndroidOperationsImpl implements AndroidOperations {
     }
     
     private void updateAndroidManifest(final String moduleName) {
-//        androidTypeService.addActvity(moduleName, ".MainActivity", true);
+        androidTypeService.addActvity(moduleName, ".MainActivity", true);
     }
 }

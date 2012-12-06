@@ -10,7 +10,7 @@ public class AndroidPaths {
 
     public static final String RES_LAYOUT = SEP + "res" + SEP + "layout";
 
-    public static final RequestFactoryPath ACTIVITY = new RequestFactoryPath("/activity", "module/activity/" + RequestFactoryPath.templateSelector);
+    public static final RequestFactoryPath ACTIVITY = new RequestFactoryPath("/activity", "module/client/activity/" + RequestFactoryPath.templateSelector);
 //    public static final RequestFactoryPath RES_LAYOUT = new RequestFactoryPath("/res/layout", "module/layout/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath[] ALL_PATHS = new RequestFactoryPath[] {
