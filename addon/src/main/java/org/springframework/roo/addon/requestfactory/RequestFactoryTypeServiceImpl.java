@@ -91,16 +91,16 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
     @Override
     public FieldMetadata getParentField(ClassOrInterfaceTypeDetails childType) {
         for (FieldMetadata field : childType.getFieldsWithAnnotation(MANY_TO_ONE)) {
-            
+
             final String fieldTypeId = typeLocationService
-                    .getPhysicalTypeIdentifier(field.getFieldType());
+                    .getPhysicalTypeIdentifier(field.getFieldType(), false);
             if (fieldTypeId == null
                     || metadataService.get(fieldTypeId) == null) {
                 continue;
             }
             final MemberHoldingTypeDetails fieldType = ((PhysicalTypeMetadata) metadataService
                     .get(fieldTypeId)).getMemberHoldingTypeDetails();
-            
+
             for (FieldMetadata opposite : fieldType.getFieldsWithAnnotation(ONE_TO_MANY)) {
                 AnnotationMetadata oneToMany = opposite.getAnnotation(ONE_TO_MANY);
                 AnnotationAttributeValue<String> mappedBy = oneToMany.getAttribute("mappedBy");
@@ -385,7 +385,7 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
         if (childType != null) {
             for (final JavaType javaType : childType.getExtendsTypes()) {
                 final String superTypeId = typeLocationService
-                        .getPhysicalTypeIdentifier(javaType);
+                        .getPhysicalTypeIdentifier(javaType, false);
                 if (superTypeId == null
                         || metadataService.get(superTypeId) == null) {
                     continue;

@@ -116,7 +116,7 @@ public class EntityLayerProvider extends CoreLayerProvider {
 
     /*private FieldMetadata getParentField(JavaType targetEntity, String parentFieldName) {
 
-        final String physicalTypeIdentifier = typeLocationService.getPhysicalTypeIdentifier(targetEntity);
+        final String physicalTypeIdentifier = typeLocationService.getPhysicalTypeIdentifier(targetEntity, false);
         if (physicalTypeIdentifier == null) {
             return null;
         }

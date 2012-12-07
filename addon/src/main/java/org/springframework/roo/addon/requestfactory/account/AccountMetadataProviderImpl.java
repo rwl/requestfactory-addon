@@ -120,7 +120,7 @@ public final class AccountMetadataProviderImpl extends AbstractItdMetadataProvid
     public AccountAnnotationValues getAnnotationValues(JavaType javaType) {
         Validate.notNull(javaType, "JavaType required");
         final String physicalTypeId = typeLocationService
-                .getPhysicalTypeIdentifier(javaType);
+                .getPhysicalTypeIdentifier(javaType, false);
         if (StringUtils.isBlank(physicalTypeId)) {
             return null;
         }
