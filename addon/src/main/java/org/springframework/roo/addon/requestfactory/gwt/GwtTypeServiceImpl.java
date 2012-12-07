@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
+package org.springframework.roo.addon.requestfactory.gwt;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +24,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryFileManager;
 import org.springframework.roo.addon.requestfactory.RequestFactoryOperations;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
-import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadata;
+import org.springframework.roo.addon.requestfactory.gwt.scaffold.GwtScaffoldMetadata;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MemberHoldingTypeDetails;
 import org.springframework.roo.classpath.details.MethodMetadata;
@@ -47,7 +46,7 @@ import org.xml.sax.SAXException;
 
 @Component
 @Service
-public class GwtBootstrapTypeServiceImpl implements GwtBootstrapTypeService {
+public class GwtTypeServiceImpl implements GwtTypeService {
 
     private static final String PATH = "path";
     private static final String INHERITS = "inherits";
@@ -62,7 +61,7 @@ public class GwtBootstrapTypeServiceImpl implements GwtBootstrapTypeService {
     public void buildType(final RequestFactoryType type,
             final List<ClassOrInterfaceTypeDetails> templateTypeDetails,
             final String moduleName) {
-        if (GwtBootstrapType.LIST_PLACE_RENDERER.equals(type)) {
+        if (GwtType.LIST_PLACE_RENDERER.equals(type)) {
             final Map<JavaSymbolName, List<JavaType>> watchedMethods = new HashMap<JavaSymbolName, List<JavaType>>();
             watchedMethods.put(new JavaSymbolName("render"), Collections
                     .singletonList(new JavaType(projectOperations
@@ -178,7 +177,7 @@ public class GwtBootstrapTypeServiceImpl implements GwtBootstrapTypeService {
                     final String systemId) throws SAXException, IOException {
                 if (systemId.endsWith("gwt-module.dtd")) {
                     return new InputSource(FileUtils.getInputStream(
-                            GwtBootstrapScaffoldMetadata.class,
+                            GwtScaffoldMetadata.class,
                             "templates/gwt-module.dtd"));
                 }
                 // Use the default behaviour

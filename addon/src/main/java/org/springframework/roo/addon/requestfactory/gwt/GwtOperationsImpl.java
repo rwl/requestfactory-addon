@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
+package org.springframework.roo.addon.requestfactory.gwt;
 
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ENTITY_PROXY;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.OLD_ENTITY_PROXY;
@@ -8,7 +8,7 @@ import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaTyp
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_REQUEST;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
-import static org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP_SCAFFOLD;
+import static org.springframework.roo.addon.requestfactory.gwt.GwtJavaType.ROO_REQUEST_FACTORY_GWT;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ACTIVE_RECORD;
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 import static org.springframework.roo.model.RooJavaType.ROO_MONGO_ENTITY;
@@ -38,7 +38,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.annotations.gwt.bootstrap.RooGwtBootstrapScaffold;
+import org.springframework.roo.addon.requestfactory.annotations.gwt.RooRequestFactoryGwt;
 import org.springframework.roo.addon.web.mvc.controller.WebMvcOperations;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.TypeLocationService;
@@ -77,25 +77,25 @@ import org.w3c.dom.Element;
 
 
 /**
- * Implementation of {@link GwtBootstrapOperations}.
+ * Implementation of {@link GwtOperations}.
  */
 @Component
 @Service
-public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
+public class GwtOperationsImpl implements GwtOperations {
 
-    private static final String FEATURE_NAME = "gwtbootstrap";
+    private static final String FEATURE_NAME = "requestfactory-gwt";
     private static final String GWT_BUILD_COMMAND = "com.google.gwt.eclipse.core.gwtProjectValidator";
     private static final String GWT_PROJECT_NATURE = "com.google.gwt.eclipse.core.gwtNature";
     private static final String MAVEN_ECLIPSE_PLUGIN = "/project/build/plugins/plugin[artifactId = 'maven-eclipse-plugin']";
     private static final String OUTPUT_DIRECTORY = "${project.build.directory}/${project.build.finalName}/WEB-INF/classes";
 
     private static final JavaSymbolName MODULE_SYMBOL_NAME = new JavaSymbolName(
-            RooGwtBootstrapScaffold.MODULE_ATTRIBUTE);
+            RooRequestFactoryGwt.MODULE_ATTRIBUTE);
 
     @Reference RequestFactoryTemplateService requestFactoryTemplateService;
     @Reference RequestFactoryTypeService requestFactoryTypeService;
     @Reference RequestFactoryOperations requestFactoryOperations;
-    @Reference GwtBootstrapTypeService gwtBootstrapTypeService;
+    @Reference GwtTypeService gwtTypeService;
     @Reference WebMvcOperations webMvcOperations;
     @Reference PathResolver pathResolver;
     @Reference ProjectOperations projectOperations;
@@ -123,7 +123,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
                 && isInstalledInModule(projectOperations.getFocusedModuleName());
     }
 
-    public void setupGwtBootstrap() {
+    public void setupGwt() {
         // Install web pieces if not already installed
         if (!fileManager.exists(projectOperations.getPathResolver()
                 .getFocusedIdentifier(SRC_MAIN_WEBAPP, "WEB-INF/web.xml"))) {
@@ -285,7 +285,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
         // Update the GaeHelper type
 //        updateGaeHelper();
 
-        /*gwtBootstrapTypeService.buildType(RequestFactoryType.APP_REQUEST_FACTORY,
+        /*gwtTypeService.buildType(RequestFactoryType.APP_REQUEST_FACTORY,
                 requestFactoryTemplateService.getStaticTemplateTypeDetails(
                         RequestFactoryType.APP_REQUEST_FACTORY, moduleName),
                         moduleName);*/
@@ -512,12 +512,12 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
     private void createScaffold(final ClassOrInterfaceTypeDetails proxy, final Pom module) {
         Validate.notNull(module, "GWT scaffold module required");
         final AnnotationMetadata annotationMetadata = RequestFactoryUtils
-                .getFirstAnnotation(proxy, ROO_GWT_BOOTSTRAP_SCAFFOLD);
+                .getFirstAnnotation(proxy, ROO_REQUEST_FACTORY_GWT);
         if (annotationMetadata == null) {
             final ClassOrInterfaceTypeDetailsBuilder cidBuilder =
                     new ClassOrInterfaceTypeDetailsBuilder(proxy);
             final AnnotationMetadataBuilder annotationMetadataBuilder =
-                    new AnnotationMetadataBuilder(ROO_GWT_BOOTSTRAP_SCAFFOLD);
+                    new AnnotationMetadataBuilder(ROO_REQUEST_FACTORY_GWT);
             final StringAttributeValue moduleAttributeValue = new StringAttributeValue(
                     MODULE_SYMBOL_NAME, module.getModuleName());
             annotationMetadataBuilder.addAttribute(moduleAttributeValue);
@@ -572,11 +572,11 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
     private void updateGwtModuleInheritance(final String scaffoldModule) {
         final String proxyModule = getProxyModuleName();
         if (!proxyModule.equals(scaffoldModule)) {
-            copyDirectoryContents(GwtBootstrapPaths.SHARED_MODULE, proxyModule);
+            copyDirectoryContents(GwtPaths.SHARED_MODULE, proxyModule);
 
             String inherits = projectOperations.getTopLevelPackage(proxyModule)
-                    + "." + GwtBootstrapPaths.SHARED_MODULE_NAME;
-            gwtBootstrapTypeService.addInheritsModule(inherits, scaffoldModule);
+                    + "." + GwtPaths.SHARED_MODULE_NAME;
+            gwtTypeService.addInheritsModule(inherits, scaffoldModule);
 
             updatePropertiesAndPlugins(proxyModule);
         }
@@ -620,7 +620,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
     }
 
     private void copyDirectoryContents(final String moduleName) {
-        for (final RequestFactoryPath path : GwtBootstrapPaths.ALL_PATHS) {
+        for (final RequestFactoryPath path : GwtPaths.ALL_PATHS) {
             copyDirectoryContents(path, moduleName);
         }
     }
@@ -641,8 +641,8 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
                 moduleName).getFullyQualifiedPackageName();
         final String targetDirectory;
         final LogicalPath path;
-        if (requestFactoryPath == GwtBootstrapPaths.WEB
-                || requestFactoryPath == GwtBootstrapPaths.ACCOUNT_WEB) {
+        if (requestFactoryPath == GwtPaths.WEB
+                || requestFactoryPath == GwtPaths.ACCOUNT_WEB) {
             path = LogicalPath.getInstance(SRC_MAIN_WEBAPP, moduleName);
             targetDirectory = projectOperations.getPathResolver()
                     .getRoot(path);
@@ -659,7 +659,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
     }
 
     /*private void addPackageToGwtXml(final JavaPackage sourcePackage) {
-        String gwtConfig = gwtBootstrapTypeService.getGwtModuleXml(projectOperations
+        String gwtConfig = gwtTypeService.getGwtModuleXml(projectOperations
                 .getFocusedModuleName());
         gwtConfig = StringUtils.stripEnd(gwtConfig, File.separator);
         final String moduleRoot = projectOperations.getPathResolver()
@@ -670,7 +670,7 @@ public class GwtBootstrapOperationsImpl implements GwtBootstrapOperations {
         final String relativePackage = StringUtils.removeStart(
                 sourcePackage.getFullyQualifiedPackageName(), topLevelPackage
                         + ".");
-        gwtBootstrapTypeService.addSourcePath(
+        gwtTypeService.addSourcePath(
                 relativePackage.replace(".", PATH_DELIMITER),
                 projectOperations.getFocusedModuleName());
     }*/

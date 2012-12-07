@@ -9,7 +9,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapPaths;
+import org.springframework.roo.addon.requestfactory.gwt.GwtPaths;
 
 
 /**
@@ -22,12 +22,12 @@ public class GwtPathTest {
 
     @Test
     public void testPackageNameForWebPath() {
-        assertEquals("", GwtBootstrapPaths.WEB.packageName(null));
+        assertEquals("", GwtPaths.WEB.packageName(null));
     }
 
     @Test
     public void testSegmentNamesAreNonNull() {
-        for (final RequestFactoryPath requestFactoryPath : GwtBootstrapPaths.ALL_PATHS) {
+        for (final RequestFactoryPath requestFactoryPath : GwtPaths.ALL_PATHS) {
             assertNotNull("Null segment name for " + requestFactoryPath,
                     requestFactoryPath.getSegmentName());
         }
@@ -36,7 +36,7 @@ public class GwtPathTest {
     @Test
     public void testSegmentNamesAreUnique() {
         final Collection<String> segmentNames = new HashSet<String>();
-        for (final RequestFactoryPath requestFactoryPath : GwtBootstrapPaths.ALL_PATHS) {
+        for (final RequestFactoryPath requestFactoryPath : GwtPaths.ALL_PATHS) {
             final String segmentName = requestFactoryPath.getSegmentName();
             assertTrue("Duplicate segment name '" + segmentName + "'",
                     segmentNames.add(segmentName));
@@ -45,6 +45,6 @@ public class GwtPathTest {
 
     @Test
     public void testSegmentPackageForWebPath() {
-        assertEquals("", GwtBootstrapPaths.WEB.segmentPackage());
+        assertEquals("", GwtPaths.WEB.segmentPackage());
     }
 }

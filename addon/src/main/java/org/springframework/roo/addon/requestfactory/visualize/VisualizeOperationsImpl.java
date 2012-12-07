@@ -14,7 +14,7 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.requestfactory.annotations.visualize.RooMapMarker;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapTypeService;
+import org.springframework.roo.addon.requestfactory.gwt.GwtTypeService;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
@@ -55,7 +55,7 @@ public class VisualizeOperationsImpl implements VisualizeOperations {
      */
     @Reference private TypeManagementService typeManagementService;
 
-    @Reference protected GwtBootstrapTypeService gwtBootstrapTypeService;
+    @Reference protected GwtTypeService gwtTypeService;
 
     @Override
     public boolean isAnnotateCommandAvailable() {
@@ -126,7 +126,7 @@ public class VisualizeOperationsImpl implements VisualizeOperations {
         projectOperations.addDependencies(moduleName, dependencies);
         
         try {
-            gwtBootstrapTypeService.addInheritsModule(MAPS_MODULE, moduleName);
+            gwtTypeService.addInheritsModule(MAPS_MODULE, moduleName);
         } catch (IllegalStateException e) {
             LOGGER.warning("Problem adding " + MAPS_MODULE
                     + " to inheritance (.gwt.xml file may not yet exist)");

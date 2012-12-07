@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
+package org.springframework.roo.addon.requestfactory.gwt;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,7 +18,7 @@ import org.w3c.dom.Document;
  * @author James Tyrrell
  * @since 1.1.2
  */
-public interface GwtBootstrapTypeService {
+public interface GwtTypeService {
 
     void buildType(RequestFactoryType destType,
             List<ClassOrInterfaceTypeDetails> templateTypeDetails,

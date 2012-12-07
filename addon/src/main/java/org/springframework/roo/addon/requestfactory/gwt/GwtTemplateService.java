@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
+package org.springframework.roo.addon.requestfactory.gwt;
 
 import hapax.TemplateDataDictionary;
 
@@ -17,12 +17,12 @@ import org.springframework.roo.model.JavaType;
 import org.w3c.dom.Document;
 
 /**
- * Interface for {@link GwtBootstrapTemplateServiceImpl}.
+ * Interface for {@link GwtTemplateServiceImpl}.
  *
  * @author James Tyrrell
  * @since 1.1.2
  */
-public interface GwtBootstrapTemplateService {
+public interface GwtTemplateService {
 
     String buildUiXml(String templateContents, String destFile,
             List<MethodMetadata> proxyMethods);

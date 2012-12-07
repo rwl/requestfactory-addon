@@ -6,7 +6,7 @@ import org.springframework.roo.model.JavaType;
 public interface AccountMetadataProvider extends ItdTriggerBasedMetadataProvider {
 
     /**
-     * Returns the values of the Gwt Bootstrap-related annotation on the given Java type
+     * Returns the values of the Account-related annotation on the given Java type
      * (if any).
      *
      * @param javaType can be <code>null</code>

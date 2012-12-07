@@ -1,6 +1,6 @@
-package org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold;
+package org.springframework.roo.addon.requestfactory.gwt.scaffold;
 
-import static org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapJavaType.ROO_GWT_BOOTSTRAP_SCAFFOLD;
+import static org.springframework.roo.addon.requestfactory.gwt.GwtJavaType.ROO_REQUEST_FACTORY_GWT;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,13 +17,13 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHolder;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.annotations.gwt.bootstrap.RooGwtBootstrapScaffold;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapPaths;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapProxyProperty;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapTemplateService;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapType;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapTypeService;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapUtils;
+import org.springframework.roo.addon.requestfactory.annotations.gwt.RooRequestFactoryGwt;
+import org.springframework.roo.addon.requestfactory.gwt.GwtPaths;
+import org.springframework.roo.addon.requestfactory.gwt.GwtProxyProperty;
+import org.springframework.roo.addon.requestfactory.gwt.GwtTemplateService;
+import org.springframework.roo.addon.requestfactory.gwt.GwtType;
+import org.springframework.roo.addon.requestfactory.gwt.GwtTypeService;
+import org.springframework.roo.addon.requestfactory.gwt.GwtUtils;
 import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadataProviderImpl;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
@@ -50,7 +50,7 @@ import org.springframework.roo.project.PathResolver;
  * <p/>
  * <p/>
  * Like all Roo add-ons, this provider aims to expose potentially-useful
- * contents of the above files via {@link GwtBootstrapScaffoldMetadata}. It also attempts
+ * contents of the above files via {@link GwtScaffoldMetadata}. It also attempts
  * to avoiding writing to disk unless actually necessary.
  * <p/>
  * <p/>
@@ -65,11 +65,11 @@ import org.springframework.roo.project.PathResolver;
  */
 @Component(immediate = true)
 @Service
-public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaffoldMetadataProviderImpl
-        implements GwtBootstrapScaffoldMetadataProvider {
+public class GwtScaffoldMetadataProviderImpl extends RequestFactoryScaffoldMetadataProviderImpl
+        implements GwtScaffoldMetadataProvider {
 
-    @Reference protected GwtBootstrapTemplateService gwtBootstrapTemplateService;
-    @Reference protected GwtBootstrapTypeService gwtBootstrapTypeService;
+    @Reference protected GwtTemplateService gwtTemplateService;
+    @Reference protected GwtTypeService gwtTypeService;
 
     protected void activate(final ComponentContext context) {
         metadataDependencyRegistry.registerDependency(
@@ -85,37 +85,37 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
 
     @Override
     protected boolean isScaffoldEnabled(final ClassOrInterfaceTypeDetails proxy) {
-        return proxy.getAnnotation(ROO_GWT_BOOTSTRAP_SCAFFOLD) != null;
+        return proxy.getAnnotation(ROO_REQUEST_FACTORY_GWT) != null;
     }
 
     @Override
     protected void buildType(final RequestFactoryType type, final String moduleName) {
-        gwtBootstrapTypeService.buildType(type, gwtBootstrapTemplateService
+        gwtTypeService.buildType(type, gwtTemplateService
                 .getStaticTemplateTypeDetails(type, moduleName), moduleName);
     }
 
     @Override
     protected String createLocalIdentifier(final JavaType javaType,
             final LogicalPath path) {
-        return GwtBootstrapScaffoldMetadata.createIdentifier(javaType, path);
+        return GwtScaffoldMetadata.createIdentifier(javaType, path);
     }
 
     @Override
     protected void buildTypes(final String moduleName) {
-        buildType(GwtBootstrapType.LIST_PLACE_RENDERER, moduleName);
-        buildType(GwtBootstrapType.PROXY_PLACE_RENDERER, moduleName);
-        buildType(GwtBootstrapType.MASTER_ACTIVITIES, moduleName);
-        buildType(GwtBootstrapType.MOBILE_ACTIVITY_MAPPER, moduleName);
-        buildType(GwtBootstrapType.IS_LEAF_PROCESSOR, moduleName);
-        buildType(GwtBootstrapType.PROXY_LIST_NODE_PROCESSOR, moduleName);
-        buildType(GwtBootstrapType.PROXY_NODE_PROCESSOR, moduleName);
+        buildType(GwtType.LIST_PLACE_RENDERER, moduleName);
+        buildType(GwtType.PROXY_PLACE_RENDERER, moduleName);
+        buildType(GwtType.MASTER_ACTIVITIES, moduleName);
+        buildType(GwtType.MOBILE_ACTIVITY_MAPPER, moduleName);
+        buildType(GwtType.IS_LEAF_PROCESSOR, moduleName);
+        buildType(GwtType.PROXY_LIST_NODE_PROCESSOR, moduleName);
+        buildType(GwtType.PROXY_NODE_PROCESSOR, moduleName);
     }
 
     @Override
     protected String getModuleName(ClassOrInterfaceTypeDetails proxy) {
         String moduleName = RequestFactoryUtils.getStringAnnotationValue(proxy,
-                ROO_GWT_BOOTSTRAP_SCAFFOLD,
-                RooGwtBootstrapScaffold.MODULE_ATTRIBUTE, "");
+                ROO_REQUEST_FACTORY_GWT,
+                RooRequestFactoryGwt.MODULE_ATTRIBUTE, "");
         if (moduleName.isEmpty()) {
             return super.getModuleName(proxy);
         } else {
@@ -125,7 +125,7 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
 
     @Override
     protected MetadataItem createMetadataItem(final String metadataIdentificationString) {
-        return new GwtBootstrapScaffoldMetadata(metadataIdentificationString);
+        return new GwtScaffoldMetadata(metadataIdentificationString);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
             final List<AnnotationMetadata> annotations,
             final MethodMetadata proxyMethod) {
 
-        return new GwtBootstrapProxyProperty(
+        return new GwtProxyProperty(
                 topLevelPackage, ptmd, propertyType,
                 propertyName.getSymbolName(), annotations, proxyMethod
                         .getMethodName().getSymbolName());
@@ -147,7 +147,7 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
             Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap,
             final String moduleName) {
 
-        return gwtBootstrapTemplateService
+        return gwtTemplateService
                 .getMirrorTemplateTypeDetails(mirroredType, clientSideTypeMap,
                         moduleName);
     }
@@ -168,26 +168,26 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
         for (final Map.Entry<RequestFactoryType, JavaType> entry : mirrorTypeMap
                 .entrySet()) {
             final RequestFactoryType requestFactoryType = entry.getKey();
-            if (!(requestFactoryType instanceof GwtBootstrapType)) {
+            if (!(requestFactoryType instanceof GwtType)) {
                 continue;
             }
-            final GwtBootstrapType gwtBootstrapType = (GwtBootstrapType) entry.getKey();
-            if (!gwtBootstrapType.isMirrorType()
-//                    || gwtBootstrapType.equals(RequestFactoryType.PROXY)
-//                    || gwtBootstrapType.equals(RequestFactoryType.REQUEST)
+            final GwtType gwtType = (GwtType) entry.getKey();
+            if (!gwtType.isMirrorType()
+//                    || gwtType.equals(RequestFactoryType.PROXY)
+//                    || gwtType.equals(RequestFactoryType.REQUEST)
                     ) {
                 continue;
             }
-            gwtBootstrapType.dynamicallyResolveFieldsToWatch(clientSideTypeMap);
-            gwtBootstrapType.dynamicallyResolveMethodsToWatch(proxy.getName(),
+            gwtType.dynamicallyResolveFieldsToWatch(clientSideTypeMap);
+            gwtType.dynamicallyResolveMethodsToWatch(proxy.getName(),
                     clientSideTypeMap, topLevelPackage);
 
             final List<MemberHoldingTypeDetails> extendsTypes = requestFactoryTypeService
                     .getExtendsTypes(templateDataHolder
-                            .getTemplateTypeDetailsMap().get(gwtBootstrapType));
-            typesToBeWritten.put(gwtBootstrapType, requestFactoryTypeService
-                    .buildType(gwtBootstrapType, templateDataHolder
-                            .getTemplateTypeDetailsMap().get(gwtBootstrapType),
+                            .getTemplateTypeDetailsMap().get(gwtType));
+            typesToBeWritten.put(gwtType, requestFactoryTypeService
+                    .buildType(gwtType, templateDataHolder
+                            .getTemplateTypeDetailsMap().get(gwtType),
                             extendsTypes, moduleName));
 
         }
@@ -209,23 +209,23 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
         for (final Map.Entry<RequestFactoryType, JavaType> entry : mirrorTypeMap
                 .entrySet()) {
             final RequestFactoryType requestFactoryType = entry.getKey();
-            if (!(requestFactoryType instanceof GwtBootstrapType)) {
+            if (!(requestFactoryType instanceof GwtType)) {
                 continue;
             }
-            final GwtBootstrapType gwtBootstrapType = (GwtBootstrapType) entry.getKey();
+            final GwtType gwtType = (GwtType) entry.getKey();
             final JavaType javaType = entry.getValue();
-            if (!gwtBootstrapType.isMirrorType()
-//                    || gwtBootstrapType.equals(RequestFactoryType.PROXY)
-//                    || gwtBootstrapType.equals(RequestFactoryType.REQUEST)
+            if (!gwtType.isMirrorType()
+//                    || gwtType.equals(RequestFactoryType.PROXY)
+//                    || gwtType.equals(RequestFactoryType.REQUEST)
                     ) {
                 continue;
             }
-//            gwtBootstrapType.dynamicallyResolveFieldsToWatch(clientSideTypeMap);
-//            gwtBootstrapType.dynamicallyResolveMethodsToWatch(proxy.getName(),
+//            gwtType.dynamicallyResolveFieldsToWatch(clientSideTypeMap);
+//            gwtType.dynamicallyResolveMethodsToWatch(proxy.getName(),
 //                    clientSideTypeMap, topLevelPackage);
 
-            if (gwtBootstrapType.isCreateUiXml()) {
-                final RequestFactoryPath requestFactoryPath = gwtBootstrapType.getPath();
+            if (gwtType.isCreateUiXml()) {
+                final RequestFactoryPath requestFactoryPath = gwtType.getPath();
                 final PathResolver pathResolver = projectOperations
                         .getPathResolver();
                 final String webappPath = pathResolver.getIdentifier(
@@ -236,12 +236,12 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
                                 Path.SRC_MAIN_JAVA, moduleName), requestFactoryPath
                                 .getPackagePath(topLevelPackage));
 
-                final String targetDirectory = requestFactoryPath == GwtBootstrapPaths.WEB ? webappPath
+                final String targetDirectory = requestFactoryPath == GwtPaths.WEB ? webappPath
                         : packagePath;
                 final String destFile = targetDirectory + File.separatorChar
                         + javaType.getSimpleTypeName() + ".ui.xml";
-                final String contents = gwtBootstrapTemplateService.buildUiXml(
-                        templateDataHolder.getXmlTemplates().get(gwtBootstrapType),
+                final String contents = gwtTemplateService.buildUiXml(
+                        templateDataHolder.getXmlTemplates().get(gwtType),
                         destFile,
                         new ArrayList<MethodMetadata>(proxy
                                 .getDeclaredMethods()));
@@ -254,16 +254,16 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
     @Override
     protected Map<RequestFactoryType, JavaType> getMirrorTypeMap(
             final JavaType governorType, final JavaPackage topLevelPackage) {
-        return GwtBootstrapUtils.getMirrorTypeMap(governorType,
+        return GwtUtils.getMirrorTypeMap(governorType,
                 topLevelPackage);
     }
 
     @Override
     protected ClassOrInterfaceTypeDetails getGovernor(
             final String metadataIdentificationString) {
-        final JavaType governorTypeName = GwtBootstrapScaffoldMetadata
+        final JavaType governorTypeName = GwtScaffoldMetadata
                 .getJavaType(metadataIdentificationString);
-        final LogicalPath governorTypePath = GwtBootstrapScaffoldMetadata
+        final LogicalPath governorTypePath = GwtScaffoldMetadata
                 .getPath(metadataIdentificationString);
 
         final String physicalTypeId = PhysicalTypeIdentifier.createIdentifier(
@@ -273,6 +273,6 @@ public class GwtBootstrapScaffoldMetadataProviderImpl extends RequestFactoryScaf
 
     @Override
     public String getProvidesType() {
-        return GwtBootstrapScaffoldMetadata.getMetadataIdentifierType();
+        return GwtScaffoldMetadata.getMetadataIdentifierType();
     }
 }

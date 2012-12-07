@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
+package org.springframework.roo.addon.requestfactory.gwt;
 
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.Feature;
@@ -10,7 +10,7 @@ import org.springframework.roo.project.maven.Pom;
  *
  * @since 1.1
  */
-public interface GwtBootstrapOperations extends Feature {
+public interface GwtOperations extends Feature {
 
     /**
      * The delimiter for multi-level paths specified by a "<source path="..." />
@@ -22,7 +22,7 @@ public interface GwtBootstrapOperations extends Feature {
 
     boolean isGwtInstallationPossible();
 
-    void setupGwtBootstrap();
+    void setupGwt();
 
     void scaffoldAll(final Pom module);
 

@@ -178,11 +178,11 @@ public class EntityLayerProvider extends CoreLayerProvider {
     /**
      * For use by unit tests
      *
-     * @param gwtBootstrapMetadataProvider
+     * @param entityMetadataProvider
      */
     void setJpaActiveRecordMetadataProvider(
-            final EntityMetadataProviderImpl gwtBootstrapMetadataProvider) {
-        this.entityMetadataProvider = gwtBootstrapMetadataProvider;
+            final EntityMetadataProviderImpl entityMetadataProvider) {
+        this.entityMetadataProvider = entityMetadataProvider;
     }
 
     /**

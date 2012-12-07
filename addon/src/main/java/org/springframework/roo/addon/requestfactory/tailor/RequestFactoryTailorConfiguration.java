@@ -30,7 +30,7 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
         config.addCommandConfig(createModuleFocusCommandConfig("enum type", "shared"));
         config.addCommandConfig(createCommandConfigFieldSetup());
         config.addCommandConfig(createProxyRequestCommandConfig());
-        config.addCommandConfig(createModuleFocusCommandConfig("web requestfactory gwt bootstrap", "client/gwt"));
+        config.addCommandConfig(createModuleFocusCommandConfig("web requestfactory gwt", "client/gwt"));
         config.addCommandConfig(createModuleFocusCommandConfig("web requestfactory android", "client/android"));
         return Arrays.asList(config);
     }

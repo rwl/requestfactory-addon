@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
+package org.springframework.roo.addon.requestfactory.gwt;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,12 +8,12 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
 
-public final class GwtBootstrapUtils {
+public final class GwtUtils {
 
     public static Map<RequestFactoryType, JavaType> getMirrorTypeMap(
             final JavaType governorType, final JavaPackage topLevelPackage) {
         final Map<RequestFactoryType, JavaType> mirrorTypeMap = new HashMap<RequestFactoryType, JavaType>();
-        for (final GwtBootstrapType mirrorType : GwtBootstrapType.ALL_TYPES) {
+        for (final GwtType mirrorType : GwtType.ALL_TYPES) {
             mirrorTypeMap.put(
                     mirrorType,
                     RequestFactoryUtils.convertGovernorTypeNameIntoKeyTypeName(governorType,
@@ -22,6 +22,6 @@ public final class GwtBootstrapUtils {
         return mirrorTypeMap;
     }
 
-    private GwtBootstrapUtils() {
+    private GwtUtils() {
     }
 }

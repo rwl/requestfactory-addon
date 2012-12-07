@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.annotations.gwt.bootstrap;
+package org.springframework.roo.addon.requestfactory.annotations.gwt;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
-public @interface RooGwtBootstrapScaffold {
+public @interface RooRequestFactoryGwt {
 
     String MODULE_ATTRIBUTE = "module";
 

@@ -3,7 +3,7 @@ package org.springframework.roo.addon.requestfactory;
 import java.io.File;
 
 import org.apache.commons.lang3.Validate;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.GwtBootstrapPaths;
+import org.springframework.roo.addon.requestfactory.gwt.GwtPaths;
 import org.springframework.roo.model.JavaPackage;
 
 public class RequestFactoryPath {
@@ -87,7 +87,7 @@ public class RequestFactoryPath {
     }
 
     public String packageName(final JavaPackage topLevelPackage) {
-        if (GwtBootstrapPaths.WEB.equals(this)) {
+        if (GwtPaths.WEB.equals(this)) {
             return "";
         }
         return topLevelPackage.getFullyQualifiedPackageName()
@@ -95,7 +95,7 @@ public class RequestFactoryPath {
     }
 
     public String segmentPackage() {
-        if (GwtBootstrapPaths.WEB.equals(this)) {
+        if (GwtPaths.WEB.equals(this)) {
             return "";
         }
         return segmentName.substring(1).replace('/', '.');

@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
+package org.springframework.roo.addon.requestfactory.gwt;
 
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ACCEPTS_ONE_WIDGET;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ENTITY_PROXY;
@@ -22,58 +22,58 @@ import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 
-public class GwtBootstrapType extends RequestFactoryType {
+public class GwtType extends RequestFactoryType {
 
-    public static final GwtBootstrapType MASTER_ACTIVITIES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "masterActivities", "ApplicationMasterActivities", false, false, false);
-    public static final GwtBootstrapType ACTIVITIES_MAPPER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ActivitiesMapper", "activitiesMapper", "ActivitiesMapper", false, false, false);
-    public static final GwtBootstrapType LIST_ACTIVITIES_MAPPER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ListActivitiesMapper", "listActivitiesMapper", "ListActivitiesMapper", false, false, false);
+    public static final GwtType MASTER_ACTIVITIES = new GwtType(GwtPaths.MANAGED_ACTIVITY, false, "", "masterActivities", "ApplicationMasterActivities", false, false, false);
+    public static final GwtType ACTIVITIES_MAPPER = new GwtType(GwtPaths.MANAGED_ACTIVITY, true, "ActivitiesMapper", "activitiesMapper", "ActivitiesMapper", false, false, false);
+    public static final GwtType LIST_ACTIVITIES_MAPPER = new GwtType(GwtPaths.MANAGED_ACTIVITY, true, "ListActivitiesMapper", "listActivitiesMapper", "ListActivitiesMapper", false, false, false);
     
-    public static final GwtBootstrapType DETAIL_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "DetailsActivity", "detailsActivity", "DetailsActivity", false, true, false);
-    public static final GwtBootstrapType DETAILS_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI, true, "DetailsView", "detailsView", "DetailsView", false, false, false);
-    public static final GwtBootstrapType DESKTOP_DETAILS_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopDetailsView", "desktopDetailsView", "DesktopDetailsView", true, true, false);
+    public static final GwtType DETAIL_ACTIVITY = new GwtType(GwtPaths.MANAGED_ACTIVITY, true, "DetailsActivity", "detailsActivity", "DetailsActivity", false, true, false);
+    public static final GwtType DETAILS_VIEW = new GwtType(GwtPaths.MANAGED_UI, true, "DetailsView", "detailsView", "DetailsView", false, false, false);
+    public static final GwtType DESKTOP_DETAILS_VIEW = new GwtType(GwtPaths.MANAGED_UI_DESKTOP, true, "DesktopDetailsView", "desktopDetailsView", "DesktopDetailsView", true, true, false);
     
-    public static final GwtBootstrapType EDIT_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "EditActivity", "editActivity", "EditActivity", false, false, false);
-    public static final GwtBootstrapType EDIT_ACTIVITY_WRAPPER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "EditActivityWrapper", "editActivityWrapper", "EditActivityWrapper", false, true, false);
-    public static final GwtBootstrapType CREATE_ACTIVITY_WRAPPER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "CreateActivityWrapper", "createActivityWrapper", "CreateActivityWrapper", false, false, false);
-    public static final GwtBootstrapType EDIT_RENDERER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_RENDERER, true, "ProxyRenderer", "renderer", "EditRenderer", false, false, false);
-    public static final GwtBootstrapType EDIT_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI, true, "EditView", "editView", "EditView", false, false, false);
-    public static final GwtBootstrapType DESKTOP_EDIT_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopEditView", "desktopEditView", "DesktopEditView", true, true, false);
-    public static final GwtBootstrapType LIST_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ListActivity", "listActivity", "ListActivity", false, true, false);
-    public static final GwtBootstrapType LIST_VISUALIZE_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "ListVisualizeActivity", "listVisualizeActivity", "ListVisualizeActivity", false, true, false);
-    public static final GwtBootstrapType LIST_EDITOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_EDITOR, true, "ListEditor", "listEditor", "ListEditor", true, true, false);
-    public static final GwtBootstrapType LIST_PLACE_RENDERER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_RENDERER, false, "", "listPlaceRenderer", "ApplicationListPlaceRenderer", false, true, false);
-    public static final GwtBootstrapType PROXY_PLACE_RENDERER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_RENDERER, false, "", "proxyPlaceRenderer", "ApplicationProxyPlaceRenderer", false, true, false);
-    public static final GwtBootstrapType DESKTOP_LIST_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopListView", "desktopListView", "DesktopListView", true, true, false);
-    public static final GwtBootstrapType DESKTOP_LIST_VISUALIZE_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopListVisualizeView", "desktopListVisualizeView", "DesktopListVisualizeView", true, true, false);
+    public static final GwtType EDIT_ACTIVITY = new GwtType(GwtPaths.MANAGED_ACTIVITY, true, "EditActivity", "editActivity", "EditActivity", false, false, false);
+    public static final GwtType EDIT_ACTIVITY_WRAPPER = new GwtType(GwtPaths.MANAGED_ACTIVITY, true, "EditActivityWrapper", "editActivityWrapper", "EditActivityWrapper", false, true, false);
+    public static final GwtType CREATE_ACTIVITY_WRAPPER = new GwtType(GwtPaths.MANAGED_ACTIVITY, true, "CreateActivityWrapper", "createActivityWrapper", "CreateActivityWrapper", false, false, false);
+    public static final GwtType EDIT_RENDERER = new GwtType(GwtPaths.MANAGED_UI_RENDERER, true, "ProxyRenderer", "renderer", "EditRenderer", false, false, false);
+    public static final GwtType EDIT_VIEW = new GwtType(GwtPaths.MANAGED_UI, true, "EditView", "editView", "EditView", false, false, false);
+    public static final GwtType DESKTOP_EDIT_VIEW = new GwtType(GwtPaths.MANAGED_UI_DESKTOP, true, "DesktopEditView", "desktopEditView", "DesktopEditView", true, true, false);
+    public static final GwtType LIST_ACTIVITY = new GwtType(GwtPaths.MANAGED_ACTIVITY, true, "ListActivity", "listActivity", "ListActivity", false, true, false);
+    public static final GwtType LIST_VISUALIZE_ACTIVITY = new GwtType(GwtPaths.MANAGED_ACTIVITY, true, "ListVisualizeActivity", "listVisualizeActivity", "ListVisualizeActivity", false, true, false);
+    public static final GwtType LIST_EDITOR = new GwtType(GwtPaths.MANAGED_UI_EDITOR, true, "ListEditor", "listEditor", "ListEditor", true, true, false);
+    public static final GwtType LIST_PLACE_RENDERER = new GwtType(GwtPaths.MANAGED_UI_RENDERER, false, "", "listPlaceRenderer", "ApplicationListPlaceRenderer", false, true, false);
+    public static final GwtType PROXY_PLACE_RENDERER = new GwtType(GwtPaths.MANAGED_UI_RENDERER, false, "", "proxyPlaceRenderer", "ApplicationProxyPlaceRenderer", false, true, false);
+    public static final GwtType DESKTOP_LIST_VIEW = new GwtType(GwtPaths.MANAGED_UI_DESKTOP, true, "DesktopListView", "desktopListView", "DesktopListView", true, true, false);
+    public static final GwtType DESKTOP_LIST_VISUALIZE_VIEW = new GwtType(GwtPaths.MANAGED_UI_DESKTOP, true, "DesktopListVisualizeView", "desktopListVisualizeView", "DesktopListVisualizeView", true, true, false);
     
-    public static final GwtBootstrapType VISUALIZE_ACTIVITY = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, true, "VisualizeActivity", "visualizeActivity", "VisualizeActivity", false, true, false);
-    public static final GwtBootstrapType VISUALIZE_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI, true, "VisualizeView", "visualizeView", "VisualizeView", false, false, false);
-    public static final GwtBootstrapType DESKTOP_VISUALIZE_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_DESKTOP, true, "DesktopVisualizeView", "desktopVisualizeView", "DesktopVisualizeView", true, true, false);
+    public static final GwtType VISUALIZE_ACTIVITY = new GwtType(GwtPaths.MANAGED_ACTIVITY, true, "VisualizeActivity", "visualizeActivity", "VisualizeActivity", false, true, false);
+    public static final GwtType VISUALIZE_VIEW = new GwtType(GwtPaths.MANAGED_UI, true, "VisualizeView", "visualizeView", "VisualizeView", false, false, false);
+    public static final GwtType DESKTOP_VISUALIZE_VIEW = new GwtType(GwtPaths.MANAGED_UI_DESKTOP, true, "DesktopVisualizeView", "desktopVisualizeView", "DesktopVisualizeView", true, true, false);
     
-    public static final GwtBootstrapType PROXY_MESSAGES = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_MESSAGES, true, "Messages", "proxyMessages", "Messages", false, false, false);
+    public static final GwtType PROXY_MESSAGES = new GwtType(GwtPaths.MANAGED_MESSAGES, true, "Messages", "proxyMessages", "Messages", false, false, false);
 
-    public static final GwtBootstrapType ABSTRACT_DATA_PROVIDER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_PROVIDER, true, "ListDataProvider", "listDataProvider", "ListDataProvider", false, false, false);
-    public static final GwtBootstrapType PROXY_DATA_PROVIDER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_PROVIDER, true, "ProxyDataProvider", "proxyDataProvider", "ProxyDataProvider", false, false, false);
-    public static final GwtBootstrapType NODE_DATA_PROVIDER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_PROVIDER, true, "NodeDataProvider", "nodeDataProvider", "NodeDataProvider", false, false, false);
-    public static final GwtBootstrapType IS_LEAF_PROCESSOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_TREE, false, "", "isLeafProcessor", "IsLeafProcessor", false, false, false);
-    public static final GwtBootstrapType PROXY_LIST_NODE_PROCESSOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_TREE, false, "", "proxyListNodeProcessor", "ProxyListNodeProcessor", false, false, false);
-    public static final GwtBootstrapType PROXY_NODE_PROCESSOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_TREE, false, "", "proxyNodeProcessor", "ProxyNodeProcessor", false, false, false);
+    public static final GwtType ABSTRACT_DATA_PROVIDER = new GwtType(GwtPaths.MANAGED_PROVIDER, true, "ListDataProvider", "listDataProvider", "ListDataProvider", false, false, false);
+    public static final GwtType PROXY_DATA_PROVIDER = new GwtType(GwtPaths.MANAGED_PROVIDER, true, "ProxyDataProvider", "proxyDataProvider", "ProxyDataProvider", false, false, false);
+    public static final GwtType NODE_DATA_PROVIDER = new GwtType(GwtPaths.MANAGED_PROVIDER, true, "NodeDataProvider", "nodeDataProvider", "NodeDataProvider", false, false, false);
+    public static final GwtType IS_LEAF_PROCESSOR = new GwtType(GwtPaths.MANAGED_TREE, false, "", "isLeafProcessor", "IsLeafProcessor", false, false, false);
+    public static final GwtType PROXY_LIST_NODE_PROCESSOR = new GwtType(GwtPaths.MANAGED_TREE, false, "", "proxyListNodeProcessor", "ProxyListNodeProcessor", false, false, false);
+    public static final GwtType PROXY_NODE_PROCESSOR = new GwtType(GwtPaths.MANAGED_TREE, false, "", "proxyNodeProcessor", "ProxyNodeProcessor", false, false, false);
 
-    public static final GwtBootstrapType MOBILE_ACTIVITY_MAPPER = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_ACTIVITY, false, "", "mobileActivityMapper", "MobileActivityMapper", false, false, false);
-    public static final GwtBootstrapType MOBILE_DETAILS_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_MOBILE, true, "MobileDetailsView", "mobileDetailsView", "MobileDetailsView", true, true, false);
-    public static final GwtBootstrapType MOBILE_EDIT_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_MOBILE, true, "MobileEditView", "mobileEditView", "MobileEditView", true, true, false);
-    public static final GwtBootstrapType MOBILE_LIST_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_MOBILE, true, "MobileListView", "mobileListView", "MobileListView", false, true, false);
-    public static final GwtBootstrapType MOBILE_PROXY_LIST_VIEW = new GwtBootstrapType(GwtBootstrapPaths.SCAFFOLD_UI, false, "", "mobileProxyListView", "MobileProxyListView", false, false, false);
-    public static final GwtBootstrapType MOBILE_VISUALIZE_VIEW = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_MOBILE, true, "MobileVisualizeView", "mobileVisualizeView", "MobileVisualizeView", true, true, false);
+    public static final GwtType MOBILE_ACTIVITY_MAPPER = new GwtType(GwtPaths.MANAGED_ACTIVITY, false, "", "mobileActivityMapper", "MobileActivityMapper", false, false, false);
+    public static final GwtType MOBILE_DETAILS_VIEW = new GwtType(GwtPaths.MANAGED_UI_MOBILE, true, "MobileDetailsView", "mobileDetailsView", "MobileDetailsView", true, true, false);
+    public static final GwtType MOBILE_EDIT_VIEW = new GwtType(GwtPaths.MANAGED_UI_MOBILE, true, "MobileEditView", "mobileEditView", "MobileEditView", true, true, false);
+    public static final GwtType MOBILE_LIST_VIEW = new GwtType(GwtPaths.MANAGED_UI_MOBILE, true, "MobileListView", "mobileListView", "MobileListView", false, true, false);
+    public static final GwtType MOBILE_PROXY_LIST_VIEW = new GwtType(GwtPaths.SCAFFOLD_UI, false, "", "mobileProxyListView", "MobileProxyListView", false, false, false);
+    public static final GwtType MOBILE_VISUALIZE_VIEW = new GwtType(GwtPaths.MANAGED_UI_MOBILE, true, "MobileVisualizeView", "mobileVisualizeView", "MobileVisualizeView", true, true, false);
 
-    public static final GwtBootstrapType SET_EDITOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_EDITOR, true, "SetEditor", "setEditor", "SetEditor", true, true, false);
-    public static final GwtBootstrapType INSTANCE_EDITOR = new GwtBootstrapType(GwtBootstrapPaths.MANAGED_UI_EDITOR, true, "Editor", "editor", "Editor", true, true, false);
+    public static final GwtType SET_EDITOR = new GwtType(GwtPaths.MANAGED_UI_EDITOR, true, "SetEditor", "setEditor", "SetEditor", true, true, false);
+    public static final GwtType INSTANCE_EDITOR = new GwtType(GwtPaths.MANAGED_UI_EDITOR, true, "Editor", "editor", "Editor", true, true, false);
 
-    public static final GwtBootstrapType APPLICATION = new GwtBootstrapType(GwtBootstrapPaths.SCAFFOLD, false, "", "application", "Application", false, false, false);
-    public static final GwtBootstrapType DESKTOP_APPLICATION = new GwtBootstrapType(GwtBootstrapPaths.SCAFFOLD, false, "", "desktopApplication", "DesktopApplication", false, false, false);
-    public static final GwtBootstrapType MOBILE_APPLICATION = new GwtBootstrapType(GwtBootstrapPaths.SCAFFOLD, false, "", "mobileApplication", "MobileApplication", false, false, false);
+    public static final GwtType APPLICATION = new GwtType(GwtPaths.SCAFFOLD, false, "", "application", "Application", false, false, false);
+    public static final GwtType DESKTOP_APPLICATION = new GwtType(GwtPaths.SCAFFOLD, false, "", "desktopApplication", "DesktopApplication", false, false, false);
+    public static final GwtType MOBILE_APPLICATION = new GwtType(GwtPaths.SCAFFOLD, false, "", "mobileApplication", "MobileApplication", false, false, false);
 
-    public static final GwtBootstrapType[] ALL_TYPES = new GwtBootstrapType[] {
+    public static final GwtType[] ALL_TYPES = new GwtType[] {
         MASTER_ACTIVITIES, ACTIVITIES_MAPPER, LIST_ACTIVITIES_MAPPER,
         DETAIL_ACTIVITY, DETAILS_VIEW, DESKTOP_DETAILS_VIEW,
         EDIT_ACTIVITY, EDIT_ACTIVITY_WRAPPER, CREATE_ACTIVITY_WRAPPER,
@@ -89,9 +89,9 @@ public class GwtBootstrapType extends RequestFactoryType {
         PROXY_MESSAGES
     };
 
-    public static List<GwtBootstrapType> getGwtBootstrapMirrorTypes() {
-        final List<GwtBootstrapType> mirrorTypes = new ArrayList<GwtBootstrapType>();
-        for (final GwtBootstrapType requestFactoryType : GwtBootstrapType.ALL_TYPES) {
+    public static List<GwtType> getGwtMirrorTypes() {
+        final List<GwtType> mirrorTypes = new ArrayList<GwtType>();
+        for (final GwtType requestFactoryType : GwtType.ALL_TYPES) {
             if (requestFactoryType.isMirrorType()) {
                 mirrorTypes.add(requestFactoryType);
             }
@@ -101,7 +101,7 @@ public class GwtBootstrapType extends RequestFactoryType {
 
     protected final boolean createUiXml;
 
-    public GwtBootstrapType(final RequestFactoryPath path, final boolean mirrorType,
+    public GwtType(final RequestFactoryPath path, final boolean mirrorType,
             final String suffix, final String name, final String template,
             final boolean createUiXml, final boolean createAbstract,
             final boolean overwriteConcrete) {

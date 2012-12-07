@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
+package org.springframework.roo.addon.requestfactory.gwt;
 
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import hapax.TemplateDataDictionary;
@@ -37,7 +37,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.entity.TextType;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
+import org.springframework.roo.addon.requestfactory.gwt.scaffold.GwtScaffoldMetadata;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
@@ -72,9 +72,9 @@ import org.xml.sax.SAXException;
  */
 @Component
 @Service
-public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateService {
+public class GwtTemplateServiceImpl implements GwtTemplateService {
 
-    private static final String TEMPLATE_DIR = "org/springframework/roo/addon/requestfactory/gwt/bootstrap/scaffold/templates/";
+    private static final String TEMPLATE_DIR = "org/springframework/roo/addon/requestfactory/gwt/scaffold/templates/";
 
     @Reference RequestFactoryTypeService requestFactoryTypeService;
     @Reference RequestFactoryTemplateService templateService;
@@ -92,7 +92,7 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
                 proxies.iterator().next().getDeclaredByMetadataId()).getModule();
         final TemplateDataDictionary dataDictionary = buildStandardDataDictionary(
                 type, moduleName, proxyModuleName);
-        if (type == GwtBootstrapType.MASTER_ACTIVITIES) {
+        if (type == GwtType.MASTER_ACTIVITIES) {
             for (final ClassOrInterfaceTypeDetails proxy : proxies) {
                 if (!RequestFactoryUtils.scaffoldProxy(proxy)) {
                     continue;
@@ -114,29 +114,29 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
                     section.setVariable("proxySimpleNameUncapitalize",
                             StringUtils.uncapitalize(proxySimpleName));
                     templateService.addImport(dataDictionary, entitySimpleName,
-                            GwtBootstrapType.LIST_ACTIVITY, moduleName);
+                            GwtType.LIST_ACTIVITY, moduleName);
                     templateService.addImport(dataDictionary, proxy.getName()
                             .getFullyQualifiedTypeName());
                     templateService.addImport(
                             dataDictionary,
-                            GwtBootstrapType.ACTIVITIES_MAPPER.getPath().packageName(
+                            GwtType.ACTIVITIES_MAPPER.getPath().packageName(
                                     projectOperations
                                             .getTopLevelPackage(moduleName))
                                     + "."
                                     + entitySimpleName
-                                    + GwtBootstrapType.ACTIVITIES_MAPPER.getSuffix());
+                                    + GwtType.ACTIVITIES_MAPPER.getSuffix());
                     templateService.addImport(
                             dataDictionary,
-                            GwtBootstrapType.LIST_ACTIVITIES_MAPPER.getPath().packageName(
+                            GwtType.LIST_ACTIVITIES_MAPPER.getPath().packageName(
                                     projectOperations
                                             .getTopLevelPackage(moduleName))
                                     + "."
                                     + entitySimpleName
-                                    + GwtBootstrapType.LIST_ACTIVITIES_MAPPER.getSuffix());
+                                    + GwtType.LIST_ACTIVITIES_MAPPER.getSuffix());
                 }
             }
-        } else if (type == GwtBootstrapType.LIST_PLACE_RENDERER
-                || type == GwtBootstrapType.PROXY_PLACE_RENDERER) {
+        } else if (type == GwtType.LIST_PLACE_RENDERER
+                || type == GwtType.PROXY_PLACE_RENDERER) {
             for (final ClassOrInterfaceTypeDetails proxy : proxies) {
                 if (!RequestFactoryUtils.scaffoldProxy(proxy)) {
                     continue;
@@ -167,11 +167,11 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
                             .getFullyQualifiedTypeName());
                 }
             }
-        } else if (type == GwtBootstrapType.MOBILE_ACTIVITY_MAPPER) {
+        } else if (type == GwtType.MOBILE_ACTIVITY_MAPPER) {
             // do nothing
-        } else if (type == GwtBootstrapType.PROXY_NODE_PROCESSOR
-                || type == GwtBootstrapType.PROXY_LIST_NODE_PROCESSOR
-                || type == GwtBootstrapType.IS_LEAF_PROCESSOR) {
+        } else if (type == GwtType.PROXY_NODE_PROCESSOR
+                || type == GwtType.PROXY_LIST_NODE_PROCESSOR
+                || type == GwtType.IS_LEAF_PROCESSOR) {
             for (final ClassOrInterfaceTypeDetails proxy : proxies) {
                 if (!RequestFactoryUtils.scaffoldProxy(proxy)) {
                     continue;
@@ -186,8 +186,8 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
                     final JavaPackage topLevelPackage = projectOperations
                             .getTopLevelPackage(moduleName);
                     final String providerSimpleName = entitySimpleName
-                            + GwtBootstrapType.NODE_DATA_PROVIDER.getSuffix();
-                    final String providerFullName = GwtBootstrapType.NODE_DATA_PROVIDER.
+                            + GwtType.NODE_DATA_PROVIDER.getSuffix();
+                    final String providerFullName = GwtType.NODE_DATA_PROVIDER.
                             getPath().packageName(topLevelPackage)
                             + "." + providerSimpleName;
                     final TemplateDataDictionary section = dataDictionary
@@ -231,7 +231,7 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
                 }
             }
             dataDictionary.setVariable("scaffoldUiPackage",
-                    GwtBootstrapPaths.SCAFFOLD_UI.packageName(projectOperations
+                    GwtPaths.SCAFFOLD_UI.packageName(projectOperations
                             .getTopLevelPackage(moduleName)));
         }
 
@@ -265,19 +265,19 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
                 .getTopLevelPackage(moduleName);
 
         dataDictionary.setVariable("placePackage",
-                GwtBootstrapPaths.SCAFFOLD_PLACE.packageName(topLevelPackage));
+                GwtPaths.SCAFFOLD_PLACE.packageName(topLevelPackage));
         dataDictionary.setVariable("scaffoldUiPackage",
-                GwtBootstrapPaths.SCAFFOLD_UI.packageName(topLevelPackage));
+                GwtPaths.SCAFFOLD_UI.packageName(topLevelPackage));
         dataDictionary.setVariable("uiPackage",
-                GwtBootstrapPaths.MANAGED_UI.packageName(topLevelPackage));
+                GwtPaths.MANAGED_UI.packageName(topLevelPackage));
         dataDictionary.setVariable("desktopUiPackage",
-                GwtBootstrapPaths.MANAGED_UI_DESKTOP.packageName(topLevelPackage));
+                GwtPaths.MANAGED_UI_DESKTOP.packageName(topLevelPackage));
         dataDictionary.setVariable("mobileUiPackage",
-                GwtBootstrapPaths.MANAGED_UI_MOBILE.packageName(topLevelPackage));
+                GwtPaths.MANAGED_UI_MOBILE.packageName(topLevelPackage));
         dataDictionary.setVariable("uiEditorPackage",
-                GwtBootstrapPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage));
+                GwtPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage));
 
-        dataDictionary.setVariable("proxyRenderer", GwtBootstrapProxyProperty
+        dataDictionary.setVariable("proxyRenderer", GwtProxyProperty
                 .getProxyRendererType(topLevelPackage, proxyType));
 
         String proxyFields = null;
@@ -294,18 +294,18 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
 
         // Adds names of fields the are found in both the unmanaged EditView and
         // MobileEditView to fieldsInBothViewAndMobileView list
-        if (type == GwtBootstrapType.EDIT_ACTIVITY_WRAPPER
-                || type == GwtBootstrapType.MOBILE_EDIT_VIEW
-                || type == GwtBootstrapType.DESKTOP_EDIT_VIEW) {
+        if (type == GwtType.EDIT_ACTIVITY_WRAPPER
+                || type == GwtType.MOBILE_EDIT_VIEW
+                || type == GwtType.DESKTOP_EDIT_VIEW) {
             List<String> existingDesktopFields = new ArrayList<String>();
             List<String> existingMobileFields = new ArrayList<String>();
 
             try {
-                String className = GwtBootstrapPaths.MANAGED_UI_DESKTOP
+                String className = GwtPaths.MANAGED_UI_DESKTOP
                         .packageName(topLevelPackage)
                         + "."
                         + simpleTypeName
-                        + GwtBootstrapType.DESKTOP_EDIT_VIEW.getTemplate();
+                        + GwtType.DESKTOP_EDIT_VIEW.getTemplate();
 
                 ClassOrInterfaceTypeDetails details = typeLocationService
                         .getTypeDetails(new JavaType(className));
@@ -318,11 +318,11 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
                     }
                 }
 
-                className = GwtBootstrapPaths.MANAGED_UI_MOBILE
+                className = GwtPaths.MANAGED_UI_MOBILE
                         .packageName(topLevelPackage)
                         + "."
                         + simpleTypeName
-                        + GwtBootstrapType.MOBILE_EDIT_VIEW.getTemplate();
+                        + GwtType.MOBILE_EDIT_VIEW.getTemplate();
 
                 details = typeLocationService.getTypeDetails(new JavaType(
                         className));
@@ -336,12 +336,12 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
                 }
 
                 // Adds names of fields in MobileEditView to existingFields list
-                if (type == GwtBootstrapType.MOBILE_EDIT_VIEW)
+                if (type == GwtType.MOBILE_EDIT_VIEW)
                     existingEditViewFields = existingMobileFields;
 
                 // Adds names of fields in DesktopEditView to existingFields
                 // list
-                if (type == GwtBootstrapType.DESKTOP_EDIT_VIEW)
+                if (type == GwtType.DESKTOP_EDIT_VIEW)
                     existingEditViewFields = existingDesktopFields;
 
             }
@@ -359,17 +359,17 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
             }
         }
 
-        if (type == GwtBootstrapType.MOBILE_DETAILS_VIEW
-                || type == GwtBootstrapType.DESKTOP_DETAILS_VIEW) {
+        if (type == GwtType.MOBILE_DETAILS_VIEW
+                || type == GwtType.DESKTOP_DETAILS_VIEW) {
             List<String> existingDesktopFields = new ArrayList<String>();
             List<String> existingMobileFields = new ArrayList<String>();
 
             try {
-                String className = GwtBootstrapPaths.MANAGED_UI_DESKTOP
+                String className = GwtPaths.MANAGED_UI_DESKTOP
                         .packageName(topLevelPackage)
                         + "."
                         + simpleTypeName
-                        + GwtBootstrapType.DESKTOP_DETAILS_VIEW.getTemplate();
+                        + GwtType.DESKTOP_DETAILS_VIEW.getTemplate();
 
                 ClassOrInterfaceTypeDetails details = typeLocationService
                         .getTypeDetails(new JavaType(className));
@@ -382,11 +382,11 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
                     }
                 }
 
-                className = GwtBootstrapPaths.MANAGED_UI_MOBILE
+                className = GwtPaths.MANAGED_UI_MOBILE
                         .packageName(topLevelPackage)
                         + "."
                         + simpleTypeName
-                        + GwtBootstrapType.MOBILE_DETAILS_VIEW.getTemplate();
+                        + GwtType.MOBILE_DETAILS_VIEW.getTemplate();
 
                 details = typeLocationService.getTypeDetails(new JavaType(
                         className));
@@ -401,12 +401,12 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
 
                 // Adds names of fields in MobileDetailsView to existingFields
                 // list
-                if (type == GwtBootstrapType.MOBILE_DETAILS_VIEW)
+                if (type == GwtType.MOBILE_DETAILS_VIEW)
                     existingDetailsViewFields = existingMobileFields;
 
                 // Adds names of fields in DesktopDetailsView to existingFields
                 // list
-                if (type == GwtBootstrapType.DESKTOP_DETAILS_VIEW)
+                if (type == GwtType.DESKTOP_DETAILS_VIEW)
                     existingDetailsViewFields = existingDesktopFields;
             }
             catch (Exception e) {
@@ -698,7 +698,7 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
             final String proxyModuleName) {
         final TemplateDataDictionary dataDictionary = templateService
                 .buildStandardDataDictionary(type, moduleName, proxyModuleName);
-        dataDictionary.setVariable("placePackage", GwtBootstrapPaths.SCAFFOLD_PLACE
+        dataDictionary.setVariable("placePackage", GwtPaths.SCAFFOLD_PLACE
                 .packageName(projectOperations.getTopLevelPackage(moduleName)));
         return dataDictionary;
     }
@@ -715,7 +715,7 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
                     if (systemId
                             .equals("http://dl.google.com/gwt/DTD/xhtml.ent")) {
                         return new InputSource(FileUtils.getInputStream(
-                                GwtBootstrapScaffoldMetadata.class,
+                                GwtScaffoldMetadata.class,
                                 "templates/xhtml.ent"));
                     }
 
@@ -860,36 +860,36 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
                 proxy.getDeclaredByMetadataId()).getModule());
         final Map<RequestFactoryType, JavaType> mirrorTypeMap = RequestFactoryUtils
                 .getMirrorTypeMap(mirroredType.getName(), proxyTopLevelPackage);
-        mirrorTypeMap.putAll(GwtBootstrapUtils.getMirrorTypeMap(
+        mirrorTypeMap.putAll(GwtUtils.getMirrorTypeMap(
                 mirroredType.getName(), topLevelPackage));
         mirrorTypeMap.put(RequestFactoryType.PROXY, proxy.getName());
         mirrorTypeMap.put(RequestFactoryType.REQUEST, request.getName());
 
         final Map<RequestFactoryType, ClassOrInterfaceTypeDetails> templateTypeDetailsMap = new LinkedHashMap<RequestFactoryType, ClassOrInterfaceTypeDetails>();
         final Map<RequestFactoryType, String> xmlTemplates = new LinkedHashMap<RequestFactoryType, String>();
-        for (final GwtBootstrapType gwtBootstrapType : GwtBootstrapType.getGwtBootstrapMirrorTypes()) {
-            if (gwtBootstrapType.getTemplate() == null) {
+        for (final GwtType gwtType : GwtType.getGwtMirrorTypes()) {
+            if (gwtType.getTemplate() == null) {
                 continue;
             }
             TemplateDataDictionary dataDictionary = buildMirrorDataDictionary(
-                    gwtBootstrapType, mirroredType, proxy, mirrorTypeMap,
+                    gwtType, mirroredType, proxy, mirrorTypeMap,
                     clientSideTypeMap, moduleName);
-            gwtBootstrapType.dynamicallyResolveFieldsToWatch(clientSideTypeMap);
-            gwtBootstrapType.dynamicallyResolveMethodsToWatch(mirroredType.getName(),
+            gwtType.dynamicallyResolveFieldsToWatch(clientSideTypeMap);
+            gwtType.dynamicallyResolveMethodsToWatch(mirroredType.getName(),
                     clientSideTypeMap, topLevelPackage);
             templateTypeDetailsMap.put(
-                    gwtBootstrapType, templateService.
-                    getTemplateDetails(dataDictionary, gwtBootstrapType.getTemplate(),
-                            mirrorTypeMap.get(gwtBootstrapType), moduleName, TEMPLATE_DIR));
+                    gwtType, templateService.
+                    getTemplateDetails(dataDictionary, gwtType.getTemplate(),
+                            mirrorTypeMap.get(gwtType), moduleName, TEMPLATE_DIR));
 
-            if (gwtBootstrapType.isCreateUiXml()) {
-                dataDictionary = buildMirrorDataDictionary(gwtBootstrapType,
+            if (gwtType.isCreateUiXml()) {
+                dataDictionary = buildMirrorDataDictionary(gwtType,
                         mirroredType, proxy, mirrorTypeMap, clientSideTypeMap,
                         moduleName);
                 final String contents = templateService.getTemplateContents(
-                        gwtBootstrapType.getTemplate() + "UiXml", dataDictionary,
+                        gwtType.getTemplate() + "UiXml", dataDictionary,
                         TEMPLATE_DIR);
-                xmlTemplates.put(gwtBootstrapType, contents);
+                xmlTemplates.put(gwtType, contents);
             }
         }
 
@@ -903,9 +903,9 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
 
             TemplateDataDictionary dataDictionary = TemplateDictionary.create();
             dataDictionary.setVariable("packageName",
-                    GwtBootstrapPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage));
+                    GwtPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage));
             dataDictionary.setVariable("scaffoldUiPackage",
-                    GwtBootstrapPaths.SCAFFOLD_UI.packageName(topLevelPackage));
+                    GwtPaths.SCAFFOLD_UI.packageName(topLevelPackage));
             final JavaType collectionTypeImpl = templateService
                     .getCollectionImplementation(proxyProperty
                     .getPropertyType());
@@ -924,7 +924,7 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
                     boundCollectionType);
 
             final JavaType collectionEditorType = new JavaType(
-                    GwtBootstrapPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage) + "."
+                    GwtPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage) + "."
                             + boundCollectionType + collectionType + "Editor");
             typeDetails.add(templateService.getTemplateDetails(dataDictionary,
                     "CollectionEditor", collectionEditorType, moduleName,
@@ -932,9 +932,9 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
 
             dataDictionary = TemplateDictionary.create();
             dataDictionary.setVariable("packageName",
-                    GwtBootstrapPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage));
+                    GwtPaths.MANAGED_UI_EDITOR.packageName(topLevelPackage));
             dataDictionary.setVariable("scaffoldUiPackage",
-                    GwtBootstrapPaths.SCAFFOLD_UI.packageName(topLevelPackage));
+                    GwtPaths.SCAFFOLD_UI.packageName(topLevelPackage));
             dataDictionary.setVariable("collectionType", collectionType);
             dataDictionary.setVariable("collectionTypeImpl",
                     collectionTypeImpl.getSimpleTypeName());
@@ -946,7 +946,7 @@ public class GwtBootstrapTemplateServiceImpl implements GwtBootstrapTemplateServ
                     + "UiXml", dataDictionary, TEMPLATE_DIR);
             final String packagePath = projectOperations.getPathResolver()
                     .getFocusedIdentifier(Path.SRC_MAIN_JAVA,
-                            GwtBootstrapPaths.MANAGED_UI_EDITOR.getPackagePath(topLevelPackage));
+                            GwtPaths.MANAGED_UI_EDITOR.getPackagePath(topLevelPackage));
             xmlMap.put(packagePath + "/" + boundCollectionType + collectionType
                     + "Editor.ui.xml", contents);
         }

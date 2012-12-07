@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
-public @interface RooAndroidScaffold {
+public @interface RooRequestFactoryAndroid {
 
     String MODULE_ATTRIBUTE = "module";
 

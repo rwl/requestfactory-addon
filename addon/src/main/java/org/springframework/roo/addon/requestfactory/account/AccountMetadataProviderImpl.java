@@ -127,7 +127,6 @@ public final class AccountMetadataProviderImpl extends AbstractItdMetadataProvid
         final MemberHoldingTypeDetailsMetadataItem<?> governor = (MemberHoldingTypeDetailsMetadataItem<?>) metadataService
                 .get(physicalTypeId);
         if (MemberFindingUtils.getAnnotationOfType(governor, ROO_ACCOUNT) == null) {
-            // The type is not annotated with @RooGwtBootstrap
             return null;
         }
         return new AccountAnnotationValues(governor);

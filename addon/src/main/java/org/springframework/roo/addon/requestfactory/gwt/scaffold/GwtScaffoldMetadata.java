@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold;
+package org.springframework.roo.addon.requestfactory.gwt.scaffold;
 
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.metadata.AbstractMetadataItem;
@@ -15,9 +15,9 @@ import org.springframework.roo.project.LogicalPath;
  * @author Amit Manjhi
  * @since 1.1
  */
-public class GwtBootstrapScaffoldMetadata extends AbstractMetadataItem {
+public class GwtScaffoldMetadata extends AbstractMetadataItem {
 
-    private static final String PROVIDES_TYPE_STRING = GwtBootstrapScaffoldMetadata.class
+    private static final String PROVIDES_TYPE_STRING = GwtScaffoldMetadata.class
             .getName();
     private static final String PROVIDES_TYPE = MetadataIdentificationUtils
             .create(PROVIDES_TYPE_STRING);
@@ -42,7 +42,7 @@ public class GwtBootstrapScaffoldMetadata extends AbstractMetadataItem {
                 metadataIdentificationString);
     }
 
-    public GwtBootstrapScaffoldMetadata(final String id) {
+    public GwtScaffoldMetadata(final String id) {
         super(id);
     }
 }

@@ -20,7 +20,7 @@ import org.springframework.roo.addon.requestfactory.android.AndroidPaths;
 import org.springframework.roo.addon.requestfactory.android.AndroidTemplateService;
 import org.springframework.roo.addon.requestfactory.android.AndroidType;
 import org.springframework.roo.addon.requestfactory.android.AndroidUtils;
-import org.springframework.roo.addon.requestfactory.annotations.android.RooAndroidScaffold;
+import org.springframework.roo.addon.requestfactory.annotations.android.RooRequestFactoryAndroid;
 import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadataProviderImpl;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
@@ -81,7 +81,7 @@ public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldM
     protected String getModuleName(ClassOrInterfaceTypeDetails proxy) {
         String moduleName = RequestFactoryUtils.getStringAnnotationValue(proxy,
                 ROO_ANDROID_SCAFFOLD,
-                RooAndroidScaffold.MODULE_ATTRIBUTE, "");
+                RooRequestFactoryAndroid.MODULE_ATTRIBUTE, "");
         if (moduleName.isEmpty()) {
             return super.getModuleName(proxy);
         } else {

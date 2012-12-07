@@ -13,7 +13,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryOperations;
 import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.annotations.android.RooAndroidScaffold;
+import org.springframework.roo.addon.requestfactory.annotations.android.RooRequestFactoryAndroid;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
@@ -37,7 +37,7 @@ import org.springframework.roo.project.maven.Pom;
 public class AndroidOperationsImpl implements AndroidOperations {
 
     private static final JavaSymbolName MODULE_SYMBOL_NAME = new JavaSymbolName(
-            RooAndroidScaffold.MODULE_ATTRIBUTE);
+            RooRequestFactoryAndroid.MODULE_ATTRIBUTE);
 
     @Reference RequestFactoryTypeService requestFactoryTypeService;
     @Reference AndroidTypeService androidTypeService;

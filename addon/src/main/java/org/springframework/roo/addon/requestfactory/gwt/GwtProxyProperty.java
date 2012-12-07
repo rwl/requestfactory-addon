@@ -1,4 +1,4 @@
-package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
+package org.springframework.roo.addon.requestfactory.gwt;
 
 import static org.springframework.roo.model.JavaType.LONG_OBJECT;
 import static org.springframework.roo.model.JavaType.OBJECT;
@@ -15,22 +15,22 @@ import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaType;
 
-public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
+public class GwtProxyProperty extends RequestFactoryProxyProperty {
 
     private static final String ALTERNATE_SIZE = "LARGE";
 
     public static String getProxyRendererType(
             final JavaPackage topLevelPackage, final JavaType javaType) {
-        return GwtBootstrapType.EDIT_RENDERER.getPath().packageName(topLevelPackage)
+        return GwtType.EDIT_RENDERER.getPath().packageName(topLevelPackage)
                 + "." + javaType.getSimpleTypeName() + "Renderer";
     }
 
-    public GwtBootstrapProxyProperty(JavaPackage topLevelPackage,
+    public GwtProxyProperty(JavaPackage topLevelPackage,
             ClassOrInterfaceTypeDetails ptmd, JavaType type) {
         super(topLevelPackage, ptmd, type);
     }
 
-    public GwtBootstrapProxyProperty(final JavaPackage topLevelPackage,
+    public GwtProxyProperty(final JavaPackage topLevelPackage,
             final ClassOrInterfaceTypeDetails ptmd, final JavaType type,
             final String name, final List<AnnotationMetadata> annotations,
             final String getter) {
@@ -169,9 +169,9 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
         if (type.getParameters().size() > 0) {
             arg = type.getParameters().get(0);
         }
-        return GwtBootstrapPaths.SCAFFOLD_PLACE.packageName(topLevelPackage)
+        return GwtPaths.SCAFFOLD_PLACE.packageName(topLevelPackage)
                 + ".CollectionRenderer.of("
-                + new GwtBootstrapProxyProperty(topLevelPackage, ptmd, arg)
+                + new GwtProxyProperty(topLevelPackage, ptmd, arg)
                         .getRenderer() + ")";
     }
 
@@ -297,7 +297,7 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
     }
 
     public JavaType getInstanceEditorType() {
-        return new JavaType(GwtBootstrapType.INSTANCE_EDITOR.getPath().packageName(
+        return new JavaType(GwtType.INSTANCE_EDITOR.getPath().packageName(
                 topLevelPackage)
                 + "." + getInstanceEditor());
     }
@@ -326,8 +326,8 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
 
     private String getSetEditor() {
         return getSimpleTypeName()
-                + (type.getSimpleTypeName().equals("Set") ? GwtBootstrapType.SET_EDITOR
-                        .getSuffix() : GwtBootstrapType.LIST_EDITOR.getSuffix());
+                + (type.getSimpleTypeName().equals("Set") ? GwtType.SET_EDITOR
+                        .getSuffix() : GwtType.LIST_EDITOR.getSuffix());
     }
     
     public String getSetValuePickerMethod(final boolean nullable) {
@@ -358,7 +358,7 @@ public class GwtBootstrapProxyProperty extends RequestFactoryProxyProperty {
     }
 
     public JavaType getSetEditorType() {
-        return new JavaType(GwtBootstrapType.SET_EDITOR.getPath().packageName(
+        return new JavaType(GwtType.SET_EDITOR.getPath().packageName(
                 topLevelPackage)
                 + "." + getSetEditor());
     }

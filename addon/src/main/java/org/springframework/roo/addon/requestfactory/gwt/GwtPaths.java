@@ -1,8 +1,8 @@
-package org.springframework.roo.addon.requestfactory.gwt.bootstrap;
+package org.springframework.roo.addon.requestfactory.gwt;
 
 import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 
-public class GwtBootstrapPaths {
+public class GwtPaths {
 
     public static final RequestFactoryPath GWT_ROOT = new RequestFactoryPath("/", "module/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath IMAGES = new RequestFactoryPath("/style/images", "module/client/style/images/" + RequestFactoryPath.wildCardSelector);
@@ -46,6 +46,6 @@ public class GwtBootstrapPaths {
 
     public static final RequestFactoryPath SHARED_MODULE = new RequestFactoryPath("/", "module/shared/" + SHARED_MODULE_NAME + ".gwt.xml");
 
-    private GwtBootstrapPaths() {
+    private GwtPaths() {
     }
 }

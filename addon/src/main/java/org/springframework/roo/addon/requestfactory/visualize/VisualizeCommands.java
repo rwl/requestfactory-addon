@@ -15,7 +15,7 @@ import org.springframework.roo.shell.CommandMarker;
 public class VisualizeCommands implements CommandMarker {
 
     private static final String MAP_MARKER_COMMAND = "web requestfactory map marker";
-    private static final String SETUP_MAP_COMMAND = "web requestfactory gwt bootstrap maps setup";
+    private static final String SETUP_MAP_COMMAND = "web requestfactory gwt maps setup";
 
     @Reference private VisualizeOperations operations;
 

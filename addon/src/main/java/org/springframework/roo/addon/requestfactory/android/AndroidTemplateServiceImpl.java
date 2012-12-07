@@ -30,7 +30,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateServic
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
-import org.springframework.roo.addon.requestfactory.gwt.bootstrap.scaffold.GwtBootstrapScaffoldMetadata;
+import org.springframework.roo.addon.requestfactory.gwt.scaffold.GwtScaffoldMetadata;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MethodMetadata;
@@ -111,7 +111,7 @@ public class AndroidTemplateServiceImpl implements AndroidTemplateService {
                     if (systemId
                             .equals("http://dl.google.com/gwt/DTD/xhtml.ent")) {
                         return new InputSource(FileUtils.getInputStream(
-                                GwtBootstrapScaffoldMetadata.class,
+                                GwtScaffoldMetadata.class,
                                 "templates/xhtml.ent"));
                     }
 

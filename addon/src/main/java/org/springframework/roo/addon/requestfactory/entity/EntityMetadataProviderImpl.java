@@ -139,7 +139,7 @@ public final class EntityMetadataProviderImpl extends AbstractItdMetadataProvide
     }
 
     /**
-     * Define the unique ITD file name extension, here the resulting file name will be **_ROO_Gwt_Bootstrap.aj
+     * Define the unique ITD file name extension.
      */
     public String getItdUniquenessFilenameSuffix() {
         return "RequestFactory";
