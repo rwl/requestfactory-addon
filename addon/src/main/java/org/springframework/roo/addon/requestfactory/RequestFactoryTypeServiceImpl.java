@@ -93,7 +93,7 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
         for (FieldMetadata field : childType.getFieldsWithAnnotation(MANY_TO_ONE)) {
 
             final String fieldTypeId = typeLocationService
-                    .getPhysicalTypeIdentifier(field.getFieldType(), false);
+                    .getPhysicalTypeIdentifier(field.getFieldType());
             if (fieldTypeId == null
                     || metadataService.get(fieldTypeId) == null) {
                 continue;
@@ -385,7 +385,7 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
         if (childType != null) {
             for (final JavaType javaType : childType.getExtendsTypes()) {
                 final String superTypeId = typeLocationService
-                        .getPhysicalTypeIdentifier(javaType, false);
+                        .getPhysicalTypeIdentifier(javaType);
                 if (superTypeId == null
                         || metadataService.get(superTypeId) == null) {
                     continue;
