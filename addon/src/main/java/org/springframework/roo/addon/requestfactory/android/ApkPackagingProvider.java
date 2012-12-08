@@ -47,7 +47,6 @@ public class ApkPackagingProvider extends AbstractPackagingProvider {
     @Override
     protected void createOtherArtifacts(final JavaPackage topLevelPackage,
             final String module, final ProjectOperations projectOperations) {
-        super.createOtherArtifacts(topLevelPackage, module, projectOperations);
 
         final String moduleName = getFullyQualifiedModuleName(module,
                 projectOperations);

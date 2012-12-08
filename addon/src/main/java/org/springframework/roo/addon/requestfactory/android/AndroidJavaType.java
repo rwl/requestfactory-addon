@@ -18,6 +18,9 @@ public final class AndroidJavaType {
     public static final JavaType ROO_RESOURCE_STRING = new JavaType(
             RooResourceString.class);
 
+    public static final JavaType ANDROID_ACTIVITY = new JavaType(
+            "android.app.Activity");
+
     /**
      * Constructor is private to prevent instantiation
      */

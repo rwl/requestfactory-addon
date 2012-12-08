@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface RooActivity {
 
-    int value() default ResourceId.DEFAULT_VALUE;
+    int value() default -1;
 }

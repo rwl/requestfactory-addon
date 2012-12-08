@@ -6,7 +6,7 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 
 public class AndroidPaths {
 
-    private static final String SEP = File.separator;
+    public static final String SEP = File.separator;
 
     public static final String LAYOUT_PATH = SEP + "res" + SEP + "layout";
 
