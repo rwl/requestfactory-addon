@@ -14,7 +14,7 @@ public interface AndroidProjectOperations {
     boolean isViewAvailable();
 
     void activity(JavaType type, String layout, boolean main);
-    void view(JavaType type, JavaType view, String identifier,
+    void view(JavaType type, String view, String identifier,
             JavaSymbolName fieldName, Dimension height,
             Dimension width);
     void resourceString(JavaType type, String name, JavaSymbolName fieldName,

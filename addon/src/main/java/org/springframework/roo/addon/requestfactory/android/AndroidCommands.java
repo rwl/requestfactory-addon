@@ -73,11 +73,11 @@ public class AndroidCommands implements CommandMarker {
         projectOperations.activity(name, layout, main);
     }
 
-    @CliCommand(value = VIEW_COMMAND, help = "Adds a view to a layout")
-    public void view(@CliOption(key = { "", "identifier" }, mandatory = true, help = "The ID of the view to add") final String identifier,
+    @CliCommand(value = VIEW_COMMAND, help = "Adds a view to a layout and binds it to an activity")
+    public void view(@CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
+            @CliOption(key = "identifier", mandatory = false, help = "The view identifier (defaults to the field name)") final String identifier,
             @CliOption(key = "type", mandatory = false, unspecifiedDefaultValue = "*", optionContext = "update,project", help = "The type to receive this view") final JavaType typeName,
-            @CliOption(key = "view", mandatory = true, help = "Class name of the view to create") final JavaType view,
-            @CliOption(key = "fieldName", mandatory = false, help = "The name of the field to add (defaults to the view ID)") final JavaSymbolName fieldName,
+            @CliOption(key = "view", mandatory = true, help = "Class name of the view to create (package defaults to 'android.widget')") final String view,
             @CliOption(key = "height", mandatory = false, unspecifiedDefaultValue = "FILL_PARENT", help = "The height of the view group") final Dimension height,
             @CliOption(key = "width", mandatory = false, unspecifiedDefaultValue = "FILL_PARENT", help = "The width of the view group") final Dimension width) {
         projectOperations.view(typeName, view, identifier, fieldName, height, width);

@@ -2,10 +2,12 @@ package org.springframework.roo.addon.requestfactory.android;
 
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_ACTIVITY;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ACTIVITY;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_VIEW;
 import static org.springframework.roo.addon.requestfactory.android.AndroidPaths.LAYOUT_PATH;
 import static org.springframework.roo.addon.requestfactory.android.AndroidPaths.SEP;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +17,22 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.jpa.JpaOperations;
+import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.android.types.Dimension;
 import org.springframework.roo.addon.requestfactory.android.types.Orientation;
 import org.springframework.roo.classpath.TypeLocationService;
+import org.springframework.roo.classpath.TypeManagementService;
+import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
+import org.springframework.roo.classpath.details.FieldMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
+import org.springframework.roo.classpath.operations.jsr303.FieldDetails;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.process.manager.FileManager;
@@ -50,8 +59,9 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
     }
 
     private static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
-
     private static final String XML_EXTENSION = ".xml";
+    private static final String WIDGET_PACKAGE = "android.widget";
+    private static final String ID_PREFIX = "@+id/";
 
     public static DocumentBuilder newDocumentBuilder() {
         try {
@@ -63,6 +73,7 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
     }
 
     @Reference TypeLocationService typeLocationService;
+    @Reference TypeManagementService typeManagementService;
     @Reference ProjectOperations projectOperations;
     @Reference JpaOperations jpaOperations;
     @Reference FileManager fileManager;
@@ -126,13 +137,13 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
             }
         }
 
-        final List<AnnotationMetadataBuilder> annotationBuilders = new ArrayList<AnnotationMetadataBuilder>();
+        final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
         final AnnotationMetadataBuilder activityAnnotationBuilder = new AnnotationMetadataBuilder(ROO_ACTIVITY);
         activityAnnotationBuilder.addStringAttribute("value", layout);
-        annotationBuilders.add(activityAnnotationBuilder);
+        annotations.add(activityAnnotationBuilder);
 
         jpaOperations.newEntity(name, false, ANDROID_ACTIVITY,
-                annotationBuilders);
+                annotations);
 
         androidTypeService.addActvity(
                 projectOperations.getFocusedModuleName(),
@@ -140,10 +151,68 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
     }
 
     @Override
-    public void view(final JavaType type, final JavaType view,
+    public void view(final JavaType type, final String viewName,
             final String identifier, final JavaSymbolName fieldName,
             final Dimension height, final Dimension width) {
 
+        final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
+                .getTypeDetails(type);
+        Validate.notNull(javaTypeDetails, "The type specified, '" + type
+                + "'doesn't exist");
+
+        final JavaType viewType = new JavaType(viewName.contains(".")
+                ? viewName : WIDGET_PACKAGE + "." + viewName);
+
+        final String layout = RequestFactoryUtils.getStringAnnotationValue(
+                javaTypeDetails, ROO_ACTIVITY, "value", "");
+        if (!StringUtils.isEmpty(layout)) {
+            final DocumentBuilder builder = XmlUtils.getDocumentBuilder();
+            final String layoutPath = pathResolver.getFocusedIdentifier(
+                    Path.ROOT, LAYOUT_PATH + SEP + layout + XML_EXTENSION);
+
+            InputStream inputStream = null;
+            Document document = null;
+            try {
+                inputStream = fileManager.getInputStream(layoutPath);
+                document = builder.parse(inputStream);
+            }
+            catch (final Exception e) {
+                LOGGER.severe("Error reading layout XML: " + e.getMessage());
+            }
+            finally {
+                IOUtils.closeQuietly(inputStream);
+            }
+
+            if (document != null) {
+                final Element root = document.getDocumentElement();
+
+                final Element viewElem = document.createElement(viewType
+                        .getSimpleTypeName());
+                final String id = StringUtils.isEmpty(identifier)
+                        ? fieldName.getSymbolName() : identifier;
+                viewElem.setAttribute("android:id", ID_PREFIX + id);
+                viewElem.setAttribute("android:layout_height", height.value());
+                viewElem.setAttribute("android:layout_width", width.value());
+                root.appendChild(viewElem);
+
+                fileManager.createOrUpdateTextFileIfRequired(layoutPath ,
+                        XmlUtils.nodeToString(document), true);
+            }
+        }
+
+        final String physicalTypeIdentifier = javaTypeDetails
+                .getDeclaredByMetadataId();
+//        final FieldDetails fieldDetails = new FieldDetails(
+//                physicalTypeIdentifier, viewType, fieldName);
+
+        final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        final AnnotationMetadataBuilder activityAnnotationBuilder = new AnnotationMetadataBuilder(ROO_VIEW);
+        activityAnnotationBuilder.addStringAttribute("value", identifier);
+        annotations.add(activityAnnotationBuilder);
+
+        final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(
+                physicalTypeIdentifier, 0, annotations, fieldName, viewType);
+        typeManagementService.addField(fieldBuilder.build());
     }
 
     @Override
