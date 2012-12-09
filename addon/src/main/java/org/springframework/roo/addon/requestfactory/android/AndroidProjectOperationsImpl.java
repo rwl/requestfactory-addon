@@ -1,7 +1,7 @@
 package org.springframework.roo.addon.requestfactory.android;
 
-import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ACTIVITY;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_ACTIVITY;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ACTIVITY;
 import static org.springframework.roo.addon.requestfactory.android.AndroidPaths.LAYOUT_PATH;
 import static org.springframework.roo.addon.requestfactory.android.AndroidPaths.SEP;
 
@@ -52,7 +52,6 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
     private static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 
     private static final String XML_EXTENSION = ".xml";
-    private static final String LAYOUT_PREFIX = "R.layout.";
 
     public static DocumentBuilder newDocumentBuilder() {
         try {
@@ -127,17 +126,14 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
             }
         }
 
-        final List<AnnotationMetadataBuilder> annotationBuilders =
-                new ArrayList<AnnotationMetadataBuilder>();
-        final AnnotationMetadataBuilder activityAnnotationBuilder =
-                new AnnotationMetadataBuilder(ROO_ACTIVITY);
-        activityAnnotationBuilder.addStringAttribute("value",
-                LAYOUT_PREFIX + layout);
+        final List<AnnotationMetadataBuilder> annotationBuilders = new ArrayList<AnnotationMetadataBuilder>();
+        final AnnotationMetadataBuilder activityAnnotationBuilder = new AnnotationMetadataBuilder(ROO_ACTIVITY);
+        activityAnnotationBuilder.addStringAttribute("value", layout);
         annotationBuilders.add(activityAnnotationBuilder);
 
         jpaOperations.newEntity(name, false, ANDROID_ACTIVITY,
                 annotationBuilders);
-        
+
         androidTypeService.addActvity(
                 projectOperations.getFocusedModuleName(),
                 name.getFullyQualifiedTypeName(), main);

@@ -20,6 +20,8 @@ public final class AndroidJavaType {
 
     public static final JavaType ANDROID_ACTIVITY = new JavaType(
             "android.app.Activity");
+    public static final JavaType ANDROID_BUNDLE = new JavaType(
+            "android.os.Bundle");
 
     /**
      * Constructor is private to prevent instantiation
