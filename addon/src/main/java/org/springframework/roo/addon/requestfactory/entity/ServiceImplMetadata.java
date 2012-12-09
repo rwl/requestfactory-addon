@@ -122,7 +122,7 @@ public class ServiceImplMetadata extends
         final JavaType returnType = domainType;
 
         // Check if a method with the same signature already exists in the target type
-        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
+        final MethodMetadata method = getGovernorMethod(methodName, parameterType);
         if (method != null) {
             // If it already exists, just return the method and omit its generation via the ITD
             return method;
@@ -154,18 +154,18 @@ public class ServiceImplMetadata extends
             return null;
         }
 
-        JavaSymbolName methodName = new JavaSymbolName("find" + domainType
-                .getSimpleTypeName() + "EntriesByParentId");
-
-        final MethodMetadata method = methodExists(methodName,
-                new ArrayList<AnnotatedJavaType>());
-        if (method != null) {
-            return method;
-        }
-
         final JavaType idType = KEY.equals(identifierField.getFieldType())
                 ? STRING : identifierField.getFieldType();
         final JavaType[] parameterTypes = { idType, INT_PRIMITIVE, INT_PRIMITIVE };
+
+        JavaSymbolName methodName = new JavaSymbolName("find" + domainType
+                .getSimpleTypeName() + "EntriesByParentId");
+
+        final MethodMetadata method = getGovernorMethod(methodName,
+                parameterTypes);
+        if (method != null) {
+            return method;
+        }
 
         final String idParamName = StringUtils.uncapitalize(parentProperty
                 .getFieldType().getSimpleTypeName()) + "Id";
@@ -216,15 +216,15 @@ public class ServiceImplMetadata extends
         JavaSymbolName methodName = new JavaSymbolName("find" + plural
                 + "ByParentId");
 
-        final MethodMetadata method = methodExists(methodName,
-                new ArrayList<AnnotatedJavaType>());
-        if (method != null) {
-            return method;
-        }
-
         final JavaType idType = KEY.equals(identifierField.getFieldType())
                 ? STRING : identifierField.getFieldType();
         final JavaType[] parameterTypes = { idType };
+
+        final MethodMetadata method = getGovernorMethod(methodName,
+                parameterTypes);
+        if (method != null) {
+            return method;
+        }
 
         final String idParamName = StringUtils.uncapitalize(parentProperty
                 .getFieldType().getSimpleTypeName()) + "Id";
@@ -266,17 +266,16 @@ public class ServiceImplMetadata extends
             return null;
         }
 
-        JavaSymbolName methodName = new JavaSymbolName("count" + plural + "ByParentId");
-
-        final MethodMetadata method = methodExists(methodName,
-                new ArrayList<AnnotatedJavaType>());
-        if (method != null) {
-            return method;
-        }
-
         final JavaType idType = KEY.equals(identifierField.getFieldType())
                 ? STRING : identifierField.getFieldType();
         final JavaType[] parameterTypes = { idType };
+
+        JavaSymbolName methodName = new JavaSymbolName("count" + plural + "ByParentId");
+
+        final MethodMetadata method = getGovernorMethod(methodName, parameterTypes);
+        if (method != null) {
+            return method;
+        }
 
         final String idParamName = StringUtils.uncapitalize(parentProperty
                 .getFieldType().getSimpleTypeName()) + "Id";
@@ -331,20 +330,6 @@ public class ServiceImplMetadata extends
                 getId(), 0,  annotations, fieldName, parentRepository);
 
         return fieldBuilder.build();
-    }
-
-    private MethodMetadata methodExists(JavaSymbolName methodName, List<AnnotatedJavaType> paramTypes) {
-        // We have no access to method parameter information, so we scan by name alone and treat any match as authoritative
-        // We do not scan the superclass, as the caller is expected to know we'll only scan the current class
-        for (MethodMetadata method : governorTypeDetails.getDeclaredMethods()) {
-            if (method.getMethodName().equals(methodName)
-//                    && method.getParameterTypes().equals(paramTypes)
-                    ) {
-                // Found a method of the expected name; we won't check method parameters though
-                return method;
-            }
-        }
-        return null;
     }
 
     @Override

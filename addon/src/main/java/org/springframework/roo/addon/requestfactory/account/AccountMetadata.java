@@ -157,7 +157,7 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
         JavaSymbolName methodName = new JavaSymbolName("find" + destination.getSimpleTypeName() + "ByUsername");
 
         // Check if a method with the same signature already exists in the target type
-        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
+        final MethodMetadata method = getGovernorMethod(methodName, STRING);
         if (method != null) {
             // If it already exists, just return the method and omit its generation via the ITD
             return method;
@@ -595,20 +595,6 @@ public class AccountMetadata extends AbstractItdTypeDetailsProvidingMetadataItem
                 AnnotatedJavaType.convertFromJavaTypes(parameterTypes),
                 parameterNames, bodyBuilder);
     }*/
-
-    private MethodMetadata methodExists(JavaSymbolName methodName, List<AnnotatedJavaType> paramTypes) {
-        // We have no access to method parameter information, so we scan by name alone and treat any match as authoritative
-        // We do not scan the superclass, as the caller is expected to know we'll only scan the current class
-        for (MethodMetadata method : governorTypeDetails.getDeclaredMethods()) {
-            if (method.getMethodName().equals(methodName) && method.getParameterTypes().equals(paramTypes)) {
-                // Found a method of the expected name; we won't check method parameters though
-                return method;
-            }
-        }
-        return null;
-    }
-
-    // Typically, no changes are required beyond this point
 
     public String toString() {
         final ToStringBuilder builder = new ToStringBuilder(this);

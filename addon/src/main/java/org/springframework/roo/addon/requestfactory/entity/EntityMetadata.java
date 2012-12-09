@@ -13,6 +13,7 @@ import static org.springframework.roo.model.SpringJavaType.TRANSACTIONAL;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -118,7 +119,8 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         }
 
         // Check if a method with the same signature already exists in the target type
-        final MethodMetadata method = methodExists(STRING_ID_GETTER, new ArrayList<AnnotatedJavaType>());
+        final MethodMetadata method = getGovernorMethod(STRING_ID_GETTER,
+                Collections.<JavaType>emptyList());
         if (method != null) {
             // If it already exists, just return the method and omit its generation via the ITD
             return method;
@@ -154,7 +156,8 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         JavaSymbolName methodName = new JavaSymbolName("setStringId");
 
         // Check if a method with the same signature already exists in the target type
-        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
+        final MethodMetadata method = getGovernorMethod(methodName,
+                STRING);
         if (method != null) {
             // If it already exists, just return the method and omit its generation via the ITD
             return method;
@@ -201,7 +204,7 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         final JavaType returnType = destination;
 
         // Check if a method with the same signature already exists in the target type
-        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
+        final MethodMetadata method = getGovernorMethod(methodName, parameterType);
         if (method != null) {
             // If it already exists, just return the method and omit its generation via the ITD
             return method;
@@ -242,8 +245,12 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
                 + "EntriesBy" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id");*/
         JavaSymbolName methodName = new JavaSymbolName("find" + destination.getSimpleTypeName() + "EntriesByParentId");
 
+        // Define method parameter types
+        final JavaType idType = identifierField.getFieldType().equals(KEY) ? STRING : identifierField.getFieldType();
+        final JavaType[] parameterTypes = { idType, INT_PRIMITIVE, INT_PRIMITIVE };
+
         // Check if a method with the same signature already exists in the target type
-        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
+        final MethodMetadata method = getGovernorMethod(methodName, parameterTypes);
         if (method != null) {
             // If it already exists, just return the method and omit its generation via the ITD
             return method;
@@ -257,10 +264,6 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
 
         // Define method throws types (none in this case)
         List<JavaType> throwsTypes = new ArrayList<JavaType>();
-
-        // Define method parameter types
-        final JavaType idType = identifierField.getFieldType().equals(KEY) ? STRING : identifierField.getFieldType();
-        final JavaType[] parameterTypes = { idType, INT_PRIMITIVE, INT_PRIMITIVE };
 
         // Define method parameter names
         final String idParamName = StringUtils.uncapitalize(parentProperty.getFieldType().getSimpleTypeName()) + "Id";
@@ -326,7 +329,10 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
 
         JavaSymbolName methodName = new JavaSymbolName("find" + destination.getSimpleTypeName() + "ByParentId");
 
-        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
+        final JavaType idType = identifierField.getFieldType().equals(KEY) ? STRING : identifierField.getFieldType();
+        final JavaType[] parameterTypes = { idType };
+
+        final MethodMetadata method = getGovernorMethod(methodName, parameterTypes);
         if (method != null) {
             return method;
         }
@@ -337,9 +343,6 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         }
 
         List<JavaType> throwsTypes = new ArrayList<JavaType>();
-
-        final JavaType idType = identifierField.getFieldType().equals(KEY) ? STRING : identifierField.getFieldType();
-        final JavaType[] parameterTypes = { idType };
 
         final String idParamName = StringUtils.uncapitalize(parentProperty.getFieldType().getSimpleTypeName()) + "Id";
         final List<JavaSymbolName> parameterNames = Arrays.asList(
@@ -399,8 +402,12 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
                 + "By" + parentField.getFieldName().getSymbolNameCapitalisedFirstLetter() + "Id");*/
         JavaSymbolName methodName = new JavaSymbolName("count" + plural + "ByParentId");
 
+        // Define method parameter types
+        final JavaType idType = identifierField.getFieldType().equals(KEY) ? STRING : identifierField.getFieldType();
+        final JavaType[] parameterTypes = { idType };
+
         // Check if a method with the same signature already exists in the target type
-        final MethodMetadata method = methodExists(methodName, new ArrayList<AnnotatedJavaType>());
+        final MethodMetadata method = getGovernorMethod(methodName, parameterTypes);
         if (method != null) {
             // If it already exists, just return the method and omit its generation via the ITD
             return method;
@@ -414,10 +421,6 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
 
         // Define method throws types (none in this case)
         List<JavaType> throwsTypes = new ArrayList<JavaType>();
-
-        // Define method parameter types
-        final JavaType idType = identifierField.getFieldType().equals(KEY) ? STRING : identifierField.getFieldType();
-        final JavaType[] parameterTypes = { idType };
 
         // Define method parameter names
         final String idParamName = StringUtils.uncapitalize(parentProperty.getFieldType().getSimpleTypeName()) + "Id";
@@ -485,27 +488,6 @@ public class EntityMetadata extends AbstractItdTypeDetailsProvidingMetadataItem 
         }
         annotations.add(transactionalBuilder);
     }
-
-    private MethodMetadata methodExists(JavaSymbolName methodName, List<AnnotatedJavaType> paramTypes) {
-        // We have no access to method parameter information, so we scan by name alone and treat any match as authoritative
-        // We do not scan the superclass, as the caller is expected to know we'll only scan the current class
-        for (MethodMetadata method : governorTypeDetails.getDeclaredMethods()) {
-            if (method.getMethodName().equals(methodName)
-//                    && method.getParameterTypes().equals(paramTypes)
-                    ) {
-                // Found a method of the expected name; we won't check method parameters though
-                return method;
-            }
-        }
-        /*for (MethodMetadata method : builder.build().getDeclaredMethods()) {
-            if (method.getMethodName().equals(methodName)) {
-                return method;
-            }
-        }*/
-        return null;
-    }
-
-    // Typically, no changes are required beyond this point
 
     public String toString() {
         final ToStringBuilder builder = new ToStringBuilder(this);

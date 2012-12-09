@@ -1,15 +1,11 @@
 package org.springframework.roo.addon.requestfactory.android.activity;
 
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_BUNDLE;
-import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_VIEW;
-import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_STRING;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_RESOURCES;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ON_CREATE;
-
-import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
-import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_STRING;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_VIEW;
 import static org.springframework.roo.model.JavaType.VOID_PRIMITIVE;
-import static org.springframework.roo.model.JdkJavaType.LIST;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -19,22 +15,18 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.roo.addon.jpa.activerecord.JpaCrudAnnotationValues;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.details.FieldMetadata;
-import org.springframework.roo.classpath.details.ItdTypeDetailsBuilder;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.classpath.details.MethodMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotatedJavaType;
-import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
 import org.springframework.roo.classpath.itd.AbstractItdTypeDetailsProvidingMetadataItem;
 import org.springframework.roo.classpath.itd.InvocableMemberBodyBuilder;
 import org.springframework.roo.metadata.MetadataIdentificationUtils;
-import org.springframework.roo.model.DataType;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
@@ -75,7 +67,6 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
     }
 
     private final ActivityAnnotationValues activityAnnotationValues;
-    private final String topLevelPackage;
     
     private final JavaType layoutType;
     private final JavaType idType;
@@ -90,7 +81,6 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
                 + identifier + "' does not appear to be a valid");
 
         this.activityAnnotationValues = activityAnnotationValues;
-        this.topLevelPackage = topLevelPackage;
 
         this.layoutType = new JavaType(topLevelPackage + ".R.layout");
         this.idType = new JavaType(topLevelPackage + ".R.id");
@@ -100,20 +90,12 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
             return;
         }
 
-//        builder.getImportRegistrationResolver().addImports(getImports());
         builder.addMethod(getOnCreateMethod());
         builder.addMethod(getInitViewsMethod());
         builder.addMethod(getInitResourcesMethod());
 
         itdTypeDetails = builder.build();
     }
-
-    /*private List<JavaType> getImports() {
-        final JavaType layout = new JavaType(topLevelPackage + ".R." + LAYOUT);
-        final JavaType id = new JavaType(topLevelPackage + ".R." + ID);
-        final JavaType string = new JavaType(topLevelPackage + ".R." + STRING);
-        return Arrays.asList(layout, id, string);
-    }*/
 
     private MethodMetadata getOnCreateMethod() {
         final MethodMetadata method = getGovernorMethod(ON_CREATE_METHOD,
@@ -263,27 +245,6 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
 
         return methodBuilder.build();
     }
-
-    private MethodMetadata methodExists(JavaSymbolName methodName, List<AnnotatedJavaType> paramTypes) {
-        // We have no access to method parameter information, so we scan by name alone and treat any match as authoritative
-        // We do not scan the superclass, as the caller is expected to know we'll only scan the current class
-        for (MethodMetadata method : governorTypeDetails.getDeclaredMethods()) {
-            if (method.getMethodName().equals(methodName)
-//                    && method.getParameterTypes().equals(paramTypes)
-                    ) {
-                // Found a method of the expected name; we won't check method parameters though
-                return method;
-            }
-        }
-        /*for (MethodMetadata method : builder.build().getDeclaredMethods()) {
-            if (method.getMethodName().equals(methodName)) {
-                return method;
-            }
-        }*/
-        return null;
-    }
-
-    // Typically, no changes are required beyond this point
 
     public String toString() {
         final ToStringBuilder builder = new ToStringBuilder(this);
