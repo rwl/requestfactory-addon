@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.FIELD)
-public @interface RooResourceString {
+public @interface RooString {
 
-    int value() default -1;
+    String value() default "";
 }

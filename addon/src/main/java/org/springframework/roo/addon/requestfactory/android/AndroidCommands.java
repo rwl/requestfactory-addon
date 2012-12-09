@@ -21,7 +21,7 @@ public class AndroidCommands implements CommandMarker {
     private static final String SCAFFOLD_ALL_COMMAND = "web requestfactory android scaffold all";
     private static final String SCAFFOLD_TYPE_COMMAND = "web requestfactory android scaffold type";
 
-    private static final String LAYOUT_LINEAR_COMMAND = "android layout linear";
+    private static final String LAYOUT_COMMAND = "android layout";
     private static final String ACTIVITY_COMMAND = "android activity";
     private static final String VIEW_COMMAND = "android view";
     private static final String RESOURCE_STRING_COMMAND = "android resource string";
@@ -48,7 +48,7 @@ public class AndroidCommands implements CommandMarker {
     }
 
 
-    @CliAvailabilityIndicator({ ACTIVITY_COMMAND, LAYOUT_LINEAR_COMMAND })
+    @CliAvailabilityIndicator({ ACTIVITY_COMMAND, LAYOUT_COMMAND })
     public boolean isActivityAvailable() {
         return projectOperations.isActivityAvailable();
     }
@@ -58,12 +58,12 @@ public class AndroidCommands implements CommandMarker {
         return projectOperations.isViewAvailable();
     }
 
-    @CliCommand(value = LAYOUT_LINEAR_COMMAND, help = "Creates a linear layout")
-    public void layoutLinear(@CliOption(key = { "", "name" }, mandatory = true, help = "The name of the layout to add") final String name,
+    @CliCommand(value = LAYOUT_COMMAND, help = "Creates a layout")
+    public void layout(@CliOption(key = { "", "name" }, mandatory = true, help = "The name of the layout to add") final String name,
             @CliOption(key = "height", mandatory = false, unspecifiedDefaultValue = "FILL_PARENT", help = "The height of the view group") final Dimension height,
             @CliOption(key = "width", mandatory = false, unspecifiedDefaultValue = "FILL_PARENT", help = "The width of the view group") final Dimension width,
             @CliOption(key = "orientation", mandatory = false, unspecifiedDefaultValue = "VERTICAL", help = "Should the layout be a column or a row?") final Orientation orientation) {
-        projectOperations.layoutLinear(name, height, width, orientation);
+        projectOperations.layout(name, height, width, orientation);
     }
     
     @CliCommand(value = ACTIVITY_COMMAND, help = "Creates a new Android activity in SRC_MAIN_JAVA")
@@ -75,7 +75,7 @@ public class AndroidCommands implements CommandMarker {
 
     @CliCommand(value = VIEW_COMMAND, help = "Adds a view to a layout and binds it to an activity")
     public void view(@CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
-            @CliOption(key = "identifier", mandatory = false, help = "The view identifier (defaults to the field name)") final String identifier,
+            @CliOption(key = "identifier", mandatory = false, unspecifiedDefaultValue = "", help = "The view identifier (defaults to the field name)") final String identifier,
             @CliOption(key = "type", mandatory = false, unspecifiedDefaultValue = "*", optionContext = "update,project", help = "The type to receive this view") final JavaType typeName,
             @CliOption(key = "view", mandatory = true, help = "Class name of the view to create (package defaults to 'android.widget')") final String view,
             @CliOption(key = "height", mandatory = false, unspecifiedDefaultValue = "FILL_PARENT", help = "The height of the view group") final Dimension height,
@@ -84,12 +84,10 @@ public class AndroidCommands implements CommandMarker {
     }
 
     @CliCommand(value = RESOURCE_STRING_COMMAND, help = "Creates a string resource")
-    public void resourceString(@CliOption(key = { "", "name" }, mandatory = true, help = "The name of the resource to add") final String name,
+    public void resourceString(@CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
+            @CliOption(key = "name", mandatory = false, unspecifiedDefaultValue = "", help = "The name of the resource to add (defaults to the field name)") final String name,
             @CliOption(key = "type", mandatory = false, unspecifiedDefaultValue = "*", optionContext = "update,project", help = "The type to receive this resource") final JavaType typeName,
-            @CliOption(key = "value", mandatory = true, help = "The content of the string resource") final String value,
-            @CliOption(key = "fieldName", mandatory = false, help = "The name of the field to add (defaults to the resource name)") final JavaSymbolName fieldName,
-            @CliOption(key = "height", mandatory = false, unspecifiedDefaultValue = "WRAP_CONTENT", help = "The height of the view") final Dimension height,
-            @CliOption(key = "width", mandatory = false, unspecifiedDefaultValue = "FILL_PARENT", help = "The width of the view") final Dimension width) {
-        projectOperations.resourceString(typeName, name, fieldName, value, height, width);
+            @CliOption(key = "value", mandatory = true, help = "The content of the string resource") final String value) {
+        projectOperations.resourceString(typeName, name, fieldName, value);
     }
 }

@@ -18,7 +18,7 @@ public interface AndroidProjectOperations {
             JavaSymbolName fieldName, Dimension height,
             Dimension width);
     void resourceString(JavaType type, String name, JavaSymbolName fieldName,
-            String value, Dimension height, Dimension width);
-    void layoutLinear(String name, Dimension height, Dimension width,
+            String value);
+    void layout(String name, Dimension height, Dimension width,
             Orientation orientation);
 }
