@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
+import org.springframework.roo.classpath.details.IdentifiableAnnotatedJavaStructure;
 import org.springframework.roo.classpath.details.MemberFindingUtils;
 import org.springframework.roo.classpath.details.annotations.AnnotationAttributeValue;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
@@ -118,7 +119,7 @@ public final class RequestFactoryUtils {
     }
 
     public static String getStringAnnotationValue(
-            final ClassOrInterfaceTypeDetails target,
+            final IdentifiableAnnotatedJavaStructure target,
             final JavaType annotationType, final String attributeName,
             final String valueIfNull) {
         final AnnotationMetadata annotation = MemberFindingUtils

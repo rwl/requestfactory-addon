@@ -50,10 +50,10 @@ public final class AndroidActivityMetadataProviderImpl extends AbstractItdMetada
 
         final ActivityAnnotationValues activityAnnotationValues = new ActivityAnnotationValues(governorPhysicalTypeMetadata);
 
-        final ClassOrInterfaceTypeDetails activity = getGovernor(metadataIdentificationString);
+        final ClassOrInterfaceTypeDetails typeDetails = getGovernor(metadataIdentificationString);
 
         final String moduleName = PhysicalTypeIdentifier.getPath(
-                activity.getDeclaredByMetadataId()).getModule();
+                typeDetails.getDeclaredByMetadataId()).getModule();
         final String topLevelPackage = projectOperations.getTopLevelPackage(
                 moduleName).getFullyQualifiedPackageName();
         
