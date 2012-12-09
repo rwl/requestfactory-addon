@@ -1,6 +1,7 @@
 package org.springframework.roo.addon.requestfactory.android;
 
 import org.springframework.roo.addon.requestfactory.annotations.android.RooActivity;
+import org.springframework.roo.addon.requestfactory.annotations.android.RooOnCreate;
 import org.springframework.roo.addon.requestfactory.annotations.android.RooRequestFactoryAndroid;
 import org.springframework.roo.addon.requestfactory.annotations.android.RooString;
 import org.springframework.roo.addon.requestfactory.annotations.android.RooView;
@@ -17,6 +18,8 @@ public final class AndroidJavaType {
             RooView.class);
     public static final JavaType ROO_STRING = new JavaType(
             RooString.class);
+    public static final JavaType ROO_ON_CREATE = new JavaType(
+            RooOnCreate.class);
 
     public static final JavaType ANDROID_ACTIVITY = new JavaType(
             "android.app.Activity");

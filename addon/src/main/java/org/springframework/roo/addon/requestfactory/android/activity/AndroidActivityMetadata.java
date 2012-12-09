@@ -4,6 +4,7 @@ import static org.springframework.roo.addon.requestfactory.android.AndroidJavaTy
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_VIEW;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_STRING;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_RESOURCES;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ON_CREATE;
 
 import static org.springframework.roo.model.JavaType.INT_PRIMITIVE;
 import static org.springframework.roo.model.JavaType.LONG_PRIMITIVE;
@@ -148,6 +149,24 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
         if (governorTypeDetails.getFieldsWithAnnotation(ROO_VIEW).size() > 0) {
             bodyBuilder.appendFormalLine(INIT_VIEWS_METHOD.getSymbolName()
                     + "();");
+        }
+        for (MethodMetadata methodMetadata : governorTypeDetails.getDeclaredMethods()) {
+            final AnnotationMetadata onCreate = methodMetadata.getAnnotation(ROO_ON_CREATE);
+            if (onCreate == null) {
+                continue;
+            }
+            final List<AnnotatedJavaType> paramTypes = methodMetadata.getParameterTypes();
+            final String call;
+            if (paramTypes.size() == 0) {
+                call = "();";
+            } else if (paramTypes.size() == 1 && paramTypes.get(0)
+                    .getJavaType().equals(ANDROID_BUNDLE)) {
+                call = "(savedInstanceState);";
+            } else {
+                continue;
+            }
+            bodyBuilder.appendFormalLine(methodMetadata.getMethodName()
+                    .getSymbolName() + call);
         }
 
         final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
