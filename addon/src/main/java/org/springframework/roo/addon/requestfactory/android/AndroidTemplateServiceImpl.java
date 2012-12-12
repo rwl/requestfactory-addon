@@ -1,5 +1,6 @@
 package org.springframework.roo.addon.requestfactory.android;
 
+import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import hapax.TemplateDataDictionary;
 
 import java.io.File;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.transform.Transformer;
@@ -24,6 +26,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.plural.PluralMetadata;
 import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHolder;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateService;
@@ -31,10 +34,13 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryType;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTypeService;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.gwt.scaffold.GwtScaffoldMetadata;
+import org.springframework.roo.classpath.PhysicalTypeIdentifier;
+import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MethodMetadata;
 import org.springframework.roo.classpath.persistence.PersistenceMemberLocator;
+import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
@@ -48,16 +54,6 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-
-/**
- * Provides a basic implementation of {@link RequestFactoryTemplateService} which is used
- * to create {@link ClassOrInterfaceTypeDetails} objects from source files
- * created from templates. This class keeps all templating concerns in one
- * place.
- *
- * @author James Tyrrell
- * @since 1.1.2
- */
 @Component
 @Service
 public class AndroidTemplateServiceImpl implements AndroidTemplateService {
@@ -68,10 +64,64 @@ public class AndroidTemplateServiceImpl implements AndroidTemplateService {
     @Reference PersistenceMemberLocator persistenceMemberLocator;
     @Reference RequestFactoryTypeService requestFactoryTypeService;
     @Reference ProjectOperations projectOperations;
+    @Reference TypeLocationService typeLocationService;
+    @Reference MetadataService metadataService;
+    
+    @Override
+    public TemplateDataDictionary buildDictionary(final RequestFactoryType type,
+            final String moduleName) {
+        final Set<ClassOrInterfaceTypeDetails> proxies = typeLocationService
+                .findClassesOrInterfaceDetailsWithAnnotation(ROO_REQUEST_FACTORY_PROXY);
+        final String proxyModuleName = PhysicalTypeIdentifier.getPath(
+                proxies.iterator().next().getDeclaredByMetadataId()).getModule();
+        final TemplateDataDictionary dataDictionary = requestFactoryTemplateService
+                .buildStandardDataDictionary(type, moduleName, proxyModuleName);
+        
+        if (type == AndroidType.LIST_ACTIVITY_PROCESSOR
+                || type == AndroidType.PLURAL_PROCESSOR) {
+            for (final ClassOrInterfaceTypeDetails proxy : proxies) {
+                if (!RequestFactoryUtils.scaffoldProxy(proxy)) {
+                    continue;
+                }
+                final ClassOrInterfaceTypeDetails entity = requestFactoryTypeService
+                        .lookupEntityFromProxy(proxy);
+                if (entity != null) {
+                    final String entitySimpleName = entity.getName()
+                            .getSimpleTypeName();
+                    final String proxySimpleName = proxy.getName()
+                            .getSimpleTypeName();
+
+                    final TemplateDataDictionary section = dataDictionary
+                            .addSection("entities");
+                    section.setVariable("entitySimpleName", entitySimpleName);
+                    section.setVariable("proxySimpleName", proxySimpleName);
+
+                    section.setVariable("entityListActivity", entitySimpleName 
+                            + AndroidType.PROXY_LIST_ACTIVITY.getSuffix());
+                    
+                    requestFactoryTemplateService.addImport(dataDictionary,
+                            proxy.getName().getFullyQualifiedTypeName());
+
+
+                    final String pluralMetadataKey = PluralMetadata
+                            .createIdentifier(entity.getName(),
+                                    PhysicalTypeIdentifier.getPath(entity
+                                            .getDeclaredByMetadataId()));
+                    final PluralMetadata pluralMetadata = (PluralMetadata)
+                            metadataService.get(pluralMetadataKey);
+                    final String plural = pluralMetadata.getPlural();
+
+                    section.setVariable("entityPluralName", plural);
+                }
+            }
+        }
+            
+        return dataDictionary;
+    }
 
     @Override
     public TemplateDataDictionary buildMirrorDataDictionary(
-            final RequestFactoryType type, final ClassOrInterfaceTypeDetails mirroredType,
+            final AndroidType type, final ClassOrInterfaceTypeDetails mirroredType,
             final ClassOrInterfaceTypeDetails proxy,
             final Map<RequestFactoryType, JavaType> mirrorTypeMap,
             final Map<JavaSymbolName, RequestFactoryProxyProperty> clientSideTypeMap,
@@ -89,12 +139,17 @@ public class AndroidTemplateServiceImpl implements AndroidTemplateService {
         final JavaType idType = persistenceMemberLocator
                 .getIdentifierType(entity);
         Validate.notNull(idType,
-                "Identifier type is not available for entity '" + entityName + "'");
+                "Identifier type is not available for entity '" + entityName
+                + "'");
+
+        for (int i = 0; i < type.getViewTemplates().size(); i++) {
+            final String viewTemplate = type.getViewTemplates().get(0);
+            dataDictionary.setVariable("view_name_" + i, viewTemplate/*AndroidUtils
+                    .camelToLowerCase(viewTemplate)*/);
+        }
         
-        final String viewName = javaType.getSimpleTypeName()
-                .replaceAll("(\\p{Ll})(\\p{Lu})", "$1_$2").toLowerCase()
-                + "_view";
-        dataDictionary.setVariable("viewName", viewName);
+        dataDictionary.setVariable("proxy_name", AndroidUtils
+                .camelToLowerCase(proxy.getName().getSimpleTypeName()));
         
         return dataDictionary;
     }
@@ -268,7 +323,7 @@ public class AndroidTemplateServiceImpl implements AndroidTemplateService {
         mirrorTypeMap.put(RequestFactoryType.REQUEST, request.getName());
 
         final Map<RequestFactoryType, ClassOrInterfaceTypeDetails> templateTypeDetailsMap = new LinkedHashMap<RequestFactoryType, ClassOrInterfaceTypeDetails>();
-        final Map<RequestFactoryType, String> xmlTemplates = new LinkedHashMap<RequestFactoryType, String>();
+        final Map<RequestFactoryType, String[]> xmlTemplates = new LinkedHashMap<RequestFactoryType, String[]>();
         for (final AndroidType androidType : AndroidType.getAndroidMirrorTypes()) {
             if (androidType.getTemplate() == null) {
                 continue;
@@ -287,10 +342,13 @@ public class AndroidTemplateServiceImpl implements AndroidTemplateService {
                 dataDictionary = buildMirrorDataDictionary(androidType,
                         mirroredType, proxy, mirrorTypeMap, clientSideTypeMap,
                         moduleName);
-                final String contents = requestFactoryTemplateService
-                        .getTemplateContents(androidType.getTemplate()
-                                + "ViewXml", dataDictionary, TEMPLATE_DIR);
-                xmlTemplates.put(androidType, contents);
+                final List<String> contents = new ArrayList<String>();
+                for (String viewTemplate : androidType.getViewTemplates()) {
+                    contents.add(requestFactoryTemplateService
+                            .getTemplateContents(viewTemplate, dataDictionary,
+                                    TEMPLATE_DIR));
+                }
+                xmlTemplates.put(androidType, contents.toArray(new String[0]));
             }
         }
 

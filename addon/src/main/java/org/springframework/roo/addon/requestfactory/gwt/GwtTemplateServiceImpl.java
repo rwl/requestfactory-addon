@@ -866,7 +866,7 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
         mirrorTypeMap.put(RequestFactoryType.REQUEST, request.getName());
 
         final Map<RequestFactoryType, ClassOrInterfaceTypeDetails> templateTypeDetailsMap = new LinkedHashMap<RequestFactoryType, ClassOrInterfaceTypeDetails>();
-        final Map<RequestFactoryType, String> xmlTemplates = new LinkedHashMap<RequestFactoryType, String>();
+        final Map<RequestFactoryType, String[]> xmlTemplates = new LinkedHashMap<RequestFactoryType, String[]>();
         for (final GwtType gwtType : GwtType.getGwtMirrorTypes()) {
             if (gwtType.getTemplate() == null) {
                 continue;
@@ -886,9 +886,9 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                 dataDictionary = buildMirrorDataDictionary(gwtType,
                         mirroredType, proxy, mirrorTypeMap, clientSideTypeMap,
                         moduleName);
-                final String contents = templateService.getTemplateContents(
+                final String[] contents = {templateService.getTemplateContents(
                         gwtType.getTemplate() + "UiXml", dataDictionary,
-                        TEMPLATE_DIR);
+                        TEMPLATE_DIR)};
                 xmlTemplates.put(gwtType, contents);
             }
         }

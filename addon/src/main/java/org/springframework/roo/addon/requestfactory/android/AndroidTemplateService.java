@@ -21,7 +21,7 @@ public interface AndroidTemplateService {
     String buildViewXml(String templateContents, String destFile,
             List<MethodMetadata> proxyMethods);
 
-    TemplateDataDictionary buildMirrorDataDictionary(RequestFactoryType type,
+    TemplateDataDictionary buildMirrorDataDictionary(AndroidType type,
             ClassOrInterfaceTypeDetails mirroredType,
             ClassOrInterfaceTypeDetails proxy, Map<RequestFactoryType,
             JavaType> mirrorTypeMap, Map<JavaSymbolName,
@@ -34,4 +34,7 @@ public interface AndroidTemplateService {
 
     List<ClassOrInterfaceTypeDetails> getStaticTemplateTypeDetails(
             RequestFactoryType type, String moduleName);
+
+    TemplateDataDictionary buildDictionary(RequestFactoryType type,
+            String moduleName);
 }

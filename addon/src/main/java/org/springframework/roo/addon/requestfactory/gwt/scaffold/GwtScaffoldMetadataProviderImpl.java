@@ -241,7 +241,7 @@ public class GwtScaffoldMetadataProviderImpl extends RequestFactoryScaffoldMetad
                 final String destFile = targetDirectory + File.separatorChar
                         + javaType.getSimpleTypeName() + ".ui.xml";
                 final String contents = gwtTemplateService.buildUiXml(
-                        templateDataHolder.getXmlTemplates().get(gwtType),
+                        templateDataHolder.getXmlTemplates().get(gwtType)[0],
                         destFile,
                         new ArrayList<MethodMetadata>(proxy
                                 .getDeclaredMethods()));

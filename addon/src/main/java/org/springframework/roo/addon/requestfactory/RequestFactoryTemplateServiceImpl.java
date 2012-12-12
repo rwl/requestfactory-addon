@@ -607,7 +607,7 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
         mirrorTypeMap.put(RequestFactoryType.REQUEST, request.getName());
 
         final Map<RequestFactoryType, ClassOrInterfaceTypeDetails> templateTypeDetailsMap = new LinkedHashMap<RequestFactoryType, ClassOrInterfaceTypeDetails>();
-        final Map<RequestFactoryType, String> xmlTemplates = new LinkedHashMap<RequestFactoryType, String>();
+        final Map<RequestFactoryType, String[]> xmlTemplates = new LinkedHashMap<RequestFactoryType, String[]>();
         for (final RequestFactoryType requestFactoryType : RequestFactoryType.getRequestFactoryMirrorTypes()) {
             if (requestFactoryType.getTemplate() == null) {
                 continue;

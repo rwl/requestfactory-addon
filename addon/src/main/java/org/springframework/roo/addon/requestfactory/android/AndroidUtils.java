@@ -14,12 +14,15 @@ public final class AndroidUtils {
             final JavaType governorType, final JavaPackage topLevelPackage) {
         final Map<RequestFactoryType, JavaType> mirrorTypeMap = new HashMap<RequestFactoryType, JavaType>();
         for (final RequestFactoryType mirrorType : AndroidType.ALL_TYPES) {
-            mirrorTypeMap.put(
-                    mirrorType,
-                    RequestFactoryUtils.convertGovernorTypeNameIntoKeyTypeName(governorType,
+            mirrorTypeMap.put(mirrorType, RequestFactoryUtils
+                    .convertGovernorTypeNameIntoKeyTypeName(governorType,
                             mirrorType, topLevelPackage));
         }
         return mirrorTypeMap;
+    }
+    
+    public static String camelToLowerCase(final String camel) {
+        return camel.replaceAll("(\\p{Ll})(\\p{Lu})", "$1_$2").toLowerCase();
     }
 
     private AndroidUtils() {

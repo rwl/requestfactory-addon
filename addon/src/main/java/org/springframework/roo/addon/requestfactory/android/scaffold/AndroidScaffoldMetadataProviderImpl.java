@@ -75,6 +75,8 @@ public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldM
 
     @Override
     protected void buildTypes(final String moduleName) {
+        buildType(AndroidType.LIST_ACTIVITY_PROCESSOR, moduleName);
+        buildType(AndroidType.PLURAL_PROCESSOR, moduleName);
     }
 
     @Override
@@ -123,22 +125,27 @@ public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldM
                 final String layoutPath = pathResolver.getIdentifier(
                         LogicalPath.getInstance(Path.ROOT,
                                 moduleName), AndroidPaths.LAYOUT_PATH);
-                final String packagePath = pathResolver
+                /*final String packagePath = pathResolver
                         .getIdentifier(LogicalPath.getInstance(
                                 Path.SRC_MAIN_JAVA, moduleName), path
-                                .getPackagePath(topLevelPackage));
+                                .getPackagePath(topLevelPackage));*/
 
-                final String targetDirectory = path == AndroidPaths.ACTIVITY ?
-                        layoutPath : packagePath;
-                final String destFile = targetDirectory + File.separatorChar
-                        + javaType.getSimpleTypeName()
-                        .replaceAll("(\\p{Ll})(\\p{Lu})", "$1_$2").toLowerCase()
-                        + "_view.xml";
-                final String contents = androidTemplateService.buildViewXml(
-                        templateDataHolder.getXmlTemplates().get(androidType),
-                        destFile, new ArrayList<MethodMetadata>(proxy
-                                .getDeclaredMethods()));
-                xmlToBeWritten.put(destFile, contents);
+                final String targetDirectory = layoutPath;
+
+                for (int i = 0; i < androidType.getViewTemplates().size(); i++) {
+                    final String viewTemplate = androidType.getViewTemplates().get(i);
+                    final String destFile = targetDirectory
+                            + File.separatorChar
+                            + AndroidUtils.camelToLowerCase(mirroredType
+                                    .getName().getSimpleTypeName())
+                            + "_"+ viewTemplate + ".xml";
+                    final String contents = androidTemplateService
+                            .buildViewXml(templateDataHolder.getXmlTemplates()
+                                    .get(androidType)[i], destFile,
+                                    new ArrayList<MethodMetadata>(proxy
+                                            .getDeclaredMethods()));
+                    xmlToBeWritten.put(destFile, contents);
+                }
             }
         }
         return xmlToBeWritten;

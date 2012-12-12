@@ -1,0 +1,20 @@
+package {{=packageName}};
+{{#imports}}
+import {{=import}};{{/imports}}
+
+public class {{=className}} extends {{=entityTypes}}<String> {
+
+	private static {{=className}} instance;
+
+	public static {{=className}} instance() {
+		if (instance == null) {
+			instance = new {{=className}}();
+		}
+		return instance;
+	}
+{{#entities}}
+    @Override
+    public void handle{{=entitySimpleName}}({{=proxySimpleName}} isNull) {
+        setResult("{{=entityPluralName}}");
+    }{{/entities}}
+}

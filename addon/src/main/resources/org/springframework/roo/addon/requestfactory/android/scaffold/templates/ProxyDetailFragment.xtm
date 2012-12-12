@@ -1,0 +1,44 @@
+package {{=packageName}};
+
+import {{=topLevelPackage}}.R;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+public class {{=className}} extends Fragment {
+
+    public static final String TOKEN = "token";
+
+    private {{=proxy}} proxy;
+
+    public {{=className}}() {
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments().containsKey(TOKEN)) {
+//			proxy = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+        }
+    }
+
+    @Override
+    public View onCreateView(final LayoutInflater inflater,
+            final ViewGroup container, final Bundle savedInstanceState) {
+        final View rootView = inflater.inflate(R.layout.{{=proxy_name}}_fragment_detail, container, false);
+
+        if (proxy != null) {
+//			((TextView) rootView.findViewById(R.id.{{=proxy_name}}_detail)).setText(proxy.content);
+        }
+
+        return rootView;
+    }
+}

@@ -1,0 +1,46 @@
+package {{=packageName}};
+
+import {{=topLevelPackage}}.R;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+public class {{=className}} extends SherlockFragmentActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Theme_Sherlock);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.{{=view_name_0}});
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (savedInstanceState == null) {
+            final Bundle arguments = new Bundle();
+            arguments.putString({{=proxyDetailFragment}}.TOKEN,
+                    getIntent().getStringExtra({{=proxyDetailFragment}}.TOKEN));
+            final {{=proxyDetailFragment}} fragment = new {{=proxyDetailFragment}}();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction().add(
+                    R.id.{{=proxy_name}}_detail_container, fragment).commit();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            NavUtils.navigateUpTo(this, new Intent(this,
+                    {{=proxyListActivity}}.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}

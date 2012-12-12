@@ -1,0 +1,63 @@
+package {{=packageName}};
+
+import {{=topLevelPackage}}.R;
+
+import java.util.List;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+public class {{=className}} extends ArrayAdapter<{{=proxy}}> {
+
+	final Context context;
+	final int resource;
+	final List<{{=proxy}}> data;
+
+	final LayoutInflater inflater;
+
+	public {{=className}}(final Context context,
+			final int resource, final List<{{=proxy}}> data) {
+		super(context, resource, data);
+	        this.resource = resource;
+	        this.context = context;
+	        this.data = data;
+
+	        inflater = (LayoutInflater) context.getSystemService(Context
+	        		.LAYOUT_INFLATER_SERVICE);
+	}
+
+	@Override
+	public View getView(final int position, final View convertView,
+			final ViewGroup parent) {
+
+		View row = convertView;
+		final {{=proxy}}Holder holder;
+
+		if (row == null) {
+			row = inflater.inflate(resource, parent, false);
+
+			holder = new RecordProxyHolder();
+			holder.textView = (TextView) row.findViewById(R.id.textView);
+
+			row.setTag(holder);
+		} else {
+			holder = ({{=proxy}}Holder) row.getTag();
+		}
+
+		final {{=proxy}} proxy = data.get(position);
+		holder.textView.setText(proxy.toString());
+
+		return row;
+	}
+
+	static class {{=proxy}}Holder {
+	        TextView textView;
+	}
+}

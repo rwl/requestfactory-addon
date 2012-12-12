@@ -16,11 +16,11 @@ public class RequestFactoryTemplateDataHolder {
     private final Map<RequestFactoryType, ClassOrInterfaceTypeDetails> templateTypeDetailsMap;
     private final List<ClassOrInterfaceTypeDetails> typeList;
     private final Map<String, String> xmlMap;
-    private final Map<RequestFactoryType, String> xmlTemplates;
+    private final Map<RequestFactoryType, String[]> xmlTemplates;
 
     public RequestFactoryTemplateDataHolder(
             final Map<RequestFactoryType, ClassOrInterfaceTypeDetails> templateTypeDetailsMap,
-            final Map<RequestFactoryType, String> xmlTemplates,
+            final Map<RequestFactoryType, String[]> xmlTemplates,
             final List<ClassOrInterfaceTypeDetails> typeList,
             final Map<String, String> xmlMap) {
         this.templateTypeDetailsMap = templateTypeDetailsMap;
@@ -41,7 +41,7 @@ public class RequestFactoryTemplateDataHolder {
         return xmlMap;
     }
 
-    public Map<RequestFactoryType, String> getXmlTemplates() {
+    public Map<RequestFactoryType, String[]> getXmlTemplates() {
         return xmlTemplates;
     }
 }

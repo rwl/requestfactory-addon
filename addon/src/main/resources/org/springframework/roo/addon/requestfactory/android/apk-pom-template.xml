@@ -16,9 +16,8 @@
         <java.version>JAVA_VERSION</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>1.6.6</slf4j.version>
-        <platform.version>2.3.3</platform.version>
-        <sdk.platform.version>10</sdk.platform.version>
-        <roboguice.version>2.0</roboguice.version>
+        <platform.version>4.1.1.4</platform.version>
+        <sdk.platform.version>16</sdk.platform.version>
     </properties>
     <dependencies>
         <dependency>
@@ -41,9 +40,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.roboguice</groupId>
-            <artifactId>roboguice</artifactId>
-            <version>${roboguice.version}</version>
+            <groupId>com.google.android</groupId>
+            <artifactId>support-v4</artifactId>
+            <version>r7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.actionbarsherlock</groupId>
+            <artifactId>actionbarsherlock</artifactId>
+            <version>4.2.0</version>
+            <type>apklib</type>
         </dependency>
     </dependencies>
     <build>

@@ -1,48 +1,54 @@
 package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
-import __TOP_LEVEL_PACKAGE__.R;
-
 import java.util.List;
-import java.util.ArrayList;
 
+import __TOP_LEVEL_PACKAGE__.R;
+import __TOP_LEVEL_PACKAGE__.adapter.ProxyTypeArrayAdapter;
+import __TOP_LEVEL_PACKAGE__.processor.ListActivityProcessor;
+import __SHARED_TOP_LEVEL_PACKAGE__.managed.request.ApplicationEntityTypesProcessor;
+
+import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import roboguice.activity.RoboListActivity;
+import android.widget.TextView;
 
-import __SHARED_TOP_LEVEL_PACKAGE__.managed.request.ApplicationEntityTypesProcessor;
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
 
 
-public class MainActivity extends RoboListActivity {
+public class MainActivity extends ListActivity {
 
-    private static final List<String> values = getListValues();
+    private static final List<Class<? extends EntityProxy>> values =
+            ApplicationEntityTypesProcessor.getAll();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_view);
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-            android.R.layout.simple_list_item_1, values);
+        final ProxyTypeArrayAdapter adapter = new ProxyTypeArrayAdapter(this,
+            R.layout.proxytype_listview_item_row, values);
+
+        final TextView headerText = (TextView) findViewById(R.id.headerText);
+        headerText.setText("Select Type");
+
+        final View header = (View) getLayoutInflater().inflate(R.layout
+                .listview_header_row, null);
+        getListView().addHeaderView(header);
 
         setListAdapter(adapter);
     }
 
     @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
+    protected void onListItemClick(final ListView l, final View v,
+            final int position, final long id) {
         super.onListItemClick(l, v, position, id);
-    }
 
-    private static List<String> getListValues() {
-        List<Class<? extends EntityProxy>> types = ApplicationEntityTypesProcessor.getAll();
-        List<String> values = new ArrayList<String>(types.size());
+        final Class<? extends EntityProxy> clazz = values.get(position);
 
-        for (Class<? extends EntityProxy> type : types) {
-            //values.add(ProxyListRenderer.instance().render(type));
-        }
+        final Intent intent = new Intent(this, ListActivityProcessor
+                .instance().process(clazz));
 
-        return values;
+        startActivity(intent);
     }
 }

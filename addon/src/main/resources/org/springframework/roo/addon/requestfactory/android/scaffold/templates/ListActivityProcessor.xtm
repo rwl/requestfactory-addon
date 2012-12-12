@@ -1,0 +1,23 @@
+package {{=packageName}};
+
+import android.app.Activity;
+
+{{#imports}}import {{=import}};
+{{/imports}}
+
+public class {{=className}} extends {{=entityTypes}}<Class<? extends Activity>> {
+
+    private static {{=className}} instance;
+
+    public static {{=className}} instance() {
+        if (instance == null) {
+            instance = new {{=className}}();
+        }
+        return instance;
+    }
+{{#entities}}
+    @Override
+    public void handle{{=entitySimpleName}}({{=proxySimpleName}} isNull) {
+        setResult({{=entityListActivity}}.class);
+    }{{/entities}}
+}
