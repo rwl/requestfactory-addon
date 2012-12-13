@@ -108,7 +108,8 @@ public class GwtTemplateServiceImpl implements GwtTemplateService {
                     final TemplateDataDictionary section = dataDictionary
                             .addSection("entities");
                     section.setVariable("entitySimpleName", entitySimpleName);
-                    section.setVariable("entitySimpleNameUncapitalize", StringUtils.uncapitalize(entitySimpleName));
+                    section.setVariable("entitySimpleNameUncapitalize",
+                            StringUtils.uncapitalize(entitySimpleName));
                     section.setVariable("entityFullPath", proxySimpleName);
                     section.setVariable("proxySimpleName", proxySimpleName);
                     section.setVariable("proxySimpleNameUncapitalize",

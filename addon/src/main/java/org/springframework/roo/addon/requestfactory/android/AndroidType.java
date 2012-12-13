@@ -71,7 +71,7 @@ public class AndroidType extends RequestFactoryType {
                     PROXY_DETAIL_FRAGMENT, PROXY_LIST_FRAGMENT);
         } else if (type == LIST_ACTIVITY_PROCESSOR) {
             return Arrays.<RequestFactoryType>asList(
-                    APP_ENTITY_TYPES_PROCESSOR, PROXY_LIST_ACTIVITY);
+                    APP_ENTITY_TYPES_PROCESSOR);
         } else if (type == PLURAL_PROCESSOR) {
             return Arrays.<RequestFactoryType>asList(
                     APP_ENTITY_TYPES_PROCESSOR);

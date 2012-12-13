@@ -76,43 +76,72 @@ public class AndroidTemplateServiceImpl implements AndroidTemplateService {
                 proxies.iterator().next().getDeclaredByMetadataId()).getModule();
         final TemplateDataDictionary dataDictionary = requestFactoryTemplateService
                 .buildStandardDataDictionary(type, moduleName, proxyModuleName);
+        final JavaPackage topLevelPackage = projectOperations
+                .getTopLevelPackage(moduleName);
         
-        if (type == AndroidType.LIST_ACTIVITY_PROCESSOR
-                || type == AndroidType.PLURAL_PROCESSOR) {
+        if (type == AndroidType.LIST_ACTIVITY_PROCESSOR) {
             for (final ClassOrInterfaceTypeDetails proxy : proxies) {
                 if (!RequestFactoryUtils.scaffoldProxy(proxy)) {
                     continue;
                 }
                 final ClassOrInterfaceTypeDetails entity = requestFactoryTypeService
                         .lookupEntityFromProxy(proxy);
-                if (entity != null) {
-                    final String entitySimpleName = entity.getName()
-                            .getSimpleTypeName();
-                    final String proxySimpleName = proxy.getName()
-                            .getSimpleTypeName();
-
-                    final TemplateDataDictionary section = dataDictionary
-                            .addSection("entities");
-                    section.setVariable("entitySimpleName", entitySimpleName);
-                    section.setVariable("proxySimpleName", proxySimpleName);
-
-                    section.setVariable("entityListActivity", entitySimpleName 
-                            + AndroidType.PROXY_LIST_ACTIVITY.getSuffix());
-                    
-                    requestFactoryTemplateService.addImport(dataDictionary,
-                            proxy.getName().getFullyQualifiedTypeName());
-
-
-                    final String pluralMetadataKey = PluralMetadata
-                            .createIdentifier(entity.getName(),
-                                    PhysicalTypeIdentifier.getPath(entity
-                                            .getDeclaredByMetadataId()));
-                    final PluralMetadata pluralMetadata = (PluralMetadata)
-                            metadataService.get(pluralMetadataKey);
-                    final String plural = pluralMetadata.getPlural();
-
-                    section.setVariable("entityPluralName", plural);
+                if (entity == null) {
+                    continue;
                 }
+                final String entitySimpleName = entity.getName()
+                        .getSimpleTypeName();
+                final String proxySimpleName = proxy.getName()
+                        .getSimpleTypeName();
+
+                final TemplateDataDictionary section = dataDictionary
+                        .addSection("entities");
+                section.setVariable("entitySimpleName", entitySimpleName);
+                section.setVariable("proxySimpleName", proxySimpleName);
+                requestFactoryTemplateService.addImport(dataDictionary,
+                        proxy.getName().getFullyQualifiedTypeName());
+
+                final JavaType proxyListActivity = RequestFactoryUtils
+                        .convertGovernorTypeNameIntoKeyTypeName(
+                                entity.getType(),
+                                AndroidType.PROXY_LIST_ACTIVITY,
+                                topLevelPackage);
+                section.setVariable("entityListActivity", proxyListActivity
+                        .getSimpleTypeName());
+                requestFactoryTemplateService.addImport(dataDictionary,
+                        proxyListActivity);
+            }
+        } else if (type == AndroidType.PLURAL_PROCESSOR) {
+            for (final ClassOrInterfaceTypeDetails proxy : proxies) {
+                if (!RequestFactoryUtils.scaffoldProxy(proxy)) {
+                    continue;
+                }
+                final ClassOrInterfaceTypeDetails entity = requestFactoryTypeService
+                        .lookupEntityFromProxy(proxy);
+                if (entity == null) {
+                    continue;
+                }
+                final String entitySimpleName = entity.getName()
+                        .getSimpleTypeName();
+                final String proxySimpleName = proxy.getName()
+                        .getSimpleTypeName();
+
+                final TemplateDataDictionary section = dataDictionary
+                        .addSection("entities");
+                section.setVariable("entitySimpleName", entitySimpleName);
+                section.setVariable("proxySimpleName", proxySimpleName);
+                requestFactoryTemplateService.addImport(dataDictionary,
+                        proxy.getName().getFullyQualifiedTypeName());
+
+                final String pluralMetadataKey = PluralMetadata
+                        .createIdentifier(entity.getName(),
+                                PhysicalTypeIdentifier.getPath(entity
+                                        .getDeclaredByMetadataId()));
+                final PluralMetadata pluralMetadata = (PluralMetadata)
+                        metadataService.get(pluralMetadataKey);
+                final String plural = pluralMetadata.getPlural();
+
+                section.setVariable("entityPluralName", plural);
             }
         }
             
@@ -144,8 +173,9 @@ public class AndroidTemplateServiceImpl implements AndroidTemplateService {
 
         for (int i = 0; i < type.getViewTemplates().size(); i++) {
             final String viewTemplate = type.getViewTemplates().get(0);
-            dataDictionary.setVariable("view_name_" + i, viewTemplate/*AndroidUtils
-                    .camelToLowerCase(viewTemplate)*/);
+            dataDictionary.setVariable("view_name_" + i,
+                    AndroidUtils.camelToLowerCase(mirroredType.getName()
+                            .getSimpleTypeName()) + "_" + viewTemplate);
         }
         
         dataDictionary.setVariable("proxy_name", AndroidUtils
@@ -363,8 +393,7 @@ public class AndroidTemplateServiceImpl implements AndroidTemplateService {
     public List<ClassOrInterfaceTypeDetails> getStaticTemplateTypeDetails(
             final RequestFactoryType type, final String moduleName) {
         final List<ClassOrInterfaceTypeDetails> templateTypeDetails = new ArrayList<ClassOrInterfaceTypeDetails>();
-        final TemplateDataDictionary dataDictionary = requestFactoryTemplateService
-                .buildDictionary(type, moduleName);
+        final TemplateDataDictionary dataDictionary = buildDictionary(type, moduleName);
         templateTypeDetails.add(requestFactoryTemplateService
                 .getTemplateDetails(dataDictionary, type.getTemplate(),
                         requestFactoryTemplateService.getDestinationJavaType(

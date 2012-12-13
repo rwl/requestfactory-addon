@@ -43,7 +43,7 @@ public class {{=className}} extends ArrayAdapter<{{=proxy}}> {
 		if (row == null) {
 			row = inflater.inflate(resource, parent, false);
 
-			holder = new RecordProxyHolder();
+			holder = new {{=proxy}}Holder();
 			holder.textView = (TextView) row.findViewById(R.id.textView);
 
 			row.setTag(holder);

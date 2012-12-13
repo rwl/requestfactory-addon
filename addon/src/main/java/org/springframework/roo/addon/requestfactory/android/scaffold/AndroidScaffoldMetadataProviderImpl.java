@@ -5,6 +5,7 @@ import static org.springframework.roo.addon.requestfactory.android.AndroidJavaTy
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.felix.scr.annotations.Component;
@@ -132,8 +133,9 @@ public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldM
 
                 final String targetDirectory = layoutPath;
 
-                for (int i = 0; i < androidType.getViewTemplates().size(); i++) {
-                    final String viewTemplate = androidType.getViewTemplates().get(i);
+                final List<String> templates = androidType.getViewTemplates();
+                for (int i = 0; i < templates.size(); i++) {
+                    final String viewTemplate = templates.get(i);
                     final String destFile = targetDirectory
                             + File.separatorChar
                             + AndroidUtils.camelToLowerCase(mirroredType
