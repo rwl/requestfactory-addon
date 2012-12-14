@@ -1,17 +1,25 @@
 package {{=packageName}};
 
-import {{=topLevelPackage}}.R;
+import {{=topLevelPackage}}.application.AndroidApplication;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
+import android.util.Log;
 
 {{#imports}}import {{=import}};
 {{/imports}}
 
 public class {{=className}} extends ListFragment {
+
+    public interface Callback {
+        public void onItemSelected(int position);
+    }
+
+    private static final String TAG = "{{=className}}";
 
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
@@ -19,18 +27,14 @@ public class {{=className}} extends ListFragment {
 
     private int activatedPosition = ListView.INVALID_POSITION;
 
-    public interface Callback {
-        public void onItemSelected(String id);
-    }
-
     public {{=className}}() {
     }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //setListAdapter(new {{=proxyArrayAdapter}}(getActivity(), R.layout.{{=proxy_name}}_listview_item_row, new ArrayList<{{=proxy}}>()));
+        final AndroidApplication application = (AndroidApplication) getActivity().getApplication();
+        setListAdapter(application.getRecorderProxyAdapter(getActivity()));
     }
 
     @Override
@@ -47,16 +51,23 @@ public class {{=className}} extends ListFragment {
         super.onAttach(activity);
 
         if (!(activity instanceof Callback)) {
-            throw new IllegalStateException("Activity must implement fragment's callback.");
+            Log.w(TAG, "Activity should implement fragment's callback.");
+        } else {
+            callback = (Callback) activity;
         }
 
-        callback = (Callback) activity;
+        if (!(activity instanceof OnScrollListener)) {
+            Log.w(TAG, "Activity should implement OnScrollListener.");
+        } else {
+        	getListView().setOnScrollListener((OnScrollListener) activity);
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         callback = null;
+        getListView().setOnScrollListener(null);
     }
 
     @Override

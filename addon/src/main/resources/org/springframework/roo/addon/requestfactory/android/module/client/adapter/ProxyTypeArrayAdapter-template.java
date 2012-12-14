@@ -18,51 +18,51 @@ import android.widget.TextView;
 
 public class ProxyTypeArrayAdapter extends ArrayAdapter<Class<? extends EntityProxy>> {
 
-	final Context context;
-	final int resource;
-	final List<Class<? extends EntityProxy>> data;
+    final Context context;
+    final int resource;
+    final List<Class<? extends EntityProxy>> data;
 
-	final LayoutInflater inflater;
+    final LayoutInflater inflater;
 
-	public ProxyTypeArrayAdapter(final Context context,
-			final int resource,
-			final List<Class<? extends EntityProxy>> data) {
-		super(context, resource, data);
-	        this.resource = resource;
-	        this.context = context;
-	        this.data = data;
+    public ProxyTypeArrayAdapter(final Context context,
+            final int resource,
+            final List<Class<? extends EntityProxy>> data) {
+        super(context, resource, data);
+            this.resource = resource;
+            this.context = context;
+            this.data = data;
 
-	        inflater = (LayoutInflater) context.getSystemService(
-	        		Context.LAYOUT_INFLATER_SERVICE);
-	}
+            inflater = (LayoutInflater) context.getSystemService(
+                    Context.LAYOUT_INFLATER_SERVICE);
+    }
 
-	@Override
-	public View getView(int position, final View convertView,
-			final ViewGroup parent) {
+    @Override
+    public View getView(int position, final View convertView,
+            final ViewGroup parent) {
 
-		View row = convertView;
-		final ProxyClassHolder holder;
+        View row = convertView;
+        final ProxyClassHolder holder;
 
-		if (row == null) {
-			row = inflater.inflate(resource, parent, false);
+        if (row == null) {
+            row = inflater.inflate(resource, parent, false);
 
-			holder = new ProxyClassHolder();
-			holder.className = (TextView) row.findViewById(
-					R.id.className);
+            holder = new ProxyClassHolder();
+            holder.className = (TextView) row.findViewById(
+                    R.id.className);
 
-			row.setTag(holder);
-		} else {
-			holder = (ProxyClassHolder) row.getTag();
-		}
+            row.setTag(holder);
+        } else {
+            holder = (ProxyClassHolder) row.getTag();
+        }
 
-		final Class<? extends EntityProxy> type = data.get(position);
-		holder.className.setText(PluralProcessor.instance()
-				.process(type));
+        final Class<? extends EntityProxy> type = data.get(position);
+        holder.className.setText(PluralProcessor.instance()
+                .process(type));
 
-		return row;
-	}
+        return row;
+    }
 
-	static class ProxyClassHolder {
-	        TextView className;
-	}
+    static class ProxyClassHolder {
+            TextView className;
+    }
 }

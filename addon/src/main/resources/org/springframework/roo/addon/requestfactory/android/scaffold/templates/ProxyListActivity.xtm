@@ -1,19 +1,30 @@
 package {{=packageName}};
 
 import {{=topLevelPackage}}.R;
+import {{=topLevelPackage}}.application.Util;
+import {{=topLevelPackage}}.application.AndroidApplication;
 
-import com.google.web.bindery.requestfactory.shared.RequestFactory;
+import {{=sharedTopLevelPackage}}.managed.request.ApplicationRequestFactory;
+
+import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+{{#imports}}
+import {{=import}};{{/imports}}
 
-{{#imports}}import {{=import}};
-{{/imports}}
+public class {{=className}} extends FragmentActivity implements {{=proxyListFragment}}.Callback, OnScrollListener {
 
-public class {{=className}} extends FragmentActivity implements {{=proxyListFragment}}.Callback {
+    private static final int PADDING = 5;
 
-    private /*final */RequestFactory requests;
+    private ApplicationRequestFactory requestFactory;
+
+    private {{=proxyAdapter}} adapter;
+
+    private {{=proxyFetchTask}} task;
 
     private boolean twoPane;
 
@@ -21,28 +32,76 @@ public class {{=className}} extends FragmentActivity implements {{=proxyListFrag
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.{{=view_name_0}});
+        
+        requestFactory = Util.getRequestFactory(this, ApplicationRequestFactory.class);
+        
+        final AndroidApplication application = (AndroidApplication) getApplication();
+        adapter = application.get{{=proxyAdapter}}(this);
 
         if (findViewById(R.id.{{=proxy_name}}_detail_container) != null) {
             twoPane = true;
-
             (({{=proxyListFragment}}) getSupportFragmentManager().findFragmentById(R.id.{{=proxy_name}}_list)).setActivateOnItemClick(true);
         }
     }
 
     @Override
-    public void onItemSelected(String id) {
+    protected void onStart() {
+        super.onStart();
+        fetch{{=pluralName}}(null);
+    }
+
+    @Override
+    public void onItemSelected(final int position) {
+        final {{=proxy}} proxy = adapter.getItem(position);
+        final String token = requestFactory.getHistoryToken(proxy.stableId());
         if (twoPane) {
             final Bundle arguments = new Bundle();
-            //requests.getHistoryToken(
-            arguments.putString({{=proxyDetailFragment}}.TOKEN, id);
+            arguments.putString({{=proxyDetailFragment}}.TOKEN, token);
             final {{=proxyDetailFragment}} fragment = new {{=proxyDetailFragment}}();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction().replace(R.id.{{=proxy_name}}_detail_container, fragment).commit();
 
         } else {
             final Intent detailIntent = new Intent(this, {{=proxyDetailActivity}}.class);
-            detailIntent.putExtra({{=proxyDetailFragment}}.TOKEN, id);
+            detailIntent.putExtra({{=proxyDetailFragment}}.TOKEN, token);
             startActivity(detailIntent);
         }
+    }
+
+    @Override
+    public void onScroll(final AbsListView view, final int firstVisible, final int visibleCount, final int totalCount) {
+        final boolean loadMore = firstVisible + visibleCount + PADDING >= totalCount;
+        if (loadMore) {
+            fetch{{=pluralName}}(null);
+        }
+    }
+
+    @Override
+    public void onScrollStateChanged(final AbsListView view, final int scrollState) {
+    }
+
+    public void fetch{{=pluralName}}(final {{=idType}} id) {
+        //progressBar.setVisibility(View.VISIBLE);
+        if (task != null) {
+            task.cancel(true);
+        }
+        task = new {{=proxyFetchTask}}(this);
+        task.execute(id);
+    }
+
+    public void set{{=pluralName}}(final List<{{=proxy}}> {{=pluralNameUncapitalized}}) {
+        //progressBar.setVisibility(View.GONE);
+        adapter.set{{=pluralName}}({{=pluralNameUncapitalized}});
+        adapter.notifyDataSetChanged();
+    }
+
+    public void add{{=pluralName}}(final List<{{=proxy}}> {{=pluralNameUncapitalized}}) {
+        //progressBar.setVisibility(View.GONE);
+        adapter.add{{=pluralName}}({{=pluralNameUncapitalized}});
+        adapter.notifyDataSetChanged();
+    }
+
+    public int getCount() {
+        return adapter.getCount();
     }
 }

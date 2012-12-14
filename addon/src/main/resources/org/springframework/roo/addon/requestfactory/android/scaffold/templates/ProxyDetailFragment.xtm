@@ -1,6 +1,9 @@
 package {{=packageName}};
 
 import {{=topLevelPackage}}.R;
+import {{=topLevelPackage}}.application.Util;
+
+import {{=sharedTopLevelPackage}}.managed.request.ApplicationRequestFactory;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,12 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.web.bindery.requestfactory.shared.EntityProxyId;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+
 {{#imports}}import {{=import}};
 {{/imports}}
 
 public class {{=className}} extends Fragment {
 
     public static final String TOKEN = "token";
+
+    private ApplicationRequestFactory requestFactory;
 
     private {{=proxy}} proxy;
 
@@ -24,9 +32,17 @@ public class {{=className}} extends Fragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        requestFactory = Util.getRequestFactory(getActivity(), ApplicationRequestFactory.class);
         if (getArguments().containsKey(TOKEN)) {
-//			proxy = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            final String token = getArguments().getString(TOKEN);
+            final EntityProxyId<{{=proxy}}> entityProxyId = requestFactory.getProxyId(token);
+            requestFactory.find(entityProxyId).fire(new Receiver<{{=proxy}}>() {
+
+                @Override
+                public void onSuccess({{=proxy}} response) {
+                    proxy = response;
+                }
+            });
         }
     }
 
@@ -36,7 +52,7 @@ public class {{=className}} extends Fragment {
         final View rootView = inflater.inflate(R.layout.{{=proxy_name}}_detail_fragment_view, container, false);
 
         if (proxy != null) {
-//			((TextView) rootView.findViewById(R.id.{{=proxy_name}}_detail)).setText(proxy.content);
+            final TextView textView = (TextView) rootView.findViewById(R.id.{{=proxy_name}}_detail);
         }
 
         return rootView;

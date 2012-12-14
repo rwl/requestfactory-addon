@@ -78,6 +78,7 @@ public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldM
     protected void buildTypes(final String moduleName) {
         buildType(AndroidType.LIST_ACTIVITY_PROCESSOR, moduleName);
         buildType(AndroidType.PLURAL_PROCESSOR, moduleName);
+        buildType(AndroidType.ANDROID_APPLICATION, moduleName);
     }
 
     @Override

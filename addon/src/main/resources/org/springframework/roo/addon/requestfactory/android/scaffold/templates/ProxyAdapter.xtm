@@ -1,0 +1,83 @@
+package {{=packageName}};
+
+import {{=topLevelPackage}}.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
+{{#imports}}
+import {{=import}};{{/imports}}
+
+
+public class {{=className}} extends BaseAdapter {
+
+    private static class {{=proxy}}Holder {
+            TextView textView;
+    }
+
+    final Context context;
+
+    final List<{{=proxy}}> {{=pluralNameUncapitalized}};
+
+    final LayoutInflater inflater;
+
+    public {{=className}}(final Context context) {
+        this.context = context;
+        {{=pluralNameUncapitalized}} = new ArrayList<{{=proxy}}>();
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    @Override
+    public int getCount() {
+        return {{=pluralNameUncapitalized}}.size();
+    }
+
+    @Override
+    public {{=proxy}} getItem(final int position) {
+        return {{=pluralNameUncapitalized}}.get(position);
+    }
+
+    @Override
+    public long getItemId(final int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(final int position, final View convertView,
+            final ViewGroup parent) {
+
+        View row = convertView;
+        final {{=proxy}}Holder holder;
+
+        if (row == null) {
+            row = inflater.inflate(R.layout.{{=proxy_name}}_listview_item_row, parent, false);
+
+            holder = new {{=proxy}}Holder();
+            holder.textView = (TextView) row.findViewById(R.id.textView);
+
+            row.setTag(holder);
+        } else {
+            holder = ({{=proxy}}Holder) row.getTag();
+        }
+
+        final {{=proxy}} proxy = {{=pluralNameUncapitalized}}.get(position);
+        holder.textView.setText(proxy.toString());
+
+        return row;
+    }
+
+    public void add{{=pluralName}}(final List<{{=proxy}}> {{=pluralNameUncapitalized}}) {
+        this.{{=pluralNameUncapitalized}}.addAll({{=pluralNameUncapitalized}});
+    }
+
+    public void set{{=pluralName}}(final List<{{=proxy}}> {{=pluralNameUncapitalized}}) {
+        this.{{=pluralNameUncapitalized}}.clear();
+        this.{{=pluralNameUncapitalized}}.addAll({{=pluralNameUncapitalized}});
+    }
+}

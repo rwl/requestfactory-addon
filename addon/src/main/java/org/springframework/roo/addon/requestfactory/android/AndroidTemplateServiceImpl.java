@@ -79,7 +79,40 @@ public class AndroidTemplateServiceImpl implements AndroidTemplateService {
         final JavaPackage topLevelPackage = projectOperations
                 .getTopLevelPackage(moduleName);
         
-        if (type == AndroidType.LIST_ACTIVITY_PROCESSOR) {
+        if (type == AndroidType.ANDROID_APPLICATION) {
+            for (final ClassOrInterfaceTypeDetails proxy : proxies) {
+                if (!RequestFactoryUtils.scaffoldProxy(proxy)) {
+                    continue;
+                }
+                final ClassOrInterfaceTypeDetails entity = requestFactoryTypeService
+                        .lookupEntityFromProxy(proxy);
+                if (entity == null) {
+                    continue;
+                }
+//                final String entitySimpleName = entity.getName()
+//                        .getSimpleTypeName();
+//                final String proxySimpleName = proxy.getName()
+//                        .getSimpleTypeName();
+
+                final TemplateDataDictionary section = dataDictionary
+                        .addSection("proxys");
+//                section.setVariable("entitySimpleName", entitySimpleName);
+//                section.setVariable("proxySimpleName", proxySimpleName);
+//                requestFactoryTemplateService.addImport(dataDictionary,
+//                        proxy.getName().getFullyQualifiedTypeName());
+
+                final JavaType proxyAdapter = RequestFactoryUtils
+                        .convertGovernorTypeNameIntoKeyTypeName(
+                                entity.getType(), AndroidType.PROXY_ADAPTER,
+                                topLevelPackage);
+                section.setVariable("proxyAdapter", proxyAdapter
+                        .getSimpleTypeName());
+                section.setVariable("proxyAdapterUncapitalized", StringUtils
+                        .uncapitalize(proxyAdapter.getSimpleTypeName()));
+                requestFactoryTemplateService.addImport(dataDictionary,
+                        proxyAdapter);
+            }
+        } else if (type == AndroidType.LIST_ACTIVITY_PROCESSOR) {
             for (final ClassOrInterfaceTypeDetails proxy : proxies) {
                 if (!RequestFactoryUtils.scaffoldProxy(proxy)) {
                     continue;

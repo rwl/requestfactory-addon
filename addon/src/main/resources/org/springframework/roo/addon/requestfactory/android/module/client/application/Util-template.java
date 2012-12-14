@@ -1,4 +1,4 @@
-package __TOP_LEVEL_PACKAGE__;
+package __TOP_LEVEL_PACKAGE__.__SEGMENT_PACKAGE__;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

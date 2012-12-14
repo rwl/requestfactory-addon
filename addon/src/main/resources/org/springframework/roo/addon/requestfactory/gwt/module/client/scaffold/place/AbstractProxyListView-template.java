@@ -80,6 +80,6 @@ public abstract class AbstractProxyListView<P extends EntityProxy> extends Compo
     }
 
     protected void initWidget(Widget widget) {
-        throw new UnsupportedOperationException("AbstractRecordListView must be initialized via init(Widget, HasData<P>, Button) ");
+        throw new UnsupportedOperationException("AbstractProxyListView must be initialized via init(Widget, HasData<P>, Button) ");
     }
 }

@@ -1,6 +1,6 @@
 package {{=packageName}};
 
-import {{=sharedScaffoldPackage}}.BaseRequestFactory;
+import {{=sharedTopLevelPackage}}.factory.BaseRequestFactory;
 {{#hasAccount}}import {{=sharedAccountPackage}}.MakesAccountRequests;
 {{/hasAccount}}
 

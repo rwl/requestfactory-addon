@@ -18,7 +18,7 @@ import com.google.gwt.view.client.HasData;
 public interface ProxyListView<P extends EntityProxy> extends IsWidget {
 
     /**
-     * Implemented by the owner of a RecordTableView.
+     * Implemented by the owner of a ProxyTableView.
      *
      * @param <R> the type of the records to display
      */

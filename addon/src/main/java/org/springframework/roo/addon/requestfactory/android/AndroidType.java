@@ -15,15 +15,19 @@ public class AndroidType extends RequestFactoryType {
     public static final AndroidType PROXY_LIST_ACTIVITY = new AndroidType(AndroidPaths.ACTIVITY, true, "ProxyListActivity", "proxyListActivity", "ProxyListActivity", Arrays.asList("proxy_list_activity_view", "proxy_list_activity_twopane"), false, false, true);
     public static final AndroidType PROXY_LIST_FRAGMENT = new AndroidType(AndroidPaths.FRAGMENT, true, "ProxyListFragment", "proxyListFragment", "ProxyListFragment", Collections.<String>emptyList(), false, false, false);
 
-    public static final AndroidType PROXY_ARRAY_ADAPTER = new AndroidType(AndroidPaths.ADAPTER, true, "ProxyArrayAdapter", "proxyArrayAdapter", "ProxyArrayAdapter", Arrays.asList("proxy_listview_item_row"), false, false, true);
+    public static final AndroidType PROXY_FETCH_TASK = new AndroidType(AndroidPaths.TASK, true, "FetchTask", "proxyFetchTask", "ProxyFetchTask", Collections.<String>emptyList(), false, false, false);
+
+    public static final AndroidType PROXY_ADAPTER = new AndroidType(AndroidPaths.ADAPTER, true, "ProxyAdapter", "proxyAdapter", "ProxyAdapter", Arrays.asList("proxy_listview_item_row"), false, false, true);
 
     public static final AndroidType LIST_ACTIVITY_PROCESSOR = new AndroidType(AndroidPaths.PROCESSOR, false, "ListActivityProcessor", "listActivityProcessor", "ListActivityProcessor", Collections.<String>emptyList(), false, true, false);
     public static final AndroidType PLURAL_PROCESSOR = new AndroidType(AndroidPaths.PROCESSOR, false, "PluralProcessor", "pluralProcessor", "PluralProcessor", Collections.<String>emptyList(), false, true, false);
 
+    public static final AndroidType ANDROID_APPLICATION = new AndroidType(AndroidPaths.APPLICATION, false, "AndroidApplication", "androidApplication", "AndroidApplication", Collections.<String>emptyList(), false, true, false);
+
     public static final AndroidType[] ALL_TYPES = new AndroidType[] {
         PROXY_DETAIL_ACTIVITY, PROXY_DETAIL_FRAGMENT, PROXY_LIST_ACTIVITY,
-        PROXY_LIST_FRAGMENT, PROXY_ARRAY_ADAPTER, LIST_ACTIVITY_PROCESSOR,
-        PLURAL_PROCESSOR
+        PROXY_LIST_FRAGMENT, PROXY_FETCH_TASK, PROXY_ADAPTER, 
+        LIST_ACTIVITY_PROCESSOR, PLURAL_PROCESSOR, ANDROID_APPLICATION
     };
 
     public static List<AndroidType> getAndroidMirrorTypes() {
@@ -64,17 +68,25 @@ public class AndroidType extends RequestFactoryType {
     protected List<RequestFactoryType> resolveReferences(
             final RequestFactoryType type) {
         if (type == PROXY_DETAIL_ACTIVITY) {
-            return Arrays.<RequestFactoryType>asList(PROXY_DETAIL_FRAGMENT,
-                    PROXY_LIST_ACTIVITY);
+            return Arrays.<RequestFactoryType>asList(
+                    PROXY_DETAIL_FRAGMENT, PROXY_LIST_ACTIVITY);
         } else if (type == PROXY_LIST_ACTIVITY) {
-            return Arrays.<RequestFactoryType>asList(PROXY_DETAIL_ACTIVITY,
-                    PROXY_DETAIL_FRAGMENT, PROXY_LIST_FRAGMENT);
+            return Arrays.<RequestFactoryType>asList(
+                    PROXY_ADAPTER, PROXY_FETCH_TASK,
+                    PROXY_DETAIL_ACTIVITY, PROXY_DETAIL_FRAGMENT,
+                    PROXY_LIST_FRAGMENT, ANDROID_APPLICATION);
         } else if (type == LIST_ACTIVITY_PROCESSOR) {
             return Arrays.<RequestFactoryType>asList(
                     APP_ENTITY_TYPES_PROCESSOR);
         } else if (type == PLURAL_PROCESSOR) {
             return Arrays.<RequestFactoryType>asList(
                     APP_ENTITY_TYPES_PROCESSOR);
+        } else if (type == PROXY_FETCH_TASK) {
+            return Arrays.<RequestFactoryType>asList(
+                    PROXY_LIST_ACTIVITY);
+        } else if (type == PROXY_LIST_FRAGMENT) {
+            return Arrays.<RequestFactoryType>asList(
+                    ANDROID_APPLICATION);
         } else {
             return new ArrayList<RequestFactoryType>();
         }

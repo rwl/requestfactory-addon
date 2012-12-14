@@ -476,24 +476,31 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
 
         final String simpleTypeName = mirroredType.getName()
                 .getSimpleTypeName();
+        final String proxyModuleName = PhysicalTypeIdentifier.getPath(
+                proxy.getDeclaredByMetadataId()).getModule();
         final JavaPackage topLevelPackage = projectOperations
                 .getTopLevelPackage(moduleName);
+        final JavaPackage sharedTopLevelPackage = projectOperations
+                .getTopLevelPackage(proxyModuleName);
+
 
         dataDictionary.setVariable("className", javaType.getSimpleTypeName());
         dataDictionary.setVariable("packageName", javaType.getPackage()
                 .getFullyQualifiedPackageName());
-        dataDictionary.setVariable("topLevelPackage", projectOperations
-                .getTopLevelPackage(moduleName).getFullyQualifiedPackageName());
+        dataDictionary.setVariable("topLevelPackage", topLevelPackage
+                .getFullyQualifiedPackageName());
 
-        dataDictionary.setVariable("requestPackage",
-                RequestFactoryPath.SHARED_MANAGED_REQUEST.packageName(topLevelPackage));
-        dataDictionary.setVariable("sharedScaffoldPackage",
-                RequestFactoryPath.SHARED_FACTORY.packageName(topLevelPackage));
+        dataDictionary.setVariable("requestPackage", RequestFactoryPath
+                .SHARED_MANAGED_REQUEST.packageName(sharedTopLevelPackage));
+        dataDictionary.setVariable("sharedTopLevelPackage",
+                sharedTopLevelPackage.getFullyQualifiedPackageName());
 
         dataDictionary.setVariable("name", simpleTypeName);
         dataDictionary.setVariable("pluralName", plural);
         dataDictionary.setVariable("nameUncapitalized",
                 StringUtils.uncapitalize(simpleTypeName));
+        dataDictionary.setVariable("pluralNameUncapitalized",
+                StringUtils.uncapitalize(plural));
         dataDictionary.setVariable("proxy", proxyType.getSimpleTypeName());
 
         return dataDictionary;
@@ -534,8 +541,14 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
     public TemplateDataDictionary buildStandardDataDictionary(
             final RequestFactoryType type, final String moduleName,
             final String proxyModuleName) {
-        final JavaType javaType = new JavaType(getFullyQualifiedTypeName(type,
-                moduleName));
+        final String typeName = getFullyQualifiedTypeName(type,
+                moduleName);
+        JavaType javaType = null;
+        try {
+        javaType = new JavaType(typeName);
+        } catch (StringIndexOutOfBoundsException e) {
+            throw e;
+        }
         final TemplateDataDictionary dataDictionary = TemplateDictionary
                 .create();
         for (final RequestFactoryType reference : type.getReferences()) {
@@ -550,9 +563,9 @@ public class RequestFactoryTemplateServiceImpl implements RequestFactoryTemplate
                 .getFullyQualifiedPackageName());
         dataDictionary.setVariable("topLevelPackage", projectOperations
                 .getTopLevelPackage(moduleName).getFullyQualifiedPackageName());
-        dataDictionary.setVariable("sharedScaffoldPackage",
-                RequestFactoryPath.SHARED_FACTORY.packageName(projectOperations
-                        .getTopLevelPackage(moduleName)));
+        dataDictionary.setVariable("sharedTopLevelPackage", projectOperations
+                .getTopLevelPackage(proxyModuleName)
+                .getFullyQualifiedPackageName());
         dataDictionary.setVariable("sharedAccountPackage", RequestFactoryPath.SHARED_ACCOUNT
                 .packageName(projectOperations.getTopLevelPackage(moduleName)));
         return dataDictionary;

@@ -1,0 +1,18 @@
+package {{=packageName}};
+
+import android.content.Context;
+import android.app.Application;
+{{#imports}}
+import {{=import}};{{/imports}}
+
+public class {{=className}} extends Application {
+{{#proxys}}
+	private {{=proxyAdapter}} {{=proxyAdapterUncapitalized}};{{/proxys}}
+{{#proxys}}
+	public {{=proxyAdapter}} get{{=proxyAdapter}}(final Context context) {
+		if ({{=proxyAdapterUncapitalized}} == null) {
+			{{=proxyAdapterUncapitalized}} = new {{=proxyAdapter}}(context);
+		}
+		return {{=proxyAdapterUncapitalized}};
+	}{{/proxys}}
+}
