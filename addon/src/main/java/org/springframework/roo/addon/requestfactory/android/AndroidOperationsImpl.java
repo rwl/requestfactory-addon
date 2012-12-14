@@ -126,7 +126,12 @@ public class AndroidOperationsImpl implements AndroidOperations {
     }
     
     private void updateAndroidManifest(final String moduleName) {
-        androidTypeService.addActvity(moduleName, ".MainActivity", true);
+        final String topLevelPackageName = projectOperations
+                .getTopLevelPackage(moduleName).getFullyQualifiedPackageName();
+        androidTypeService.addActvity(moduleName, topLevelPackageName
+                + ".activity.MainActivity", true);
+        androidTypeService.setApplicationName(moduleName, topLevelPackageName
+                + ".application.AndroidApplication");
     }
 
     private void copyDirectoryContents(

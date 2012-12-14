@@ -6,4 +6,6 @@ public interface AndroidTypeService {
             final boolean mainActivity);
     
     String getAndroidManifestXml(final String moduleName);
+
+    void setApplicationName(String moduleName, String applicationName);
 }

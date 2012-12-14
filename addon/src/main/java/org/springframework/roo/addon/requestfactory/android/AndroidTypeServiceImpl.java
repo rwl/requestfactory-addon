@@ -30,6 +30,26 @@ public class AndroidTypeServiceImpl implements AndroidTypeService {
 
     @Reference FileManager fileManager;
     @Reference ProjectOperations projectOperations;
+    
+    @Override
+    public void setApplicationName(final String moduleName,
+            final String applicationName) {
+        final String manifestXml = getAndroidManifestXml(moduleName);
+        Validate.notBlank(manifestXml,
+                "AndroidManifest.xml not found for module '"
+                + moduleName + "'");
+        final Document manifestXmlDoc = getAndroidManifestXmlDocument(manifestXml);
+        final Element manifestXmlRoot = manifestXmlDoc.getDocumentElement();
+        final Element applicationElement = XmlUtils.findFirstElement(
+                "/manifest/application", manifestXmlRoot);
+        
+        applicationElement.setAttribute(NAME, applicationName);
+
+        final String xmlString = XmlUtils.nodeToString(manifestXmlDoc);
+        fileManager.createOrUpdateTextFileIfRequired(manifestXml,
+                xmlString, "Set application name to: " + applicationName,
+                true);
+    }
 
     @Override
     public void addActvity(final String moduleName, final String activityName,

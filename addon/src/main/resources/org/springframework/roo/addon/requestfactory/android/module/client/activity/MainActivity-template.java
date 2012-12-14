@@ -29,12 +29,12 @@ public class MainActivity extends ListActivity {
         final ProxyTypeArrayAdapter adapter = new ProxyTypeArrayAdapter(this,
             R.layout.proxytype_listview_item_row, values);
 
-        final TextView headerText = (TextView) findViewById(R.id.headerText);
+        /*final TextView headerText = (TextView) findViewById(R.id.headerText);
         headerText.setText("Select Type");
 
         final View header = (View) getLayoutInflater().inflate(R.layout
                 .listview_header_row, null);
-        getListView().addHeaderView(header);
+        getListView().addHeaderView(header);*/
 
         setListAdapter(adapter);
     }

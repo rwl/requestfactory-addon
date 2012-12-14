@@ -20,8 +20,10 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.android.AndroidPaths;
 import org.springframework.roo.addon.requestfactory.android.AndroidTemplateService;
 import org.springframework.roo.addon.requestfactory.android.AndroidType;
+import org.springframework.roo.addon.requestfactory.android.AndroidTypeService;
 import org.springframework.roo.addon.requestfactory.android.AndroidUtils;
 import org.springframework.roo.addon.requestfactory.annotations.android.RooRequestFactoryAndroid;
+import org.springframework.roo.addon.requestfactory.scaffold.BaseScaffoldMetadataProviderImpl;
 import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadataProviderImpl;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
@@ -40,10 +42,11 @@ import org.springframework.roo.project.PathResolver;
  */
 @Component(immediate = true)
 @Service
-public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldMetadataProviderImpl
+public class AndroidScaffoldMetadataProviderImpl extends BaseScaffoldMetadataProviderImpl
         implements AndroidScaffoldMetadataProvider {
 
     @Reference AndroidTemplateService androidTemplateService;
+    @Reference AndroidTypeService androidTypeService;
 
     protected void activate(final ComponentContext context) {
         metadataDependencyRegistry.registerDependency(
@@ -149,6 +152,12 @@ public class AndroidScaffoldMetadataProviderImpl extends RequestFactoryScaffoldM
                                             .getDeclaredMethods()));
                     xmlToBeWritten.put(destFile, contents);
                 }
+            }
+            
+            if (androidType == AndroidType.PROXY_DETAIL_ACTIVITY
+                    || androidType == AndroidType.PROXY_LIST_ACTIVITY) {
+                androidTypeService.addActvity(moduleName, javaType
+                        .getFullyQualifiedTypeName(), false);
             }
         }
         return xmlToBeWritten;

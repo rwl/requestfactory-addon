@@ -28,12 +28,12 @@ public class ProxyTypeArrayAdapter extends ArrayAdapter<Class<? extends EntityPr
             final int resource,
             final List<Class<? extends EntityProxy>> data) {
         super(context, resource, data);
-            this.resource = resource;
-            this.context = context;
-            this.data = data;
+        this.resource = resource;
+        this.context = context;
+        this.data = data;
 
-            inflater = (LayoutInflater) context.getSystemService(
-                    Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
