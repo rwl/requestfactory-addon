@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+    <batch>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.web.bindery</groupId>
+                <artifactId>requestfactory-apt</artifactId>
+                <version>2.5.0</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <id>VerifyRequestFactoryInterfaces</id>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-cp</argument>
+                                <classpath />
+                                <argument>com.google.web.bindery.requestfactory.apt.ValidationTool</argument>
+                                <argument>${project.build.outputDirectory}</argument>
+                                <argument>${shared.package}.managed.request.ApplicationRequestFactory</argument>
+                            </arguments>
+                            <classpathScope>compile</classpathScope>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </batch>
+</configuration>

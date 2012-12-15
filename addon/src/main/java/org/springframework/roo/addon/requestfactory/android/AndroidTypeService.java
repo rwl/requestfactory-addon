@@ -8,4 +8,6 @@ public interface AndroidTypeService {
     String getAndroidManifestXml(final String moduleName);
 
     void setApplicationName(String moduleName, String applicationName);
+
+    void addPermission(String moduleName, String permissionName);
 }

@@ -5,6 +5,9 @@ import static org.springframework.roo.addon.requestfactory.account.AccountJavaTy
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ANDROID_SCAFFOLD;
 import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
@@ -21,13 +24,20 @@ import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetailsBuil
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadata;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.StringAttributeValue;
+import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.JavaPackage;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
+import org.springframework.roo.project.Dependency;
 import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.Path;
+import org.springframework.roo.project.Plugin;
+import org.springframework.roo.project.ProjectMetadata;
 import org.springframework.roo.project.ProjectOperations;
+import org.springframework.roo.project.Property;
 import org.springframework.roo.project.maven.Pom;
+import org.springframework.roo.support.util.XmlUtils;
+import org.w3c.dom.Element;
 
 /**
  * Implementation of {@link AndroidOperations}.
@@ -44,7 +54,39 @@ public class AndroidOperationsImpl implements AndroidOperations {
     @Reference TypeManagementService typeManagementService;
     @Reference TypeLocationService typeLocationService;
     @Reference ProjectOperations projectOperations;
+    @Reference MetadataService metadataService;
     @Reference RequestFactoryOperations requestFactoryOperations;
+
+    @Override
+    public void setupAndroid() {
+        final String moduleName = projectOperations.getFocusedModuleName();
+        projectOperations.addProperty(moduleName,
+                new Property("shared.package", requestFactoryOperations
+                        .getSharedTopLevelPackageName().toString()));
+
+        final Element configuration = XmlUtils.getConfiguration(getClass());
+
+
+        final List<Dependency> dependencies = new ArrayList<Dependency>();
+        for (final Element dependencyElement : XmlUtils.findElements(
+                "/configuration/batch/dependencies/dependency", configuration)) {
+            dependencies.add(new Dependency(dependencyElement));
+        }
+        projectOperations.removeDependencies(moduleName, dependencies);
+        metadataService.evict(ProjectMetadata.getProjectIdentifier(
+                moduleName));
+        projectOperations.addDependencies(moduleName, dependencies);
+
+
+        final List<Plugin> plugins = new ArrayList<Plugin>();
+        final String xPathExpression = "/configuration/batch/plugins/plugin";
+        final List<Element> pluginElements = XmlUtils.findElements(
+                xPathExpression, configuration);
+        for (final Element pluginElement : pluginElements) {
+            plugins.add(new Plugin(pluginElement));
+        }
+        projectOperations.addBuildPlugins(moduleName, plugins);
+    }
 
     @Override
     public boolean isScaffoldAvailable() {
@@ -102,7 +144,7 @@ public class AndroidOperationsImpl implements AndroidOperations {
                     new ClassOrInterfaceTypeDetailsBuilder(proxy);
             final AnnotationMetadataBuilder annotationMetadataBuilder =
                     new AnnotationMetadataBuilder(ROO_ANDROID_SCAFFOLD);
-            final StringAttributeValue moduleAttributeValue = 
+            final StringAttributeValue moduleAttributeValue =
                     new StringAttributeValue(MODULE_SYMBOL_NAME,
                             module.getModuleName());
             annotationMetadataBuilder.addAttribute(moduleAttributeValue);
@@ -111,7 +153,7 @@ public class AndroidOperationsImpl implements AndroidOperations {
                     .build());
         }
     }
-    
+
     private void updateBoilerplate(final Pom module) {
         Validate.notNull(module);
         final String moduleName = module.getModuleName();
@@ -124,7 +166,7 @@ public class AndroidOperationsImpl implements AndroidOperations {
             copyDirectoryContents(path, moduleName);
         }
     }
-    
+
     private void updateAndroidManifest(final String moduleName) {
         final String topLevelPackageName = projectOperations
                 .getTopLevelPackage(moduleName).getFullyQualifiedPackageName();
@@ -132,6 +174,8 @@ public class AndroidOperationsImpl implements AndroidOperations {
                 + ".activity.MainActivity", true);
         androidTypeService.setApplicationName(moduleName, topLevelPackageName
                 + ".application.AndroidApplication");
+        androidTypeService.addPermission(moduleName,
+                "android.permission.INTERNET");
     }
 
     private void copyDirectoryContents(

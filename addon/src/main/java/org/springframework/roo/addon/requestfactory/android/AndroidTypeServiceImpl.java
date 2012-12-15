@@ -30,6 +30,32 @@ public class AndroidTypeServiceImpl implements AndroidTypeService {
 
     @Reference FileManager fileManager;
     @Reference ProjectOperations projectOperations;
+
+    @Override
+    public void addPermission(final String moduleName,
+            final String permissionName) {
+        final String manifestXml = getAndroidManifestXml(moduleName);
+        Validate.notBlank(manifestXml,
+                "AndroidManifest.xml not found for module '"
+                + moduleName + "'");
+        final Document manifestXmlDoc = getAndroidManifestXmlDocument(manifestXml);
+        final Element manifestXmlRoot = manifestXmlDoc.getDocumentElement();
+
+        final List<Element> permissionElements = XmlUtils.findElements(
+                "/manifest/uses-permission", manifestXmlRoot);
+
+        if (!existingWithName(permissionName, permissionElements)) {
+            final Element permissionElement = manifestXmlDoc.createElement(
+                    "uses-permission");
+            permissionElement.setAttribute(NAME, permissionName);
+            manifestXmlRoot.appendChild(permissionElement);
+
+            final String xmlString = XmlUtils.nodeToString(manifestXmlDoc);
+            fileManager.createOrUpdateTextFileIfRequired(manifestXml,
+                    xmlString, "Added '" + permissionName
+                    + "' permission to Android manifest", true);
+        }
+    }
     
     @Override
     public void setApplicationName(final String moduleName,
@@ -64,7 +90,7 @@ public class AndroidTypeServiceImpl implements AndroidTypeService {
                 "/manifest/application", manifestXmlRoot);
         final List<Element> activityElements = XmlUtils.findElements(
                 "/manifest/application/activity", manifestXmlRoot);
-        if (!existingActivity(activityName, activityElements)) {
+        if (!existingWithName(activityName, activityElements)) {
             final Element activityElement = manifestXmlDoc.createElement(
                     "activity");
             activityElement.setAttribute(NAME, activityName);
@@ -94,10 +120,10 @@ public class AndroidTypeServiceImpl implements AndroidTypeService {
         }
     }
 
-    private boolean existingActivity(final String activityName,
-            final Iterable<Element> activityElements) {
-        for (final Element activityElement : activityElements) {
-            if (activityName.equals(activityElement.getAttribute(NAME))) {
+    private boolean existingWithName(final String name,
+            final Iterable<Element> elements) {
+        for (final Element activityElement : elements) {
+            if (name.equals(activityElement.getAttribute(NAME))) {
                 return true;
             }
         }

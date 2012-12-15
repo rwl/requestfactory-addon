@@ -18,6 +18,8 @@ import org.springframework.roo.shell.CommandMarker;
 @Service
 public class AndroidCommands implements CommandMarker {
 
+    private static final String SETUP_ANDROID_COMMAND = "web requestfactory android setup";
+    
     private static final String SCAFFOLD_ALL_COMMAND = "web requestfactory android scaffold all";
     private static final String SCAFFOLD_TYPE_COMMAND = "web requestfactory android scaffold type";
 
@@ -28,6 +30,11 @@ public class AndroidCommands implements CommandMarker {
 
     @Reference private AndroidOperations operations;
     @Reference private AndroidProjectOperations projectOperations;
+
+    @CliCommand(value = SETUP_ANDROID_COMMAND, help = "Setup module to use RequestFactory with Android")
+    public void androidSetup() {
+        operations.setupAndroid();
+    }
 
     @CliAvailabilityIndicator({
             SCAFFOLD_ALL_COMMAND,

@@ -13,4 +13,6 @@ public interface AndroidOperations {
     void scaffoldAll(final Pom module);
 
     void scaffoldType(JavaType type, final Pom module);
+
+    void setupAndroid();
 }
