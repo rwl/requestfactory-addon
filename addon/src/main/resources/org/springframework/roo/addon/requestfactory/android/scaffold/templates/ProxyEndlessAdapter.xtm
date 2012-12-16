@@ -1,0 +1,88 @@
+package {{=packageName}};
+
+import java.util.ArrayList;
+import java.util.List;
+
+import {{=topLevelPackage}}.R;
+import {{=topLevelPackage}}.application.Util;
+import {{=sharedTopLevelPackage}}.managed.request.ApplicationRequestFactory;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+
+import com.commonsware.cwac.endless.EndlessAdapter;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+{{#imports}}
+import {{=import}};{{/imports}}
+
+
+public class {{=className}} extends EndlessAdapter {
+
+	private static final int MAX_RESULTS = 10;
+
+	private RotateAnimation rotate;
+
+	private View pendingView;
+
+	private final ApplicationRequestFactory requestFactory;
+
+	private final List<{{=proxy}}> proxys = new ArrayList<{{=proxy}}>();
+
+	public {{=className}}(final Context context, final {{=proxyAdapter}} wrapped) {
+		super(wrapped);
+		this.requestFactory = Util.getRequestFactory(context, ApplicationRequestFactory.class);
+		rotate = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+		rotate.setDuration(600);
+		rotate.setRepeatMode(Animation.RESTART);
+		rotate.setRepeatCount(Animation.INFINITE);
+	}
+
+	@Override
+	protected boolean cacheInBackground() throws Exception {
+		requestFactory.{{=nameUncapitalized}}Request().find{{=name}}Entries(getWrappedAdapter().getCount(), MAX_RESULTS).fire(new Receiver<List<{{=proxy}}>>() {
+
+			@Override
+			public void onSuccess(List<{{=proxy}}> response) {
+				proxys.addAll(response);
+			}
+		});
+		return proxys.size() > 0;
+	}
+
+	@Override
+	protected void appendCachedData() {
+		get{{=proxyAdapter}}().add{{=pluralName}}(proxys);
+		proxys.clear();
+	}
+
+	@Override
+	protected View getPendingView(ViewGroup parent) {
+		final View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.pending_row_view, null);
+
+		pendingView = row.findViewById(android.R.id.text1);
+		pendingView.setVisibility(View.GONE);
+		pendingView = row.findViewById(R.id.throbber);
+		pendingView.setVisibility(View.VISIBLE);
+		startProgressAnimation();
+
+		return (row);
+	}
+
+	public {{=proxy}} get(int position) {
+		return get{{=proxyAdapter}}().get(position);
+	}
+
+	public {{=proxyAdapter}} get{{=proxyAdapter}}() {
+		return ({{=proxyAdapter}}) getWrappedAdapter();
+	}
+
+	private void startProgressAnimation() {
+		if (pendingView != null) {
+			pendingView.startAnimation(rotate);
+		}
+	}
+}

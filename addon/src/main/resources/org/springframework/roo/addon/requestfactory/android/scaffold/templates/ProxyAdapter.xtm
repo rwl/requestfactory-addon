@@ -39,7 +39,7 @@ public class {{=className}} extends BaseAdapter {
     }
 
     @Override
-    public {{=proxy}} getItem(final int position) {
+    public Object getItem(final int position) {
         return {{=pluralNameUncapitalized}}.get(position);
     }
 
@@ -70,6 +70,10 @@ public class {{=className}} extends BaseAdapter {
         holder.textView.setText(proxy.toString());
 
         return row;
+    }
+
+    public {{=proxy}} get(final int position) {
+        return {{=pluralNameUncapitalized}}.get(position);
     }
 
     public void add{{=pluralName}}(final List<{{=proxy}}> {{=pluralNameUncapitalized}}) {

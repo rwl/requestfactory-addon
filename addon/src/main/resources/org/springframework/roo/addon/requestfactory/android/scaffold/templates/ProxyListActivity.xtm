@@ -2,7 +2,6 @@ package {{=packageName}};
 
 import {{=topLevelPackage}}.R;
 import {{=topLevelPackage}}.application.Util;
-import {{=topLevelPackage}}.application.AndroidApplication;
 
 import {{=sharedTopLevelPackage}}.managed.request.ApplicationRequestFactory;
 
@@ -11,20 +10,12 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 {{#imports}}
 import {{=import}};{{/imports}}
 
-public class {{=className}} extends FragmentActivity implements {{=proxyListFragment}}.Callback, OnScrollListener {
-
-    private static final int PADDING = 5;
+public class {{=className}} extends FragmentActivity implements {{=proxyListFragment}}.Callback {
 
     private ApplicationRequestFactory requestFactory;
-
-    private {{=proxyAdapter}} adapter;
-
-    private {{=proxyFetchTask}} task;
 
     private boolean twoPane;
 
@@ -32,11 +23,8 @@ public class {{=className}} extends FragmentActivity implements {{=proxyListFrag
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.{{=view_name_0}});
-        
+
         requestFactory = Util.getRequestFactory(this, ApplicationRequestFactory.class);
-        
-        final AndroidApplication application = (AndroidApplication) getApplication();
-        adapter = application.get{{=proxyAdapter}}(this);
 
         if (findViewById(R.id.{{=proxy_name}}_detail_container) != null) {
             twoPane = true;
@@ -45,14 +33,7 @@ public class {{=className}} extends FragmentActivity implements {{=proxyListFrag
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        fetch{{=pluralName}}(null);
-    }
-
-    @Override
-    public void onItemSelected(final int position) {
-        final {{=proxy}} proxy = adapter.getItem(position);
+    public void onItemSelected(final {{=proxy}} proxy) {
         final String token = requestFactory.getHistoryToken(proxy.stableId());
         if (twoPane) {
             final Bundle arguments = new Bundle();
@@ -66,42 +47,5 @@ public class {{=className}} extends FragmentActivity implements {{=proxyListFrag
             detailIntent.putExtra({{=proxyDetailFragment}}.TOKEN, token);
             startActivity(detailIntent);
         }
-    }
-
-    @Override
-    public void onScroll(final AbsListView view, final int firstVisible, final int visibleCount, final int totalCount) {
-        final boolean loadMore = firstVisible + visibleCount + PADDING >= totalCount;
-        if (loadMore) {
-            fetch{{=pluralName}}(null);
-        }
-    }
-
-    @Override
-    public void onScrollStateChanged(final AbsListView view, final int scrollState) {
-    }
-
-    public void fetch{{=pluralName}}(final {{=idType}} id) {
-        //progressBar.setVisibility(View.VISIBLE);
-        if (task != null) {
-            task.cancel(true);
-        }
-        task = new {{=proxyFetchTask}}(this);
-        task.execute(id);
-    }
-
-    public void set{{=pluralName}}(final List<{{=proxy}}> {{=pluralNameUncapitalized}}) {
-        //progressBar.setVisibility(View.GONE);
-        adapter.set{{=pluralName}}({{=pluralNameUncapitalized}});
-        adapter.notifyDataSetChanged();
-    }
-
-    public void add{{=pluralName}}(final List<{{=proxy}}> {{=pluralNameUncapitalized}}) {
-        //progressBar.setVisibility(View.GONE);
-        adapter.add{{=pluralName}}({{=pluralNameUncapitalized}});
-        adapter.notifyDataSetChanged();
-    }
-
-    public int getCount() {
-        return adapter.getCount();
     }
 }

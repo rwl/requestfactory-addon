@@ -8,6 +8,10 @@ public class AndroidPaths {
 
     public static final String SEP = File.separator;
 
+    public static final String ASSET_PATH = SEP + "asset";
+
+    public static final String DRAWABLE_PATH = SEP + "res" + SEP + "drawable";
+
     public static final String LAYOUT_PATH = SEP + "res" + SEP + "layout";
 
     public static final String VALUES_PATH = SEP + "res" + SEP + "values";
@@ -19,12 +23,15 @@ public class AndroidPaths {
     public static final RequestFactoryPath FRAGMENT = new RequestFactoryPath("/fragment", "module/client/fragment/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath ADAPTER = new RequestFactoryPath("/adapter", "module/client/adapter/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath PROCESSOR = new RequestFactoryPath("/processor", "module/client/processor/" + RequestFactoryPath.templateSelector);
-    public static final RequestFactoryPath TASK = new RequestFactoryPath("/task", "module/client/task/" + RequestFactoryPath.templateSelector);
+
+    public static final RequestFactoryPath ASSET = new RequestFactoryPath(ASSET_PATH, "module/client/asset/" + RequestFactoryPath.templateSelector);
+
+    public static final RequestFactoryPath DRAWABLE = new RequestFactoryPath(DRAWABLE_PATH, "module/client/drawable/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath LAYOUT = new RequestFactoryPath(LAYOUT_PATH, "module/client/layout/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath[] ALL_PATHS = new RequestFactoryPath[] {
-        APPLICATION, ACTIVITY, FRAGMENT, ADAPTER, PROCESSOR, LAYOUT
+        APPLICATION, ACTIVITY, FRAGMENT, ADAPTER, PROCESSOR, DRAWABLE, ASSET, LAYOUT
     };
 
     private AndroidPaths() {

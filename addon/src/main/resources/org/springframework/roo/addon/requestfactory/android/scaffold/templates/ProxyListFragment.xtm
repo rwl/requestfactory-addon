@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.util.Log;
 
@@ -16,7 +15,7 @@ import android.util.Log;
 public class {{=className}} extends ListFragment {
 
     public interface Callback {
-        public void onItemSelected(int position);
+        public void onItemSelected({{=proxy}} position);
     }
 
     private static final String TAG = "{{=className}}";
@@ -24,10 +23,10 @@ public class {{=className}} extends ListFragment {
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
     private Callback callback;
-
-    private OnScrollListener onScrollListener;
-
+    
     private int activatedPosition = ListView.INVALID_POSITION;
+    
+    private {{=proxyEndlessAdapter}} adapter;
 
     public {{=className}}() {
     }
@@ -36,7 +35,8 @@ public class {{=className}} extends ListFragment {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final AndroidApplication application = (AndroidApplication) getActivity().getApplication();
-        setListAdapter(application.getRecorderProxyAdapter(getActivity()));
+        adapter = new {{=proxyEndlessAdapter}}(getActivity(), application.get{{=proxyAdapter}}(getActivity()));
+        setListAdapter(adapter);
     }
 
     @Override
@@ -46,7 +46,6 @@ public class {{=className}} extends ListFragment {
         if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
         }
-        getListView().setOnScrollListener(onScrollListener);
     }
 
     @Override
@@ -58,20 +57,12 @@ public class {{=className}} extends ListFragment {
         } else {
             callback = (Callback) activity;
         }
-
-        if (!(activity instanceof OnScrollListener)) {
-            Log.w(TAG, "Activity should implement OnScrollListener.");
-        } else {
-            onScrollListener = (OnScrollListener) activity;
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         callback = null;
-        onScrollListener = null;
-        getListView().setOnScrollListener(onScrollListener);
     }
 
     @Override
@@ -79,7 +70,7 @@ public class {{=className}} extends ListFragment {
         super.onListItemClick(listView, view, position, id);
 
         if (callback != null) {
-            callback.onItemSelected(position);
+            callback.onItemSelected(adapter.get(position));
         }
     }
 

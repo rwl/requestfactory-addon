@@ -190,10 +190,18 @@ public class AndroidOperationsImpl implements AndroidOperations {
                 .getTopLevelPackage(moduleName);
         final String targetDirectory;
         final LogicalPath path;
-        if (requestFactoryPath == AndroidPaths.LAYOUT) {
+        if (requestFactoryPath == AndroidPaths.ASSET) {
+            path = LogicalPath.getInstance(Path.ROOT, moduleName);
+            targetDirectory = projectOperations.getPathResolver()
+                    .getIdentifier(path, AndroidPaths.ASSET_PATH);
+        } else if (requestFactoryPath == AndroidPaths.LAYOUT) {
             path = LogicalPath.getInstance(Path.ROOT, moduleName);
             targetDirectory = projectOperations.getPathResolver()
                     .getIdentifier(path, AndroidPaths.LAYOUT_PATH);
+        } else if (requestFactoryPath == AndroidPaths.DRAWABLE) {
+            path = LogicalPath.getInstance(Path.ROOT, moduleName);
+            targetDirectory = projectOperations.getPathResolver()
+                    .getIdentifier(path, AndroidPaths.DRAWABLE_PATH);
         } else {
             path = LogicalPath.getInstance(SRC_MAIN_JAVA, moduleName);
             targetDirectory = projectOperations.getPathResolver()
