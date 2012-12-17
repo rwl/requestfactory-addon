@@ -3,7 +3,6 @@ package org.springframework.roo.addon.requestfactory.android;
 import static org.springframework.roo.addon.requestfactory.RequestFactoryJavaType.ROO_REQUEST_FACTORY_PROXY;
 import static org.springframework.roo.addon.requestfactory.account.AccountJavaType.ROO_ACCOUNT;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ANDROID_SCAFFOLD;
-import static org.springframework.roo.project.Path.SRC_MAIN_JAVA;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -203,9 +202,10 @@ public class AndroidOperationsImpl implements AndroidOperations {
             targetDirectory = projectOperations.getPathResolver()
                     .getIdentifier(path, AndroidPaths.DRAWABLE_PATH);
         } else {
-            path = LogicalPath.getInstance(SRC_MAIN_JAVA, moduleName);
+            path = LogicalPath.getInstance(Path.ROOT, moduleName);
             targetDirectory = projectOperations.getPathResolver()
-                    .getIdentifier(path, requestFactoryPath
+                    .getIdentifier(path, AndroidPaths.SRC_PATH
+                            + AndroidPaths.SEP + requestFactoryPath
                             .getPackagePath(topLevelPackage));
         }
         requestFactoryOperations.updateFile(sourceAntPath, targetDirectory,

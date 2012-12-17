@@ -56,7 +56,7 @@ public class {{=className}} extends BaseAdapter {
         final {{=proxy}}Holder holder;
 
         if (row == null) {
-            row = inflater.inflate(R.layout.{{=proxy_name}}_listview_item_row, parent, false);
+            row = inflater.inflate(R.layout.proxytype_listview_item_row, parent, false);
 
             holder = new {{=proxy}}Holder();
             holder.textView = (TextView) row.findViewById(R.id.textView);

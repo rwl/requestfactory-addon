@@ -15,7 +15,7 @@ public class AndroidType extends RequestFactoryType {
     public static final AndroidType PROXY_LIST_ACTIVITY = new AndroidType(AndroidPaths.ACTIVITY, true, "ProxyListActivity", "proxyListActivity", "ProxyListActivity", Arrays.asList("proxy_list_activity_view", "proxy_list_activity_twopane"), false, false, true);
     public static final AndroidType PROXY_LIST_FRAGMENT = new AndroidType(AndroidPaths.FRAGMENT, true, "ProxyListFragment", "proxyListFragment", "ProxyListFragment", Collections.<String>emptyList(), false, false, false);
 
-    public static final AndroidType PROXY_ADAPTER = new AndroidType(AndroidPaths.ADAPTER, true, "ProxyAdapter", "proxyAdapter", "ProxyAdapter", Arrays.asList("proxy_listview_item_row"), false, false, true);
+    public static final AndroidType PROXY_ADAPTER = new AndroidType(AndroidPaths.ADAPTER, true, "ProxyAdapter", "proxyAdapter", "ProxyAdapter", Collections.<String>emptyList(), false, false, true);
     public static final AndroidType PROXY_ENDLESS_ADAPTER = new AndroidType(AndroidPaths.ADAPTER, true, "ProxyEndlessAdapter", "proxyEndlessAdapter", "ProxyEndlessAdapter", Collections.<String>emptyList(), false, false, true);
 
     public static final AndroidType LIST_ACTIVITY_PROCESSOR = new AndroidType(AndroidPaths.PROCESSOR, false, "ListActivityProcessor", "listActivityProcessor", "ListActivityProcessor", Collections.<String>emptyList(), false, true, false);

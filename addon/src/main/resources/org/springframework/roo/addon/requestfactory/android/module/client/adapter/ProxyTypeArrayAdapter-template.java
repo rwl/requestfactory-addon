@@ -47,8 +47,8 @@ public class ProxyTypeArrayAdapter extends ArrayAdapter<Class<? extends EntityPr
             row = inflater.inflate(resource, parent, false);
 
             holder = new ProxyClassHolder();
-            holder.className = (TextView) row.findViewById(
-                    R.id.className);
+            holder.textView = (TextView) row.findViewById(
+                    R.id.textView);
 
             row.setTag(holder);
         } else {
@@ -56,13 +56,13 @@ public class ProxyTypeArrayAdapter extends ArrayAdapter<Class<? extends EntityPr
         }
 
         final Class<? extends EntityProxy> type = data.get(position);
-        holder.className.setText(PluralProcessor.instance()
+        holder.textView.setText(PluralProcessor.instance()
                 .process(type));
 
         return row;
     }
 
     static class ProxyClassHolder {
-            TextView className;
+            TextView textView;
     }
 }

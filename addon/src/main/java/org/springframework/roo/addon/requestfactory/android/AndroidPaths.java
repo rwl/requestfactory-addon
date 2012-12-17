@@ -8,7 +8,9 @@ public class AndroidPaths {
 
     public static final String SEP = File.separator;
 
-    public static final String ASSET_PATH = SEP + "asset";
+    public static final String SRC_PATH = SEP + "src";
+
+    public static final String ASSET_PATH = SEP + "assets";
 
     public static final String DRAWABLE_PATH = SEP + "res" + SEP + "drawable";
 
@@ -24,7 +26,7 @@ public class AndroidPaths {
     public static final RequestFactoryPath ADAPTER = new RequestFactoryPath("/adapter", "module/client/adapter/" + RequestFactoryPath.templateSelector);
     public static final RequestFactoryPath PROCESSOR = new RequestFactoryPath("/processor", "module/client/processor/" + RequestFactoryPath.templateSelector);
 
-    public static final RequestFactoryPath ASSET = new RequestFactoryPath(ASSET_PATH, "module/client/asset/" + RequestFactoryPath.templateSelector);
+    public static final RequestFactoryPath ASSET = new RequestFactoryPath(ASSET_PATH, "module/client/assets/" + RequestFactoryPath.templateSelector);
 
     public static final RequestFactoryPath DRAWABLE = new RequestFactoryPath(DRAWABLE_PATH, "module/client/drawable/" + RequestFactoryPath.templateSelector);
 
