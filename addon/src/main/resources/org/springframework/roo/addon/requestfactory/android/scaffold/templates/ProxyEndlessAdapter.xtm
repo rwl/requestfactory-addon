@@ -28,6 +28,8 @@ public class {{=className}} extends EndlessAdapter {
 
 	private View pendingView;
 
+	private boolean pendingRequest = false;
+
 	private final ApplicationRequestFactory requestFactory;
 
 	private final List<{{=proxy}}> proxys = new ArrayList<{{=proxy}}>();
@@ -43,13 +45,18 @@ public class {{=className}} extends EndlessAdapter {
 
 	@Override
 	protected boolean cacheInBackground() throws Exception {
-		requestFactory.{{=nameUncapitalized}}Request().find{{=name}}Entries(getWrappedAdapter().getCount(), MAX_RESULTS).fire(new Receiver<List<{{=proxy}}>>() {
-
-			@Override
-			public void onSuccess(List<{{=proxy}}> response) {
-				proxys.addAll(response);
-			}
-		});
+		if (!pendingRequest) {
+			pendingRequest = true;
+			final int count = getWrappedAdapter().getCount();
+			final int maxResults = count == 0 ? MAX_RESULTS : count;
+			requestFactory.{{=nameUncapitalized}}Request().find{{=name}}Entries(getWrappedAdapter().getCount(), MAX_RESULTS).fire(new Receiver<List<{{=proxy}}>>() {
+	
+				@Override
+				public void onSuccess(List<{{=proxy}}> response) {
+					proxys.addAll(response);
+				}
+			});
+		}
 		return proxys.size() > 0;
 	}
 

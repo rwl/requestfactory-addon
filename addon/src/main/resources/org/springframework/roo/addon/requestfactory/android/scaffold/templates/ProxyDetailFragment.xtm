@@ -5,6 +5,7 @@ import {{=topLevelPackage}}.application.Util;
 
 import {{=sharedTopLevelPackage}}.managed.request.ApplicationRequestFactory;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -26,6 +27,8 @@ public class {{=className}} extends Fragment {
 
     private {{=proxy}} proxy;
 
+	private TextView textView;
+
     public {{=className}}() {
     }
 
@@ -36,13 +39,28 @@ public class {{=className}} extends Fragment {
         if (getArguments().containsKey(TOKEN)) {
             final String token = getArguments().getString(TOKEN);
             final EntityProxyId<{{=proxy}}> entityProxyId = requestFactory.getProxyId(token);
-            requestFactory.find(entityProxyId).fire(new Receiver<{{=proxy}}>() {
+			new AsyncTask<Void, Void, RecordProxy>() {
 
-                @Override
-                public void onSuccess({{=proxy}} response) {
-                    proxy = response;
-                }
-            });
+				@Override
+				protected RecordProxy doInBackground(Void... params) {
+		            requestFactory.find(entityProxyId).fire(new Receiver<{{=proxy}}>() {
+		
+		                @Override
+		                public void onSuccess({{=proxy}} response) {
+		                    proxy = response;
+		                }
+		            });
+					return proxy;
+				}
+
+				@Override
+				protected void onPostExecute(RecordProxy result) {
+					super.onPostExecute(result);
+					if (textView != null) {
+						textView.setText(proxy.toString());
+					}
+				}
+			}.execute();
         }
     }
 
@@ -51,8 +69,8 @@ public class {{=className}} extends Fragment {
             final ViewGroup container, final Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.{{=proxy_name}}_detail_fragment_view, container, false);
 
+        textView = (TextView) rootView.findViewById(R.id.{{=proxy_name}}_detail);
         if (proxy != null) {
-            final TextView textView = (TextView) rootView.findViewById(R.id.{{=proxy_name}}_detail);
             textView.setText(proxy.toString());
         }
 
