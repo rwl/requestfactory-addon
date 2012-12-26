@@ -2,8 +2,10 @@ package org.springframework.roo.addon.requestfactory.android.activity;
 
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_BUNDLE;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_RESOURCES;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ON_CREATE;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_STRING;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_SYSTEM_SERVICE;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_VIEW;
 import static org.springframework.roo.model.JavaType.VOID_PRIMITIVE;
 
@@ -16,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
+import org.springframework.roo.addon.requestfactory.android.types.SystemService;
 import org.springframework.roo.classpath.PhysicalTypeIdentifierNamingUtils;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.details.FieldMetadata;
@@ -27,6 +30,7 @@ import org.springframework.roo.classpath.details.annotations.AnnotationMetadataB
 import org.springframework.roo.classpath.itd.AbstractItdTypeDetailsProvidingMetadataItem;
 import org.springframework.roo.classpath.itd.InvocableMemberBodyBuilder;
 import org.springframework.roo.metadata.MetadataIdentificationUtils;
+import org.springframework.roo.model.ImportRegistrationResolver;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
@@ -41,10 +45,7 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
     private static final JavaSymbolName ON_CREATE_METHOD = new JavaSymbolName("onCreate");
     private static final JavaSymbolName INIT_VIEWS_METHOD = new JavaSymbolName("initViews");
     private static final JavaSymbolName INIT_RESOURCES_METHOD = new JavaSymbolName("initResources");
-
-//    private static final String LAYOUT = "layout";
-//    private static final String ID = "id";
-//    private static final String STRING = "string";
+    private static final JavaSymbolName INIT_SERVICES_METHOD = new JavaSymbolName("initServices");
 
     public static final String getMetadataIdentiferType() {
         return PROVIDES_TYPE;
@@ -67,7 +68,7 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
     }
 
     private final ActivityAnnotationValues activityAnnotationValues;
-    
+
     private final JavaType layoutType;
     private final JavaType idType;
     private final JavaType stringType;
@@ -91,8 +92,10 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
         }
 
         builder.addMethod(getOnCreateMethod());
+
         builder.addMethod(getInitViewsMethod());
         builder.addMethod(getInitResourcesMethod());
+        builder.addMethod(getInitServicesMethod());
 
         itdTypeDetails = builder.build();
     }
@@ -111,11 +114,14 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
         final List<JavaSymbolName> parameterNames = Arrays
                 .asList(new JavaSymbolName("savedInstanceState"));
 
-        // Build method body
         final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
 
         if (governorTypeDetails.getFieldsWithAnnotation(ROO_STRING).size() > 0) {
             bodyBuilder.appendFormalLine(INIT_RESOURCES_METHOD.getSymbolName()
+                    + "();");
+        }
+        if (governorTypeDetails.getFieldsWithAnnotation(ROO_SYSTEM_SERVICE).size() > 0) {
+            bodyBuilder.appendFormalLine(INIT_SERVICES_METHOD.getSymbolName()
                     + "();");
         }
 
@@ -219,7 +225,7 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
         final List<JavaSymbolName> parameterNames = new ArrayList<JavaSymbolName>();
 
         final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
-        
+
         bodyBuilder.appendFormalLine("final " + ANDROID_RESOURCES
                 .getNameIncludingTypeParameters(true,
                         builder.getImportRegistrationResolver())
@@ -239,6 +245,46 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
 
         final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
                 getId(), Modifier.PRIVATE, INIT_RESOURCES_METHOD,
+                VOID_PRIMITIVE, parameterTypes, parameterNames, bodyBuilder);
+        methodBuilder.setAnnotations(annotations);
+        methodBuilder.setThrowsTypes(throwsTypes);
+
+        return methodBuilder.build();
+    }
+
+    private MethodMetadata getInitServicesMethod() {
+        final MethodMetadata method = getGovernorMethod(INIT_SERVICES_METHOD);
+        if (method != null) {
+            return method;
+        }
+        final List<FieldMetadata> serviceFields = governorTypeDetails
+                .getFieldsWithAnnotation(ROO_SYSTEM_SERVICE);
+        if (serviceFields.isEmpty()) {
+            return null;
+        }
+
+        final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
+        final List<JavaType> throwsTypes = new ArrayList<JavaType>();
+        final List<AnnotatedJavaType> parameterTypes = new ArrayList<AnnotatedJavaType>();
+        final List<JavaSymbolName> parameterNames = new ArrayList<JavaSymbolName>();
+
+        final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+        
+        final ImportRegistrationResolver resolver = builder.getImportRegistrationResolver();
+
+        for (FieldMetadata field : serviceFields) {
+            final SystemService systemService = SystemService.forType(field
+                    .getFieldType());
+            bodyBuilder.appendFormalLine(field.getFieldName() + " = (("
+                    + field.getFieldType().getNameIncludingTypeParameters(
+                            true, resolver) + ") this.getSystemService("
+                    + ANDROID_CONTEXT.getNameIncludingTypeParameters(true,
+                            resolver) + "." + systemService.getContextField()
+                            + "));");
+        }
+
+        final MethodMetadataBuilder methodBuilder = new MethodMetadataBuilder(
+                getId(), Modifier.PRIVATE, INIT_SERVICES_METHOD,
                 VOID_PRIMITIVE, parameterTypes, parameterNames, bodyBuilder);
         methodBuilder.setAnnotations(annotations);
         methodBuilder.setThrowsTypes(throwsTypes);

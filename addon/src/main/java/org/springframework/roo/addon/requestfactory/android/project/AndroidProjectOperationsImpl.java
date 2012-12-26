@@ -1,6 +1,7 @@
-package org.springframework.roo.addon.requestfactory.android;
+package org.springframework.roo.addon.requestfactory.android.project;
 
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_ACTIVITY;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_SYSTEM_SERVICE;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ACTIVITY;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_STRING;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_VIEW;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -28,13 +30,16 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.jpa.JpaOperations;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
+import org.springframework.roo.addon.requestfactory.android.AndroidTypeService;
 import org.springframework.roo.addon.requestfactory.android.types.Dimension;
 import org.springframework.roo.addon.requestfactory.android.types.Orientation;
+import org.springframework.roo.addon.requestfactory.android.types.SystemService;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.FieldMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
+import org.springframework.roo.classpath.operations.jsr303.FieldDetails;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.process.manager.FileManager;
@@ -266,8 +271,10 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
         final String physicalTypeIdentifier = javaTypeDetails
                 .getDeclaredByMetadataId();
 
-        final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
-        final AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(ROO_STRING);
+        final List<AnnotationMetadataBuilder> annotations =
+                new ArrayList<AnnotationMetadataBuilder>();
+        final AnnotationMetadataBuilder annotationBuilder =
+                new AnnotationMetadataBuilder(ROO_STRING);
         if (!StringUtils.isEmpty(name)) {
             annotationBuilder.addStringAttribute("value", name);
         }
@@ -275,6 +282,32 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
 
         final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(
                 physicalTypeIdentifier, 0, annotations, fieldName, STRING);
+        typeManagementService.addField(fieldBuilder.build());
+    }
+
+    @Override
+    public void systemService(final JavaType type,
+            JavaSymbolName fieldName, final SystemService service) {
+
+        final ClassOrInterfaceTypeDetails typeDetails = typeLocationService
+                .getTypeDetails(type);
+        Validate.notNull(typeDetails, "The type specified, '" + type
+                + "'doesn't exist");
+        
+        if (fieldName == null) {
+            fieldName = new JavaSymbolName(service.getServiceType()
+                    .getSimpleTypeName());
+        }
+
+        final String physicalTypeIdentifier = typeDetails
+                .getDeclaredByMetadataId();
+        
+        final List<AnnotationMetadataBuilder> annotations = Arrays
+                .asList(new AnnotationMetadataBuilder(ROO_SYSTEM_SERVICE));
+
+        final FieldMetadataBuilder fieldBuilder = new FieldMetadataBuilder(
+                physicalTypeIdentifier, 0, annotations, fieldName,
+                service.getServiceType());
         typeManagementService.addField(fieldBuilder.build());
     }
 }
