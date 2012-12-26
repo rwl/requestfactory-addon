@@ -5,6 +5,7 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.requestfactory.android.types.Dimension;
 import org.springframework.roo.addon.requestfactory.android.types.Orientation;
+import org.springframework.roo.addon.requestfactory.android.types.Permission;
 import org.springframework.roo.addon.requestfactory.android.types.SystemService;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
@@ -22,6 +23,7 @@ public class AndroidProjectCommands implements CommandMarker {
     private static final String VIEW_COMMAND = "android view";
     private static final String RESOURCE_STRING_COMMAND = "android resource string";
     private static final String SYSTEM_SERVICE_COMMAND = "android service";
+    private static final String PERMISSION_COMMAND = "android permission";
 
     @Reference private AndroidProjectOperations projectOperations;
 
@@ -71,7 +73,13 @@ public class AndroidProjectCommands implements CommandMarker {
     @CliCommand(value = SYSTEM_SERVICE_COMMAND, help = "Binds a system service to the given type")
     public void systemService(@CliOption(key = { "", "fieldName" }, mandatory = false, help = "The name of the field to add (defaults to the service class name") final JavaSymbolName fieldName,
             @CliOption(key = "type", mandatory = false, unspecifiedDefaultValue = "*", optionContext = "update,project", help = "The type to receive this service") final JavaType typeName,
-            @CliOption(key = "service", mandatory = true, help = "The type of system service to add") final SystemService value) {
-        projectOperations.systemService(typeName, fieldName, value);
+            @CliOption(key = "name", mandatory = true, help = "The type of system service to add") final SystemService value,
+            @CliOption(key = "addPermissions", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Add typical permissions for the service to the manifest") final boolean addPermissions) {
+        projectOperations.systemService(typeName, fieldName, value, addPermissions);
+    }
+
+    @CliCommand(value = PERMISSION_COMMAND, help = "Adds a permission to the Android manifest")
+    public void permission(@CliOption(key = "name", mandatory = true, help = "The type of permission to add") final Permission name) {
+        projectOperations.permission(name);
     }
 }

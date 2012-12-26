@@ -2,6 +2,7 @@ package org.springframework.roo.addon.requestfactory.android.project;
 
 import org.springframework.roo.addon.requestfactory.android.types.Dimension;
 import org.springframework.roo.addon.requestfactory.android.types.Orientation;
+import org.springframework.roo.addon.requestfactory.android.types.Permission;
 import org.springframework.roo.addon.requestfactory.android.types.SystemService;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
@@ -23,5 +24,6 @@ public interface AndroidProjectOperations {
     void layout(String name, Dimension height, Dimension width,
             Orientation orientation);
     void systemService(JavaType typeName, JavaSymbolName fieldName,
-            SystemService value);
+            SystemService value, boolean addPermissions);
+    void permission(Permission name);
 }

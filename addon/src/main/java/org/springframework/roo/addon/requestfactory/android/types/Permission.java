@@ -114,7 +114,7 @@ public enum Permission {
         this.className = className;
     }
 
-    public String permissionClassName() {
+    public String permissionName() {
         return className;
     }
 }

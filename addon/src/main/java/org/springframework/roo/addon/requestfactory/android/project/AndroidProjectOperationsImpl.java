@@ -1,13 +1,13 @@
 package org.springframework.roo.addon.requestfactory.android.project;
 
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_ACTIVITY;
-import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_SYSTEM_SERVICE;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ACTIVITY;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_STRING;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_SYSTEM_SERVICE;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_VIEW;
 import static org.springframework.roo.addon.requestfactory.android.AndroidPaths.LAYOUT_PATH;
-import static org.springframework.roo.addon.requestfactory.android.AndroidPaths.VALUES_PATH;
 import static org.springframework.roo.addon.requestfactory.android.AndroidPaths.SEP;
+import static org.springframework.roo.addon.requestfactory.android.AndroidPaths.VALUES_PATH;
 import static org.springframework.roo.model.JavaType.STRING;
 
 import java.io.IOException;
@@ -33,13 +33,13 @@ import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
 import org.springframework.roo.addon.requestfactory.android.AndroidTypeService;
 import org.springframework.roo.addon.requestfactory.android.types.Dimension;
 import org.springframework.roo.addon.requestfactory.android.types.Orientation;
+import org.springframework.roo.addon.requestfactory.android.types.Permission;
 import org.springframework.roo.addon.requestfactory.android.types.SystemService;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.FieldMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
-import org.springframework.roo.classpath.operations.jsr303.FieldDetails;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.process.manager.FileManager;
@@ -287,7 +287,8 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
 
     @Override
     public void systemService(final JavaType type,
-            JavaSymbolName fieldName, final SystemService service) {
+            JavaSymbolName fieldName, final SystemService service,
+            final boolean addPermissions) {
 
         final ClassOrInterfaceTypeDetails typeDetails = typeLocationService
                 .getTypeDetails(type);
@@ -309,5 +310,22 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
                 physicalTypeIdentifier, 0, annotations, fieldName,
                 service.getServiceType());
         typeManagementService.addField(fieldBuilder.build());
+        
+        if (addPermissions) {
+            final String moduleName = projectOperations
+                    .getFocusedProjectName();
+            for (Permission permission : service.getPermissions()) {
+                androidTypeService.addPermission(moduleName, permission
+                        .permissionName());                
+            }
+        }
+    }
+
+    @Override
+    public void permission(final Permission permission) {
+        Validate.notNull(permission, "Permission type may not be null");
+        final String moduleName = projectOperations.getFocusedProjectName();
+        androidTypeService.addPermission(moduleName, permission
+                .permissionName());
     }
 }
