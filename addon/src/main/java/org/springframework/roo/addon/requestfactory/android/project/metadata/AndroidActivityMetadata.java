@@ -1,6 +1,8 @@
-package org.springframework.roo.addon.requestfactory.android.activity;
+package org.springframework.roo.addon.requestfactory.android.project.metadata;
 
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_BUNDLE;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_LAYOUT_PARAMS;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_WINDOW;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_RESOURCES;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_CONTEXT;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ON_CREATE;
@@ -51,20 +53,28 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
         return PROVIDES_TYPE;
     }
 
-    public static final String createIdentifier(JavaType javaType, LogicalPath path) {
-        return PhysicalTypeIdentifierNamingUtils.createIdentifier(PROVIDES_TYPE_STRING, javaType, path);
+    public static final String createIdentifier(final JavaType javaType,
+            final LogicalPath path) {
+        return PhysicalTypeIdentifierNamingUtils.createIdentifier(
+                PROVIDES_TYPE_STRING, javaType, path);
     }
 
-    public static final JavaType getJavaType(String metadataIdentificationString) {
-        return PhysicalTypeIdentifierNamingUtils.getJavaType(PROVIDES_TYPE_STRING, metadataIdentificationString);
+    public static final JavaType getJavaType(
+            final String metadataIdentificationString) {
+        return PhysicalTypeIdentifierNamingUtils.getJavaType(
+                PROVIDES_TYPE_STRING, metadataIdentificationString);
     }
 
-    public static final LogicalPath getPath(String metadataIdentificationString) {
-        return PhysicalTypeIdentifierNamingUtils.getPath(PROVIDES_TYPE_STRING, metadataIdentificationString);
+    public static final LogicalPath getPath(
+            final String metadataIdentificationString) {
+        return PhysicalTypeIdentifierNamingUtils.getPath(
+                PROVIDES_TYPE_STRING, metadataIdentificationString);
     }
 
-    public static boolean isValid(String metadataIdentificationString) {
-        return PhysicalTypeIdentifierNamingUtils.isValid(PROVIDES_TYPE_STRING, metadataIdentificationString);
+    public static boolean isValid(
+            final String metadataIdentificationString) {
+        return PhysicalTypeIdentifierNamingUtils.isValid(
+                PROVIDES_TYPE_STRING, metadataIdentificationString);
     }
 
     private final ActivityAnnotationValues activityAnnotationValues;
@@ -73,8 +83,9 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
     private final JavaType idType;
     private final JavaType stringType;
 
-    public AndroidActivityMetadata(String identifier, JavaType aspectName,
-            PhysicalTypeMetadata governorPhysicalTypeMetadata,
+    public AndroidActivityMetadata(final String identifier,
+            final JavaType aspectName,
+            final PhysicalTypeMetadata governorPhysicalTypeMetadata,
             final ActivityAnnotationValues activityAnnotationValues,
             final String topLevelPackage) {
         super(identifier, aspectName, governorPhysicalTypeMetadata);
@@ -115,14 +126,31 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
                 .asList(new JavaSymbolName("savedInstanceState"));
 
         final InvocableMemberBodyBuilder bodyBuilder = new InvocableMemberBodyBuilder();
+        final ImportRegistrationResolver resolver = builder
+                .getImportRegistrationResolver();
 
-        if (governorTypeDetails.getFieldsWithAnnotation(ROO_STRING).size() > 0) {
+        if (governorTypeDetails.getFieldsWithAnnotation(ROO_STRING)
+                .size() > 0) {
             bodyBuilder.appendFormalLine(INIT_RESOURCES_METHOD.getSymbolName()
                     + "();");
         }
-        if (governorTypeDetails.getFieldsWithAnnotation(ROO_SYSTEM_SERVICE).size() > 0) {
+        if (governorTypeDetails.getFieldsWithAnnotation(ROO_SYSTEM_SERVICE)
+                .size() > 0) {
             bodyBuilder.appendFormalLine(INIT_SERVICES_METHOD.getSymbolName()
                     + "();");
+        }
+        
+        if (activityAnnotationValues.isNoTitle()) {
+            bodyBuilder.appendFormalLine("requestWindowFeature("
+                    + ANDROID_WINDOW.getNameIncludingTypeParameters(
+                            true, resolver) + ".FEATURE_NO_TITLE);");
+        }
+        if (activityAnnotationValues.isFullscreen()) {
+            bodyBuilder.appendFormalLine("getWindow().setFlags("
+                    + ANDROID_LAYOUT_PARAMS.getNameIncludingTypeParameters(
+                            true, resolver) + ".FLAG_FULLSCREEN, "
+                    + ANDROID_LAYOUT_PARAMS.getNameIncludingTypeParameters(
+                            true, resolver) + ".FLAG_FULLSCREEN);");
         }
 
         bodyBuilder.appendFormalLine("super.onCreate(savedInstanceState);");
@@ -130,20 +158,23 @@ public class AndroidActivityMetadata extends AbstractItdTypeDetailsProvidingMeta
         final String layout = activityAnnotationValues.getLayout();
         if (!StringUtils.isEmpty(layout)) {
             bodyBuilder.appendFormalLine("setContentView(" + layoutType
-                    .getNameIncludingTypeParameters(true, builder
-                            .getImportRegistrationResolver()) + "."
+                    .getNameIncludingTypeParameters(true, resolver) + "."
                     + layout + ");");
         }
-        if (governorTypeDetails.getFieldsWithAnnotation(ROO_VIEW).size() > 0) {
+        if (governorTypeDetails.getFieldsWithAnnotation(ROO_VIEW)
+                .size() > 0) {
             bodyBuilder.appendFormalLine(INIT_VIEWS_METHOD.getSymbolName()
                     + "();");
         }
-        for (MethodMetadata methodMetadata : governorTypeDetails.getDeclaredMethods()) {
-            final AnnotationMetadata onCreate = methodMetadata.getAnnotation(ROO_ON_CREATE);
+        for (MethodMetadata methodMetadata : governorTypeDetails
+                .getDeclaredMethods()) {
+            final AnnotationMetadata onCreate = methodMetadata
+                    .getAnnotation(ROO_ON_CREATE);
             if (onCreate == null) {
                 continue;
             }
-            final List<AnnotatedJavaType> paramTypes = methodMetadata.getParameterTypes();
+            final List<AnnotatedJavaType> paramTypes = methodMetadata
+                    .getParameterTypes();
             final String call;
             if (paramTypes.size() == 0) {
                 call = "();";

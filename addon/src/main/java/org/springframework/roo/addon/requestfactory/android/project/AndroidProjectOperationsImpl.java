@@ -1,7 +1,10 @@
 package org.springframework.roo.addon.requestfactory.android.project;
 
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_ACTIVITY;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_FRAGMENT;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ANDROID_SUPPORT_FRAGMENT;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ACTIVITY;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_FRAGMENT;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_STRING;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_SYSTEM_SERVICE;
 import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_VIEW;
@@ -35,6 +38,7 @@ import org.springframework.roo.addon.requestfactory.android.types.Dimension;
 import org.springframework.roo.addon.requestfactory.android.types.Orientation;
 import org.springframework.roo.addon.requestfactory.android.types.Permission;
 import org.springframework.roo.addon.requestfactory.android.types.SystemService;
+import org.springframework.roo.addon.requestfactory.annotations.android.RooActivity;
 import org.springframework.roo.classpath.TypeLocationService;
 import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
@@ -134,7 +138,17 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
 
     @Override
     public void activity(final JavaType name, final String layout,
-            final boolean main) {
+            final boolean main, final boolean noTitle,
+            final boolean fullscreen) {
+        if (noTitle) {
+            Validate.isTrue(fullscreen == false,
+                    "Options 'noTitle' and 'fullscreen' are mutex");
+        }
+        if (fullscreen) {
+            Validate.isTrue(noTitle == false,
+                    "Options 'noTitle' and 'fullscreen' are mutex");
+        }
+        
         if (!StringUtils.isEmpty(layout)) {
             final String layoutPath = pathResolver.getFocusedIdentifier(
                     Path.ROOT, LAYOUT_PATH + SEP + layout + XML_EXTENSION);
@@ -145,10 +159,20 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
             }
         }
 
-        final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
-        final AnnotationMetadataBuilder activityAnnotationBuilder = new AnnotationMetadataBuilder(ROO_ACTIVITY);
+        final List<AnnotationMetadataBuilder> annotations =
+                new ArrayList<AnnotationMetadataBuilder>();
+        final AnnotationMetadataBuilder activityAnnotationBuilder =
+                new AnnotationMetadataBuilder(ROO_ACTIVITY);
         if (!StringUtils.isEmpty(layout)) {
             activityAnnotationBuilder.addStringAttribute("value", layout);
+        }
+        if (noTitle) {
+            activityAnnotationBuilder.addBooleanAttribute(RooActivity
+                    .NO_TITLE_ATTRIBUTE, noTitle);
+        }
+        if (fullscreen) {
+            activityAnnotationBuilder.addBooleanAttribute(RooActivity
+                    .FULLSCREEN_ATTRIBUTE, fullscreen);
         }
         annotations.add(activityAnnotationBuilder);
 
@@ -165,16 +189,16 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
             final String identifier, final JavaSymbolName fieldName,
             final Dimension height, final Dimension width) {
 
-        final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
+        final ClassOrInterfaceTypeDetails typeDetails = typeLocationService
                 .getTypeDetails(type);
-        Validate.notNull(javaTypeDetails, "The type specified, '" + type
+        Validate.notNull(typeDetails, "The type specified, '" + type
                 + "'doesn't exist");
 
         final JavaType viewType = new JavaType(viewName.contains(".")
                 ? viewName : WIDGET_PACKAGE + "." + viewName);
 
         final String layout = RequestFactoryUtils.getStringAnnotationValue(
-                javaTypeDetails, ROO_ACTIVITY, "value", "");
+                typeDetails, ROO_ACTIVITY, "value", "");
         if (!StringUtils.isEmpty(layout)) {
             final DocumentBuilder builder = newDocumentBuilder();
             final String layoutPath = pathResolver.getFocusedIdentifier(
@@ -210,13 +234,13 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
             }
         }
 
-        final String physicalTypeIdentifier = javaTypeDetails
+        final String physicalTypeIdentifier = typeDetails
                 .getDeclaredByMetadataId();
-//        final FieldDetails fieldDetails = new FieldDetails(
-//                physicalTypeIdentifier, viewType, fieldName);
 
-        final List<AnnotationMetadataBuilder> annotations = new ArrayList<AnnotationMetadataBuilder>();
-        final AnnotationMetadataBuilder annotationBuilder = new AnnotationMetadataBuilder(ROO_VIEW);
+        final List<AnnotationMetadataBuilder> annotations =
+                new ArrayList<AnnotationMetadataBuilder>();
+        final AnnotationMetadataBuilder annotationBuilder =
+                new AnnotationMetadataBuilder(ROO_VIEW);
         if (!StringUtils.isEmpty(identifier)) {
             annotationBuilder.addStringAttribute("value", identifier);
         }
@@ -231,10 +255,10 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
     public void resourceString(final JavaType type, final String name,
             final JavaSymbolName fieldName, final String value) {
 
-        final ClassOrInterfaceTypeDetails javaTypeDetails = typeLocationService
+        final ClassOrInterfaceTypeDetails typeDetails = typeLocationService
                 .getTypeDetails(type);
-        Validate.notNull(javaTypeDetails, "The type specified, '" + type
-                + "'doesn't exist");
+        Validate.notNull(typeDetails, "The type specified, '" + type
+                + "' doesn't exist");
 
         final DocumentBuilder builder = newDocumentBuilder();
         final String valuesPath = pathResolver.getFocusedIdentifier(
@@ -256,7 +280,7 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
         if (document != null) {
             final Element root = document.getDocumentElement();
 
-            
+
             final Element stringElem = XmlUtils.createTextElement(document,
                     "string", value);
             final String id = StringUtils.isEmpty(name)
@@ -268,7 +292,7 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
                     XmlUtils.nodeToString(document), true);
         }
 
-        final String physicalTypeIdentifier = javaTypeDetails
+        final String physicalTypeIdentifier = typeDetails
                 .getDeclaredByMetadataId();
 
         final List<AnnotationMetadataBuilder> annotations =
@@ -293,16 +317,16 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
         final ClassOrInterfaceTypeDetails typeDetails = typeLocationService
                 .getTypeDetails(type);
         Validate.notNull(typeDetails, "The type specified, '" + type
-                + "'doesn't exist");
-        
+                + "' doesn't exist");
+
         if (fieldName == null) {
-            fieldName = new JavaSymbolName(service.getServiceType()
-                    .getSimpleTypeName());
+            fieldName = new JavaSymbolName(StringUtils.uncapitalize(service
+                    .getServiceType().getSimpleTypeName()));
         }
 
         final String physicalTypeIdentifier = typeDetails
                 .getDeclaredByMetadataId();
-        
+
         final List<AnnotationMetadataBuilder> annotations = Arrays
                 .asList(new AnnotationMetadataBuilder(ROO_SYSTEM_SERVICE));
 
@@ -310,13 +334,13 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
                 physicalTypeIdentifier, 0, annotations, fieldName,
                 service.getServiceType());
         typeManagementService.addField(fieldBuilder.build());
-        
+
         if (addPermissions) {
             final String moduleName = projectOperations
-                    .getFocusedProjectName();
+                    .getFocusedModuleName();
             for (Permission permission : service.getPermissions()) {
                 androidTypeService.addPermission(moduleName, permission
-                        .permissionName());                
+                        .permissionName());
             }
         }
     }
@@ -324,8 +348,36 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
     @Override
     public void permission(final Permission permission) {
         Validate.notNull(permission, "Permission type may not be null");
-        final String moduleName = projectOperations.getFocusedProjectName();
+        final String moduleName = projectOperations.getFocusedModuleName();
         androidTypeService.addPermission(moduleName, permission
                 .permissionName());
+    }
+
+    @Override
+    public void fragment(final JavaType name, final String layout,
+            final boolean support) {
+
+        if (!StringUtils.isEmpty(layout)) {
+            final String layoutPath = pathResolver.getFocusedIdentifier(
+                    Path.ROOT, LAYOUT_PATH + SEP + layout + XML_EXTENSION);
+            if (!fileManager.exists(layoutPath)) {
+                LOGGER.info("Layout '" + layout + "' does not exist");
+                layout(layout, Dimension.FILL_PARENT, Dimension
+                        .FILL_PARENT, Orientation.VERTICAL);
+            }
+        }
+
+        final List<AnnotationMetadataBuilder> annotations =
+                new ArrayList<AnnotationMetadataBuilder>();
+        final AnnotationMetadataBuilder activityAnnotationBuilder =
+                new AnnotationMetadataBuilder(ROO_FRAGMENT);
+        if (!StringUtils.isEmpty(layout)) {
+            activityAnnotationBuilder.addStringAttribute("value", layout);
+        }
+        annotations.add(activityAnnotationBuilder);
+
+        jpaOperations.newEntity(name, false,
+                support ? ANDROID_SUPPORT_FRAGMENT : ANDROID_FRAGMENT,
+                annotations);
     }
 }

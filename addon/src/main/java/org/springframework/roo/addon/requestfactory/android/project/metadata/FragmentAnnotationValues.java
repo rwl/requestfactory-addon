@@ -1,6 +1,6 @@
-package org.springframework.roo.addon.requestfactory.android.activity;
+package org.springframework.roo.addon.requestfactory.android.project.metadata;
 
-import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_ACTIVITY;
+import static org.springframework.roo.addon.requestfactory.android.AndroidJavaType.ROO_FRAGMENT;
 
 import org.springframework.roo.classpath.details.annotations.populator.AbstractAnnotationValues;
 import org.springframework.roo.classpath.details.annotations.populator.AutoPopulate;
@@ -8,12 +8,12 @@ import org.springframework.roo.classpath.details.annotations.populator.AutoPopul
 import org.springframework.roo.classpath.itd.MemberHoldingTypeDetailsMetadataItem;
 
 
-public class ActivityAnnotationValues extends AbstractAnnotationValues {
+public class FragmentAnnotationValues extends AbstractAnnotationValues {
 
     @AutoPopulate private String value = "";
 
-    public ActivityAnnotationValues(final MemberHoldingTypeDetailsMetadataItem<?> annotatedType) {
-        super(annotatedType, ROO_ACTIVITY);
+    public FragmentAnnotationValues(final MemberHoldingTypeDetailsMetadataItem<?> annotatedType) {
+        super(annotatedType, ROO_FRAGMENT);
         AutoPopulationUtils.populate(this, annotationMetadata);
     }
 

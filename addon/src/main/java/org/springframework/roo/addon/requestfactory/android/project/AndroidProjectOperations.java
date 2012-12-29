@@ -15,7 +15,8 @@ public interface AndroidProjectOperations {
     boolean isActivityAvailable();
     boolean isViewAvailable();
 
-    void activity(JavaType type, String layout, boolean main);
+    void activity(JavaType type, String layout, boolean main,
+            boolean noTitle, boolean fullscreen);
     void view(JavaType type, String view, String identifier,
             JavaSymbolName fieldName, Dimension height,
             Dimension width);
@@ -26,4 +27,5 @@ public interface AndroidProjectOperations {
     void systemService(JavaType typeName, JavaSymbolName fieldName,
             SystemService value, boolean addPermissions);
     void permission(Permission name);
+    void fragment(JavaType name, String layout, boolean support);
 }

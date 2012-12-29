@@ -50,6 +50,11 @@
             <version>4.2.0</version>
             <type>apklib</type>
         </dependency>
+        <dependency>
+            <groupId>com.github.rwl</groupId>
+            <artifactId>org.springframework.roo.addon.requestfactory.annotations</artifactId>
+            <version>0.1.0.BUILD-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src</sourceDirectory>

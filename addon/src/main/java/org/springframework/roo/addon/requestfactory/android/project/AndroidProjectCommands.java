@@ -24,6 +24,7 @@ public class AndroidProjectCommands implements CommandMarker {
     private static final String RESOURCE_STRING_COMMAND = "android resource string";
     private static final String SYSTEM_SERVICE_COMMAND = "android service";
     private static final String PERMISSION_COMMAND = "android permission";
+    private static final String FRAGMENT_COMMAND = "android fragment";
 
     @Reference private AndroidProjectOperations projectOperations;
 
@@ -45,11 +46,13 @@ public class AndroidProjectCommands implements CommandMarker {
         projectOperations.layout(name, height, width, orientation);
     }
     
-    @CliCommand(value = ACTIVITY_COMMAND, help = "Creates a new Android activity in SRC_MAIN_JAVA")
+    @CliCommand(value = ACTIVITY_COMMAND, help = "Creates a new Android activity")
     public void activity(@CliOption(key = "class", optionContext = "update,project", mandatory = true, help = "Name of the activity to create") final JavaType name,
             @CliOption(key = "layout", mandatory = false, unspecifiedDefaultValue = "", help = "Name of the layout to create under /res/layout and pass to setContentView() in onCreate()") final String layout,
-            @CliOption(key = "main", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether the activity is the main launch activity") final boolean main) {
-        projectOperations.activity(name, layout, main);
+            @CliOption(key = "launcher", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Indicates whether the activity is the main launch activity") final boolean main,
+            @CliOption(key = "noTitle", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Requests a window feature with no title") final boolean noTitle,
+            @CliOption(key = "fullscreen", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Flags the window as fullscreen") final boolean fullscreen) {
+        projectOperations.activity(name, layout, main, noTitle, fullscreen);
     }
 
     @CliCommand(value = VIEW_COMMAND, help = "Adds a view to a layout and binds it to the given type")
@@ -71,15 +74,22 @@ public class AndroidProjectCommands implements CommandMarker {
     }
 
     @CliCommand(value = SYSTEM_SERVICE_COMMAND, help = "Binds a system service to the given type")
-    public void systemService(@CliOption(key = { "", "fieldName" }, mandatory = false, help = "The name of the field to add (defaults to the service class name") final JavaSymbolName fieldName,
+    public void systemService(@CliOption(key = { "", "name" }, mandatory = true, help = "The type of system service to add") final SystemService value,
+            @CliOption(key = "fieldName", mandatory = false, help = "The name of the field to add (defaults to the service class name") final JavaSymbolName fieldName,
             @CliOption(key = "type", mandatory = false, unspecifiedDefaultValue = "*", optionContext = "update,project", help = "The type to receive this service") final JavaType typeName,
-            @CliOption(key = "name", mandatory = true, help = "The type of system service to add") final SystemService value,
             @CliOption(key = "addPermissions", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Add typical permissions for the service to the manifest") final boolean addPermissions) {
         projectOperations.systemService(typeName, fieldName, value, addPermissions);
     }
 
     @CliCommand(value = PERMISSION_COMMAND, help = "Adds a permission to the Android manifest")
-    public void permission(@CliOption(key = "name", mandatory = true, help = "The type of permission to add") final Permission name) {
+    public void permission(@CliOption(key = { "", "name" }, mandatory = true, help = "The type of permission to add") final Permission name) {
         projectOperations.permission(name);
+    }
+    
+    @CliCommand(value = FRAGMENT_COMMAND, help = "Creates a new Android fragment")
+    public void fragment(@CliOption(key = "class", optionContext = "update,project", mandatory = true, help = "Name of the fragment to create") final JavaType name,
+            @CliOption(key = "layout", mandatory = false, unspecifiedDefaultValue = "", help = "Name of the fragment layout to create and inflate in onCreateView()") final String layout,
+            @CliOption(key = "support", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Subclass Fragment from the Android Support Library") final boolean support) {
+        projectOperations.fragment(name, layout, support);
     }
 }

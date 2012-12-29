@@ -12,7 +12,6 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.osgi.service.component.ComponentContext;
-import org.springframework.roo.addon.requestfactory.RequestFactoryPath;
 import org.springframework.roo.addon.requestfactory.RequestFactoryProxyProperty;
 import org.springframework.roo.addon.requestfactory.RequestFactoryTemplateDataHolder;
 import org.springframework.roo.addon.requestfactory.RequestFactoryType;
@@ -24,7 +23,6 @@ import org.springframework.roo.addon.requestfactory.android.AndroidTypeService;
 import org.springframework.roo.addon.requestfactory.android.AndroidUtils;
 import org.springframework.roo.addon.requestfactory.annotations.android.RooRequestFactoryAndroid;
 import org.springframework.roo.addon.requestfactory.scaffold.BaseScaffoldMetadataProviderImpl;
-import org.springframework.roo.addon.requestfactory.scaffold.RequestFactoryScaffoldMetadataProviderImpl;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.MethodMetadata;
@@ -124,7 +122,7 @@ public class AndroidScaffoldMetadataProviderImpl extends BaseScaffoldMetadataPro
                     clientSideTypeMap, topLevelPackage);
 
             if (androidType.isCreateViewXml()) {
-                final RequestFactoryPath path = androidType.getPath();
+                /*final RequestFactoryPath path = androidType.getPath();*/
                 final PathResolver pathResolver = projectOperations
                         .getPathResolver();
                 final String layoutPath = pathResolver.getIdentifier(

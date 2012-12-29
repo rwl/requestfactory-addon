@@ -12,7 +12,7 @@
     <name>Spring Roo - Addon - Request Factory</name>
     <description>Support for GWT, Android and iOS UI scaffolding using RequestFactory.</description>
     <properties>
-        <roo.version>1.2.3.BUILD-SNAPSHOT</roo.version>
+        <roo.version>1.2.3.RELEASE</roo.version>
         <hapax.version>2.3.4.0010</hapax.version>
     </properties>
     <repositories>

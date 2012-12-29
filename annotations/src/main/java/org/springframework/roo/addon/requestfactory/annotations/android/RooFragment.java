@@ -7,14 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
-public @interface RooActivity {
-
-    String NO_TITLE_ATTRIBUTE = "noTitle";
-    String FULLSCREEN_ATTRIBUTE = "fullscreen";
+public @interface RooFragment {
 
     String value() default "";
-
-    boolean noTitle() default false;
-
-    boolean fullscreen() default false;
 }
