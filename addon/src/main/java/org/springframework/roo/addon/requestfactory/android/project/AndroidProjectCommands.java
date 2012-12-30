@@ -17,14 +17,22 @@ import org.springframework.roo.shell.CommandMarker;
 @Component
 @Service
 public class AndroidProjectCommands implements CommandMarker {
+    
+    public static final String ANDROID_PREFIX = "android";
 
-    private static final String LAYOUT_COMMAND = "android layout";
-    private static final String ACTIVITY_COMMAND = "android activity";
-    private static final String VIEW_COMMAND = "android view";
-    private static final String RESOURCE_STRING_COMMAND = "android resource string";
-    private static final String SYSTEM_SERVICE_COMMAND = "android service";
-    private static final String PERMISSION_COMMAND = "android permission";
-    private static final String FRAGMENT_COMMAND = "android fragment";
+    private static final String LAYOUT_COMMAND = ANDROID_PREFIX + " layout";
+    private static final String ACTIVITY_COMMAND = ANDROID_PREFIX + " activity";
+    private static final String VIEW_COMMAND = ANDROID_PREFIX + " view";
+    private static final String RESOURCE_STRING_COMMAND = ANDROID_PREFIX + " resource string";
+    private static final String SYSTEM_SERVICE_COMMAND = ANDROID_PREFIX + " system service";
+    private static final String PERMISSION_COMMAND = ANDROID_PREFIX + " permission";
+    private static final String FRAGMENT_COMMAND = ANDROID_PREFIX + " fragment";
+    
+    public static final String[] ANDROID_COMMANDS = new String[] {
+        LAYOUT_COMMAND, ACTIVITY_COMMAND, VIEW_COMMAND,
+        RESOURCE_STRING_COMMAND, SYSTEM_SERVICE_COMMAND,
+        PERMISSION_COMMAND, FRAGMENT_COMMAND
+    };
 
     @Reference private AndroidProjectOperations projectOperations;
 

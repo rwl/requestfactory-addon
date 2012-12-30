@@ -82,7 +82,7 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
         config.setCommandName("field");
         config.addAction(ActionConfigFactory.focusModuleAction("server"));
         config.addAction(RequestFactoryActionConfigFactory
-                .executePrefixAction(EntityFieldCommands
+                .executePrefixedAction(EntityFieldCommands
                         .REQUEST_FACTORY_FIELD_COMMAND_PREFIX));
         return config;
     }

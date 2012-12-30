@@ -50,7 +50,7 @@ The `resource` command can be used to add [resources](http://developer.android.c
 
 The `service` command binds a [system service](http://developer.android.com/reference/android/content/Context.html#getSystemService%28java.lang.String%29) the a field on the given `type`.
 
-        roo> service --name LAYOUT_INFLATER --fieldName inflater
+        roo> system service --name LAYOUT_INFLATER --fieldName inflater
 
 ## Other commands
 
