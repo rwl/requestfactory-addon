@@ -39,10 +39,10 @@ public class {{=className}} extends Fragment {
         if (getArguments().containsKey(TOKEN)) {
             final String token = getArguments().getString(TOKEN);
             final EntityProxyId<{{=proxy}}> entityProxyId = requestFactory.getProxyId(token);
-			new AsyncTask<Void, Void, RecordProxy>() {
+			new AsyncTask<Void, Void, {{=proxy}}>() {
 
 				@Override
-				protected RecordProxy doInBackground(Void... params) {
+				protected {{=proxy}} doInBackground(Void... params) {
 		            requestFactory.find(entityProxyId).fire(new Receiver<{{=proxy}}>() {
 		
 		                @Override
@@ -54,7 +54,7 @@ public class {{=className}} extends Fragment {
 				}
 
 				@Override
-				protected void onPostExecute(RecordProxy result) {
+				protected void onPostExecute({{=proxy}} result) {
 					super.onPostExecute(result);
 					if (textView != null) {
 						textView.setText(proxy.toString());

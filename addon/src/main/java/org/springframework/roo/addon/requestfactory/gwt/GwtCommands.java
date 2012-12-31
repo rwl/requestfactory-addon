@@ -19,6 +19,11 @@ public class GwtCommands implements CommandMarker {
     private static final String SCAFFOLD_TYPE_COMMAND = "web requestfactory gwt scaffold type";
     private static final String UPDATE_GAE_COMMAND = "web requestfactory gwt update gae";
     private static final String SETUP_GWT_COMMAND = "web requestfactory gwt setup";
+    
+    public static final String[] TAILORED_COMMANDS = new String[] {
+        SCAFFOLD_ALL_COMMAND, SCAFFOLD_TYPE_COMMAND, UPDATE_GAE_COMMAND,
+        SETUP_GWT_COMMAND
+    };
 
     @Reference private GwtOperations operations;
 

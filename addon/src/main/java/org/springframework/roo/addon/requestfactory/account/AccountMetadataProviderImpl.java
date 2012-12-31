@@ -4,7 +4,6 @@ import static org.springframework.roo.addon.requestfactory.account.AccountJavaTy
 import static org.springframework.roo.model.RooJavaType.ROO_JPA_ENTITY;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
@@ -15,10 +14,8 @@ import org.springframework.roo.addon.requestfactory.annotations.account.RooAccou
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
 import org.springframework.roo.classpath.TypeManagementService;
-import org.springframework.roo.classpath.details.MemberFindingUtils;
 import org.springframework.roo.classpath.itd.AbstractItdMetadataProvider;
 import org.springframework.roo.classpath.itd.ItdTypeDetailsProvidingMetadataItem;
-import org.springframework.roo.classpath.itd.MemberHoldingTypeDetailsMetadataItem;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.FeatureNames;
 import org.springframework.roo.project.LogicalPath;
@@ -114,21 +111,5 @@ public final class AccountMetadataProviderImpl extends AbstractItdMetadataProvid
 
     public String getProvidesType() {
         return AccountMetadata.getMetadataIdentiferType();
-    }
-
-    @Override
-    public AccountAnnotationValues getAnnotationValues(JavaType javaType) {
-        Validate.notNull(javaType, "JavaType required");
-        final String physicalTypeId = typeLocationService
-                .getPhysicalTypeIdentifier(javaType);
-        if (StringUtils.isBlank(physicalTypeId)) {
-            return null;
-        }
-        final MemberHoldingTypeDetailsMetadataItem<?> governor = (MemberHoldingTypeDetailsMetadataItem<?>) metadataService
-                .get(physicalTypeId);
-        if (MemberFindingUtils.getAnnotationOfType(governor, ROO_ACCOUNT) == null) {
-            return null;
-        }
-        return new AccountAnnotationValues(governor);
     }
 }

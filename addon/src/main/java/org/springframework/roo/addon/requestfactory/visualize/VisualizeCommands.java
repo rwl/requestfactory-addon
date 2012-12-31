@@ -3,6 +3,7 @@ package org.springframework.roo.addon.requestfactory.visualize;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.requestfactory.RequestFactoryCommands;
 import org.springframework.roo.addon.requestfactory.annotations.visualize.RooMapMarker;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.shell.CliAvailabilityIndicator;
@@ -14,8 +15,12 @@ import org.springframework.roo.shell.CommandMarker;
 @Service
 public class VisualizeCommands implements CommandMarker {
 
-    private static final String MAP_MARKER_COMMAND = "web requestfactory map marker";
-    private static final String SETUP_MAP_COMMAND = "web requestfactory gwt maps setup";
+    private static final String MAP_MARKER_COMMAND = RequestFactoryCommands.WEB_REQUEST_FACTORY_PREFIX + " map marker";
+    private static final String SETUP_MAP_COMMAND = RequestFactoryCommands.WEB_REQUEST_FACTORY_PREFIX + " gwt maps setup";
+    
+    public static final String[] TAILORED_COMMANDS = new String[] {
+        MAP_MARKER_COMMAND, SETUP_MAP_COMMAND
+    };
 
     @Reference private VisualizeOperations operations;
 

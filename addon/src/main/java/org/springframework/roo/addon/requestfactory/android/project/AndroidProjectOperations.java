@@ -28,4 +28,5 @@ public interface AndroidProjectOperations {
             SystemService value, boolean addPermissions);
     void permission(Permission name);
     void fragment(JavaType name, String layout, boolean support);
+    void dependency(AndroidProjectDependency name);
 }

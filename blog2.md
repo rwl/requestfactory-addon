@@ -51,6 +51,8 @@ The application scaffold that may be shared between the clients can be generated
 
 > Until [ROO-2988](https://jira.springsource.org/browse/ROO-2988) is resolved a dependency on the `server` module will have to be removed from the `shared` module to ensure decoupling.
 
+        roo> dependency remove --groupId com.example.drooid.server --artifactId drooid-server --version 0.1.0.BUILD-SNAPSHOT
+
 ## Client side
 
 To generate scaffolding for a GWT client application use the command:

@@ -20,7 +20,7 @@ public class AndroidProjectTailorConfiguration implements TailorConfigurationFac
         TailorConfiguration config = new TailorConfiguration("android",
                 "Develop projects for the Android operating system");
         config.addCommandConfig(createCommandConfigProjectSetup());
-        for (final String command : AndroidProjectCommands.ANDROID_COMMANDS) {
+        for (final String command : AndroidProjectCommands.TAILORED_COMMANDS) {
             final String abbrev = command.substring(AndroidProjectCommands
                     .ANDROID_PREFIX.length() + 1);
             config.addCommandConfig(createCommandConfigPrefixSetup(abbrev));

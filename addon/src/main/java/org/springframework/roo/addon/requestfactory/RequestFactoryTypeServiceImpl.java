@@ -13,10 +13,12 @@ import static org.springframework.roo.model.JpaJavaType.EMBEDDABLE;
 import static org.springframework.roo.model.JpaJavaType.MANY_TO_ONE;
 import static org.springframework.roo.model.JpaJavaType.ONE_TO_MANY;
 
+import java.io.File;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -34,7 +36,9 @@ import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.classpath.PhysicalTypeCategory;
 import org.springframework.roo.classpath.PhysicalTypeIdentifier;
 import org.springframework.roo.classpath.PhysicalTypeMetadata;
+import org.springframework.roo.classpath.TypeCache;
 import org.springframework.roo.classpath.TypeLocationService;
+import org.springframework.roo.classpath.TypeLocationServiceImpl;
 import org.springframework.roo.classpath.customdata.CustomDataKeys;
 import org.springframework.roo.classpath.details.AbstractIdentifiableAnnotatedJavaStructureBuilder;
 import org.springframework.roo.classpath.details.BeanInfoUtils;
@@ -55,14 +59,18 @@ import org.springframework.roo.classpath.itd.InvocableMemberBodyBuilder;
 import org.springframework.roo.classpath.persistence.PersistenceMemberLocator;
 import org.springframework.roo.classpath.scanner.MemberDetails;
 import org.springframework.roo.classpath.scanner.MemberDetailsScanner;
+import org.springframework.roo.file.monitor.FileMonitorService;
 import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.DataType;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.Path;
+import org.springframework.roo.project.PhysicalPath;
 import org.springframework.roo.project.ProjectOperations;
+import org.springframework.roo.project.maven.Pom;
 import org.springframework.roo.support.logging.HandlerUtils;
+import org.springframework.roo.support.util.FileUtils;
 
 
 /**
@@ -92,8 +100,7 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
     public FieldMetadata getParentField(ClassOrInterfaceTypeDetails childType) {
         for (FieldMetadata field : childType.getFieldsWithAnnotation(MANY_TO_ONE)) {
 
-            final String fieldTypeId = typeLocationService
-                    .getPhysicalTypeIdentifier(field.getFieldType());
+            final String fieldTypeId = typeLocationService.getPhysicalTypeIdentifier(field.getFieldType());
             if (fieldTypeId == null
                     || metadataService.get(fieldTypeId) == null) {
                 continue;
@@ -384,8 +391,7 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
         final List<MemberHoldingTypeDetails> extendsTypes = new ArrayList<MemberHoldingTypeDetails>();
         if (childType != null) {
             for (final JavaType javaType : childType.getExtendsTypes()) {
-                final String superTypeId = typeLocationService
-                        .getPhysicalTypeIdentifier(javaType);
+                final String superTypeId = typeLocationService.getPhysicalTypeIdentifier(javaType);
                 if (superTypeId == null
                         || metadataService.get(superTypeId) == null) {
                     continue;
@@ -786,4 +792,110 @@ public class RequestFactoryTypeServiceImpl implements RequestFactoryTypeService 
         }
         return typeMap;
     }
+    
+    /* TODO: Remove when ROO-2988 is closed. */
+
+    /*@Reference private FileMonitorService fileMonitorService;
+    @Reference private TypeCache typeCache;
+    
+    private final Set<String> discoveredTypes = new HashSet<String>();
+
+    private String getProposedJavaType(final String fileCanonicalPath) {
+        Validate.notBlank(fileCanonicalPath, "File canonical path required");
+        // Determine the JavaType for this file
+        String relativePath = "";
+        final Pom moduleForFileIdentifier = projectOperations
+                .getModuleForFileIdentifier(fileCanonicalPath);
+        if (moduleForFileIdentifier == null) {
+            return relativePath;
+        }
+
+        for (final PhysicalPath physicalPath : moduleForFileIdentifier
+                .getPhysicalPaths()) {
+            final String moduleCanonicalPath = FileUtils
+                    .ensureTrailingSeparator(FileUtils
+                            .getCanonicalPath(physicalPath.getLocation()));
+            if (fileCanonicalPath.startsWith(moduleCanonicalPath)) {
+                relativePath = File.separator
+                        + StringUtils.replace(fileCanonicalPath,
+                                moduleCanonicalPath, "", 1);
+                break;
+            }
+        }
+        Validate.notBlank(relativePath,
+                "Could not determine compilation unit name for file '"
+                        + fileCanonicalPath + "'");
+        Validate.isTrue(relativePath.startsWith(File.separator),
+                "Relative path unexpectedly dropped the '" + File.separator
+                        + "' prefix (received '" + relativePath + "' from '"
+                        + fileCanonicalPath + "'");
+        relativePath = relativePath.substring(1);
+        Validate.isTrue(relativePath.endsWith(".java"),
+                "The relative path unexpectedly dropped the .java extension for file '"
+                        + fileCanonicalPath + "'");
+        relativePath = relativePath.substring(0,
+                relativePath.lastIndexOf(".java"));
+        return relativePath.replace(File.separatorChar, '.');
+    }
+
+    private boolean doesPathIndicateJavaType(final String fileCanonicalPath) {
+        Validate.notBlank(fileCanonicalPath, "File canonical path required");
+        return fileCanonicalPath.endsWith(".java")
+                && !fileCanonicalPath.endsWith("package-info.java")
+                && JavaSymbolName
+                        .isLegalJavaName(getProposedJavaType(fileCanonicalPath));
+    }
+
+    private Set<String> discoverTypes() {
+        // Retrieve a list of paths that have been discovered or modified since
+        // the last invocation by this class
+        for (final String change : fileMonitorService
+                .getDirtyFiles(TypeLocationServiceImpl.class.getName())) {
+            if (doesPathIndicateJavaType(change)) {
+                discoveredTypes.add(change);
+            }
+        }
+        return discoveredTypes;
+    }
+
+    private String getParentPath(final JavaType javaType) {
+        final String relativePath = javaType.getRelativeFileName();
+        for (final String typePath : discoverTypes()) {
+            if (typePath.endsWith(relativePath)) {
+                return StringUtils.removeEnd(typePath, relativePath);
+            }
+        }
+        return null;
+    }
+
+    private PhysicalPath getPhysicalPath(final JavaType javaType) {
+        Validate.notNull(javaType, "Java type required");
+        final String parentPath = getParentPath(javaType);
+        if (parentPath == null) {
+            return null;
+        }
+        for (final Pom pom : projectOperations.getPoms()) {
+            for (final PhysicalPath physicalPath : pom.getPhysicalPaths()) {
+                if (physicalPath.isSource()) {
+                    final String pathLocation = FileUtils
+                            .ensureTrailingSeparator(physicalPath
+                                    .getLocationPath());
+                    if (pathLocation.startsWith(parentPath)) {
+                        typeCache.cacheTypeAgainstModule(pom, javaType);
+                        return physicalPath;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private String getPhysicalTypeIdentifier(final JavaType type) {
+        final PhysicalPath containingPhysicalPath = getPhysicalPath(type);
+        if (containingPhysicalPath == null) {
+            return null;
+        }
+        final LogicalPath logicalPath = containingPhysicalPath.getLogicalPath();
+        return PhysicalTypeIdentifier.createIdentifier(type, logicalPath);
+    }*/
 }

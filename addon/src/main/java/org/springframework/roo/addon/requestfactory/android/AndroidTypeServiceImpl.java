@@ -2,6 +2,8 @@ package org.springframework.roo.addon.requestfactory.android;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -13,9 +15,12 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.file.monitor.event.FileDetails;
 import org.springframework.roo.process.manager.FileManager;
+import org.springframework.roo.project.Dependency;
 import org.springframework.roo.project.LogicalPath;
 import org.springframework.roo.project.Path;
 import org.springframework.roo.project.ProjectOperations;
+import org.springframework.roo.project.maven.Pom;
+import org.springframework.roo.support.util.DomUtils;
 import org.springframework.roo.support.util.XmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -154,6 +159,79 @@ public class AndroidTypeServiceImpl implements AndroidTypeService {
             throw new IllegalStateException(e);
         } finally {
             IOUtils.closeQuietly(inputStream);
+        }
+    }
+
+    @Override
+    public void addDependencies(final String moduleName,
+            final Collection<? extends AndroidDependency> newDependencies) {
+        Validate.isTrue(projectOperations.isProjectAvailable(moduleName),
+                "Dependency modification prohibited; no such module '"
+                        + moduleName + "'");
+        final Pom pom = projectOperations.getPomFromModuleName(moduleName);
+        Validate.notNull(pom,
+                "The pom is not available, so dependencies cannot be added");
+
+        final Document document = XmlUtils.readXml(fileManager
+                .getInputStream(pom.getPath()));
+        final Element dependenciesElement = DomUtils.createChildIfNotExists(
+                "dependencies", document.getDocumentElement(), document);
+        final List<Element> existingDependencyElements = XmlUtils.findElements(
+                "dependency", dependenciesElement);
+
+        final List<String> addedDependencies = new ArrayList<String>();
+        final List<String> removedDependencies = new ArrayList<String>();
+        final List<String> skippedDependencies = new ArrayList<String>();
+        for (final AndroidDependency newDependency : newDependencies) {
+            if (pom.canAddDependency(newDependency)) {
+                // Look for any existing instances of this dependency
+                boolean inserted = false;
+                for (final Element existingDependencyElement : existingDependencyElements) {
+                    final Dependency existingDependency = new Dependency(
+                            existingDependencyElement);
+                    if (existingDependency.hasSameCoordinates(newDependency)) {
+                        // It's the same artifact, but might have a different
+                        // version, exclusions, etc.
+                        if (!inserted) {
+                            // We haven't added the new one yet; do so now
+                            dependenciesElement.insertBefore(
+                                    newDependency.getElement(document),
+                                    existingDependencyElement);
+                            inserted = true;
+                            if (!newDependency.getVersion().equals(
+                                    existingDependency.getVersion())) {
+                                // It's a genuine version change => mention the
+                                // old and new versions in the message
+                                addedDependencies.add(newDependency
+                                        .getSimpleDescription());
+                                removedDependencies.add(existingDependency
+                                        .getSimpleDescription());
+                            }
+                        }
+                        // Either way, we remove the previous one in case it was
+                        // different in any way
+                        dependenciesElement
+                                .removeChild(existingDependencyElement);
+                    }
+                    // Keep looping in case it's present more than once
+                }
+                if (!inserted) {
+                    // We didn't encounter any existing dependencies with the
+                    // same coordinates; add it now
+                    dependenciesElement.appendChild(newDependency
+                            .getElement(document));
+                    addedDependencies.add(newDependency.getSimpleDescription());
+                }
+            }
+            else {
+                skippedDependencies.add(newDependency.getSimpleDescription());
+            }
+        }
+        if (!newDependencies.isEmpty() || !skippedDependencies.isEmpty()) {
+            /*final String message = getPomDependenciesUpdateMessage(addedDependencies,
+                    removedDependencies, skippedDependencies);*/
+            fileManager.createOrUpdateTextFileIfRequired(pom.getPath(),
+                    XmlUtils.nodeToString(document), false);
         }
     }
 }

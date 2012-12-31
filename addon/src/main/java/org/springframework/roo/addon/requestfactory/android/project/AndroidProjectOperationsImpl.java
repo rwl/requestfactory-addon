@@ -33,6 +33,7 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.springframework.roo.addon.jpa.JpaOperations;
 import org.springframework.roo.addon.requestfactory.RequestFactoryUtils;
+import org.springframework.roo.addon.requestfactory.android.AndroidDependency;
 import org.springframework.roo.addon.requestfactory.android.AndroidTypeService;
 import org.springframework.roo.addon.requestfactory.android.types.Dimension;
 import org.springframework.roo.addon.requestfactory.android.types.Orientation;
@@ -44,13 +45,16 @@ import org.springframework.roo.classpath.TypeManagementService;
 import org.springframework.roo.classpath.details.ClassOrInterfaceTypeDetails;
 import org.springframework.roo.classpath.details.FieldMetadataBuilder;
 import org.springframework.roo.classpath.details.annotations.AnnotationMetadataBuilder;
+import org.springframework.roo.metadata.MetadataService;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.process.manager.FileManager;
 import org.springframework.roo.process.manager.MutableFile;
 import org.springframework.roo.project.Path;
 import org.springframework.roo.project.PathResolver;
+import org.springframework.roo.project.ProjectMetadata;
 import org.springframework.roo.project.ProjectOperations;
+import org.springframework.roo.project.Property;
 import org.springframework.roo.support.logging.HandlerUtils;
 import org.springframework.roo.support.util.XmlUtils;
 import org.w3c.dom.Document;
@@ -91,6 +95,7 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
     @Reference FileManager fileManager;
     @Reference PathResolver pathResolver;
     @Reference AndroidTypeService androidTypeService;
+    @Reference MetadataService metadataService;
 
     @Override
     public boolean isActivityAvailable() {
@@ -148,7 +153,7 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
             Validate.isTrue(noTitle == false,
                     "Options 'noTitle' and 'fullscreen' are mutex");
         }
-        
+
         if (!StringUtils.isEmpty(layout)) {
             final String layoutPath = pathResolver.getFocusedIdentifier(
                     Path.ROOT, LAYOUT_PATH + SEP + layout + XML_EXTENSION);
@@ -379,5 +384,30 @@ public class AndroidProjectOperationsImpl implements AndroidProjectOperations {
         jpaOperations.newEntity(name, false,
                 support ? ANDROID_SUPPORT_FRAGMENT : ANDROID_FRAGMENT,
                 annotations);
+    }
+
+    @Override
+    public void dependency(final AndroidProjectDependency dependency) {
+        final String moduleName = projectOperations.getFocusedModuleName();
+        final Element configuration = XmlUtils.getConfiguration(getClass());
+
+        for (final Element propertyElement : XmlUtils.findElements(
+                "/configuration/" + dependency.getTag()
+                + "/properties/property", configuration)) {
+            final Property property = new Property(propertyElement);
+            projectOperations.addProperty(moduleName, property);
+        }
+
+        final List<AndroidDependency> dependencies = new ArrayList<AndroidDependency>();
+        for (final Element dependencyElement : XmlUtils.findElements(
+                "/configuration/" + dependency.getTag()
+                + "/dependencies/dependency", configuration)) {
+            dependencies.add(new AndroidDependency(dependencyElement));
+        }
+        projectOperations.removeDependencies(moduleName, dependencies);
+        metadataService.evict(ProjectMetadata.getProjectIdentifier(
+                moduleName));
+        androidTypeService.addDependencies(moduleName, dependencies);
+
     }
 }

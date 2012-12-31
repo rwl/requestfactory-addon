@@ -3,6 +3,7 @@ package org.springframework.roo.addon.requestfactory.android;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.requestfactory.RequestFactoryCommands;
 import org.springframework.roo.addon.requestfactory.annotations.android.RooRequestFactoryAndroid;
 import org.springframework.roo.model.JavaType;
 import org.springframework.roo.project.maven.Pom;
@@ -15,10 +16,14 @@ import org.springframework.roo.shell.CommandMarker;
 @Service
 public class AndroidCommands implements CommandMarker {
 
-    private static final String SETUP_ANDROID_COMMAND = "web requestfactory android setup";
+    private static final String SETUP_ANDROID_COMMAND = RequestFactoryCommands.WEB_REQUEST_FACTORY_PREFIX + " android setup";
     
-    private static final String SCAFFOLD_ALL_COMMAND = "web requestfactory android scaffold all";
-    private static final String SCAFFOLD_TYPE_COMMAND = "web requestfactory android scaffold type";
+    private static final String SCAFFOLD_ALL_COMMAND = RequestFactoryCommands.WEB_REQUEST_FACTORY_PREFIX + " android scaffold all";
+    private static final String SCAFFOLD_TYPE_COMMAND = RequestFactoryCommands.WEB_REQUEST_FACTORY_PREFIX + " android scaffold type";
+    
+    public static final String[] TAILORED_COMMANDS = new String[] {
+        SETUP_ANDROID_COMMAND, SCAFFOLD_ALL_COMMAND, SCAFFOLD_TYPE_COMMAND
+    };
 
     @Reference private AndroidOperations operations;
 

@@ -5,6 +5,7 @@ import java.util.Set;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.springframework.roo.addon.requestfactory.RequestFactoryCommands;
 import org.springframework.roo.addon.requestfactory.annotations.entity.RooRequestFactoryEntity;
 import org.springframework.roo.model.JavaSymbolName;
 import org.springframework.roo.model.JavaType;
@@ -17,9 +18,13 @@ import org.springframework.roo.shell.CommandMarker;
 @Service
 public class EntityCommands implements CommandMarker {
 
-    private static final String SCAFFOLD_COMMAND = "web requestfactory scaffold entity";
+    private static final String SCAFFOLD_COMMAND = RequestFactoryCommands.WEB_REQUEST_FACTORY_PREFIX + " scaffold entity";
     private static final String PLURAL_COMMAND = "plural";
     private static final String TO_STRING_COMMAND = "toString";
+    
+    public static final String[] TAILORED_COMMANDS = new String[] {
+        SCAFFOLD_COMMAND
+    };
 
     @Reference private EntityOperations operations;
 

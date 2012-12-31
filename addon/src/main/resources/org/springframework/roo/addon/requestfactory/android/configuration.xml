@@ -1,5 +1,55 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configuration>
+    <annotations>
+        <properties>
+            <requestfactory.annotations.version>0.1.0.BUILD-SNAPSHOT</requestfactory.annotations.version>
+        </properties>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.rwl</groupId>
+                <artifactId>org.springframework.roo.addon.requestfactory.annotations</artifactId>
+                <version>${requestfactory.annotations.version}</version>
+            </dependency>
+        </dependencies>
+    </annotations>
+    <abs>
+        <properties>
+            <actionbarsherlock.version>4.2.0</actionbarsherlock.version>
+        </properties>
+        <dependencies>
+            <dependency>
+                <groupId>com.actionbarsherlock</groupId>
+                <artifactId>actionbarsherlock</artifactId>
+                <version>${actionbarsherlock.version}</version>
+                <type>apklib</type>
+            </dependency>
+        </dependencies>
+    </abs>
+    <endless>
+        <properties>
+            <endless.version>1.2.0</endless.version>
+        </properties>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.cwac</groupId>
+                <artifactId>cwac-endless</artifactId>
+                <version>${endless.version}</version>
+                <type>apklib</type>
+            </dependency>
+        </dependencies>
+    </endless>
+    <support>
+        <properties>
+            <support.version>r7</support.version>
+        </properties>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.android</groupId>
+                <artifactId>support-v4</artifactId>
+                <version>${support.version}</version>
+            </dependency>
+        </dependencies>
+    </support>
     <batch>
         <dependencies>
             <dependency>

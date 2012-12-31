@@ -114,48 +114,6 @@ public class EntityLayerProvider extends CoreLayerProvider {
                 method.getParameters(callerParameterList));
     }
 
-    /*private FieldMetadata getParentField(JavaType targetEntity, String parentFieldName) {
-
-        final String physicalTypeIdentifier = typeLocationService.getPhysicalTypeIdentifier(targetEntity, false);
-        if (physicalTypeIdentifier == null) {
-            return null;
-        }
-        // We need to lookup the metadata we depend on
-        final PhysicalTypeMetadata physicalTypeMetadata = (PhysicalTypeMetadata) metadataService.get(physicalTypeIdentifier);
-
-
-        // We need to abort if we couldn't find dependent metadata
-        if (physicalTypeMetadata == null || !physicalTypeMetadata.isValid()) {
-            return null;
-        }
-
-        final ClassOrInterfaceTypeDetails cid = physicalTypeMetadata.getMemberHoldingTypeDetails();
-        if (cid == null) {
-            // Abort if the type's class details aren't available (parse error
-            // etc)
-            return null;
-        }
-
-
-        final MemberDetails memberDetails = memberDetailsScanner.getMemberDetails(getClass().getName(), cid);
-        if (memberDetails == null) {
-            return null;
-        }
-        FieldMetadata parentField = null;
-        if (!parentFieldName.isEmpty()) {
-            for (FieldMetadata field : memberDetails.getFields()) {
-                if (field.getFieldName().getSymbolName().equals(parentFieldName)) {
-                    parentField = field;
-                    break;
-                }
-            }
-            if (parentField == null) {
-                return null;
-            }
-        }
-        return parentField;
-    }*/
-
     /**
      * Returns the plural form of the given entity
      *

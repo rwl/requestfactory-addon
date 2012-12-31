@@ -31,18 +31,31 @@ public class RequestFactoryCommands implements CommandMarker {
 
     private static final String PROXY_PACKAGE_DEFAULT = "~.managed.proxy";
     private static final String REQUEST_PACKAGE_DEFAULT = "~.managed.request";
+    
+    public static final String WEB_REQUEST_FACTORY_PREFIX = "web requestfactory";
 
-    private static final String WEB_REQUEST_FACTORY_SETUP_ADDON_COMMAND = "web requestfactory setup addon";
-    private static final String WEB_REQUEST_FACTORY_SETUP_SERVER_COMMAND = "web requestfactory setup server";
-    private static final String WEB_REQUEST_FACTORY_SETUP_CLIENT_COMMAND = "web requestfactory setup client";
-    private static final String WEB_REQUEST_FACTORY_PROXY_ALL_COMMAND = "web requestfactory proxy all";
-    private static final String WEB_REQUEST_FACTORY_PROXY_TYPE_COMMAND = "web requestfactory proxy type";
-    private static final String WEB_REQUEST_FACTORY_REQUEST_ALL_COMMAND = "web requestfactory request all";
-    private static final String WEB_REQUEST_FACTORY_REQUEST_TYPE_COMMAND = "web requestfactory request type";
-    private static final String WEB_REQUEST_FACTORY_PROXY_REQUEST_ALL_COMMAND = "web requestfactory proxy request all";
-    private static final String WEB_REQUEST_FACTORY_PROXY_REQUEST_TYPE_COMMAND = "web requestfactory proxy request type";
-    private static final String WEB_REQUEST_FACTORY_SCAFFOLD_ALL_COMMAND = "web requestfactory scaffold all";
-    private static final String WEB_REQUEST_FACTORY_SCAFFOLD_TYPE_COMMAND = "web requestfactory scaffold type";
+    private static final String WEB_REQUEST_FACTORY_SETUP_ADDON_COMMAND = WEB_REQUEST_FACTORY_PREFIX + " setup addon";
+    private static final String WEB_REQUEST_FACTORY_SETUP_SERVER_COMMAND = WEB_REQUEST_FACTORY_PREFIX + " setup server";
+    private static final String WEB_REQUEST_FACTORY_SETUP_CLIENT_COMMAND = WEB_REQUEST_FACTORY_PREFIX + " setup client";
+    private static final String WEB_REQUEST_FACTORY_PROXY_ALL_COMMAND = WEB_REQUEST_FACTORY_PREFIX + " proxy all";
+    private static final String WEB_REQUEST_FACTORY_PROXY_TYPE_COMMAND = WEB_REQUEST_FACTORY_PREFIX + " proxy type";
+    private static final String WEB_REQUEST_FACTORY_REQUEST_ALL_COMMAND = WEB_REQUEST_FACTORY_PREFIX + " request all";
+    private static final String WEB_REQUEST_FACTORY_REQUEST_TYPE_COMMAND = WEB_REQUEST_FACTORY_PREFIX + " request type";
+    private static final String WEB_REQUEST_FACTORY_PROXY_REQUEST_ALL_COMMAND = WEB_REQUEST_FACTORY_PREFIX + " proxy request all";
+    private static final String WEB_REQUEST_FACTORY_PROXY_REQUEST_TYPE_COMMAND = WEB_REQUEST_FACTORY_PREFIX + " proxy request type";
+    private static final String WEB_REQUEST_FACTORY_SCAFFOLD_ALL_COMMAND = WEB_REQUEST_FACTORY_PREFIX + " scaffold all";
+    private static final String WEB_REQUEST_FACTORY_SCAFFOLD_TYPE_COMMAND = WEB_REQUEST_FACTORY_PREFIX + " scaffold type";
+    
+    public static final String[] TAILORED_COMMANDS = new String[] {
+        WEB_REQUEST_FACTORY_PROXY_ALL_COMMAND,
+        WEB_REQUEST_FACTORY_PROXY_TYPE_COMMAND,
+        WEB_REQUEST_FACTORY_REQUEST_ALL_COMMAND,
+        WEB_REQUEST_FACTORY_REQUEST_TYPE_COMMAND,
+        WEB_REQUEST_FACTORY_PROXY_REQUEST_ALL_COMMAND,
+        WEB_REQUEST_FACTORY_PROXY_REQUEST_TYPE_COMMAND,
+        WEB_REQUEST_FACTORY_SCAFFOLD_ALL_COMMAND,
+        WEB_REQUEST_FACTORY_SCAFFOLD_TYPE_COMMAND
+    };
 
     @Reference protected RequestFactoryOperations requestFactoryOperations;
 

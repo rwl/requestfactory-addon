@@ -24,14 +24,14 @@ public class AndroidProjectCommands implements CommandMarker {
     private static final String ACTIVITY_COMMAND = ANDROID_PREFIX + " activity";
     private static final String VIEW_COMMAND = ANDROID_PREFIX + " view";
     private static final String RESOURCE_STRING_COMMAND = ANDROID_PREFIX + " resource string";
-    private static final String SYSTEM_SERVICE_COMMAND = ANDROID_PREFIX + " system service";
+    private static final String SYSTEM_SERVICE_COMMAND = ANDROID_PREFIX + " service";
     private static final String PERMISSION_COMMAND = ANDROID_PREFIX + " permission";
     private static final String FRAGMENT_COMMAND = ANDROID_PREFIX + " fragment";
+    private static final String DEPENDENCY_COMMAND = ANDROID_PREFIX + " dependency";
     
-    public static final String[] ANDROID_COMMANDS = new String[] {
+    public static final String[] TAILORED_COMMANDS = new String[] {
         LAYOUT_COMMAND, ACTIVITY_COMMAND, VIEW_COMMAND,
-        RESOURCE_STRING_COMMAND, SYSTEM_SERVICE_COMMAND,
-        PERMISSION_COMMAND, FRAGMENT_COMMAND
+        RESOURCE_STRING_COMMAND, PERMISSION_COMMAND, FRAGMENT_COMMAND
     };
 
     @Reference private AndroidProjectOperations projectOperations;
@@ -71,7 +71,7 @@ public class AndroidProjectCommands implements CommandMarker {
             @CliOption(key = "height", mandatory = false, unspecifiedDefaultValue = "FILL_PARENT", help = "The height of the view group") final Dimension height,
             @CliOption(key = "width", mandatory = false, unspecifiedDefaultValue = "FILL_PARENT", help = "The width of the view group") final Dimension width) {
         projectOperations.view(typeName, view, identifier, fieldName, height, width);
-    }
+    } 
 
     @CliCommand(value = RESOURCE_STRING_COMMAND, help = "Creates a string resource")
     public void resourceString(@CliOption(key = { "", "fieldName" }, mandatory = true, help = "The name of the field to add") final JavaSymbolName fieldName,
@@ -99,5 +99,10 @@ public class AndroidProjectCommands implements CommandMarker {
             @CliOption(key = "layout", mandatory = false, unspecifiedDefaultValue = "", help = "Name of the fragment layout to create and inflate in onCreateView()") final String layout,
             @CliOption(key = "support", mandatory = false, unspecifiedDefaultValue = "false", specifiedDefaultValue = "true", help = "Subclass Fragment from the Android Support Library") final boolean support) {
         projectOperations.fragment(name, layout, support);
+    }
+
+    @CliCommand(value = DEPENDENCY_COMMAND, help = "Adds a dependency to the Android manifest")
+    public void dependency(@CliOption(key = { "", "name" }, mandatory = true, help = "The type of dependency to add") final AndroidProjectDependency name) {
+        projectOperations.dependency(name);
     }
 }

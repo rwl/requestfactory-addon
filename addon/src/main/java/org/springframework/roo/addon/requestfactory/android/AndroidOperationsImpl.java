@@ -65,16 +65,15 @@ public class AndroidOperationsImpl implements AndroidOperations {
 
         final Element configuration = XmlUtils.getConfiguration(getClass());
 
-
-        final List<Dependency> dependencies = new ArrayList<Dependency>();
+        final List<AndroidDependency> dependencies = new ArrayList<AndroidDependency>();
         for (final Element dependencyElement : XmlUtils.findElements(
                 "/configuration/batch/dependencies/dependency", configuration)) {
-            dependencies.add(new Dependency(dependencyElement));
+            dependencies.add(new AndroidDependency(dependencyElement));
         }
         projectOperations.removeDependencies(moduleName, dependencies);
         metadataService.evict(ProjectMetadata.getProjectIdentifier(
                 moduleName));
-        projectOperations.addDependencies(moduleName, dependencies);
+        androidTypeService.addDependencies(moduleName, dependencies);
 
 
         final List<Plugin> plugins = new ArrayList<Plugin>();
