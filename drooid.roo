@@ -1,0 +1,26 @@
+// Start the RequestFactory OSGI bundle
+osgi start --url file:///home/rwl/java/gwt-bootstrap-addon/requestfactory-addon/annotations/target/org.springframework.roo.addon.requestfactory.annotations-0.1.0.BUILD-SNAPSHOT.jar
+osgi start --url file:///home/rwl/java/gwt-bootstrap-addon/requestfactory-addon/addon/target/org.springframework.roo.addon.requestfactory-0.1.0.BUILD-SNAPSHOT.jar
+
+tailor activate --name android
+
+project --projectName roodroid --topLevelPackage org.roodroid
+
+layout --name main
+activity --class ~.activity.MainActivity --launcher --layout main --fullscreen
+view --view TextView --identifier textView --fieldName tv
+resource string --fieldName message --value "foo bar"
+
+system service WINDOW_MANAGER
+system service LAYOUT_INFLATER --fieldName inflater
+system service --name ACTIVITY_MANAGER
+system service --name WIFI_MANAGER --addPermissions
+
+permission CAMERA
+permission --name FLASHLIGHT
+
+fragment --class ~.fragment.MyFragment --layout fragment_layout --support
+
+android dependency --name ACTION_BAR_SHERLOCK
+
+// Morphology, longevity, incept dates

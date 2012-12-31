@@ -1,0 +1,131 @@
+// Start the RequestFactory OSGI bundle
+osgi start --url file:///home/rwl/java/gwt-bootstrap-addon/requestfactory-addon/annotations/target/org.springframework.roo.addon.requestfactory.annotations-0.1.0.BUILD-SNAPSHOT.jar
+osgi start --url file:///home/rwl/java/gwt-bootstrap-addon/requestfactory-addon/addon/target/org.springframework.roo.addon.requestfactory-0.1.0.BUILD-SNAPSHOT.jar
+
+// Tailor Roo for use with the RequestFactory add-on
+tailor activate --name requestfactory
+
+project --topLevelPackage org.mothwatch --projectName mothwatch
+
+// jpa setup --database GOOGLE_APP_ENGINE --provider DATANUCLEUS
+jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY
+// mongo setup --databaseName mothwatch
+
+// module focus --moduleName domain
+// dependency add --artifactId datanucleus-enhancer --groupId org.datanucleus --version 3.1.1 --scope RUNTIME
+
+enum type --class org.mothwatch.shared.domain.Sex
+enum constant --name MALE
+enum constant --name FEMALE 
+
+enum type --class org.mothwatch.shared.domain.Stage
+enum constant --name ADULT
+enum constant --name EGG
+enum constant --name LARVA
+enum constant --name PUPA
+ 
+// entity jpa --class ~.domain.Recorder --identifierType com.google.appengine.api.datastore.Key --versionType java.lang.Long
+// entity jpa --class ~.domain.Recorder --identifierType java.lang.String --versionType java.lang.Long
+// entity jpa --class ~.domain.Recorder
+entity jpa --class ~.domain.Recorder --activeRecord false
+// entity mongo --class ~.domain.Recorder --identifierType java.lang.String
+field string fullName
+/*
+field string fullName --notNull --sizeMin 6 --sizeMax 32
+field string addressLine1 --sizeMax 32
+field string addressLine2 --sizeMax 32 --invisible
+field string postalTown --sizeMax 32
+field string postCode --sizeMin 4 --sizeMax 8
+*/
+field enum sex --type org.mothwatch.shared.domain.Sex --notNull --enumType STRING --default MALE
+toString --excludeFields sex
+
+// entity jpa --class ~.domain.Species --identifierType com.google.appengine.api.datastore.Key --versionType java.lang.Long
+// entity jpa --class ~.domain.Species --identifierType java.lang.String --versionType java.lang.Long
+// entity jpa --class ~.domain.Species
+entity jpa --class ~.domain.Species --activeRecord false
+// entity mongo --class ~.domain.Species --identifierType java.lang.String
+plural --name Species
+field string vernacular --sizeMax 32 --helpText "Common or English name"
+field string taxon --sizeMax 32 --helpText "Scientific or Latin name"
+field string description --sizeMax 1024 --textArea
+field string discoveredBy --sizeMax 32 --helpText "Name of the individual credited with the discovery of the species"
+field number discoveredIn --type java.lang.Integer --min 1600 --max 2012 --helpText "Year in which the species was discovered"
+field number wingspan --type java.lang.Integer --min 1 --max 200 --helpText "Typical wingspan in millimetres" --units mm
+field number bradleyAndFletcherNumber --type java.lang.Integer --min 1 --max 2624 --helpText "The reference number devised by Bradley and Fletcher for the checklist of Lepidoptera"
+
+// entity jpa --class ~.domain.Record --identifierType com.google.appengine.api.datastore.Key --versionType java.lang.Long
+// entity jpa --class ~.domain.Record --identifierType java.lang.String --versionType java.lang.Long
+// entity jpa --class ~.domain.Record
+entity jpa --class ~.domain.Record --activeRecord false
+// entity mongo --class ~.domain.Record --identifierType java.lang.String
+field string site
+// field reference species --type Species --fetch LAZY --unowned --notNull
+field reference species --type Species --fetch LAZY 
+/*
+field string site --sizeMax 64 --comment "Site name / location name"
+field string gridRef --sizeMin 6 --sizeMax 10 --comment "6, 8 or even 10 figure Ordnance Survey map grid reference"
+field string vc --sizeMax 6 --comment "Vice-county number"
+// field reference determiner --type Recorder --fetch LAZY --unowned --comment "person who identified the moth species - if different to the recorder"
+field date recorded --type java.util.Date --past --dateTimeFormatPattern dd-MM-yyyy --comment "Date when the moth was recorded"
+field number abundance --type java.lang.Integer --min 1 --max 9999 --comment "Number of moths recorded"
+field enum sex --type org.mothwatch.shared.domain.Sex --enumType STRING
+field enum stage --type org.mothwatch.shared.domain.Stage --notNull --enumType STRING
+field string comment --sizeMax 1024 --comment "Any other information relating to the record" --textArea
+field boolean verified --notNull
+*/
+field reference recorder --type Recorder --fetch LAZY
+
+field list records --class ~.domain.Recorder --type ~.domain.Record --mappedBy recorder --cardinality ONE_TO_MANY
+field set records --class ~.domain.Species --type ~.domain.Record --mappedBy species --cardinality ONE_TO_MANY
+
+// Create a repository layer using Spring Data
+repository jpa --interface ~.repository.RecorderRepository --entity ~.domain.Recorder
+repository jpa --interface ~.repository.SpeciesRepository --entity ~.domain.Species
+repository jpa --interface ~.repository.RecordRepository --entity ~.domain.Record
+// repository mongo --interface ~.repository.RecorderRepository --entity ~.domain.Recorder
+// repository mongo --interface ~.repository.SpeciesRepository --entity ~.domain.Species
+// repository mongo --interface ~.repository.RecordRepository --entity ~.domain.Record
+
+// Create a service layer
+service --interface ~.service.RecorderService --entity ~.domain.Recorder
+service --interface ~.service.SpeciesService --entity ~.domain.Species
+service --interface ~.service.RecordService --entity ~.domain.Record
+
+// Annotate JPA entities for use with the RequestFactory add-on.
+scaffold entity --type ~.domain.Recorder --primary firstName
+scaffold entity --type ~.domain.Species --primary vernacular --secondary taxon
+scaffold entity --type ~.domain.Record --primary site --secondary date
+
+map marker --type ~.domain.Record
+
+// Shared proxy, request and scaffold classes
+proxy request all
+scaffold all
+
+module focus --moduleName shared
+dependency remove --groupId org.mothwatch.server --artifactId mothwatch-server --version 0.1.0.BUILD-SNAPSHOT
+
+// Create GWT UI scaffold
+gwt setup
+// gwt update gae
+gwt scaffold all
+gwt maps setup
+
+// dependency add --artifactId spring-data-jpa --groupId org.springframework.data --version 1.2.0.RELEASE
+// dependency add --artifactId spring-data-mongodb --groupId org.springframework.data --version 1.1.1.RELEASE
+
+// Create Android UI scaffold
+android setup
+android scaffold all
+// More human than human
+
+module focus --moduleName client/android
+dependency remove --groupId org.mothwatch.gwt --artifactId mothwatch-gwt --version 0.1.0.BUILD-SNAPSHOT
+
+/*
+// Create iOS UI scaffold
+ios  setup
+ios scaffold all --package ~.ios --module mothwatch-ui/ios
+*/
+
