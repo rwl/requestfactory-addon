@@ -40,7 +40,7 @@ public class VisualizeCommands implements CommandMarker {
     }
 
     @CliCommand(value = MAP_MARKER_COMMAND, help = "Creates map scaffold for the specified type")
-    public void scaffoldType(@CliOption(key = "type", mandatory = true, help = "The type to base the created map marker scaffold on") final JavaType type,
+    public void scaffoldType(@CliOption(key = "type", mandatory = false, unspecifiedDefaultValue = "*", optionContext = "update,project", help = "The type to base the created map marker scaffold on") final JavaType type,            
             @CliOption(key = RooMapMarker.LAT_FIELD_ATTRIBUTE, mandatory = false, help = "Field name for marker latitude") final String lat,
             @CliOption(key = RooMapMarker.LON_FIELD_ATTRIBUTE, mandatory = false, help = "Field name for marker longitude") final String lon) {
         operations.annotateNodeType(type, lat, lon);

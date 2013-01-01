@@ -1,0 +1,87 @@
+//
+// osgi uninstall --bundleSymbolicName org.springframework.roo.addon.requestfactory
+// osgi uninstall --bundleSymbolicName org.springframework.roo.addon.requestfactory.annotations
+osgi start --url file:///home/rwl/java/gwt-bootstrap-addon/requestfactory-addon/annotations/target/org.springframework.roo.addon.requestfactory.annotations-0.1.0.BUILD-SNAPSHOT.jar
+osgi start --url file:///home/rwl/java/gwt-bootstrap-addon/requestfactory-addon/addon/target/org.springframework.roo.addon.requestfactory-0.1.0.BUILD-SNAPSHOT.jar
+
+tailor activate --name requestfactory
+
+
+project --projectName petclinic --topLevelPackage com.springsource.petclinic
+
+jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY
+
+enum type --class ~.domain.PetType
+enum constant --name Dog
+enum constant --name Cat
+enum constant --name Bird
+
+enum type --class ~.domain.Specialty
+enum constant --name Cardiology
+enum constant --name Dentistry
+enum constant --name Nutrition
+
+entity jpa --class ~.domain.Pet --testAutomatically
+entity jpa --class ~.domain.Visit --testAutomatically
+entity jpa --class ~.domain.AbstractPerson --abstract
+entity jpa --class ~.domain.Vet --extends ~.domain.AbstractPerson --testAutomatically
+entity jpa --class ~.domain.Owner --extends ~.domain.AbstractPerson --testAutomatically
+
+field string --fieldName firstName --sizeMin 3 --sizeMax 30 --class ~.domain.AbstractPerson
+field string --fieldName lastName --notNull --sizeMin 3 --sizeMax 30
+field string --fieldName address --notNull --sizeMax 50 --sizeMin 1
+field string --fieldName city --notNull --sizeMax 30
+field string --fieldName telephone --notNull
+field string --fieldName homePage --sizeMax 30
+field string --fieldName email --sizeMax 30 --sizeMin 6
+field date --fieldName birthDay --type java.util.Date --notNull
+map marker
+
+field string --fieldName description --sizeMax 255 --class ~.domain.Visit
+field date --fieldName visitDate --type java.util.Date --notNull --past
+field reference --fieldName pet --type ~.domain.Pet --notNull --unowned
+field reference --fieldName vet --type ~.domain.Vet
+
+field boolean --fieldName sendReminders --notNull --primitive --class ~.domain.Pet
+field string --fieldName name --notNull --sizeMin 1
+field number --fieldName weight --type java.lang.Float --notNull
+field reference --fieldName petOwner --type ~.domain.Owner --fetch LAZY
+field enum --fieldName type --type com.springsource.petclinic.shared.domain.PetType --notNull --enumType STRING
+
+field date --fieldName employedSince --type java.util.Date --notNull --past --class ~.domain.Vet
+field enum --fieldName specialty --type com.springsource.petclinic.shared.domain.Specialty --notNull false --enumType STRING
+field list --fieldName visits --type ~.domain.Visit --mappedBy vet --cardinality ONE_TO_MANY
+
+field list --class ~.domain.Owner --fieldName pets --type ~.domain.Pet --mappedBy petOwner --notNull false --cardinality ONE_TO_MANY
+
+finder add --finderName findPetsByNameAndWeight --class ~.domain.Pet
+finder add --finderName findPetsByPetOwner
+finder add --finderName findPetsBySendRemindersAndWeightLessThan
+finder add --finderName findPetsByTypeAndNameLike
+
+finder add --finderName findVisitsByDescriptionAndVisitDate --class ~.domain.Visit
+finder add --finderName findVisitsByVisitDateBetween
+finder add --finderName findVisitsByDescriptionLike
+
+
+scaffold entity --type ~.domain.Pet --primary type --secondary name
+scaffold entity --type ~.domain.Visit --primary visitDate --secondary vet
+scaffold entity --type ~.domain.Vet --primary lastName --secondary specialty
+scaffold entity --type ~.domain.Owner --primary lastName --secondary pets
+
+proxy request all
+scaffold all
+
+module focus --moduleName shared
+dependency remove --groupId com.springsource.petclinic.server --artifactId petclinic-server --version 0.1.0.BUILD-SNAPSHOT
+
+gwt setup
+gwt scaffold all
+gwt maps setup
+
+android setup
+android scaffold all
+
+module focus --moduleName client/android
+dependency remove --groupId com.springsource.petclinic.gwt --artifactId petclinic-gwt --version 0.1.0.BUILD-SNAPSHOT --packaging WAR
+

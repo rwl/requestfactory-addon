@@ -66,6 +66,7 @@ public class RequestFactoryTailorConfiguration implements TailorConfigurationFac
         final CommandConfiguration config = new CommandConfiguration();
         config.setCommandName("project");
         config.addAction(ActionConfigFactory.defaultArgumentAction("packaging", "POM_SIMPLE"));
+        config.addAction(ActionConfigFactory.defaultArgumentAction("projectName", "${topLevelPackage}"));
         config.addAction(ActionConfigFactory.executeAction());
         config.addAction(ActionConfigFactory.executeAction("web requestfactory setup addon"));
         config.addAction(ActionConfigFactory.executeAction("module create --moduleName server --topLevelPackage ${topLevelPackage}.server --artifactId ${projectName}-server --parent ${topLevelPackage}:${projectName}:" + VERSION));
