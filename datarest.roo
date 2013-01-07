@@ -8,7 +8,7 @@ project --topLevelPackage org.datarest
 
 jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY
 
-entity jpa --class ~.domain.Person
+entity jpa --class ~.domain.Person --versionType java.lang.Long
 field string firstName
 field string lastName
 
