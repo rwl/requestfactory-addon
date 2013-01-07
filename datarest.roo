@@ -1,0 +1,18 @@
+// Start the RequestFactory OSGI bundle
+osgi uninstall --bundleSymbolicName org.springframework.roo.addon.requestfactory
+osgi uninstall --bundleSymbolicName org.springframework.roo.addon.requestfactory.annotations
+osgi start --url file:///home/rwl/java/gwt-bootstrap-addon/requestfactory-addon/annotations/target/org.springframework.roo.addon.requestfactory.annotations-0.1.0.BUILD-SNAPSHOT.jar
+osgi start --url file:///home/rwl/java/gwt-bootstrap-addon/requestfactory-addon/addon/target/org.springframework.roo.addon.requestfactory-0.1.0.BUILD-SNAPSHOT.jar
+
+project --topLevelPackage org.datarest
+
+jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY
+
+entity jpa --class ~.domain.Person
+field string firstName
+field string lastName
+
+repository jpa --interface ~.repository.PersonRepository --entity ~.domain.Person
+
+data rest setup
+data rest resource --repository ~.repository.PersonRepository --path people --rel people
